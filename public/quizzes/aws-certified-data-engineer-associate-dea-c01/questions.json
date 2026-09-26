@@ -11,7 +11,7 @@
       "E": "Use AWS Lake Formation for centralized data governance and access control."
     },
     "answer": "BE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để thiết lập mô hình lưới dữ liệu (data mesh) hiệu quả và tiết kiệm chi phí trên AWS:\n\n* **Amazon S3 & Amazon Athena (B):** S3 đóng vai trò là kho lưu trữ dữ liệu phi tập trung linh hoạt (data lakes), trong khi Athena cho phép phân tích dữ liệu trực tiếp trên S3 bằng SQL mà không cần di chuyển dữ liệu, đáp ứng tiêu chí phân tích dữ liệu của mô hình data mesh.\n* **AWS Lake Formation (E):** Cung cấp khả năng quản trị dữ liệu tập trung (centralized data governance) và kiểm soát truy cập chi tiết (data access control) ở cấp độ bảng, dòng và cột cho các tài nguyên dữ liệu trong AWS Glue Data Catalog.\n\n**Tại sao các phương án khác sai:**\n\n* **A, D:** Aurora, RDS và EMR hay Redshift provisioned không phải là sự kết hợp tối ưu cho việc thiết lập lưới dữ liệu tự phục vụ và quản trị tập trung với độ phức tạp vận hành thấp nhất, do chúng yêu cầu cấu hình hạ tầng phức tạp và không tích hợp sâu cho kiểm soát truy cập tập trung kiểu Lake Formation.\n* **C:** AWS Glue DataBrew là công cụ chuẩn bị dữ liệu trực quan (data preparation tool) chứ không dùng để quản trị dữ liệu tập trung hay kiểm soát quyền truy cập.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -307,7 +307,7 @@
       "E": "Use the Redshift Data API to load transformed data into Amazon Redshift."
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để thiết lập đường ống ETL tự động chạy mỗi giờ từ Amazon RDS và MongoDB sang Amazon Redshift bằng AWS Glue với ít chi phí vận hành nhất:\n\n* **AWS Glue triggers (A):** Cung cấp cơ chế lập lịch tích hợp sẵn của AWS Glue. Bạn có thể dễ dàng thiết lập một trigger dựa trên thời gian (time-based trigger) để tự động chạy các job ETL mỗi giờ một lần mà không cần sử dụng dịch vụ bên ngoài như Lambda hay CloudWatch Events.\n* **AWS Glue connections (D):** Cho phép bạn quản lý tập trung và an toàn thông tin kết nối (như URL cơ sở dữ liệu, thông tin đăng nhập và cài đặt mạng VPC) để kết nối trực tiếp AWS Glue đến Amazon RDS, MongoDB và Amazon Redshift. Nhờ đó, Glue ETL job có thể dễ dàng đọc/ghi dữ liệu từ các nguồn/đích này một cách an toàn mà không cần tự cấu hình mạng và driver trong code.\n\n**Tại sao các phương án khác sai:**\n\n* **B:** AWS Glue DataBrew là một công cụ chuẩn bị dữ liệu trực quan (visual data preparation tool) dùng để làm sạch dữ liệu thủ công hoặc thiết kế luồng biến đổi qua giao diện kéo thả, không phải là giải pháp phù hợp hoặc tự động hóa hoàn toàn cho đường ống ETL quy mô hệ thống chạy mỗi giờ.\n* **C:** Việc sử dụng các hàm AWS Lambda để lập lịch kích hoạt AWS Glue job tạo thêm gánh nặng vận hành vì phải bảo trì code Lambda và thiết lập quyền IAM bổ sung, trong khi AWS Glue triggers đã tích hợp sẵn tính năng này.\n* **E:** Redshift Data API là một API không trạng thái dùng để chạy các câu lệnh SQL trên Redshift, không trực tiếp thiết lập kết nối mạng và tích hợp nguồn dữ liệu từ RDS/MongoDB vào AWS Glue ETL job hiệu quả như AWS Glue connections.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -375,7 +375,7 @@
       "E": "Use Amazon Managed Workflows for Apache Airflow (Amazon MWAA) to orchestrate the Athena queries in AWS Batch."
     },
     "answer": "AB",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để chạy một chuỗi các truy vấn Athena chạy lâu (hơn 15 phút mỗi câu) một cách tuần tự và tiết kiệm chi phí nhất:\n\n* **Sử dụng Lambda để kích hoạt bất đồng bộ (A):** Hàm Lambda sử dụng API `start_query_execution` của thư viện Boto3 để bắt đầu chạy truy vấn Athena một cách không đồng bộ (asynchronous). Lệnh gọi này trả về ngay lập tức mã ID của truy vấn (`QueryExecutionId`) mà không cần chờ câu lệnh SQL chạy xong, giúp hàm Lambda hoàn thành trong vài giây, tiết kiệm tối đa chi phí chạy Lambda (vốn bị giới hạn thời gian chạy tối đa là 15 phút).\n* **Sử dụng Step Functions với trạng thái Wait (B):** Để kiểm tra trạng thái của các truy vấn và điều phối câu tiếp theo, bạn thiết lập một máy trạng thái (State Machine) trong AWS Step Functions. Sử dụng một trạng thái Chờ (Wait state) để dừng luồng chạy trong một khoảng thời gian (ví dụ 5 phút) trước khi chạy một hàm Lambda khác để gọi `get_query_execution` kiểm tra trạng thái truy vấn. Bằng cách này, bạn không mất tiền duy trì Lambda chạy \"chờ\" (sleep/polling), giúp giảm thiểu tối đa chi phí.\n\n**Tại sao các phương án khác sai:**\n\n* **C, D:** AWS Glue Python shell job tính phí theo thời gian chạy thực tế (tính theo DPU). Việc duy trì một Glue Python shell job chạy chỉ để thực hiện vòng lặp chờ (`sleep`) trong hơn 15 phút để kiểm tra trạng thái truy vấn là cực kỳ lãng phí chi phí.\n* **E:** Sử dụng Amazon MWAA và AWS Batch để chạy các truy vấn Athena là giải pháp quá phức tạp, dư thừa tài nguyên và phát sinh chi phí hạ tầng MWAA cố định hàng tháng rất lớn, không đáp ứng tiêu chí \"hiệu quả về chi phí nhất\".\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1447,7 +1447,7 @@
       "E": "Preprocess the .csv data to Apache Parquet format by fetching only the data blocks that are needed for predicates."
     },
     "answer": "CE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để tối ưu hiệu năng và chi phí của Amazon Athena khi lượng dữ liệu lớn:\n\n*   **Sử dụng cùng AWS Region (Đáp án C):** Đặt S3 bucket và Athena trong cùng một vùng sẽ giảm thiểu độ trễ mạng và loại bỏ chi phí truyền dữ liệu liên vùng (cross-region data transfer).\n*   **Chuyển đổi dữ liệu sang định dạng Parquet (Đáp án E):** Apache Parquet là định dạng lưu trữ dạng cột (columnar format) được nén tối ưu. Khi chạy truy vấn, Athena chỉ đọc các cột cần thiết và sử dụng kỹ thuật loại bỏ khối dữ liệu không khớp điều kiện lọc (predicate pushdown), giúp giảm tối đa lượng dữ liệu quét qua, từ đó cải thiện tốc độ và tiết kiệm chi phí.\n*   **Các phương án khác:**\n    *   *Đáp án A* không giúp tối ưu hiệu năng truy vấn Athena và không còn cần thiết cho việc tăng thông lượng S3 hiện đại.\n    *   *Đáp án B* chạy truy vấn liên tài khoản không trực tiếp làm giảm hiệu năng truy vấn nếu ở cùng Region.\n    *   *Đáp án D* (JSON) vẫn là định dạng dạng dòng và không tối ưu bằng Parquet.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1660,7 +1660,7 @@
       "E": "Grant the AWS Glue job IAM role access to the stored credentials."
     },
     "answer": "DE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để giải quyết lỗ hổng bảo mật do viết mã cứng thông tin đăng nhập trong AWS Glue:\n\n*   **Lưu trữ thông tin đăng nhập trong AWS Secrets Manager (Đáp án D):** AWS Secrets Manager là dịch vụ chuyên dụng để lưu trữ, quản lý và xoay vòng các thông tin nhạy cảm (như mật khẩu cơ sở dữ liệu) một cách an toàn và được mã hóa.\n*   **Cấp quyền cho vai trò IAM của Glue Job (Đáp án E):** Để kịch bản Glue Job có thể truy xuất thông tin đăng nhập này tại thời điểm chạy (runtime), vai trò IAM gắn với Glue Job cần được cấp quyền đọc dữ liệu từ AWS Secrets Manager (`secretsmanager:GetSecretValue`).\n*   **Các phương án khác:**\n    *   *Đáp án A* (Glue job parameters) vẫn có thể bị xem được dưới dạng văn bản thuần túy trong bảng điều khiển AWS hoặc qua API.\n    *   *Đáp án B và C* lưu trữ trong S3 (ngay cả khi được mã hóa) vẫn tăng rủi ro rò rỉ và phức tạp hơn nhiều so với việc sử dụng dịch vụ chuyên dụng như Secrets Manager.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1753,7 +1753,7 @@
       "E": "There is no IAM role assigned to QuickSight."
     },
     "answer": "CD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Khi kết nối QuickSight với dashboard chạy trên nền Athena và gặp lỗi thiếu quyền truy cập (insufficient permissions):\n\n*   **QuickSight thiếu quyền truy cập vào S3 bucket (Đáp án C):** Để hiển thị kết quả, QuickSight cần đọc trực tiếp cả dữ liệu nguồn trên S3 cũng như thư mục kết quả truy vấn của Athena nằm trên S3. Nếu QuickSight chưa được cấp quyền truy cập các bucket này trong cài đặt bảo mật dịch vụ của QuickSight, lỗi quyền truy cập sẽ xảy ra.\n*   **QuickSight thiếu quyền giải mã dữ liệu (Đáp án D):** Nếu dữ liệu trong S3 được mã hóa bằng khóa quản lý bởi khách hàng (AWS KMS CMK), vai trò dịch vụ của QuickSight phải được cấp quyền giải mã sử dụng khóa KMS này (`kms:Decrypt` hoặc thông qua việc tạo grant). Nếu không có quyền này, QuickSight không thể đọc được nội dung các tệp tin đã mã hóa.\n*   **Các phương án khác:**\n    *   *Đáp án A và B* không phải là lỗi liên quan trực tiếp đến quyền truy cập IAM/Resource Access.\n    *   *Đáp án E* sai vì QuickSight tự động tạo và gán một vai trò dịch vụ mặc định (service role) cho tài khoản khi được khởi tạo.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1945,7 +1945,7 @@
       "E": "Modify the IAM role that grants access to AWS glue to grant access to all S3 features."
     },
     "answer": "AB",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để khắc phục việc công việc AWS Glue chạy ngày càng lâu khi dữ liệu tích lũy:\n\n* **Đúng: A.** **Phân vùng dữ liệu (Partitioning)** trong S3 bucket theo năm, tháng, ngày giúp AWS Glue chỉ đọc những phân vùng dữ liệu mới hoặc cần thiết thay vì quét toàn bộ dữ liệu từ trước tới nay, giảm lượng I/O đáng kể.\n* **Đúng: B.** **Tăng quy mô loại worker (worker type)** (ví dụ: chuyển từ Standard sang G.1X hoặc G.2X) giúp cấp nhiều bộ nhớ và tài nguyên CPU hơn cho các node tính toán xử lý dữ liệu của Spark, từ đó tăng tốc xử lý.\n* **Sai: C.** Mặc dù DynamicFrame là một cấu trúc dữ liệu tối ưu trong Glue, việc chỉ đổi class schema không giải quyết được vấn đề gốc rễ là Glue job đang phải đọc quá nhiều dữ liệu chưa phân vùng.\n* **Sai: D.** Việc giảm tần suất chạy công việc xuống một nửa không cải thiện hiệu năng của chính job đó khi nó chạy, mà trái lại còn làm lượng dữ liệu tích lũy của mỗi lần chạy lớn hơn.\n* **Sai: E.** Quyền hạn của IAM role không ảnh hưởng đến tốc độ đọc ghi hay hiệu năng xử lý của AWS Glue.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1980,7 +1980,7 @@
       "E": "Use file formats that are not splittable."
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để tối ưu hiệu năng truy vấn của Redshift Spectrum trên dữ liệu lưu ở S3:\n\n* **Đúng: B.** Sử dụng **định dạng tệp dạng cột** (như Apache Parquet hoặc ORC) giúp Redshift Spectrum chỉ cần đọc các cột được yêu cầu trong câu lệnh SQL thay vì quét toàn bộ dòng dữ liệu, giảm thiểu lượng dữ liệu truyền qua mạng.\n* **Đúng: C.** **Phân vùng dữ liệu (Partitioning)** dựa trên các cột lọc phổ biến giúp Redshift Spectrum loại bỏ việc quét các thư mục/phân vùng không liên quan (partition pruning), tăng tốc độ truy vấn rõ rệt.\n* **Sai: A.** Nén gzip là dạng không thể chia tách (non-splittable). Các tệp gzip lớn từ 1 GB đến 5 GB sẽ hạn chế khả năng đọc song song của các node tính toán.\n* **Sai: D.** Tạo quá nhiều tệp nhỏ (dưới 10 KB) sẽ gây ra vấn đề \"nhiều tệp nhỏ\" (small file problem), làm tăng đáng kể chi phí API S3 (LIST/GET) và làm giảm hiệu năng hệ thống.\n* **Sai: E.** Sử dụng định dạng không thể chia tách (non-splittable) làm giảm tính song song của động cơ truy vấn.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2011,7 +2011,7 @@
       "E": "Update the network ACL of the private subnet to include a self-referencing rule that allows access through the database port."
     },
     "answer": "CD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để kết nối AWS Lambda riêng tư với RDS DB instance nằm trong private subnet:\n\n* **Đúng: C.** Cấu hình hàm Lambda hoạt động trong cùng **VPC và subnet** với RDS DB instance giúp Lambda có thể định tuyến nội bộ trực tiếp đến database thông qua giao diện mạng ENI.\n* **Đúng: D.** Việc sử dụng **chung một Security Group** cho cả Lambda và RDS, kèm theo một **quy tắc tự tham chiếu (self-referencing rule)** trên cổng cơ sở dữ liệu (ví dụ: 5432 cho PostgreSQL hoặc 3306 cho MySQL) cho phép lưu lượng từ Lambda kết nối đến RDS một cách an toàn mà không cần chỉ định cụ thể dải IP.\n* **Sai: A.** Bật truy cập công khai (public access) vi phạm yêu cầu kết nối riêng tư và tạo ra rủi ro bảo mật.\n* **Sai: B.** Security Group hoạt động ở tầng mạng, không thể cấu hình dựa trên khái niệm \"lệnh gọi hàm Lambda\" (Lambda invocations).\n* **Sai: E.** Network ACLs là stateless và hoạt động ở mức độ subnet, việc cấu hình tự tham chiếu tại đây không giải quyết được bài toán phân quyền giao tiếp giữa các tài nguyên cụ thể như Security Group.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2104,7 +2104,7 @@
       "E": "Configure an AWS Lambda function to invoke an AWS Glue job when a file is loaded into the S3 bucket. Configure the AWS Glue job to read the files from the S3 bucket into an Apache Spark DataFrame. Configure the AWS Glue job to also put smaller partitions of the DataFrame into an Amazon Kinesis Data Firehose delivery stream. Configure the delivery stream to load data into the Amazon Redshift tables."
     },
     "answer": "BD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để xử lý sự thay đổi lược đồ dữ liệu (schema drift) một cách tự động, quy trình cần chạy **AWS Glue crawler** để cập nhật AWS Glue Data Catalog trước khi chạy **AWS Glue job**.\n\n* **Đúng: B & D.** Cả hai phương án này đều sử dụng **AWS Glue workflow** để kết hợp crawler và job. Workflow đảm bảo rằng crawler sẽ chạy trước và cập nhật lược đồ thành công, sau đó mới kích hoạt job xử lý. \n  * **B** kích hoạt định kỳ mỗi 15 phút bằng EventBridge, phù hợp với tần suất gửi dữ liệu.\n  * **D** kích hoạt theo sự kiện tải tệp lên S3 thông qua một hàm Lambda khởi chạy workflow.\n* **Sai: A.** Phương án này bỏ qua việc chạy AWS Glue crawler, dẫn đến lỗi khi lược đồ dữ liệu của các file nguồn thay đổi.\n* **Sai: C.** Việc thiết lập 2 hàm Lambda và 1 quy tắc EventBridge để liên kết crawler và job là quá phức tạp và khó quản lý hơn nhiều so với việc dùng AWS Glue workflow tích hợp sống.\n* **Sai: E.** Gửi dữ liệu qua Kinesis Data Firehose từ Spark DataFrame là dư thừa và làm tăng chi phí cũng như độ phức tạp của hệ thống.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2404,7 +2404,7 @@
       "E": "Implement caching to reduce the database query load."
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để giảm mức sử dụng CPU của Amazon RDS DB instance đang chạy quá tải, các biện pháp trực tiếp và hiệu quả nhất là:\n\n* **A. Sử dụng Performance Insights để tối ưu hóa truy vấn**: Đây là bước đi tốt nhất để tìm ra nguyên nhân gốc rễ (những truy vấn chưa tối ưu ngốn nhiều CPU) và tối ưu hóa chúng (ví dụ: tối ưu hóa câu lệnh SQL, thêm chỉ mục thích hợp).\n* **D. Nâng cấp lên kích thước instance lớn hơn**: Tăng tài nguyên tính toán (CPU, RAM) của DB instance sẽ giúp xử lý khối lượng công việc hiện tại mượt mà hơn.\n* **Tại sao các phương án khác sai**:\n    * **B**: Thêm bảng và chỉ mục không định hướng cụ thể có thể làm tăng tải ghi (vì workload chủ yếu là ghi, việc duy trì quá nhiều chỉ mục dư thừa sẽ làm chậm thao tác ghi).\n    * **C**: Việc khởi động lại định kỳ không giải quyết được vấn đề thiếu hụt tài nguyên hoặc các truy vấn kém hiệu quả.\n    * **E**: Bộ nhớ đệm (caching) rất hiệu quả cho hệ thống có nhiều lượt đọc (read-heavy), nhưng ở đây workload chủ yếu là ghi (write-heavy), do đó caching không giúp giảm tải CPU đáng kể cho các tác vụ ghi dữ liệu.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3012,7 +3012,7 @@
       "E": "For archived data, use Amazon SageMaker to perform data transformations."
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để thiết lập quy trình xử lý dữ liệu tự động hiệu quả và tiết kiệm chi phí bằng Amazon MWAA:\n- **AWS Glue Crawlers (Lựa chọn A)** là công cụ tối ưu và tiết kiệm chi phí để quét dữ liệu hàng ngày (300 GB) trên Amazon S3 nhằm tự động phát hiện schema và cập nhật vào Glue Data Catalog.\n- **Amazon EMR (Lựa chọn D)** là một dịch vụ lý tưởng để xử lý và biến đổi các tập dữ liệu có quy mô lớn (hàng Terabyte dữ liệu lịch sử) cũng như dữ liệu hàng ngày bằng cách sử dụng các framework xử lý phân tán mã nguồn mở như Apache Spark. EMR cho phép khởi tạo các cụm máy chủ tạm thời (ephemeral clusters) chạy xong tác vụ biến đổi dữ liệu thì tự tắt, giúp tối ưu hóa chi phí tối đa.\n- Amazon Athena (B) không dùng để xác định hoặc lưu trữ schema tự động như Crawler.\n- Amazon Redshift (C) yêu cầu chi phí duy trì cụm liên tục và đắt đỏ, không phù hợp cho việc biến đổi dữ liệu thô hàng ngày từ S3 trước khi phân tích.\n- Amazon SageMaker (E) được thiết kế cho việc huấn luyện và triển khai mô hình học máy, không phải là công cụ tối ưu về chi phí để biến đổi ETL dữ liệu lưu trữ lịch sử ở quy mô Terabyte.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3105,7 +3105,7 @@
       "E": "Access the query data through QuickSight SPICE (Super-fast, Parallel, In-memory Calculation Engine). Configure a daily refresh for the dataset."
     },
     "answer": "BE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để xây dựng hệ thống báo cáo QuickSight cho hàng trăm người dùng hoạt động đồng thời một cách hiệu quả và tiết kiệm chi phí:\n- **Sử dụng Amazon Athena (Lựa chọn B)** để truy vấn trực tiếp dữ liệu dạng file trên Amazon S3. Điều này giúp tránh chi phí duy trì cố định và đắt đỏ của một cụm Amazon Redshift (A).\n- **Sử dụng QuickSight SPICE (Lựa chọn E)** để nhập (import) dữ liệu từ Athena vào bộ nhớ đệm in-memory hiệu năng cao của QuickSight và cấu hình làm mới (refresh) hàng ngày. Khi hàng trăm người dùng truy cập dashboard, các truy vấn sẽ được xử lý trực tiếp trên SPICE thay vì gửi liên tục các truy vấn SQL trực tiếp (Direct Query - D) xuống Athena. Điều này giúp tăng tốc độ tải trang cho người dùng và giảm thiểu chi phí quét dữ liệu của Athena (vì Athena chỉ bị tính phí quét dữ liệu một lần mỗi ngày khi SPICE làm mới dữ liệu).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4550,7 +4550,7 @@
       "E": "Use federated queries to access the data from each data provider. Do not upload the data to the S3 bucket. Perform the federated queries through a gateway VPC endpoint."
     },
     "answer": "AC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để đảm bảo an toàn bảo mật, cô lập lưu lượng mạng và ngăn chặn truy cập dữ liệu từ bên ngoài môi trường AWS của công ty:\n\n* **A đúng**: Đặt cụm Redshift trong một subnet riêng tư (private subnet) và truy cập nó qua interface VPC endpoint (AWS PrivateLink) giúp giữ mọi lưu lượng truy cập nội bộ trong mạng VPC AWS mà không cần tiếp xúc với Internet công cộng.\n* **C đúng**: Bật **Enhanced VPC Routing** buộc Amazon Redshift phải định tuyến tất cả lưu lượng dữ liệu COPY và UNLOAD giữa cụm và Amazon S3 thông qua mạng VPC của bạn thay vì đi qua Internet. Kết hợp với AWS Direct Connect giúp thiết lập một kết nối mạng riêng tư trực tiếp từ các nhà cung cấp dữ liệu bên thứ ba tới VPC của công ty.\n* **B sai**: CloudHSM giúp quản lý khóa mã hóa chứ không giải quyết vấn đề định tuyến mạng riêng tư và cô lập dữ liệu mạng khỏi Internet.\n* **D sai**: Các ràng buộc khóa chính và khóa ngoại trong Redshift chỉ mang tính chất thông tin để tối ưu hóa truy vấn, không có tác dụng bảo mật mạng hay kiểm soát truy cập.\n* **E sai**: Việc sử dụng federated query để đọc trực tiếp từ nhà cung cấp qua gateway VPC endpoint không khả thi và không đáp ứng được yêu cầu về lưu trữ an toàn trong S3 và truy cập thông qua Redshift Spectrum.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4680,7 +4680,7 @@
       "E": "Share the Amazon Redshift data share to the Amazon Redshift Serverless workgroup in the marketing team's account."
     },
     "answer": "BD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để chia sẻ dữ liệu từ Amazon Redshift Serverless với các cột khác nhau cho các nhóm khác nhau thông qua tài khoản quản trị trung tâm sử dụng AWS Lake Formation:\n\n* **B đúng**: Đầu tiên, cần tạo một Amazon Redshift data share từ cụm nguồn (producer), thêm các bảng cần chia sẻ vào datashare này.\n* **D đúng**: Tiếp theo, chia sẻ datashare đó sang tài khoản quản trị tập trung và tích hợp nó với AWS Lake Formation catalog. Sau đó, quản trị viên Lake Formation có thể thực hiện kiểm soát quyền truy cập chi tiết ở cấp độ cột (column-level permissions) cho đội ngũ marketing và đội ngũ tuân thủ một cách tập trung, giúp họ chỉ xem được các cột cụ thể mà không cần tạo các view khác nhau hoặc cấu hình kết nối trực tiếp đến từng tài khoản.\n* **A và C sai**: Tạo view riêng biệt rồi cấp quyền qua VPC endpoint tăng độ phức tạp trong quản lý và không tận dụng được cơ chế phân quyền tập trung của Lake Formation.\n* **E sai**: Việc chia sẻ trực tiếp datashare tới workgroup của đội marketing bỏ qua bước kiểm soát quyền và quản trị tập trung tại tài khoản Lake Formation của tài khoản quản trị.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -5272,7 +5272,7 @@
       "E": "Spark SQL"
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Amazon Neptune là dịch vụ cơ sở dữ liệu đồ thị (graph database) hiệu năng cao, được quản lý hoàn toàn. Neptune hỗ trợ các mô hình đồ thị phổ biến và các ngôn ngữ truy vấn tương ứng của chúng:\n\n- **A. Gremlin**: Là một ngôn ngữ duyệt đồ thị từ dự án Apache TinkerPop. Nó được sử dụng để truy vấn và thao tác trên mô hình đồ thị thuộc tính (Property Graph).\n- **D. SPARQL**: Là một ngôn ngữ truy vấn chuẩn được khuyến nghị bởi W3C, dùng để truy vấn dữ liệu đồ thị dạng RDF (Resource Description Framework).\n- **B, C, E (SQL, ANSI SQL, Spark SQL)**: Là các ngôn ngữ truy vấn dữ liệu quan hệ (relational) hoặc dạng bảng (tabular), không được thiết kế cho việc duyệt và truy vấn các mối quan hệ đồ thị phức tạp trong Amazon Neptune.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -5303,7 +5303,7 @@
       "E": "Load the JSON data into the Amazon Redshift table in a SUPER type column."
     },
     "answer": "AC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để cải thiện hiệu năng truy vấn của Redshift Spectrum với nỗ lực phát triển tối thiểu, chúng ta cần tối ưu hóa cách lưu trữ dữ liệu trên S3:\n\n- **A. Sử dụng định dạng cột (columnar format như Parquet hoặc ORC)**: Vì các truy vấn của Spectrum chỉ chọn một tập hợp nhỏ các cột (subsets of columns) từ bảng có hơn 100 cột, định dạng cột cho phép Redshift Spectrum chỉ cần đọc các cột được yêu cầu (projection pushdown) thay vì phải đọc toàn bộ tệp như định dạng CSV, giúp giảm đáng kể lượng dữ liệu quét qua mạng và cải thiện hiệu năng rõ rệt.\n- **C. Phân vùng dữ liệu S3 theo ngày đặt hàng (order date)**: Người dùng thực hiện tổng hợp các chỉ số theo đơn hàng hàng ngày. Khi dữ liệu được phân vùng theo ngày (ví dụ: `year=YYYY/month=MM/day=DD/`), Redshift Spectrum có thể bỏ qua việc quét các thư mục của các ngày không liên quan (partition pruning), tăng tốc độ truy vấn đáng kể.\n- **B**: Chỉ gộp các tệp CSV lại không thay đổi định dạng dạng hàng (row-based) kém hiệu quả của CSV và không giúp giảm tải dữ liệu cần quét khi chỉ lấy một số cột.\n- **D, E**: Định dạng JSON không phải định dạng cột và việc sử dụng kiểu dữ liệu SUPER trong bảng Redshift đòi hỏi phải tải toàn bộ dữ liệu vào bộ nhớ lưu trữ cục bộ của Redshift, làm tăng nỗ lực phát triển và chi phí vận hành hơn so với việc tối ưu hóa định dạng file trên S3.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -5392,7 +5392,7 @@
       "E": "Use AWS Glue to correlate the logs and traces."
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để thiết lập hệ thống giám sát và liên kết logs/traces trên EKS với nỗ lực phát triển thấp nhất:\n\n- **A. FluentBit (logs) + OpenTelemetry (traces)**: FluentBit là giải pháp thu thập log chuẩn và nhẹ cho Kubernetes (EKS). OpenTelemetry là chuẩn công nghiệp để tạo và thu thập các dữ liệu traces từ ứng dụng microservices.\n- **D. Sử dụng Amazon OpenSearch**: OpenSearch cung cấp các tính năng Observability tích hợp sẵn giúp lập chỉ mục, tìm kiếm và liên kết chéo giữa dữ liệu log và trace dựa trên các ID chung như `trace_id` một cách dễ dàng và trực quan.\n- **B, C**: Kinesis và MSK chỉ là các công cụ trung chuyển dữ liệu dạng luồng (data streaming buffers), không có tính năng phân tích hay liên kết logs và traces trực quan.\n- **E**: AWS Glue là dịch vụ tích hợp dữ liệu dạng lô (batch ETL) và không phù hợp cho việc phân tích, giám sát liên tục dữ liệu logs/traces theo thời gian thực.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -5783,7 +5783,7 @@
       "E": "Write custom scripts in an application to mask the PII data and to control access."
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để che giấu và bảo mật thông tin PII một cách hiệu quả với chi phí bảo trì thấp nhất, chúng ta sử dụng kết hợp **AWS Glue DataBrew** và **AWS IAM**:\n\n* **AWS Glue DataBrew (Lựa chọn A):** Là một dịch vụ chuẩn bị dữ liệu trực quan hoàn toàn không máy chủ. DataBrew cung cấp các công cụ tích hợp sẳn cho phép người dùng phát hiện và áp dụng các kỹ thuật che giấu (masking), mã hóa hoặc thay thế dữ liệu PII (như số an sinh xã hội, tên, v.v.) chỉ bằng các thao tác cấu hình trực quan mà không cần viết và duy trì mã nguồn phức tạp.\n* **AWS IAM (Lựa chọn D):** Cung cấp khả năng phân quyền chi tiết để đảm bảo chỉ những người dùng được ủy quyền (như nhóm tiền xử lý dữ liệu) mới có quyền truy cập vào dữ liệu thô (chứa PII), trong khi những người dùng khác bị hạn chế.\n* **Các lựa chọn B, C** là dịch vụ phát hiện mối đe dọa (GuardDuty) và phân loại dữ liệu nhạy cảm (Macie), chúng giúp tăng tính bảo mật nhưng không thực hiện việc che giấu dữ liệu hoặc quản lý quyền truy cập xuyên suốt cho pipeline.\n* **Lựa chọn E** đi ngược lại tiêu chí \"ít bảo trì\" vì yêu cầu viết và quản lý mã nguồn tự phát triển.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -5847,7 +5847,7 @@
       "E": "Use Amazon Redshift as a file storage system to archive old inventory management reports."
     },
     "answer": "AB",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Sự kết hợp giữa Amazon Redshift và SageMaker cho phép thực hiện phân tích và dự đoán ML ngay trong kho dữ liệu:\n\n* **Amazon Redshift ML (Lựa chọn A):** Cho phép người dùng SQL dễ dàng xây dựng, huấn luyện và thực hiện dự đoán (suy luận) bằng cách sử dụng các câu lệnh SQL quen thuộc trực tiếp trên dữ liệu của Redshift.\n* **Gọi SageMaker endpoint từ xa bằng SQL (Lựa chọn B):** Với câu lệnh `CREATE MODEL` và từ khóa `SAGEMAKER 'endpoint-name'`, Redshift ML hỗ trợ tích hợp để gọi trực tiếp các endpoint thời gian thực của SageMaker. Điều này cho phép thực hiện suy luận thời gian thực (real-time inference) trực tiếp bằng truy vấn SQL mà không cần di chuyển dữ liệu ra khỏi cơ sở dữ liệu.\n* Lựa chọn C, D, E không trực tiếp đáp ứng yêu cầu suy luận thời gian thực trên dữ liệu hiện tại hoặc sử dụng các công cụ sai mục đích (ví dụ: Redshift không dùng làm hệ thống lưu trữ tệp tin lưu trữ báo cáo).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -6439,7 +6439,7 @@
       "E": "Convert the cluster to a Multi-AZ deployment."
     },
     "answer": "BD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để thiết lập sao chép bản sao chụp chéo vùng (cross-Region snapshot copy) cho một cụm Amazon Redshift được mã hóa bằng khóa KMS tùy chỉnh:\n* Vì cụm dữ liệu nguồn sử dụng mã hóa KMS, Amazon Redshift cần có quyền sử dụng khóa KMS ở Vùng AWS đích để mã hóa bản sao chụp khi sao chép sang đó.\n* Do đó, bước đầu tiên là **tạo một khóa KMS và cấu hình một snapshot copy grant ở Vùng AWS đích (D)**. Quyền sao chép này liên kết khóa KMS ở vùng đích với cụm Redshift.\n* Bước tiếp theo là **bật tính năng sao chép bản sao chụp ở Vùng AWS nguồn và chỉ định tên của snapshot copy grant được tạo ở vùng đích (B)** để Redshift biết cách mã hóa dữ liệu tại đích.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -6998,7 +6998,7 @@
       "E": "Use error logs in Amazon CloudWatch to monitor data skew."
     },
     "answer": "BD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Lỗi \"No space left on device\" trong AWS Glue Spark xảy ra khi đĩa cục bộ của các worker bị đầy, thường là do dữ liệu bị lệch (data skew) khiến một số executor phải xử lý lượng dữ liệu shuffle khổng lồ.\n\n- **Bước 1 (Giám sát):** Sử dụng **Spark UI** và **AWS Glue metrics** (lựa chọn B) giúp trực quan hóa việc phân bổ dữ liệu trên các executor và phát hiện chính xác executor nào đang bị lệch dữ liệu.\n- **Bước 2 (Giải quyết):** Kích hoạt tham số **`--write-shuffle-files-to-s3`** (lựa chọn D) để ghi các tệp shuffle trung gian lên Amazon S3 thay vì đĩa cục bộ của worker. Đồng thời sử dụng kỹ thuật **salting** (thêm giá trị ngẫu nhiên vào khóa phân vùng) để chia nhỏ và phân bổ dữ liệu đều hơn trên các worker.\n- **Lựa chọn A & C** (scale worker) không giải quyết được gốc rễ của data skew mà chỉ tăng chi phí.\n- **Lựa chọn E** không cung cấp các số liệu phân bổ chi tiết ở cấp executor như Spark UI.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -9613,7 +9613,7 @@
       "E": "Tạo một công việc AWS Glue để chuyển từng bảng được yêu cầu. Chạy một AWS Glue workflow để bắt đầu các công việc sau mỗi 5 phút."
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để đáp ứng yêu cầu đồng bộ hóa dữ liệu từ 30 bảng cụ thể của Aurora MySQL sang Amazon Redshift nhằm giảm thiểu độ trễ báo cáo với chi phí vận hành thấp nhất:\n\n* **Tạo tích hợp zero-ETL trong Amazon Aurora và chọn lọc bảng (phương án C)**: Tích hợp không cần mã nguồn trung gian (zero-ETL integration) giúp gửi trực tiếp dữ liệu thay đổi từ Aurora sang Redshift gần như theo thời gian thực mà không cần viết code ETL. Bạn có thể cấu hình bộ lọc dữ liệu tích hợp (data filtering) để chỉ định chỉ sao chép 30 bảng cụ thể từ tổng số 100 bảng của cơ sở dữ liệu nguồn.\n* **Tạo một cơ sở dữ liệu trong Amazon Redshift sử dụng tích hợp này (phương án B)**: Đây là bước bắt buộc ở phía Redshift để kết nối và ánh xạ tới tích hợp zero-ETL từ Aurora, giúp dữ liệu tự động đổ vào các bảng tương ứng trong Redshift.\n* Các phương án khác như sử dụng AWS DMS (A) hay AWS Glue (E) đều đòi hỏi nhiều công sức cấu hình, quản trị hạ tầng và tối ưu hóa thủ công hơn so với tính năng tích hợp zero-ETL có sẵn.\n* Phương án D (sử dụng query editor v2 để truy cập trực tiếp Aurora) không lưu trữ dữ liệu trong Redshift và không giải quyết được vấn đề hiệu năng cho kho dữ liệu báo cáo quy mô lớn.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -10198,7 +10198,7 @@
       "E": "Build an orchestration solution by using AWS CodePipeline to coordinate the ETL pipeline and infrastructure changes based on the dependencies."
     },
     "answer": "AB",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để điều phối quy trình ETL serverless đa bước phối hợp giữa S3, Glue và Redshift, hai giải pháp tích hợp sẵn và phù hợp nhất là **AWS Step Functions** và **AWS Glue Workflows** (lựa chọn **A** và **B**).\n\n- **AWS Step Functions** (lựa chọn **A**) cung cấp khả năng điều phối serverless mạnh mẽ, cho phép liên kết các dịch vụ AWS khác nhau, xử lý lỗi chi tiết, rẽ nhánh điều kiện và cấu hình cơ chế tự động thử lại (retry) khi công việc Glue ETL bị lỗi.\n- **AWS Glue Workflows** (lựa chọn **B**) là tính năng tích hợp sẵn của AWS Glue được thiết kế chuyên biệt để điều phối các tác vụ trong hệ sinh thái Glue (như Glue Jobs, Crawlers, Triggers) dưới dạng một đồ thị phụ thuộc (DAG) trực quan, rất dễ thiết lập và quản lý mà không cần thêm công cụ ngoài.\n- Các phương án khác như EC2 với Cron (**C**) vi phạm tính chất serverless và tăng gánh nặng quản lý hạ tầng; EventBridge (**D**) không phù hợp để quản lý các quan hệ phụ thuộc phức tạp và trạng thái của các bước trung gian; CodePipeline (**E**) là công cụ CI/CD, không dùng để điều phối luồng dữ liệu ETL.\n\n*(Đáp án được gợi ý bởi AI)*",

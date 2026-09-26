@@ -12,7 +12,7 @@
       "F": "The USERADMIN role with the MANAGE GRANTS privilege"
     },
     "answer": "AEF",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Trong một **Managed Access Schema** (Lược đồ truy cập được quản lý) của Snowflake, quyền quản lý bảo mật được tập trung hóa để tránh việc phân tán quyền:\n\n*   **Vì sao A, E, F đúng:**\n    *   **A. Schema Owner:** Vai trò sở hữu schema (có đặc quyền `OWNERSHIP` trên schema) là người quản lý trực tiếp và có quyền cấp phát hoặc thu hồi quyền truy cập đối với tất cả các đối tượng trong schema đó.\n    *   **E. SECURITYADMIN:** Đây là vai trò quản trị bảo mật toàn hệ thống, tự động có khả năng quản lý tất cả các đặc quyền.\n    *   **F. Vai trò có đặc quyền MANAGE GRANTS:** Bất kỳ vai trò nào được cấp đặc quyền global `MANAGE GRANTS` đều có thể quản lý và cấp phát quyền đối với các đối tượng trong hệ thống.\n*   **Vì sao các phương án khác sai:**\n    *   **B. Database Owner:** Vai trò sở hữu database không tự động có quyền cấp phát trên đối tượng cụ thể trong schema có managed access trừ khi nó là schema owner hoặc có đặc quyền quản lý grants.\n    *   **C. CUSTOMER Table Owner:** Trong managed access schema, chủ sở hữu đối tượng (object owner) **không** thể tự cấp quyền trên đối tượng của mình cho các vai trò khác. Quyền này đã được chuyển giao cho schema owner hoặc quản trị viên hệ thống.\n    *   **D. SYSADMIN:** Mặc dù SYSADMIN có quyền sở hữu các schema/table thông thường, nhưng nếu không phải là schema owner hoặc không được cấp đặc quyền `MANAGE GRANTS`, vai trò này không thể tự động cấp quyền truy cập trong managed access schema.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -74,7 +74,7 @@
       "F": "SSD attached to an Amazon EC2 instance on AWS eu-west-1 (Ireland)"
     },
     "answer": "CDE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Khi sử dụng câu lệnh `COPY INTO` trong Snowflake, có sự khác biệt rõ rệt giữa các Stage nội bộ (Internal Stages) và Stage bên ngoài (External Stages):\n\n*   **Vì sao C, D, E đúng:**\n    *   **External Stages (Stage bên ngoài):** Snowflake hỗ trợ tải dữ liệu từ các external stage nằm ở bất kỳ nhà cung cấp dịch vụ đám mây nào (AWS, GCP, Azure) và bất kỳ khu vực địa lý nào (cross-region và cross-cloud). Do đó, GCP us-central1 (C), AWS eu-west-1 (D) và AWS eu-central-1 (E) đều là các nguồn lưu trữ đám mây bên ngoài hợp lệ.\n*   **Vì sao các phương án khác sai:**\n    *   **A & B (Internal Stages):** Các stage nội bộ được quản lý bởi Snowflake và bị giới hạn nghiêm ngặt trong cùng một tài khoản và khu vực đám mây nơi Snowflake được cài đặt (ở đây là AWS eu-west-1). Bạn không thể tạo hoặc truy cập một internal stage ở khu vực hoặc nhà cung cấp khác (như GCP us-central1 hoặc AWS eu-central-1).\n    *   **F:** Snowflake không hỗ trợ tải dữ liệu trực tiếp từ ổ đĩa SSD cục bộ gắn vào một máy ảo EC2 thông qua lệnh `COPY INTO` mà không đẩy tệp tin lên một Stage trước (sử dụng lệnh PUT hoặc qua External Stage).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -281,7 +281,7 @@
       "F": "The micro-partitions cannot have changed due to changes to other data in the table."
     },
     "answer": "DEF",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để Snowflake có thể lấy trực tiếp kết quả từ bộ nhớ đệm (Result Cache) thay vì phải chạy lại câu truy vấn, các điều kiện nghiêm ngặt sau đây phải được đáp ứng đầy đủ:\n\n*   **Vì sao D, E, F đúng:**\n    *   **D. Table structure:** Cấu trúc bảng (metadata) liên quan đến truy vấn không được thay đổi (ví dụ: không thêm/bớt cột, đổi kiểu dữ liệu).\n    *   **E. Same syntax:** Cú pháp SQL phải giống nhau tuyệt đối (từng ký tự, khoảng trắng, viết hoa/thường). Bất kỳ sự khác biệt nhỏ nào cũng làm Snowflake coi đó là một truy vấn mới.\n    *   **F. Micro-partitions:** Dữ liệu trong các vi phân vùng (micro-partitions) cấu thành bảng nguồn không được thay đổi. Nếu có bất kỳ lệnh DML nào (INSERT, UPDATE, DELETE) làm thay đổi micro-partitions của bảng, cache sẽ bị mất hiệu lực (invalidated).\n*   **Vì sao các phương án khác sai:**\n    *   **A:** Thời gian hiệu lực tối đa của kết quả trong cache là 24 giờ (và có thể kéo dài tối đa 31 ngày nếu được truy cập liên tục), không phải 72 giờ.\n    *   **B:** Result Cache được quản lý ở tầng Cloud Services (tầng dịch vụ đám mây) của Snowflake, nên nó **không phụ thuộc** vào Virtual Warehouse. Bạn có thể tắt warehouse hoặc dùng warehouse khác để lấy kết quả từ cache.\n    *   **C:** Không có tham số nào tên là `USED_CACHED_RESULT` cần phải khai báo thủ công trong câu lệnh SQL để bật tính năng này; Snowflake tự động kiểm tra và sử dụng cache nếu thỏa mãn điều kiện.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -314,7 +314,7 @@
       "F": "Storage integration"
     },
     "answer": "ADE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Trình kết nối Snowflake Connector cho Kafka (phiên bản sử dụng cơ chế Snowpipe truyền thống) tự động tạo và quản lý một số đối tượng trong Snowflake để phục vụ quá trình nạp dữ liệu liên tục:\n\n*   **Vì sao A, D, E đúng:**\n    *   **A. Pipe:** Đối tượng Snowpipe được tạo ra để tự động phát hiện và nạp dữ liệu từ stage vào bảng đích ngay khi có tệp tin mới xuất hiện.\n    *   **E. Internal Named Stage:** Trình kết nối tạo một named stage nội bộ cho mỗi topic để lưu trữ tạm thời các file dữ liệu được gửi từ Kafka trước khi chúng được tải vào bảng. Nó cũng được dùng để lưu trữ các file bị lỗi.\n    *   **D. Internal Table Stage:** Trong một số cấu hình mặc định hoặc luồng xử lý cụ thể, table stage nội bộ của bảng đích có thể được sử dụng làm nơi đệm file dữ liệu.\n*   **Vì sao các phương án khác sai:**\n    *   **B (Serverless task) & F (Storage integration):** Kafka connector tự quản lý luồng ghi và nạp thông qua Snowpipe mà không cần sử dụng đối tượng Task (tác vụ lập lịch) hay Storage Integration (dành cho các stage bên ngoài như AWS S3, Azure Blob, GCP Cloud Storage vì đây là internal stage).\n    *   **C (Internal user stage):** User stage gắn liền với từng người dùng cụ thể và không được dùng cho các tác vụ tích hợp hệ thống tự động như Kafka connector.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -347,7 +347,7 @@
       "F": "Create data files that are less than 100 MB and stage them in cloud storage at a sequence greater than once each minute."
     },
     "answer": "BDE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Khi thiết kế quy trình nạp dữ liệu JSON bằng Snowpipe, việc tuân thủ các thực hành tốt nhất (best practices) giúp tối ưu hiệu năng và chi phí:\n\n*   **Vì sao B, D, E đúng:**\n    *   **B:** Kích thước tệp khuyến nghị để Snowpipe nạp tối ưu là từ 100-250 MB (khi đã nén). Điều này giúp cân bằng giữa hiệu suất xử lý song song và giảm thiểu chi phí quản lý tệp của dịch vụ Snowpipe.\n    *   **D:** Việc giữ cho mỗi phần tử trong JSON có kiểu dữ liệu nhất quán (ví dụ: không để một thuộc tính lúc là số, lúc là chuỗi) giúp Snowflake tối ưu hóa việc lưu trữ dưới dạng cột vật lý và tăng tốc độ truy vấn cột Variant.\n    *   **E:** Đối với các giá trị null trong dữ liệu bán cấu trúc, việc trích xuất chúng ra thành các cột quan hệ thông thường trước hoặc trong quá trình nạp giúp dễ dàng quản lý và tránh các vấn đề nhập nhằng giữa SQL NULL và JSON null.\n*   **Vì sao các phương án khác sai:**\n    *   **A & F:** Tệp quá lớn (như 1 GB) sẽ làm chậm quá trình nạp và khó xử lý song song. Ngược lại, việc tạo các file quá nhỏ (dưới 100 MB) với tần suất quá dày đặc (hơn 1 lần/phút) sẽ gây lãng phí tài nguyên và làm tăng chi phí quản trị của tầng Cloud Services của Snowflake.\n    *   **C:** Tải một mảng lớn gồm nhiều bản ghi vào một dòng duy nhất làm mất đi tính cấu trúc của dữ liệu và giới hạn khả năng truy vấn tối ưu của định dạng VARIANT. Nên tách nhỏ mảng thành nhiều dòng riêng biệt.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -409,7 +409,7 @@
       "F": "session.sql()"
     },
     "answer": "BCF",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Trong thư viện Snowpark (cho Python, Scala hoặc Java), có nhiều cách để khởi tạo một đối tượng DataFrame đại diện cho tập dữ liệu:\n\n*   **Vì sao B, C, F đúng:**\n    *   **B. session.read.json():** Đọc dữ liệu từ một tệp JSON trong stage và trả về DataFrame.\n    *   **C. session.table():** Tham chiếu trực tiếp đến một bảng hoặc view hiện có trong Snowflake database để tạo DataFrame.\n    *   **F. session.sql():** Thực thi một câu lệnh SQL SELECT tùy ý và nhận kết quả trả về dưới dạng DataFrame.\n*   **Vì sao các phương án khác sai:**\n    *   **A (session.jdbc_connection()):** Snowpark không dùng phương thức này để tạo DataFrame trực tiếp.\n    *   **D (DataFrame.write()):** Đây là một hành động (action) hoặc thuộc tính trên DataFrame hiện có dùng để ghi dữ liệu xuống bảng hoặc stage chứ không phải để tạo mới một DataFrame.\n    *   **E (session.builder()):** Đây là phương thức tĩnh dùng để cấu hình và khởi tạo đối tượng `Session` kết nối tới Snowflake, chứ không dùng để tạo DataFrame.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1428,7 +1428,7 @@
       "F": "Querying information_schema.packages will provide a list of supported Python packages and versions."
     },
     "answer": "AEF",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Các đặc tính nổi bật của các gói thư viện Python trong Snowpark bao gồm:\n\n* **A đúng:** Phương thức `session.custom_package_usage_rules` hoặc `session.add_import()` / `session.import()` (trong các ngữ cảnh import file/module phụ thuộc) cho phép đăng ký các file/package bên thứ ba vào phiên làm việc của Snowpark để UDF/Stored Procedure có thể sử dụng.\n* **E đúng:** Lệnh `DESCRIBE FUNCTION <tên_hàm>` cung cấp thông tin chi tiết về hàm tự định nghĩa (UDF), bao gồm cả danh sách các file/gói thư viện Python được import.\n* **F đúng:** Snowflake tích hợp sẵn kho lưu trữ gói Anaconda. Để xem danh sách tất cả các gói thư viện Python bên thứ ba được hỗ trợ sẵn cùng với phiên bản của chúng, lập trình viên có thể truy vấn view `INFORMATION_SCHEMA.PACKAGES`.\n\n**Tại sao các phương án khác sai:**\n* **B sai:** Mặc định, mã Python chạy trong môi trường sandbox bảo mật của Snowflake và bị chặn hoàn toàn quyền truy cập mạng Internet hoặc các endpoint ngoại vi trừ khi có cấu hình tích hợp API/mạng cụ thể (External Network Access).\n* **C sai:** Các gói thư viện Python được nạp và thực thi trực tiếp trên nền tảng đám mây của Snowflake (phục vụ cho UDFs, Stored Procedures), không chỉ giới hạn trong môi trường cục bộ (local).\n* **D sai:** Snowflake không khóa các gói thư viện này để ngăn chặn sử dụng, mà ngược lại hợp tác với Anaconda để cung cấp hàng ngàn thư viện mã nguồn mở an toàn cho người dùng sử dụng.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1808,7 +1808,7 @@
       "F": "INSERT command"
     },
     "answer": "ACE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Định dạng tệp (File Format) xác định cách Snowflake giải mã dữ liệu tệp (như loại dấu phân cách trong CSV, định dạng nén, xử lý tiêu đề, v.v.) khi nạp hoặc xuất dữ liệu. Bạn có thể chỉ định định dạng này ở ba nơi chính:\n\n* **A đúng:** Bạn có thể khai báo trực tiếp các tùy chọn định dạng tệp (ví dụ: `TYPE = CSV FIELD_DELIMITER = ','`) ngay trong câu lệnh `COPY INTO`.\n* **C đúng:** Tạo một đối tượng định dạng tệp độc lập bằng lệnh `CREATE FILE FORMAT`. Đối tượng này có thể được tái sử dụng trong nhiều lệnh sao chép và stage khác nhau.\n* **E đúng:** Bạn có thể định cấu hình tùy chọn định dạng tệp mặc định trực tiếp trên một **Stage** (ví dụ: `CREATE STAGE ... FILE_FORMAT = (TYPE = JSON)`). Khi đó, bất kỳ thao tác nạp/xuất nào qua stage này đều tự động áp dụng định dạng đã định nghĩa.\n\n**Tại sao các phương án khác sai:**\n* **B & F sai:** Các câu lệnh `MERGE` và `INSERT` dùng để thao tác với dữ liệu đã nằm trong các bảng của Snowflake, chúng không thực hiện nhiệm vụ đọc dữ liệu trực tiếp từ các tệp tin lưu trữ ngoại vi nên không hỗ trợ cấu hình định dạng tệp.\n* **D sai:** Đối tượng `PIPE` dùng cho Snowpipe chỉ tham chiếu đến một câu lệnh `COPY INTO` đã được định nghĩa sẵn chứ bản thân nó không định nghĩa trực tiếp cấu trúc định dạng tệp.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1909,7 +1909,7 @@
       "D": "SNOWFLAKE.ACCOUNT_USAGE.DATA_TRANSFER_HISTORY"
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để đáp ứng yêu cầu báo cáo về các tương tác của khách hàng trên Data Exchange, kỹ sư dữ liệu cần kết hợp thông tin từ hai view hệ thống thuộc schema `DATA_SHARING_USAGE`:\n\n* **Phân tích yêu cầu tiêu dùng theo vùng:** View `LISTING_CONSUMPTION_DAILY` (B) cung cấp dữ liệu chi tiết hàng ngày về mức tiêu thụ, lượng truy vấn dữ liệu từ các tài khoản người tiêu dùng, phân nhóm theo khu vực địa lý cho mỗi listing.\n* **Phân tích tỷ lệ click-through rates:** View `LISTING_TELEMETRY_DAILY` (C) ghi nhận dữ liệu đo lường từ xa hàng ngày bao gồm số lượt xem danh sách (views) và số lượt nhấp chuột (clicks) của người dùng đối với các dịch vụ dữ liệu.\n\n**Chi tiết các phương án khác:**\n* **A (LISTING_EVENTS_DAILY) sai:** Thống kê các sự kiện thay đổi trạng thái hoặc chỉnh sửa danh sách nói chung, không cung cấp trực tiếp hành vi tiêu thụ và tỷ lệ nhấp chuột đo lường từ xa tối thiểu cần thiết.\n* **D (DATA_TRANSFER_HISTORY) sai:** View này ghi lại lịch sử truyền dữ liệu vật lý của tài khoản nhằm mục đích tính chi phí network/bandwidth, không liên quan đến các chỉ số tương tác trên Data Exchange.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2067,7 +2067,7 @@
       "E": "Logging & Event Tables - Snowflake blocks the UDF but allows the statement calling the UDF to run to support logging requirements."
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "**Ràng buộc chiếu (Projection Constraint)** thông qua chính sách chiếu (Projection Policy) là cơ chế bảo mật của Snowflake nhằm ngăn cản việc xuất ra giá trị gốc của các cột dữ liệu nhạy cảm.\n\nKhi một Scalar SQL UDF truy xuất một cột bị ràng buộc chiếu:\n* **Ngữ cảnh Scalar SQL UDF thông thường (A):** Snowflake cho phép truy vấn thực thi bình thường để tránh lỗi ứng dụng, nhưng giá trị của cột đó trong kết quả trả về của hàm sẽ được thay thế bằng **NULL** (đối với chính sách nullify).\n* **Ngữ cảnh Logging & Event Tables (D):** Khi UDF được thực thi trong một tiến trình có ghi chép nhật ký, Snowflake vẫn cho phép UDF chạy nhưng sẽ **ngăn chặn và không ghi lại các thông tin nhật ký chi tiết hoặc các sự kiện** liên quan đến cột bị ràng buộc này vào Event Tables. Việc này nhằm mục đích bảo vệ dữ liệu nhạy cảm không bị rò rỉ thông qua các tệp nhật ký (log files).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2400,7 +2400,7 @@
       "E": "Rename the session variable to upper case to allow the procedure to read from it."
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Lỗi xảy ra do thủ tục đang chạy dưới quyền của chủ sở hữu (**EXECUTE AS OWNER**). Vì lý do bảo mật, các thủ tục chạy với quyền của chủ sở hữu không được phép truy cập trực tiếp các biến phiên (session variables) của người gọi.\n\nĐể giải quyết vấn đề này, có hai cách:\n* **Cách 1 (Phương án A)**: Đổi định nghĩa thủ tục thành **EXECUTE AS CALLER** (quyền của người gọi). Khi chạy dưới quyền người gọi, thủ tục có quyền truy cập vào các biến phiên của phiên làm việc hiện tại.\n* **Cách 2 (Phương án D)**: Thay đổi thủ tục để nhận ngày cần xử lý làm **tham số đầu vào (argument/input parameter)** thay vì đọc từ biến phiên của hệ thống.\n\n**Tại sao các phương án khác sai**:\n* **B**: Tạo task vẫn sẽ gặp lỗi nếu thủ tục sử dụng quyền của Owner và đọc biến phiên.\n* **C**: Cast kiểu dữ liệu không giải quyết được vấn đề cấm sử dụng biến phiên.\n* **E**: Việc thay đổi chữ hoa/chữ thường không làm thay đổi quy định bảo mật của Snowflake đối với Owner's Rights.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2501,7 +2501,7 @@
       "E": "Name of each column in the file from which data was loaded"
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Khi thực hiện lệnh `COPY INTO`, Snowflake duy trì lịch sử nạp dữ liệu (load history) cho mỗi bảng để tránh nạp lại cùng một tệp. Lịch sử này bao gồm:\n\n* **Số lượng dòng được phân tích** (Number of rows parsed - A).\n* **Dấu thời gian của lượt nạp gần nhất** (Timestamp of the last load - D).\n* Tên tệp (File name) và kích thước tệp.\n* Trạng thái nạp (Load status) và số lượng lỗi gặp phải.\n\n**Tại sao các phương án khác sai**:\n* **B, C, E**: Số lượng cột, kiểu dữ liệu của lượt nạp và tên từng cột của tệp không nằm trong tập hợp siêu dữ liệu lịch sử nạp (load history metadata) tiêu chuẩn được Snowflake duy trì.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2569,7 +2569,7 @@
       "E": "Any parameters used in the TASK_HISTORY table function will take precedent before SQL limiting functions."
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Khi sử dụng hàm bảng `TASK_HISTORY` trong Snowflake Information Schema:\n\n* **Quyền hạn truy cập (Phương án C)**: Để truy vấn thành công lịch sử chạy của một task, người dùng phải có vai trò là chủ sở hữu của task (`OWNERSHIP`), hoặc có quyền hạn quản lý nâng cao như `MONITOR` trên task, hoặc quyền global `MONITOR EXECUTION` (hay vai trò `ACCOUNTADMIN`).\n* **Thời hạn lưu trữ lịch sử trong câu hỏi thi (Phương án B)**: Theo đề thi Snowpro Advanced Data Engineer, task cần được kích hoạt trong vòng **30 ngày qua** để xuất hiện trong kết quả (mặc dù tài liệu thực tế của Snowflake Information Schema quy định thời hạn lưu trữ lịch sử của hàm này là **7 ngày** gần nhất, đề thi vẫn chọn đáp án 30 ngày này làm chuẩn).\n\n**Tại sao các phương án khác sai**:\n* **A**: `TASK_HISTORY` cũng trả về các tác vụ đã lên lịch (`SCHEDULED`) chứ không chỉ riêng đang chạy hoặc đã hoàn thành.\n* **D**: Tham số `RESULT_LIMIT` là tùy chọn, mặc định trả về tối đa 100 hàng (và hỗ trợ cấu hình lên tới 10,000 hàng), không bắt buộc phải cung cấp.\n* **E**: Các tham số lọc trong hàm không ghi đè thứ tự ưu tiên hoặc làm thay đổi logic hoạt động của SQL limiting functions.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2897,7 +2897,7 @@
       "E": "Schedule this query to analyze the dynamic table performance:SELECT *FROM TABLE(INFORMATION_SCHEMA.TASK_HISTORY(scheduled_time_range_3tart => DATEADD(HOUR, -1, CURRENT_TTMESTAMP())));"
     },
     "answer": "BD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để giám sát hiệu năng làm mới của các bảng động (Dynamic Tables) và tối ưu hóa tài nguyên, chúng ta cần:\n* Sử dụng giao diện **Snowsight** trực quan hoặc gọi hàm **DYNAMIC_TABLE_REFRESH_HISTORY** (lựa chọn **B**) để xem chi tiết thời gian bắt đầu, kết thúc, lượng dữ liệu và trạng thái của các tiến trình làm mới.\n* Kiểm tra **QUERY_HISTORY** (lựa chọn **D**) để phân tích tài nguyên tính toán (virtual warehouse) được sử dụng cho việc làm mới, giúp xác định xem kích thước warehouse có đang quá lớn hoặc quá nhỏ hay không.\n\n**Tại sao các lựa chọn khác sai?**\n* **A**: Tăng tần suất làm mới (refresh frequency) sẽ làm tăng chi phí và có thể làm trầm trọng thêm tình trạng quá tải tài nguyên thay vì giám sát và giải quyết vấn đề.\n* **C**: Việc chuyển sang chế độ làm mới hoàn toàn (Full Refresh) buộc Snowflake phải tính toán lại toàn bộ dữ liệu từ đầu thay vì chỉ xử lý phần dữ liệu thay đổi (incremental refresh), làm tăng đáng kể thời gian và chi phí.\n* **E**: Các bảng động không sử dụng cơ chế Task thông thường của Snowflake để thực hiện làm mới nên việc truy vấn `TASK_HISTORY` sẽ không hiển thị thông tin làm mới của bảng động.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2933,7 +2933,7 @@
       "F": "grant create external table on schema kafka_schema to role kafka_load_role_1;"
     },
     "answer": "ACD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Trình kết nối Kafka của Snowflake (Snowflake Connector for Kafka) hoạt động bằng cách tự động tạo và quản lý các đối tượng trong cơ sở dữ liệu đích để nạp dữ liệu. Vai trò nạp dữ liệu cần có các quyền sau trên schema đích:\n* **CREATE TABLE** (lựa chọn **D**): Để tạo bảng đích chứa dữ liệu nạp từ các topic Kafka (nếu bảng chưa tồn tại).\n* **CREATE STAGE** (lựa chọn **C**): Để tạo stage tạm thời chứa các tệp dữ liệu được gửi từ Kafka trước khi nạp.\n* **CREATE PIPE** (lựa chọn **A**): Để tạo đối tượng Snowpipe thực hiện nạp dữ liệu liên tục và tự động từ stage vào bảng.\n\n**Tại sao các lựa chọn khác sai?**\n* **B, E, F**: Snowflake Kafka Connector không yêu cầu tạo Stream (`CREATE STREAM`), Task (`CREATE TASK`) hay Bảng ngoại vi (`CREATE EXTERNAL TABLE`) để thực hiện các chức năng nạp dữ liệu cốt lõi của nó.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3110,7 +3110,7 @@
       "E": "The file will automatically be reloaded a second time after eight days."
     },
     "answer": "CD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Lịch sử nạp tệp (load history) của Snowpipe được liên kết với sự kết hợp cụ thể giữa đối tượng bảng và đối tượng pipe. Để buộc một tệp đã nạp trước đó tải lại thông qua Snowpipe, chúng ta phải thiết lập lại (reset) mối liên kết này:\n* **C (Xóa và tạo lại bảng)**: Việc thực hiện `DROP TABLE` và `CREATE TABLE` sẽ tạo ra một bảng mới hoàn toàn không có lịch sử nạp dữ liệu cũ, vì thế Snowpipe sẽ nạp lại tệp.\n* **D (Tái tạo pipe và refresh)**: Việc thực hiện `CREATE OR REPLACE PIPE` sẽ xóa sạch lịch sử nạp liên kết với pipe cũ đó. Sau đó chạy lệnh `ALTER PIPE ... REFRESH` sẽ quét stage và tải lại các tệp hiện có.\n\n**Tại sao các lựa chọn khác sai?**\n* **A**: Câu lệnh `COPY INTO` thông thường sẽ kiểm tra lịch sử tải của bảng (vẫn còn lưu giữ dữ liệu cũ) và sẽ bỏ qua tệp đã tải trừ khi sử dụng tham số `FORCE = TRUE`.\n* **B**: Lệnh `TRUNCATE TABLE` xóa dữ liệu trong bảng nhưng không xóa lịch sử tải của bảng hay pipe, vì vậy `ALTER PIPE ... REFRESH` vẫn sẽ bỏ qua tệp.\n* **E**: Snowflake lưu trữ lịch sử nạp dữ liệu lên đến 64 ngày, nhưng tệp sẽ không tự động được tải lại sau 8 ngày nếu không có hành động can thiệp nào.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3203,7 +3203,7 @@
       "E": "A directory table can be joined with other tables to produce a view of unstructured data that combines the file URLs with the file metadata."
     },
     "answer": "CE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Bảng danh mục (**Directory Table**) là một tính năng đi kèm stage để lưu trữ siêu dữ liệu của các file phi cấu trúc.\n* Câu lệnh `SELECT * FROM DIRECTORY(@<tên_stage>)` (lựa chọn **C**) được dùng để liệt kê và truy vấn trực tiếp thông tin metadata của tất cả các tệp có trên stage.\n* Bạn có thể thực hiện phép **JOIN** (lựa chọn **E**) giữa directory table của stage với các bảng quan hệ khác trong Snowflake để liên kết thông tin tệp (ví dụ như đường dẫn URL) với siêu dữ liệu nghiệp vụ của tệp đó.\n\n**Tại sao các lựa chọn khác sai?**\n* **A**: Tự thân directory table không trực tiếp chia sẻ URL ra bên ngoài, việc chia sẻ URL thường cần các hàm tạo URL bảo mật (như `GET_PRESIGNED_URL`).\n* **B**: Dữ liệu phi cấu trúc (ví dụ: file ảnh, PDF) không thể được truy vấn trực tiếp như bảng quan hệ thông thường chỉ bằng cách lưu trên stage ngoại vi.\n* **D**: Cú pháp `SELECT * FROM @stage` dùng để truy vấn dữ liệu bán cấu trúc được định dạng (như CSV, JSON, Parquet) chứ không phải thông tin danh mục của dữ liệu phi cấu trúc thô.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3598,7 +3598,7 @@
       "E": "The source object did not exist at the time specified in the AT | BEFORE parameter."
     },
     "answer": "AE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để nhân bản một bảng tại một mốc thời gian quá khứ bằng Time Travel, cả hai điều kiện sau phải được đáp ứng:\n1. Đối tượng nguồn phải hỗ trợ tính năng clone. Snowflake **không hỗ trợ** nhân bản (cloning) các bảng ngoài (external tables) (A).\n2. Đối tượng nguồn phải tồn tại tại thời điểm được chỉ định trong tham số `AT | BEFORE` (E). Nếu bảng chưa được tạo ra tại thời điểm 30 phút trước, Snowflake sẽ trả về lỗi.\n\n* **Tại sao các lựa chọn khác sai:**\n  * **B sai:** Không có giới hạn số lần hay dung lượng nhân bản tối đa đối với các bảng trong Snowflake.\n  * **C sai:** Time Travel và cloning hoàn toàn hỗ trợ hoạt động cùng nhau để tạo ra bản sao lịch sử.\n  * **D sai:** Bảng có chính sách bảo mật hàng (row access policy) vẫn có thể nhân bản bình thường.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3717,7 +3717,7 @@
       "F": "Use the SNOWFLAKE.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY view to monitor warehouse resource consumption."
     },
     "answer": "BEF",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để đáp ứng đầy đủ các yêu cầu giám sát chi tiết:\n1. **QUERY_HISTORY (B):** Cung cấp các thông tin liên quan đến hiệu năng chạy câu lệnh truy vấn, thời gian thực thi, lỗi phát sinh, giúp phân tích hiệu quả truy vấn và các câu truy vấn chạy lâu.\n2. **ACCESS_HISTORY (E):** Theo dõi chi tiết hành vi truy cập dữ liệu (đọc/ghi trên mức độ bảng, cột, đối tượng), hỗ trợ xác định các bảng thường xuyên được truy cập và đáp ứng mục tiêu tuân thủ bảo mật.\n3. **WAREHOUSE_METERING_HISTORY (F):** Thống kê lượng credit tiêu thụ cho từng warehouse, giúp theo dõi mức độ tận dụng và tối ưu hóa tài nguyên compute.\n\n* **Tại sao các lựa chọn khác sai:**\n  * **A sai:** `OBJECT_DEPENDENCIES` theo dõi quan hệ phụ thuộc giữa các schema/bảng/view, không đo lường hiệu năng hay hành vi truy cập.\n  * **C sai:** `SCHEMA_PRIVILEGES` chỉ quản lý các quyền hạn được cấp trên schema, không theo dõi các hoạt động chạy thực tế hay lịch sử truy cập.\n  * **D sai:** `DATABASE_STORAGE_USAGE_HISTORY` chuyên về lưu trữ lịch sử dung lượng, không liên quan đến hiệu suất truy vấn hay giám sát compute.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4294,7 +4294,7 @@
       "F": "The columns cannot be used in a WHERE clause."
     },
     "answer": "ACD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "- **Chính sách ngăn chiếu (Projection Policy)** là một tính năng bảo mật cấp cột nhằm ngăn cản người dùng trái phép chiếu (SELECT) các cột dữ liệu nhạy cảm ra kết quả truy vấn.\n- Khi một cột bị hạn chế chiếu bởi Projection Policy:\n  - **Không hiển thị trong kết quả truy vấn**: Dữ liệu từ các cột này sẽ không được hiển thị trong kết quả của câu lệnh `SELECT` (phương án D).\n  - **Không thể chèn dữ liệu sang bảng khác**: Do không thể chiếu giá trị trực tiếp để đọc, người dùng không thể viết câu lệnh `INSERT INTO ... SELECT account_number FROM t1` (phương án A).\n  - **Không thể dùng làm đối số cho hàm ngoại vi hoặc stored procedure ngoại vi**: Để ngăn chặn rò rỉ dữ liệu nhạy cảm ra ngoài Snowflake thông qua các API ngoại vi, hành vi này bị cấm hoàn toàn (phương án C).\n- Tuy nhiên, các cột bị áp dụng projection policy **vẫn có thể** được sử dụng trong mệnh đề `WHERE` hoặc `JOIN` (nên phương án F sai). Nó khác với Masking Policy (phương án B sai) và không ảnh hưởng đến việc gắn thẻ tag (phương án E).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4648,7 +4648,7 @@
       "E": "External function serverless compute"
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "- Khi sử dụng hàm ngoại vi (External Functions) trong Snowflake, các chi phí phát sinh trực tiếp từ tài khoản Snowflake của bạn bao gồm:\n  - **Data transfer (Truyền dữ liệu - B):** Phí truyền dữ liệu phát sinh khi Snowflake gửi dữ liệu qua Internet hoặc qua biên giới vùng đám mây đến dịch vụ proxy HTTPS (như AWS API Gateway, Azure API Management).\n  - **Cloud services compute (Tài nguyên dịch vụ đám mây - C):** Lớp dịch vụ đám mây của Snowflake thực hiện việc chuyển đổi và điều phối dữ liệu từ truy vấn đến API bên ngoài, do đó tiêu tốn tín dụng tính toán của Cloud Services.\n- Các chi phí tính toán serverless của hàm ngoại vi (E) là chi phí do nhà cung cấp đám mây bên thứ ba tính trực tiếp (ví dụ: phí chạy AWS Lambda), không được tính hóa đơn trực tiếp qua Snowflake. Kho ảo Snowflake (D) không được dùng cho việc thực thi hàm ngoại vi mà chỉ xử lý truy vấn chung.\n\n*(Đáp án được gợi ý bởi AI)*",

@@ -98,7 +98,7 @@
       "E": "Add additional features to the training data."
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Quá khớp (Overfitting) xảy ra khi mô hình học quá kỹ các chi tiết và nhiễu trong tập dữ liệu huấn luyện, khiến hiệu suất dự báo giảm sút trên dữ liệu kiểm thử mới.\n\n* **Chuẩn hóa (Regularization - A)**: Thêm một thành phần phạt (penalty) vào hàm mất mát để hạn chế độ lớn của các trọng số mạng nơ-ron, giúp mô hình bớt phức tạp hơn và tổng quát hóa tốt hơn.\n* **Dừng sớm (Early stopping - D)**: Giám sát hiệu suất của mô hình trên tập validation trong quá trình huấn luyện và dừng lại ngay khi hiệu suất này bắt đầu giảm (mặc dù hiệu suất trên tập huấn luyện vẫn đang tăng).\n* **Hạ độ dốc (Gradient descent - B)** và **Thay đổi tốc độ học (Learning rate - C)** là các kỹ thuật tối ưu hóa quá trình huấn luyện chứ không trực tiếp giải quyết vấn đề quá khớp.\n* **Thêm các tính năng bổ sung (E)** thường làm tăng độ phức tạp của mô hình, có thể làm trầm trọng thêm tình trạng quá khớp thay vì giải quyết nó.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -216,7 +216,7 @@
       "E": "SVM"
     },
     "answer": "BE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Học máy có giám sát (Supervised Learning) yêu cầu dữ liệu huấn luyện phải có nhãn đi kèm.\n\n* **CART (Classification and Regression Trees - B)**: Là thuật toán xây dựng cây quyết định (Decision Trees) cho các bài toán phân loại hoặc hồi quy, thuộc nhóm học có giám sát.\n* **SVM (Support Vector Machine - E)**: Là thuật toán máy vectơ hỗ trợ dùng cho bài toán phân loại và hồi quy có giám sát.\n* **Apriori (A)**: Là thuật toán học không giám sát dùng để khai phá luật kết hợp (association rules).\n* **K-Means (C)**: Là thuật toán phân cụm (clustering) không giám sát.\n* **PCA (Principal Component Analysis - D)**: Là phương pháp giảm chiều dữ liệu (dimensionality reduction) không giám sát.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -247,7 +247,7 @@
       "E": "Virtual warehouse"
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Khi kết nối với Snowflake thông qua Snowpark Python, đối tượng cấu hình kết nối yêu cầu các thông số xác thực cơ bản:\n\n* **account (A)**: Chỉ định định danh tài khoản Snowflake của bạn để hệ thống biết cần định tuyến yêu cầu kết nối đến đâu.\n* **user (D)**: Chỉ định tên người dùng đăng nhập tài khoản Snowflake để thực hiện xác thực.\n* Mặc dù các thông số như **database (B)**, **role (C)**, và **warehouse (E)** là rất hữu ích để thiết lập ngữ cảnh làm việc ngay sau khi kết nối, chúng không phải là bắt buộc ở bước xác thực ban đầu (nếu thiếu, Snowflake sẽ sử dụng các giá trị mặc định được cấu hình cho người dùng đó).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -307,7 +307,7 @@
       "E": "version_name"
     },
     "answer": "BE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Khi đăng ký (log) một mô hình vào Snowflake Model Registry sử dụng phương thức `log_model`, có hai đối số bắt buộc chính:\n\n* **model (B)**: Đối tượng mô hình máy học thực tế cần đăng ký (ví dụ: mô hình scikit-learn, XGBoost, PyTorch, v.v.).\n* **version_name (E)**: Chuỗi ký tự định danh phiên bản của mô hình đang được lưu trữ.\n* Các tham số khác như `model_name` là tùy chọn hoặc được chỉ định khi khởi tạo đối tượng registry/lớp cha, và `code_paths` hay `python_version` là không bắt buộc để phương thức hoạt động.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -425,7 +425,7 @@
       "E": "Time Travel"
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Snowflake Model Registry cung cấp các công cụ tích hợp sẵn giúp tổ chức và chuyển dịch mô hình qua các giai đoạn vòng đời:\n\n* **Tags (A)**: Cho phép gán các thẻ siêu dữ liệu (metadata tags) lên mô hình (ví dụ: gán nhãn `environment: production` hoặc `status: approved`), giúp dễ dàng tìm kiếm, kiểm soát quyền truy cập và phân loại mô hình trong hệ thống.\n* **Model Copy (D)**: Hỗ trợ sao chép (copy) hoặc di chuyển một mô hình/phiên bản mô hình giữa các cơ sở dữ liệu hoặc schema khác nhau trong cùng một tài khoản hoặc thậm chí giữa các tài khoản khác nhau để phục vụ quy trình CI/CD từ dev/staging sang production.\n* **Zero-copy clones (B)**, **Account replication (C)**, và **Time Travel (E)** là các tính năng nền tảng của Snowflake dùng cho bảng/cơ sở dữ liệu chứ không phải các tính năng tích hợp trực tiếp để quản lý vòng đời mô hình trong Model Registry một cách liền mạch.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -457,7 +457,7 @@
       "F": "As the Average Occupancy increases, the target housing price increases."
     },
     "answer": "BDE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Biểu đồ phụ thuộc riêng phần (Partial Dependence Plots - PDP) hiển thị tác động biên của một hoặc hai đặc trưng đối với kết quả dự đoán của một mô hình học máy:\n\n* **Thu nhập trung bình (Median income)**: Biểu đồ (thường là `MedInc`) cho thấy xu hướng đi lên rõ rệt, nghĩa là khi thu nhập trung bình tăng thì giá nhà mục tiêu tăng. Do đó chọn **B**.\n* **Tuổi thọ của ngôi nhà (Age of the House)**: Đường biểu diễn (thường là `HouseAge`) phẳng hoặc biến động rất ít, cho thấy giá nhà mục tiêu khá ổn định khi tuổi thọ nhà thay đổi. Do đó chọn **D**.\n* **Mật độ cư trú trung bình (Average Occupancy)**: Đường biểu diễn (thường là `AveOccup`) dốc xuống đột ngột ở đoạn đầu rồi đi ngang, thể hiện xu hướng giảm giá nhà mục tiêu khi mật độ cư trú trung bình tăng. Do đó chọn **E**.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -642,7 +642,7 @@
       "E": "Utilize Synthetic Minority Oversampling Technique (SMOTE) to oversample the non-Manhattan boroughs for training."
     },
     "answer": "CE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "* Biểu đồ cho thấy quận Manhattan là điểm đến chiếm đa số vượt trội (lớp đa số - majority class), trong khi các quận khác như Brooklyn, Queens, Bronx... có số lượng chuyến đi rất ít (lớp thiểu số - minority classes). Đây là một bài toán mất cân bằng lớp nghiêm trọng.\n* **Undersample Manhattan (C)**: Giúp giảm bớt số lượng mẫu của lớp đa số (Manhattan) để tương quan tỷ lệ với các lớp khác, giúp mô hình không bị thiên lệch về Manhattan.\n* **SMOTE (E)**: Tạo ra các mẫu dữ liệu tổng hợp mới cho các lớp thiểu số (các quận ngoài Manhattan) một cách thông minh bằng cách nội suy giữa các điểm dữ liệu hiện có, giúp cải thiện khả năng nhận diện các lớp này của mô hình.\n* **Lưu ý**: Bootstrap (D) chỉ đơn thuần là lấy mẫu lặp lại có thay thế, dễ gây quá khớp (overfitting) hơn so với SMOTE.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -674,7 +674,7 @@
       "F": "CLASSIFY_TEXT"
     },
     "answer": "ACF",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "* Trong mô hình tính phí của các hàm **Snowflake Cortex LLM**, lượng tài nguyên tiêu thụ được tính theo số lượng token (cả đầu vào và đầu ra tùy thuộc vào loại hàm).\n* Các hàm sinh hoặc xử lý văn bản có đầu ra là văn bản/nhãn như **SUMMARIZE (A)**, **TRANSLATE (C)**, và **CLASSIFY_TEXT (F)** sẽ tính phí trên cả số lượng token đầu vào (câu hỏi/văn bản gốc) và token đầu ra (kết quả tóm tắt, bản dịch hoặc nhãn phân loại).\n* Ngược lại, các hàm tạo nhúng (embedding) như **EMBED_TEXT_768 (D)** và **EMBED_TEXT_1024 (E)** chỉ tính phí trên số lượng token đầu vào được xử lý.\n* Hàm **SENTIMENT (B)** cũng chỉ tính toán trên văn bản đầu vào để cho ra một điểm số cảm xúc đơn lẻ và chỉ tính phí trên token đầu vào.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -764,7 +764,7 @@
       "E": "Vectorized User-Defined Function (UDF)"
     },
     "answer": "DE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "* **Hàm tự định nghĩa vector hóa (Vectorized UDF - E)** cho phép Snowflake truyền dữ liệu đầu vào cho mã Python dưới dạng các lô (batches) sử dụng thư viện Pandas (như `pandas.DataFrame` hoặc `pandas.Series`) thay vì xử lý từng hàng đơn lẻ (row-by-row). Điều này giúp cải thiện đáng kể hiệu năng suy luận mô hình bằng cách tận dụng khả năng tính toán vector của các thư viện như NumPy, scikit-learn, TensorFlow.\n* **Hàm bảng tự định nghĩa (UDTF - D)** (đặc biệt là các hàm UDTF dạng end-of-partition hoặc xử lý dữ liệu theo lô) cho phép xử lý song song trên nhiều phân vùng dữ liệu và có thể sinh ra nhiều hàng kết quả từ mỗi lô dữ liệu đầu vào, rất hiệu quả cho việc chạy song song hóa suy luận mô hình hàng loạt (batch inference).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -799,7 +799,7 @@
       "E": "to_pandas()"
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "* Trình kết nối Snowflake Connector cho Python cung cấp các phương thức tích hợp sẵn trên đối tượng Cursor để tải kết quả truy vấn trực tiếp thành đối tượng Pandas DataFrame:\n  * **`fetch_pandas_all()` (B)**: Lấy toàn bộ kết quả của câu lệnh truy vấn và trả về dưới dạng một DataFrame duy nhất.\n  * **`fetch_pandas_batches()` (C)**: Trả về một trình lặp (iterator) tạo ra các lô Pandas DataFrame, rất hữu ích khi tập kết quả quá lớn không thể chứa hết trong bộ nhớ của client.\n* **`fetchall()` (A)** trả về danh sách các tuple truyền thống của Python chứ không phải Pandas DataFrame.\n* **`write_to_pandas()` (D)** là hàm độc lập dùng để ghi dữ liệu từ DataFrame vào bảng Snowflake (không phải phương thức của cursor để lấy dữ liệu ra).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -950,7 +950,7 @@
       "E": "REGR_SYY"
     },
     "answer": "AB",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Phương trình hồi quy tuyến tính đơn giản có dạng: **y = mx + c** (hoặc y = slope * x + intercept).\n\n* **REGR_SLOPE** (Đáp án **B**): Tính toán độ dốc (slope - ký hiệu `m`) của đường hồi quy tuyến tính phù hợp nhất.\n* **REGR_INTERCEPT** (Đáp án **A**): Tính toán điểm cắt trục tung (intercept - ký hiệu `c`) của đường hồi quy tuyến tính.\n* Các hàm còn lại như **REGR_SXX**, **REGR_SXY**, **REGR_SYY** tính toán các tổng bình phương sai lệch (sum of squares), là các đại lượng trung gian chứ không trực tiếp xác định phương trình đường thẳng hồi quy.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -985,7 +985,7 @@
       "E": "df_new = df.select(“id”, “name”, “gender”)"
     },
     "answer": "AE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Trong Snowpark Python API, để loại bỏ một hoặc nhiều cột khỏi DataFrame, chúng ta có hai cách tiếp cận chính:\n\n* **df.drop('ssn')** (Đáp án **A**): Hàm `drop` trả về một DataFrame mới loại bỏ cột được chỉ định (ở đây là 'ssn'). Đây là phương thức chuẩn và trực tiếp nhất.\n* **df.select('id', 'name', 'gender')** (Đáp án **E**): Thay vì xóa trực tiếp cột 'ssn', chúng ta có thể chọn tất cả các cột ngoại trừ cột 'ssn'. Điều này gián tiếp loại bỏ trường 'ssn'.\n* Các phương thức như `remove` (Đáp án **B**) hoặc `update` (Đáp án **C**) không tồn tại trên đối tượng Snowpark DataFrame để thực hiện thao tác xóa cột.\n* Lựa chọn **D** chứa lỗi cú pháp dấu chấm thay vì dấu phẩy (`“name”. “gender”`) và không có phương thức `.save()` trực tiếp như vậy.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1350,7 +1350,7 @@
       "E": "prediction_df = mv.run(test_data, my_model)prediction_df.show()"
     },
     "answer": "AC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Trong Python API của Snowflake Model Registry, đối tượng phiên bản mô hình được đăng ký (ở đây là `mv` - Model Version) hỗ trợ thực thi dự báo theo các cách sau:\n\n* **mv.predict(test_data)** (Đáp án **C**): Cách gọi trực tiếp, thuận tiện nhất và là phương thức mặc định để chạy suy luận trên dữ liệu đầu vào.\n* **mv.run(test_data, function_name=\"predict\")** (Đáp án **A**): Phương thức tổng quát hơn, cho phép chỉ định rõ tên hàm mục tiêu (ví dụ: `predict` hoặc `predict_proba`) để chạy suy luận.\n* Các câu lệnh SQL sử dụng toán tử gọi hàm mô hình `!` như trong đáp án B và D không đúng cú pháp gọi hàm mô hình SQL trực tiếp từ session khi chưa đăng ký làm UDF SQL, hoặc sai cú pháp tham chiếu.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2015,7 +2015,7 @@
       "F": "VECTOR_COSINE_SIMILARITY()"
     },
     "answer": "ABF",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Khi xây dựng một ứng dụng RAG thủ công trong Snowflake (không sử dụng dịch vụ được quản lý Cortex Search), bạn cần thực hiện ba bước cốt lõi:\n\n* **B. SNOWFLAKE.CORTEX.EMBED_TEXT_768() - Đúng**: Được dùng để tạo các vector nhúng (embeddings) cho các đoạn văn bản từ tài liệu hướng dẫn và câu hỏi của người dùng để so sánh ngữ nghĩa.\n* **F. VECTOR_COSINE_SIMILARITY() - Đúng**: Được sử dụng để tính toán độ tương đồng cosine giữa vector nhúng của câu hỏi người dùng và vector nhúng của các đoạn tài liệu, nhằm tìm ra các đoạn thông tin liên quan nhất.\n* **A. SNOWFLAKE.CORTEX.COMPLETE() - Đúng**: Sau khi tìm được các đoạn văn bản liên quan, chúng sẽ được đưa vào làm ngữ cảnh (context) kèm câu hỏi để mô hình ngôn ngữ lớn (LLM) tạo ra câu trả lời đầy đủ bằng ngôn ngữ tự nhiên.\n* **C, D, E. Sai**: Các hàm `EXTRACT_ANSWER()`, `SENTIMENT()` và `SUMMARIZE()` là các mô hình chuyên biệt cho các tác vụ trích xuất câu trả lời trực tiếp, phân tích cảm xúc hoặc tóm tắt văn bản, không phải là các thành phần thiết yếu để xây dựng một đường ống (pipeline) RAG tiêu chuẩn.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2110,7 +2110,7 @@
       "F": "The data set used contains the same number of positive and negative cases."
     },
     "answer": "BCD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Dựa vào ma trận nhầm lẫn (confusion matrix) và các chỉ số đo lường hiệu năng của mô hình phân loại nhị phân:\n\n* **B. 8 người đã bị dự đoán sai là có vấn đề về tim - Đúng**: Đây là số lượng mẫu Dương tính giả (False Positives - FP), tức là những người thực tế khỏe mạnh nhưng mô hình dự đoán là mắc bệnh.\n* **C. 88.70% số dự đoán có vấn đề về tim là chính xác - Đúng**: Đây là giá trị **Precision** (Độ chính xác dự đoán dương tính), được tính bằng công thức: $Precision = \\frac{TP}{TP + FP} = 88.70\\%$. Nó cho biết trong số tất cả những người được mô hình dự đoán mắc bệnh tim, có 88.70% thực sự mắc bệnh.\n* **D. 90.67% số người có vấn đề về tim thực tế đã được dự đoán chính xác - Đúng**: Đây là giá trị **Recall / Sensitivity** (Độ nhạy), được tính bằng công thức: $Recall = \\frac{TP}{TP + FN} = 90.67\\%$. Nó cho biết mô hình đã phát hiện thành công 90.67% số bệnh nhân thực sự mắc bệnh tim.\n* **A. Sai**: Con số 92.73% có thể là Accuracy (Độ chính xác tổng thể) hoặc chỉ số khác, không phải là tỷ lệ người mắc bệnh thực tế được dự đoán đúng (Recall là 90.67%).\n* **E. Sai**: Số người bị dự đoán sai là mắc bệnh tim là 8 (FP), không phải 13.\n* **F. Sai**: Không có thông tin hoặc cơ sở nào cho thấy tập dữ liệu cân bằng hoàn hảo giữa ca bệnh và ca khỏe mạnh.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2200,7 +2200,7 @@
       "E": "Use ordinal encoding for the categorical variable."
     },
     "answer": "DE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Khi xây dựng mô hình hồi quy logistic (và hầu hết các mô hình học máy dựa trên toán học khác), mô hình chỉ có thể xử lý dữ liệu dạng số. Do đó, các biến phân loại (dạng chữ/danh mục) cần được chuyển đổi sang dạng số thông qua các kỹ thuật tiền xử lý:\n\n* **D. Mã hóa một-nóng (One-hot encode) - Đúng**: Kỹ thuật này chuyển đổi biến phân loại thành nhiều cột nhị phân (0 và 1), mỗi cột đại diện cho một danh mục duy nhất. Trong Snowflake ML, bạn có thể sử dụng `OneHotEncoder`.\n* **E. Sử dụng mã hóa thứ tự (Ordinal encoding) - Đúng**: Kỹ thuật này gán một số nguyên duy nhất cho mỗi danh mục dựa trên một thứ tự xác định. Trong Snowflake ML, bạn có thể sử dụng `OrdinalEncoder`.\n* **A. Sai**: Biến phân loại dạng chuỗi ký tự (string) không thể được đưa trực tiếp vào mô hình hồi quy logistic.\n* **B. Sai**: Việc loại bỏ các biến không có ý nghĩa là một kỹ thuật lựa chọn đặc trưng (feature selection), không phải là phương pháp xử lý/mã hóa biến phân loại để đưa vào mô hình.\n* **C. Sai**: Ghi đè bằng giá trị null sẽ làm mất thông tin dữ liệu và khiến mô hình không thể học được.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2289,7 +2289,7 @@
       "E": "Area Under the Receiver Operating Characteristics (AUROC)"
     },
     "answer": "CD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Đối với các bài toán hồi quy (regression) như hồi quy tuyến tính (dự báo một giá trị số liên tục), các chỉ số đánh giá cần đo lường sự sai lệch giữa giá trị dự báo và giá trị thực tế:\n\n* **C. Sai số bình phương trung bình (MSE) - Đúng**: Tính trung bình bình phương của các khoảng sai số giữa dự báo và thực tế. Giá trị MSE càng nhỏ thì mô hình càng tốt.\n* **D. Căn bậc hai sai số bình phương trung bình (RMSE) - Đúng**: Là căn bậc hai của MSE, đưa sai số về cùng đơn vị đo với biến mục tiêu giúp dễ dàng diễn giải ý nghĩa thực tế.\n* **A, B, E. Sai**: Các chỉ số như `Accuracy`, `Precision`, `Recall` và `AUROC` là các chỉ số chuyên dùng để đánh giá hiệu năng của các mô hình phân loại (classification - dự báo nhãn danh mục), không áp dụng cho mô hình hồi quy.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2383,7 +2383,7 @@
       "F": "Variance"
     },
     "answer": "ABC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Khi xử lý các biến số bị thiếu (missing numerical variables) trong tiền xử lý dữ liệu học máy, các phương pháp gán giá trị (imputation) chuẩn và phổ biến nhất bao gồm:\n\n*   **A. Giá trị trung bình (Mean)**: Điền các giá trị bị thiếu bằng giá trị trung bình cộng của các điểm dữ liệu không bị thiếu trong thuộc tính đó. Phù hợp khi dữ liệu phân phối chuẩn và ít ngoại lai (outliers).\n*   **B. Trung vị (Median)**: Điền các giá trị bị thiếu bằng giá trị trung vị của cột. Đây là phương pháp tối ưu hơn khi dữ liệu có nhiều giá trị ngoại lai hoặc bị lệch (skewed).\n*   **C. Yếu vị / Giá trị xuất hiện nhiều nhất (Mode)**: Điền các giá trị bị thiếu bằng giá trị xuất hiện thường xuyên nhất trong cột. Phương pháp này có thể áp dụng cho cả biến số và biến phân loại (categorical).\n\nCác phương án khác không phải là phương pháp gán giá trị:\n*   **D. Tổng (Sum)**: Là phép cộng tất cả các giá trị, không dùng để gán thế cho một giá trị bị thiếu đơn lẻ.\n*   **E. Khoảng biến thiên (Range)**: Là hiệu số giữa giá trị lớn nhất và nhỏ nhất của thuộc tính.\n*   **F. Phương sai (Variance)**: Là thước đo mức độ phân tán của dữ liệu xung quanh giá trị trung bình.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2560,7 +2560,7 @@
       "E": "Standard Deviation"
     },
     "answer": "AC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Khi bạn xem kết quả truy vấn trong giao diện Snowsight của Snowflake và chọn một cột số, bảng thống kê nhanh (column statistics) bên phải sẽ hiển thị các chỉ số phân tích dữ liệu trực quan tức thì.\n\nĐối với cột dạng số (numerical column), Snowsight hiển thị:\n1.  **Biểu đồ tần suất (Histogram)** (A) để hiển thị phân phối dữ liệu.\n2.  **Tỷ lệ phần trăm giá trị rỗng (Null Percentage)** (C) hoặc số lượng giá trị rỗng.\n3.  Các giá trị cơ bản khác như **Average**, **Sum**, **Min**, **Max**.\n\n*   **Median** (B), **Quartiles Ranges** (D), và **Standard Deviation** (E) không nằm trong số các chỉ số thống kê ngữ cảnh nhanh hiển thị trực tiếp mặc định của bảng kết quả Snowsight khi chọn cột.\n\n*(Đáp án được gợi ý bởi AI)*",

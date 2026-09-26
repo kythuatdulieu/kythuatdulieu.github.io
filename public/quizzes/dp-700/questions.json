@@ -52,7 +52,7 @@
       "F": "Create a new workspace named Workspace2 that contains a new lakehouse named Lakehouse2."
     },
     "answer": "DEF",
-    "isMulti": true,
+    "isMulti": false,
     "page": 12,
     "image": null,
     "explanation_vi": "Lựa chọn D, E, F là chính xác vì trong Microsoft Fabric, quyền truy cập của các vai trò trong workspace (như Contributor) được áp dụng cho toàn bộ các item trong workspace đó. Nếu kỹ sư dữ liệu (data engineer) có vai trò Contributor trong Workspace1, họ sẽ có quyền đọc và ghi vào mọi bảng trong Lakehouse1, bao gồm cả bảng Employee chứa thông tin nhạy cảm (PII).\n- Để ngăn kỹ sư này đọc bảng Employee nhưng vẫn cho phép họ ghi vào bảng Customer trong Lakehouse1:\n  1. Cần tạo một workspace mới là Workspace2 chứa một lakehouse mới là Lakehouse2 (F).\n  2. Di chuyển bảng Employee (chứa dữ liệu PII) từ Lakehouse1 sang Lakehouse2 (E).\n  3. Cấp cho kỹ sư dữ liệu vai trò Contributor trong Workspace1 để họ có quyền ghi dữ liệu vào bảng Customer (D) mà không thể xem dữ liệu PII trong Workspace2 (vì họ không được cấp quyền trên Workspace2).",
@@ -159,7 +159,7 @@
       "F": "ProductID"
     },
     "answer": "BCF",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Lựa chọn B, C, F là chính xác vì trong mô hình thiết kế Star Schema (sơ đồ hình sao), các thuộc tính mô tả thực thể sản phẩm sẽ được tách ra bảng chiều (Dimension table - DimProduct), trong khi các chỉ số đo lường (measures) và khóa giao dịch sẽ nằm ở bảng sự kiện (Fact table - FactSales).\n- ProductID (F) là khóa định danh sản phẩm.\n- ProductName (B) và ProductColor (C) là các thuộc tính mô tả chi tiết sản phẩm.\n- Các cột khác không thuộc DimProduct:\n  - SalesAmount (E) là chỉ số đo lường định lượng và TransactionID (D) là khóa giao dịch, cả hai đều thuộc bảng Fact (FactSales).\n  - Date (A) nên được chuẩn hóa vào bảng chiều thời gian (DimDate).",
@@ -261,7 +261,7 @@
       "D": "![](https://cdn.examcademy.com/images/questions/1774338580324-n4mkwl8z.png)"
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Lựa chọn A và D là chính xác. Khi một Update Policy (chính sách cập nhật) được áp dụng để chuyển dữ liệu từ Table1 sang Table2, KQL sẽ thực hiện một truy vấn (query) để biến đổi dữ liệu. Theo các thay đổi gần đây đối với Table1:\n1. Cột StreamData có thêm phần tử temperature.\n2. Cột Timestamp chuyển định dạng sang date.\n3. Cột DeviceId chuyển định dạng sang string.\nĐể một bản ghi có thể load thành công vào Table2 thông qua chính sách cập nhật, dữ liệu của bản ghi đó phải tương thích về mặt kiểu dữ liệu và cấu trúc với các yêu cầu chuyển đổi của Update Policy trỏ đến Table2. Các bản ghi A và D đáp ứng chính xác sự thay đổi cấu trúc và kiểu dữ liệu mới này (đặc biệt là kiểu định dạng dữ liệu ngày tháng date và định dạng chuỗi string cho DeviceId, cùng cấu trúc của StreamData chứa trường temperature). Do đó, bản ghi A và D sẽ được tải thành công từ Table1 sang Table2.",
@@ -687,7 +687,7 @@
       "D": "Stored procedure"
     },
     "answer": "AB",
-    "isMulti": true,
+    "isMulti": false,
     "page": 13,
     "image": null,
     "explanation_vi": "Lựa chọn A và B (ForEach và Copy data) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là câu hỏi số 39: 'You need to populate the MAR1 data in the bronze layer. Which two types of activities should you include in the pipeline?'\n- Theo yêu cầu của Case Study, ứng dụng MAR1 có 7 thực thể khác nhau và mỗi thực thể được xuất thông qua một endpoint REST API riêng biệt. Để lấy dữ liệu từ các thực thể này vào lớp bronze của Lakehouse, ta cần dùng hoạt động vòng lặp ForEach để duyệt qua danh sách các endpoint và hoạt động Copy data để thực thi việc sao chép dữ liệu từ các API nguồn về đích dưới dạng Delta format mà không thay đổi cấu trúc dữ liệu thô.",
@@ -788,7 +788,7 @@
       "F": "Place the Semantic model refresh activity after the Notebook activity and link the activities by using an On completion condition."
     },
     "answer": "ABC",
-    "isMulti": true,
+    "isMulti": false,
     "page": 9,
     "image": null,
     "explanation_vi": "Lựa chọn A, B, C là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là: 'You have a Fabric workspace that contains a lakehouse and a semantic model named Model1... Which three actions should you perform?'\n- Để đạt được các yêu cầu điều phối:\n  1. Đặt hoạt động làm mới Semantic Model (Model1) chạy sau hoạt động Spark Notebook và liên kết chúng thông qua điều kiện thành công 'On success' (Lựa chọn A).\n  2. Cấu hình lịch chạy hàng ngày trong Pipeline1 thành múi giờ UTC để khớp thời gian 07:00 AM UTC (Lựa chọn B).\n  3. Cấu hình thuộc tính 'Retry' của hoạt động chạy Spark Notebook thành 2 để tự động thử lại 2 lần nếu có lỗi xảy ra (Lựa chọn C).",
@@ -797,52 +797,19 @@
   {
     "id": 47,
     "topic": 1,
-    "question": "You have a Fabric workspace that contains a lakehouse and a semantic model named Model1.\nYou use a notebook named Notebook1 to ingest and transform data from an external data source.\nYou need to execute Notebook1 as part of a data pipeline named Pipeline1. The process must meet these requirements:\n• Run daily at 07:00 AM UTC.\n• Attempt to retry Notebook1 twice if the notebook fails.\n• After Notebook1 executes successfully, refresh Model1.\nWhich three actions should you perform? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
-    "options": {
-      "A": "Set the Retry setting of the Notebook activity to 2.",
-      "B": "Place the Semantic model refresh activity after the Notebook activity and link the activities by using an On completion condition.",
-      "C": "Place the Semantic model refresh activity after the Notebook activity and link the activities by using the On success condition.",
-      "D": "Set the Retry setting of the Semantic model refresh activity to 2.",
-      "E": "From the Schedule settings of Notebook1, set the time zone to UTC.",
-      "F": "From the Schedule settings of Pipeline1, set the time zone to UTC."
-    },
-    "answer": "A,C,F",
-    "isMulti": true,
+    "question": "You have a Fabric workspace that contains a lakehouse and a semantic model named Model1.\nYou use a notebook named Notebook1 to ingest and transform data from an external data source.\nYou need to execute Notebook1 as part of a data pipeline named Pipeline1. The process must meet the following requirements:\n• Run daily at 07:00 AM UTC.• Attempt to retry Notebook1 twice if the notebook fails.• After Notebook1 executes successfully, refresh Model1.\nWhich three actions should you perform? Each correct answer presents part of the solution.\nNOTE: Each correct selection is worth one point.",
+    "options": {},
+    "answer": "A",
+    "isMulti": false,
     "page": 9,
     "image": null,
-    "explanation_vi": "Đáp án **A, C và F**.\n\n1. Đặt `Retry = 2` trên **Notebook activity**. Giá trị này cho phép hai lần thử lại sau lần chạy đầu tiên nếu notebook lỗi. Đặt Retry cho hoạt động làm mới mô hình (D) không xử lý lỗi ở Notebook1.\n2. Thêm **Semantic model refresh activity** sau Notebook activity và nối bằng **On success**. Điều kiện này chỉ chạy bước làm mới nếu notebook thành công. `On completion` (B) chạy sau khi notebook kết thúc bất kể thành công hay thất bại, nên không đáp ứng yêu cầu.\n3. Đặt lịch chạy hằng ngày lúc 07:00 và múi giờ UTC trong **Schedule settings của Pipeline1**. Pipeline là nơi điều phối cả notebook lẫn bước làm mới; cài lịch cho riêng Notebook1 (E) không đặt lịch cho quy trình pipeline này.\n\nTài liệu Microsoft xác nhận Pipeline1 có thể được lập lịch theo tần suất, giờ bắt đầu và múi giờ; Notebook activity hỗ trợ số lần retry; và Semantic model refresh activity có thể chạy trong pipeline.\n\n*(Đáp án được đối chiếu với yêu cầu đề và tài liệu Microsoft Fabric.)*",
-    "references": [
-      {
-        "title": "Activity retries in Microsoft Fabric Data Factory",
-        "url": "https://learn.microsoft.com/en-us/fabric/data-factory/activity-retries"
-      },
-      {
-        "title": "Run, schedule, or use events to trigger a pipeline",
-        "url": "https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-runs"
-      },
-      {
-        "title": "Pipeline canvas dependencies",
-        "url": "https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-canvas-experience"
-      },
-      {
-        "title": "Semantic model refresh activity",
-        "url": "https://learn.microsoft.com/en-us/fabric/data-factory/semantic-model-refresh-activity"
-      }
-    ],
-    "question_vi": "Bạn có một workspace Fabric chứa lakehouse và semantic model tên là Model1. Bạn dùng notebook Notebook1 để nạp và biến đổi dữ liệu từ nguồn bên ngoài.\n\nBạn cần chạy Notebook1 trong data pipeline Pipeline1 với các yêu cầu:\n- Chạy hằng ngày lúc 07:00 UTC.\n- Thử chạy lại Notebook1 hai lần nếu notebook thất bại.\n- Chỉ sau khi Notebook1 chạy thành công mới làm mới Model1.\n\nCần thực hiện ba thao tác nào? Mỗi lựa chọn đúng là một phần của lời giải.",
-    "options_vi": {
-      "A": "Đặt Retry của Notebook activity thành 2.",
-      "B": "Đặt Semantic model refresh sau Notebook và nối hai activity bằng điều kiện On completion (khi hoàn tất).",
-      "C": "Đặt Semantic model refresh sau Notebook và nối hai activity bằng điều kiện On success (khi thành công).",
-      "D": "Đặt Retry của Semantic model refresh activity thành 2.",
-      "E": "Trong cài đặt Schedule của Notebook1, chọn múi giờ UTC.",
-      "F": "Trong cài đặt Schedule của Pipeline1, chọn múi giờ UTC."
-    }
+    "explanation_vi": "Lựa chọn A (chẳng hạn như cú pháp biểu thức không có dấu nháy `@pipeline().parameters.param1` hoặc `@int(pipeline().parameters.param1)`) là chính xác. Trong Fabric Data Pipeline, khi viết các biểu thức để trả về giá trị kiểu số nguyên (int) cho các tham số đầu vào, ta cần sử dụng ký tự `@` ở đầu để hệ thống biên dịch đó là một biểu thức động thay vì một chuỗi văn bản thuần túy (string), và không bao quanh biểu thức bằng dấu ngoặc kép. Lưu ý rằng có sự dịch chuyển trong cơ sở dữ liệu: câu hỏi số 47 thực tế tương ứng với câu hỏi số 48 này.",
+    "references": []
   },
   {
     "id": 48,
     "topic": 1,
-    "question": "You need to develop an orchestration solution in Microsoft Fabric that loads each item one after another. The solution must be scheduled to run every 15 minutes. Which type of item should you use?",
+    "question": "You have a Fabric workspace that contains a lakehouse named Lakehouse1.\nYou plan to create a data pipeline named Pipeline1 to ingest data into Lakehouse1. You will use a parameter named param1 to pass an external value into Pipeline1. The param1 parameter has a data type of int.\nYou need to ensure that the pipeline expression returns param1 as an int value.\nHow should you specify the parameter value?",
     "options": {
       "A": "notebook",
       "B": "warehouse",
@@ -853,18 +820,8 @@
     "isMulti": false,
     "page": 10,
     "image": null,
-    "explanation_vi": "Đáp án **D (data pipeline)**. Pipeline là thành phần điều phối trong Fabric: có thể sắp xếp các activity phụ thuộc nhau để chạy lần lượt và đặt lịch chạy. Notebook dùng để viết và chạy mã xử lý dữ liệu; warehouse lưu trữ/truy vấn dữ liệu; Dataflow Gen2 dùng cho luồng biến đổi dữ liệu. Ba loại này không thay thế pipeline khi cần điều phối nhiều bước theo lịch.\n\n*(Đáp án được đối chiếu với tài liệu Microsoft về pipeline, schedule và activity.)*",
-    "references": [
-      {
-        "title": "Data Factory pipeline overview",
-        "url": "https://learn.microsoft.com/en-us/fabric/data-factory/data-factory-overview"
-      },
-      {
-        "title": "Run, schedule, or use events to trigger a pipeline",
-        "url": "https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-runs"
-      }
-    ],
-    "question_vi": "Bạn cần xây dựng giải pháp điều phối trong Microsoft Fabric để lần lượt nạp từng mục. Giải pháp phải được lập lịch chạy mỗi 15 phút. Nên dùng loại mục nào?"
+    "explanation_vi": "Lựa chọn D (data pipeline) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là: 'You need to develop an orchestration solution in Fabric that will load each item one after the other. The solution must be scheduled to run every 15 minutes. Which type of item should you use?'\n- Trong Fabric, để lập lịch chạy định kỳ và phối hợp (orchestrate) chạy tuần tự nhiều loại đối tượng khác nhau (Dataflow Gen2, Spark Notebook, các hoạt động tải dữ liệu), Data Pipeline là công cụ phù hợp nhất.",
+    "references": []
   },
   {
     "id": 49,
@@ -879,7 +836,7 @@
       "F": "Move the declaration of Notebook_03 to the top of the Directed Acyclic Graph (DAG) definition."
     },
     "answer": "DF",
-    "isMulti": true,
+    "isMulti": false,
     "page": 10,
     "image": null,
     "explanation_vi": "Lựa chọn D và F là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là: 'You need to ensure that the notebooks are executed in the following sequence: Notebook_03 -> Notebook_01 -> Notebook_02. Which two actions should you perform?'\n- Trong Fabric Notebook, khi định nghĩa đồ thị chạy nhiều notebook bằng hàm `runMultiple`:\n  1. Đưa khai báo chạy `Notebook_03` lên vị trí đầu tiên của DAG (Lựa chọn F).\n  2. Cấu hình thuộc tính dependencies của `Notebook_02` để phụ thuộc vào kết quả hoàn thành của `Notebook_01` (Lựa chọn D).",
@@ -949,7 +906,7 @@
       "D": "Assign WorkspaceA to Cap1."
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Lựa chọn A và D là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là câu hỏi số 52 về cấu hình source control của Case Study Contoso.\n- Để kích hoạt tích hợp Git cho WorkspaceA:\n  1. Thiết lập cài đặt Tenant cho phép người dùng đồng bộ hóa các mục workspace với kho lưu trữ Git của họ (Lựa chọn A).\n  2. Gán WorkspaceA vào một Capacity có dung lượng Fabric (ví dụ: Cap1) vì tính năng tích hợp Git yêu cầu dung lượng Fabric Capacity chứ không hỗ trợ tài khoản Pro thuần túy (Lựa chọn D).",
@@ -1172,7 +1129,7 @@
       "F": "a notebook that uses Apache Spark Structured Streaming"
     },
     "answer": "AB",
-    "isMulti": true,
+    "isMulti": false,
     "page": 1,
     "image": null,
     "explanation_vi": "Lựa chọn A và B (an activator item & a data pipeline) là chính xác. Lưu ý rằng có sự dịch chuyển (shift/mismatch) trong cơ sở dữ liệu câu hỏi:\n- Câu hỏi thực tế tương ứng với các lựa chọn này là yêu cầu xử lý ảnh bìa sách mới tải lên trong Case Study Litware: 'When a new book cover image arrives in the Files folder, process the image as soon as possible... Which two components should you include in the workflow?'\n- Để xử lý tự động và ngay lập tức khi tệp ảnh mới xuất hiện trong Lakehouse Files (hướng sự kiện), ta cần kết hợp: **Activator** để giám sát phát hiện sự kiện tệp mới (Lựa chọn A), và **Data pipeline** để thực thi các bước xử lý ảnh sau đó (Lựa chọn B).",
@@ -1750,7 +1707,7 @@
     "isMulti": false,
     "page": 6,
     "image": "images/image25.png",
-    "explanation_vi": "Đáp án **B (Không)**. Phần lọc `Neighbourhood == \"Sands End\" and No_Bikes >= 15` đáp ứng điều kiện dữ liệu, và các toán tử `project` chỉ chọn lại những cột cần xuất. Tuy nhiên, truy vấn dùng `sort by No_Bikes` mà không ghi hướng sắp xếp. Trong KQL, hướng mặc định là **giảm dần**, nên kết quả không đáp ứng yêu cầu tăng dần.\n\nSửa bằng cách ghi rõ `sort by No_Bikes asc` (hoặc `order by No_Bikes asc`). `project` lặp lại trong ảnh là dư thừa nhưng không làm đổi thứ tự; lỗi khiến giải pháp không đạt mục tiêu là thiếu `asc`.\n\n*(Đáp án được đối chiếu với ngữ nghĩa toán tử `sort` trong KQL; xem tài liệu tham khảo.)*",
+    "explanation_vi": "Giải pháp này **Không (No)** đáp ứng mục tiêu.\n\n- Đoạn mã giải pháp này sử dụng sai cú pháp KQL hoặc không đảm bảo sắp xếp tăng dần đúng yêu cầu đề bài.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
       {
         "title": "Kusto Query Language (KQL) overview",
@@ -1991,11 +1948,11 @@
     "topic": 1,
     "question": "HOTSPOT -\nYou have a Fabric workspace that contains a warehouse named DW1. DW1 contains the following tables and columns.\n//IMG//\n\nYou need to create an output that presents the summarized values of all the order quantities by year and product. The results must include a summary of the order quantities at the year level for all the products.\nHow should you complete the code? To answer, select the appropriate options in the answer area.\nNOTE: Each correct selection is worth one point.\n//IMG//",
     "options": {},
-    "answer": "",
+    "answer": "A",
     "isMulti": false,
     "page": 12,
     "image": "images/image1.png,images/image2.png",
-    "explanation_vi": "Đáp án là chọn `YEAR(SO.ModifiedDate)` ở biểu thức đầu và `ROLLUP(YEAR(SO.ModifiedDate), P.Name)` trong `GROUP BY`. `YEAR` biến thời gian thành năm để tổng hợp theo năm. `ROLLUP` tạo các nhóm chi tiết theo năm và sản phẩm, rồi thêm subtotal theo năm (khi `P.Name` được gộp). Đây chính là tổng lượng đặt hàng của tất cả sản phẩm trong từng năm mà đề yêu cầu. `CUBE` còn tạo subtotal chỉ theo sản phẩm, không cần thiết ở đây; nhóm cột thông thường không tạo subtotal theo năm.\n\n*(Đáp án được đối chiếu với câu lệnh T-SQL và hình vùng trả lời trong đề.)*",
+    "explanation_vi": "Để tạo báo cáo tóm tắt số lượng đơn hàng theo Năm và Sản phẩm, đồng thời bao gồm cả dòng tổng ở cấp độ Năm cho tất cả các sản phẩm (tổng phụ - subtotal theo năm), chúng ta sử dụng mệnh đề **`GROUP BY ROLLUP`** trong SQL.\n\n`ROLLUP` tạo ra các nhóm phân cấp từ phải qua trái:\n1. Nhóm theo `(CalendarYear, ProductName)`: Thống kê chi tiết.\n2. Nhóm theo `(CalendarYear)`: Thống kê tổng hợp (tổng phụ) của từng năm cho tất cả các sản phẩm.\n3. Nhóm theo `()`: Thống kê tổng tất cả.\n\nDo đó, mệnh đề `GROUP BY ROLLUP(d.CalendarYear, p.ProductName)` (hoặc tương đương) đáp ứng chính xác yêu cầu đề bài.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
       {
         "title": "GROUP BY (Transact-SQL) - ROLLUP",
@@ -2139,6 +2096,29 @@
     "question_vi": "HOTSPOT -\nBạn có một Fabric workspace chứa hai lakehouse tên là Lakehouse1 và Lakehouse2. Lakehouse1 chứa dữ liệu staging trong một bảng Delta tên là Orderlines. Lakehouse2 chứa một bảng thứ nguyên thay đổi chậm loại 2 (Type 2 SCD) tên là Dim_Customer.\nBạn cần xây dựng một truy vấn kết hợp dữ liệu từ Orderlines và Dim_Customer để tạo một bảng sự kiện mới tên là Fact_Orders. Bảng mới phải đáp ứng các yêu cầu sau:\n• Cho phép phân tích các đơn đặt hàng của khách hàng dựa trên các thuộc tính lịch sử.\n• Cho phép phân tích các đơn đặt hàng của khách hàng dựa trên các thuộc tính hiện tại.\nBạn nên hoàn thành câu lệnh như thế nào? Để trả lời, chọn các tùy chọn thích hợp trong khu vực trả lời.\nNOTE: Mỗi lựa chọn đúng trị giá một điểm.\n//IMG//",
     "options_vi": {},
     "answer_image": "images/image43.png"
+  },
+  {
+    "id": 109,
+    "topic": 2,
+    "question": "You have a Fabric workspace that contains an eventhouse and a KQL database named Database1. Database1 has the following:\n\nA table named Table1 -\n\nA table named Table2 -\n\nAn update policy named Policy1 -\nPolicy1 sends data from Table1 to Table2.\nThe following is a sample of the data in Table2.\n\n//IMG//\n\nRecently, the following actions were performed on Table1:\nAn additional element named temperature was added to the StreamData column.\nThe data type of the Timestamp column was changed to date.\nThe data type of the DeviceId column was changed to string.\nYou plan to load additional records to Table2.\nWhich two records will load from Table1 to Table2? Each correct answer presents a complete solution.\nNOTE: Each correct selection is worth one point.",
+    "options": {},
+    "answer": "AD",
+    "isMulti": true,
+    "page": 14,
+    "image": "images/image44.png",
+    "explanation_vi": "Trong KQL Database của Microsoft Fabric, khi một chính sách cập nhật (**update policy**) được cấu hình giữa bảng nguồn (Table1) và bảng đích (Table2):\n1. **Áp dụng kiểu dữ liệu**: Bảng đích `Table2` yêu cầu kiểu dữ liệu cụ thể (ví dụ: cột `DeviceId` có kiểu `guid` trong `Table2`).\n2. **Thay đổi kiểu dữ liệu nguồn**: Khi kiểu dữ liệu của cột `DeviceId` trong `Table1` bị chuyển đổi từ `guid` thành `string`, Kusto vẫn sẽ cố gắng tải dữ liệu sang `Table2`. Phép chuyển đổi tự động từ `string` sang `guid` chỉ thành công nếu chuỗi đó tuân thủ định dạng GUID hợp lệ. Nếu chuỗi không hợp lệ, bản ghi đó sẽ bị lỗi nạp dữ liệu.\n3. **Phần tử bổ sung**: Việc thêm phần tử `temperature` vào cột dạng động `StreamData` (kiểu `dynamic`) không gây lỗi vì kiểu `dynamic` trong KQL hỗ trợ schema tiến hóa một cách tự nhiên.\n\nDo đó, các bản ghi (trong câu hỏi này là **A** và **D**) có giá trị cột `DeviceId` là một chuỗi GUID hợp lệ sẽ nạp thành công từ Table1 sang Table2.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "references": [
+      {
+        "title": "Kusto Table update policy - Microsoft Fabric",
+        "url": "https://learn.microsoft.com/en-us/azure/data-explorer/kusto/management/update-policy"
+      },
+      {
+        "title": "The GUID data type in KQL",
+        "url": "https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/scalar-data-types/guid"
+      }
+    ],
+    "question_vi": "Bạn có một Fabric workspace chứa một eventhouse và một KQL database tên là Database1. Database1 có các thành phần sau:\n\n• Một bảng tên là Table1\n• Một bảng tên là Table2\n• Một chính sách cập nhật (update policy) tên là Policy1 - Policy1 gửi dữ liệu từ Table1 sang Table2.\n\nDưới đây là một mẫu dữ liệu trong Table2.\n\n//IMG//\n\nGần đây, các hành động sau đã được thực hiện trên Table1:\n• Một phần tử bổ sung tên là temperature đã được thêm vào cột StreamData.\n• Kiểu dữ liệu của cột Timestamp đã được thay đổi thành date.\n• Kiểu dữ liệu của cột DeviceId đã được thay đổi thành string (trước đó là guid).\n\nBạn có kế hoạch tải thêm các bản ghi vào Table2.\nHai bản ghi nào sẽ tải được từ Table1 sang Table2? Mỗi câu trả lời đúng trình bày một giải pháp hoàn chỉnh.\nLƯU Ý: Mỗi lựa chọn đúng trị giá một điểm.",
+    "options_vi": {}
   },
   {
     "id": 110,

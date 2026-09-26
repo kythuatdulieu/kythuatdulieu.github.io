@@ -10,7 +10,7 @@
       "D": "Review calculated insights to make sure they're run before segments are refreshed."
     },
     "answer": "CD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để đảm bảo dữ liệu trong hoạt động kích hoạt (activation) luôn là mới nhất và không bị trễ, luồng xử lý dữ liệu trong Data Cloud cần tuân theo một trình tự tuyến tính hợp lý:\n\n* **Nạp dữ liệu (Ingestion) &rarr; Tính toán chỉ số (Calculated Insights) &rarr; Làm mới phân khúc (Segment Refresh) &rarr; Kích hoạt (Activation)**.\n\n* **C đúng**: Vì nếu phân khúc được làm mới trước khi dữ liệu mới được nạp xong, phân khúc đó sẽ chỉ chứa dữ liệu cũ từ chu kỳ trước, dẫn đến việc cập nhật bị chậm trễ.\n* **D đúng**: Vì các phân khúc thường sử dụng kết quả từ các chỉ số tính toán (Calculated Insights) làm tiêu chí lọc. Nếu các chỉ số tính toán không được cập nhật trước khi phân khúc làm mới, phân khúc sẽ sử dụng các giá trị tính toán cũ.\n* **A, B sai**: Vì chúng đảo ngược hoặc làm sai lệch trình tự logic này (ví dụ: chạy chỉ số tính toán trước khi biến đổi dữ liệu, hoặc chạy chỉ số tính toán sau khi phân khúc đã được làm mới).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -329,7 +329,7 @@
       "E": "Profile Explorer"
     },
     "answer": "ABE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để xác thực dữ liệu của một hồ sơ hợp nhất trong Data Cloud:\n\n* **A đúng**: **Query API** cho phép nhà tư vấn thực hiện các truy vấn SQL trực tiếp để kiểm tra dữ liệu chi tiết của các hồ sơ cá nhân hợp nhất (Unified Individual).\n* **B đúng**: **Data Explorer** cho phép xem và duyệt qua dữ liệu thô trong cả đối tượng hồ chứa dữ liệu (DLO) và đối tượng mô hình dữ liệu (DMO), giúp kiểm tra xem việc ánh xạ và tổng hợp dữ liệu có chính xác không.\n* **E đúng**: **Profile Explorer** là công cụ trực quan hóa tuyệt vời giúp hiển thị giao diện hồ sơ hoàn chỉnh của một cá nhân hợp nhất, bao gồm tất cả các thuộc tính và liên hệ từ các nguồn dữ liệu khác nhau được kết nối với hồ sơ đó.\n* **C sai**: Identity Resolution là quy trình thiết lập các quy tắc khớp dữ liệu (Match Rules) chứ không phải công cụ để duyệt hoặc xác thực kết quả trực tiếp của một hồ sơ cụ thể.\n* **D sai**: Data Actions dùng để gửi sự kiện kích hoạt ra các hệ thống bên ngoài khi có thay đổi dữ liệu, không dùng để duyệt và xác thực dữ liệu hồ sơ.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1377,7 +1377,7 @@
       "D": "Calculated insights are better suited for single row based operation."
     },
     "answer": "AC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Sử dụng Calculated Insights (CI) đem lại hai lợi ích lớn so với việc chỉ sử dụng tiêu chí phân khúc trực tiếp:\n- **Lựa chọn A đúng**: Kết quả của Calculated Insights có thể được ánh xạ và đưa vào làm thuộc tính bổ sung (activation attributes) trong quá trình kích hoạt để gửi sang các nền tảng bên ngoài (như Marketing Cloud) nhằm cá nhân hóa nội dung.\n- **Lựa chọn C đúng**: Tiêu chí phân khúc thông thường bị giới hạn thời gian xem lại (lookback window) tối đa là 2 năm đối với dữ liệu tương tác (engagement data). Calculated Insights không bị giới hạn này và có thể truy vấn các dữ liệu lịch sử tương tác sâu hơn 2 năm phục vụ các phân tích dài hạn.\n\n*Các lựa chọn khác không chính xác*:\n- **Lựa chọn B sai**: Calculated Insights không tự động chạy làm mới tức thì khi được tham chiếu mà chúng chạy theo lịch trình (schedule) đã thiết lập sẵn.\n- **Lựa chọn D sai**: Calculated Insights được thiết kế cho các phép tính tổng hợp đa chiều (multi-dimensional aggregations) trên lượng dữ liệu lớn, chứ không phải các hoạt động xử lý từng dòng đơn lẻ (single row operations).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1410,7 +1410,7 @@
       "D": "Identity resolution rules have been removed to reduce the number of matched profiles."
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Tỷ lệ hợp nhất (Consolidation Rate) được tính bằng công thức: `(Tổng số hồ sơ nguồn - Tổng số hồ sơ hợp nhất) / Tổng số hồ sơ nguồn`. Tỷ lệ này tăng nghĩa là số lượng hồ sơ nguồn được gộp vào các thực thể hợp nhất (Unified Profiles) nhiều hơn.\n- **Lựa chọn B đúng**: Khi thêm nhiều quy tắc khớp (match rules) vào bộ quy tắc Identity Resolution, hệ thống sẽ tìm thấy nhiều liên kết trùng khớp hơn, gộp nhiều hồ sơ nguồn rời rạc lại thành ít hồ sơ hợp nhất hơn, làm tăng tỷ lệ hợp nhất.\n- **Lựa chọn C đúng**: Khi nạp thêm nguồn dữ liệu mới có độ trùng lặp cao với dữ liệu cũ, các hồ sơ mới này sẽ được ánh xạ vào các hồ sơ hợp nhất sẵn có mà không sinh ra thêm nhiều hồ sơ hợp nhất mới, làm tăng tử số trong công thức, từ đó làm tăng tỷ lệ hợp nhất.\n\n*Các lựa chọn khác không chính xác*:\n- **Lựa chọn A sai**: Loại bỏ trùng lặp tại nguồn làm giảm tổng số hồ sơ đầu vào, không trực tiếp làm tăng tỷ lệ hợp nhất của quy trình Identity Resolution trong Data Cloud.\n- **Lựa chọn D sai**: Loại bỏ quy tắc khớp sẽ làm giảm khả năng tìm thấy hồ sơ trùng khớp, dẫn đến ít hồ sơ được gộp hơn, làm giảm tỷ lệ hợp nhất.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1443,7 +1443,7 @@
       "D": "Add the calculated insight in the activation."
     },
     "answer": "AC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Trong quy trình cấu hình Kích hoạt (Activation) từ Data Cloud sang Marketing Cloud:\n- **Lựa chọn A đúng**: Bạn bắt buộc phải chọn các Điểm liên hệ (Contact Points) (ví dụ: Email, Phone) để Marketing Cloud biết sẽ gửi thông điệp tới kênh liên lạc nào.\n- **Lựa chọn C đúng**: Bạn bắt buộc phải chọn phân khúc (Segment) mục tiêu mà bạn muốn kích hoạt.\n\n*Các lựa chọn khác không chính xác*:\n- **Lựa chọn B sai**: Việc thêm thuộc tính bổ sung (additional attributes) là tùy chọn (optional) để cá nhân hóa, không phải bước bắt buộc.\n- **Lựa chọn D sai**: Điểm RFM từ Calculated Insight đã được dùng làm tiêu chí lọc để tạo phân khúc, nên bạn không bắt buộc phải thêm trực tiếp Calculated Insight vào phần Activation payload trừ khi muốn gửi nó đi làm thuộc tính bổ sung.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1642,7 +1642,7 @@
       "E": "Data stream attributes"
     },
     "answer": "ABD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Khi thiết kế một phân khúc (Segment) trong Segment Canvas của Data Cloud, bạn có thể kéo thả và kết hợp 3 loại tiêu chí chính sau:\n- **Lựa chọn B đúng**: Các thuộc tính trực tiếp (Direct attributes) - là các mối quan hệ 1-1 với thực thể cá nhân (ví dụ: tuổi, giới tính, thành phố).\n- **Lựa chọn A đúng**: Các thuộc tính liên quan (Related attributes) - là các mối quan hệ 1-nhiều (ví dụ: danh sách đơn hàng đã mua, lượt click email).\n- **Lựa chọn D đúng**: Các chỉ số tính toán (Calculated insights) - các số liệu đã được tổng hợp trước bằng SQL hoặc builder (ví dụ: tổng chi tiêu trọn đời LTV).\n\n*Các lựa chọn khác không chính xác*:\n- **Lựa chọn C sai**: Streaming insights không dùng làm bộ lọc trực tiếp trong Segment Canvas cổ điển mà dùng để kích hoạt các hành động thời gian thực (Data Actions).\n- **Lựa chọn E sai**: Bạn không dùng trực tiếp thuộc tính từ luồng dữ liệu thô (Data Source) mà phải thông qua các đối tượng mô hình dữ liệu (DMO) đã được ánh xạ.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1676,7 +1676,7 @@
       "D": "The activated profiles have a Unified Contact Point."
     },
     "answer": "AC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Khi kích hoạt thuộc tính liên quan dựa trên dữ liệu tương tác (engagement) mà payload trống, nguyên nhân thường do:\n- **Lựa chọn A đúng**: Phân khúc kích hoạt thuộc tính tương tác mặc định áp dụng giới hạn thời gian (lookback window) là 90 ngày. Nếu các hành động tương tác của khách hàng diễn ra trước đó (vượt quá 90 ngày), dữ liệu sẽ không được hiển thị trong payload kích hoạt.\n- **Lựa chọn C đúng**: Đường dẫn thuộc tính liên quan (Related Attribute path) trong giao diện cấu hình kích hoạt phải chính xác. Nếu chọn sai đường dẫn liên kết giữa các bảng, hệ thống sẽ không tìm thấy bản ghi tương ứng để xuất ra.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1841,7 +1841,7 @@
       "D": "Data Marketplace"
     },
     "answer": "AB",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Đối với một doanh nghiệp gặp khó khăn do có nhiều nguồn dữ liệu rời rạc, hai giá trị cốt lõi của Data Cloud cần làm nổi bật là:\n- **Lựa chọn A đúng**: Hồ sơ hợp nhất (Unified Profiles) - giúp gom tất cả các điểm chạm và định danh khách hàng từ các hệ thống khác nhau thành một chân dung duy nhất thông qua cơ chế Identity Resolution.\n- **Lựa chọn B đúng**: Đồng bộ và chuẩn hóa dữ liệu (Data Harmonization) - giúp chuẩn hóa các cấu trúc dữ liệu thô (từ các nguồn khác nhau) thành một mô hình dữ liệu chung tiêu chuẩn (Customer 360 Data Model).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1994,7 +1994,7 @@
       "D": "Govern enterprise data lifecycle through a centralized set of policies and processes."
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Salesforce Data Cloud là một nền tảng dữ liệu khách hàng (CDP) thời gian thực.\n\n- **Vì sao B và C đúng:** \n  - **B:** Data Cloud cho phép doanh nghiệp kết nối, đồng bộ hóa (harmonize) dữ liệu từ nhiều nguồn khác nhau (ERP, CRM, Web...) vào một mô hình dữ liệu (DMO) chuẩn hóa và có thể mở rộng.\n  - **C:** Nền tảng này giúp doanh nghiệp có một góc nhìn toàn diện để hiểu hành vi khách hàng và kích hoạt hành động thông qua các trải nghiệm cá nhân hóa tốt hơn.\n- **Vì sao A và D sai:** Data Cloud không được thiết kế cho các tác vụ kỹ thuật hạ tầng như sao lưu và phục hồi sau thảm họa (Backup and Disaster Recovery - A) hay quản lý quy trình hành chính và chính sách vòng đời dữ liệu doanh nghiệp (Enterprise Data Lifecycle Governance - D).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2226,7 +2226,7 @@
       "D": "Profile API"
     },
     "answer": "CD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để hiển thị thông tin trực quan thời gian thực từ Salesforce Data Cloud ngay trên giao diện người dùng của Salesforce CRM:\n\n- **Vì sao C và D đúng:**\n  - **C:** **Lightning Web Components (LWC)** là khung phát triển chuẩn để xây dựng và hiển thị các thành phần giao diện người dùng tùy chỉnh trên giao diện Salesforce Lightning.\n  - **D:** **Profile API** của Data Cloud cho phép truy vấn nhanh dữ liệu hồ sơ cá nhân và các thông tin liên quan theo thời gian thực (real-time) với độ trễ thấp.\n- **Các phương án khác sai:** Query API (A) thích hợp cho các truy vấn dữ liệu lớn và không đồng bộ, không phù hợp cho trải nghiệm hiển thị trực tiếp tức thời trên giao diện. Data Action (B) được sử dụng để đẩy các sự kiện dữ liệu ra hệ thống bên ngoài chứ không phục vụ mục đích hiển thị thông tin.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2284,7 +2284,7 @@
       "D": "Segments"
     },
     "answer": "AB",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Salesforce Data Cloud hỗ trợ đóng gói và phân phối siêu dữ liệu thông qua Data Kits.\n\n- **Vì sao A và B đúng:** Data Kits cho phép đóng gói các cấu hình nghiệp vụ như **Identity Resolution Rulesets** và **Calculated Insights** để chuyển giao giữa các môi trường (ví dụ từ Sandbox lên Production).\n- **Các phương án khác sai:** Data Model Objects (C) là các định nghĩa mô hình dữ liệu thường được đóng gói đi kèm cùng với Data Stream chứ không phải là thành phần độc lập trực tiếp trong Data Kit. Segments (D) không được hỗ trợ đóng gói trực tiếp trong Data Kit để triển khai sang tổ chức khác.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3674,7 +3674,7 @@
       "D": "The primary key of the segmented table must be a dimension in the calculated insight."
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để một chỉ số tính toán (Calculated Insight) có thể hiển thị và sử dụng được trên giao diện thiết kế phân khúc (segmentation canvas), hai điều kiện bắt buộc phải thỏa mãn:\n- **Individual hoặc Unified Individual ID làm Dimension**: Chỉ số tính toán phải chứa một dimension chứa trường Individual Id hoặc Unified Individual Id để liên kết kết quả đo lường với các thực thể phân khúc cụ thể (A).\n- **Khóa chính làm Dimension**: Khóa chính của bảng được phân khúc (Segmented Object - ví dụ như bảng Individual hoặc Unified Individual) phải là một dimension trong Calculated Insight (D) để cho phép phân đoạn chính xác.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3761,7 +3761,7 @@
       "D": "Dependencies on data model objects will be removed."
     },
     "answer": "CD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Khi xóa một bộ quy tắc phân giải danh tính (Identity Resolution ruleset) đang hoạt động:\n- **Xóa dữ liệu hợp nhất**: Tất cả dữ liệu hồ sơ khách hàng hợp nhất (Unified Individual và các đối tượng liên kết Unified khác) do bộ quy tắc này tạo ra sẽ bị xóa bỏ hoàn toàn khỏi hệ thống (C). Lưu ý rằng dữ liệu hồ sơ gốc (Individual) từ các nguồn vẫn được giữ nguyên.\n- **Gỡ bỏ các liên kết phụ thuộc**: Các đối tượng mô hình dữ liệu (DMO) và các phụ thuộc liên quan đến phân giải danh tính của bộ quy tắc này sẽ bị loại bỏ (D).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3964,7 +3964,7 @@
       "D": "To create and orchestrate cross-channel marketing messages"
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Data Cloud là một nền tảng dữ liệu khách hàng (CDP) tập trung vào:\n- **Nạp và hợp nhất dữ liệu (Ingest & Unify)**: Kết nối dữ liệu từ nhiều nguồn (Salesforce, Google Cloud, SFTP, AWS...) để giải quyết bài toán phân giải danh tính (Identity Resolution) nhằm nhận diện duy nhất một khách hàng (C).\n- **Thấu hiểu khách hàng (Insights)**: Cung cấp dữ liệu đã được hài hòa hóa (harmonized) để phân tích hành vi khách hàng và các tác động kinh doanh một cách chính xác nhất (B).\n- *Lưu ý*: Data Cloud không phải là công cụ điều phối tiếp thị đa kênh (đó là vai trò của Marketing Cloud Engagement) (D) và không thay thế hoàn toàn các hệ thống BI chuyên biệt trong doanh nghiệp (A).\n\n*(Đáp án được gợi ý bởi AI)*",

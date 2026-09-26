@@ -467,7 +467,7 @@
       "E": "total number of databases * average CPU utilization per database"
     },
     "answer": "ACE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để xác định kích thước (sizing) phù hợp cho một Azure SQL Database elastic pool, bạn cần sử dụng ba chỉ số: **Tổng dung lượng của tất cả các cơ sở dữ liệu** (A), **Số lượng cơ sở dữ liệu đạt đỉnh đồng thời * mức sử dụng CPU tối đa của mỗi cơ sở dữ liệu** (C) và **Tổng số lượng cơ sở dữ liệu * mức sử dụng CPU trung bình của mỗi cơ sở dữ liệu** (E).\n\n**Giải thích chi tiết:**\n- **Tổng dung lượng lưu trữ (Total size of all databases)** (A): Cần thiết để đảm bảo pool có đủ dung lượng đĩa cho tất cả các cơ sở dữ liệu thành viên.\n- **Sức mạnh tính toán (Compute - vCore) ở mức trung bình và đỉnh**:\n  - Cách tính tải trung bình: **Tổng số database * CPU trung bình** (E) giúp ước lượng tài nguyên cơ bản ổn định.\n  - Cách tính tải đỉnh: **Số database đạt đỉnh đồng thời * CPU đỉnh** (C) giúp đảm bảo pool chịu được tải khi nhiều database cùng tăng đột biến tài nguyên tính toán.\n- **Geo-replication support** (B) và **maximum number of concurrent sessions** (D) không phải là các thông số chính dùng để tính toán kích thước tài nguyên compute/storage của elastic pool.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -666,7 +666,7 @@
       "E": "Set Force Plan to On"
     },
     "answer": "BD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để giảm thiểu số lượng cảnh báo giả từ Azure Monitor và chỉ nhận cảnh báo khi có sự thay đổi đáng kể trong mẫu hành vi sử dụng (usage patterns) kéo dài, bạn cần thực hiện hai hành động: **Đặt ngưỡng logic cảnh báo thành Dynamic** (B) và **Đặt độ nhạy ngưỡng (Threshold Sensitivity) thành Low** (D).\n\n**Giải thích chi tiết:**\n- **Dynamic Thresholds (Ngưỡng động)** (B): Sử dụng học máy (machine learning) để tìm hiểu hành vi lịch sử của tài nguyên và tự động xác định các mẫu bất thường, thay vì sử dụng một con số cố định (Static).\n- **Threshold Sensitivity Low (Độ nhạy thấp)** (D): Việc đặt độ nhạy ở mức thấp (Low) sẽ giúp bộ lọc cảnh báo trở nên ít nhạy cảm hơn đối với các biến động nhỏ hoặc nhất thời, nghĩa là chỉ những thay đổi thực sự lớn và kéo dài trong hành vi sử dụng mới kích hoạt cảnh báo. Ngược lại, High (A) sẽ tạo ra nhiều cảnh báo hơn cho cả những sai lệch nhỏ.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -986,7 +986,7 @@
       "F": "Implement Always Encrypted."
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để đảm bảo mỗi khách hàng trong số 40 khách hàng chỉ có thể kết nối và truy cập vào đúng cơ sở dữ liệu riêng của họ trên cùng một máy chủ Azure SQL, bạn cần thực hiện hai biện pháp bảo mật:\n\n- **Tại sao chọn B**: Tạo người dùng ở cấp độ cơ sở dữ liệu (contained database users) giúp người dùng xác thực trực tiếp tại cơ sở dữ liệu mà họ được phép truy cập mà không cần có thông tin đăng nhập (Login) cấp máy chủ Master. Điều này ngăn chặn việc họ nhìn thấy danh sách các cơ sở dữ liệu khác trên máy chủ.\n- **Tại sao chọn C**: Tường lửa cấp cơ sở dữ liệu (database-level firewall rules) cho phép bạn giới hạn quyền truy cập IP chỉ đối với những địa chỉ IP của khách hàng cụ thể được phép kết nối vào đúng cơ sở dữ liệu của họ.\n- **Tại sao các phương án khác sai**:\n  - **A**: RLS dùng để cô lập dữ liệu giữa các dòng trong cùng một bảng, không dùng để cô lập toàn bộ cơ sở dữ liệu.\n  - **D**: Tường lửa cấp máy chủ (server-level firewall) sẽ áp dụng cho toàn bộ máy chủ, có nghĩa là nếu một khách hàng được cho phép qua tường lửa cấp máy chủ, họ có thể cố gắng truy cập các cơ sở dữ liệu khác.\n  - **E**: Tạo Login ở Master database cho phép người dùng kết nối đến máy chủ và xem thông tin siêu dữ liệu (metadata) của các cơ sở dữ liệu khác.\n  - **F**: Always Encrypted dùng để mã hóa dữ liệu nhạy cảm ở máy khách, không giải quyết vấn đề kiểm soát quyền truy cập cơ sở dữ liệu.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1107,7 +1107,7 @@
       "E": "Queries that use the index will consume more CPU resources."
     },
     "answer": "BE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Tính năng nén lưu trữ Columnstore (**Columnstore Archival Compression**) được thiết kế để nén dữ liệu sâu hơn nữa nhằm giảm thiểu chi phí lưu trữ đối với dữ liệu lịch sử hoặc dữ liệu rất ít khi được truy cập.\n\n- **Tại sao chọn B**: Do dữ liệu được nén ở mức độ cao hơn, kích thước vật lý của dữ liệu trên đĩa giảm đi đáng kể. Điều này giúp các truy vấn khi thực thi chỉ cần tải và đọc ít trang dữ liệu hơn (fewer data pages) từ đĩa vào bộ nhớ đệm.\n- **Tại sao chọn E**: Việc nén dữ liệu sâu hơn đồng nghĩa với việc quá trình giải nén (decompression) khi truy vấn dữ liệu sẽ phức tạp hơn và đòi hỏi máy chủ phải tiêu tốn nhiều tài nguyên CPU hơn.\n- **Tại sao các phương án khác sai**:\n  - **A**: Lượng I/O đĩa thực tế sẽ giảm đi chứ không tăng lên.\n  - **C**: Chỉ mục sẽ tiêu tốn ít dung lượng đĩa hơn (chứ không phải nhiều hơn).\n  - **D**: Bộ nhớ tiêu thụ để lưu trữ dữ liệu nén trong buffer pool sẽ giảm đi.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1511,7 +1511,7 @@
       "E": "Turn on Azure Defender for SQL"
     },
     "answer": "ADE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để theo dõi việc truy cập vào cột chứa thông tin mật và lưu trữ nhật ký trong vòng 365 ngày, chúng ta cần thực hiện 3 hành động sau:\n\n1. **Áp dụng nhãn nhạy cảm (Sensitivity Label) cho cột dữ liệu (Lựa chọn D)**: Sử dụng tính năng Data Discovery & Classification trong Azure Portal để phân loại cột chứa thông tin mật là *Highly Confidential*. Khi cột này được gắn nhãn nhạy cảm, SQL Auditing sẽ tự động ghi nhận thông tin phân loại này trong nhật ký kiểm toán mỗi khi cột được truy vấn.\n2. **Bật Auditing và cấu hình ghi log vào Azure Storage account (Lựa chọn A)**: Azure Storage cho phép chúng ta thiết lập thời gian lưu trữ (retention policy) lên tới 365 ngày cho các tệp log kiểm toán, đáp ứng đúng yêu cầu đề bài. (Lưu ý: Ghi vào Event Hub không hỗ trợ trực tiếp thiết lập chính sách lưu trữ dài hạn này).\n3. **Bật Microsoft Defender cho SQL (Lựa chọn E)**: Microsoft Defender cho SQL (trước đây là Azure Defender for SQL) cung cấp các cảnh báo bảo mật, phát hiện hành vi bất thường và hỗ trợ tích hợp sâu sắc với phân loại dữ liệu để bảo vệ các thông tin nhạy cảm này.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1969,7 +1969,7 @@
       "E": "a security policy"
     },
     "answer": "CE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để triển khai bảo mật cấp hàng (Row-Level Security - RLS) trong Azure Synapse Analytics dedicated SQL pool nhằm giới hạn truy cập dữ liệu của người dùng theo từng công ty, ta cần hai đối tượng chính:\n\n* **Một hàm giá trị bảng nội tuyến (Inline Table-Valued Function - C)**: Định nghĩa logic bộ lọc (ví dụ: so sánh tên đăng nhập của người dùng hiện tại hoặc thông tin công ty của họ để quyết định hàng nào được trả về).\n* **Một chính sách bảo mật (Security Policy - E)**: Áp dụng hàm bộ lọc đó lên bảng dữ liệu cụ thể.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2283,7 +2283,7 @@
       "F": "Run the Database Engine Tuning Advisor."
     },
     "answer": "BD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Lựa chọn **B** và **D** là đúng.\n\n**Lý do:**\n* **Resource Governor** trong SQL Server / SQL Managed Instance được sử dụng để quản lý và giới hạn tài nguyên hệ thống (bao gồm CPU, bộ nhớ và IOPS).\n* Để thực hiện giới hạn tài nguyên cho một ứng dụng cụ thể (như App2):\n  1. Kích hoạt Resource Governor (**B**).\n  2. Tạo một **workload group** (**D**) và định cấu hình giới hạn IOPS tối đa/tối thiểu (`MAX_IOPS_PER_VOLUME`, `MIN_IOPS_PER_VOLUME`) cho nhóm này.\n  3. Tạo một hàm phân loại (classifier function) để hướng các kết nối từ App2 vào workload group đã tạo.\n* Các tùy chọn khác như optimizer fixes, parameter sniffing, In-memory OLTP và Database Engine Tuning Advisor đều liên quan đến tối ưu hóa cấu trúc cơ sở dữ liệu và truy vấn, không thể giới hạn trực tiếp lượng IOPS tiêu thụ từ một ứng dụng cụ thể.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2766,7 +2766,7 @@
       "E": "an Azure Policy definition"
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để triển khai đồng bộ các quy tắc cấu hình (bao gồm: Bật Auditing, Bật Azure Defender, Tắt Public network access) cho số lượng lớn tài nguyên mà tốn ít công sức quản trị nhất, việc sử dụng **Azure Policy** là bắt buộc.\n\n- **Azure Policy initiative (Sáng kiến chính sách):** Giúp nhóm nhiều định nghĩa chính sách có sẵn (built-in policy definitions) lại với nhau thành một nhóm duy nhất.\n- **Azure Policy assignment (Phân công chính sách):** Được sử dụng để gán initiative đó cho toàn bộ các tài nguyên trong phạm vi Subscription để giám sát và thực thi.\n- Vì các yêu cầu này đều có sẵn các chính sách tích hợp (built-in), chúng ta không cần tự tạo thêm định nghĩa chính sách mới (tùy chọn E).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2800,7 +2800,7 @@
       "D": "Assign the database user the db_ddladmin role."
     },
     "answer": "BD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để cấp quyền cho người dùng có tài khoản Azure AD (Microsoft Entra ID) quản lý cấu trúc bảng trong Azure SQL Database theo nguyên tắc đặc quyền tối thiểu:\n\n1. **Tạo contained database user (người dùng cơ sở dữ liệu độc lập):** Tạo trực tiếp từ nhà cung cấp danh tính bên ngoài (FROM EXTERNAL PROVIDER) mà không cần tạo login tương ứng ở cơ sở dữ liệu master.\n2. **Gán người dùng này vào vai trò `db_ddladmin`:** Đây là vai trò cơ sở dữ liệu tối thiểu cho phép thực hiện bất kỳ câu lệnh DDL nào (như `ALTER TABLE` để thêm/bớt cột). Việc gán vai trò `db_owner` sẽ vi phạm nguyên tắc đặc quyền tối thiểu do cấp quá nhiều quyền không cần thiết.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3181,7 +3181,7 @@
       "E": "Enable PARAMETER_SNIFFING in DB1"
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để xem giá trị tham số thực tế từ lần chạy cuối cùng của một truy vấn (Actual Execution Plan cho lần chạy cuối), SQL Server cung cấp cấu hình ở cấp độ cơ sở dữ liệu (database-scoped configuration) là `LAST_QUERY_PLAN_STATS`.\n\n*   Cấu hình này dựa trên cơ sở hạ tầng lightweight profiling, do đó bạn cần bật cả `LAST_QUERY_PLAN_STATS` (**C**) và `LIGHTWEIGHT_QUERY_PROFILING` (**B**) (được khuyến nghị bật) trong chính cơ sở dữ liệu chứa dữ liệu và truy vấn là **DB1** (chứ không phải trong cơ sở dữ liệu hệ thống `master`).\n*   Sau khi kích hoạt hai tuỳ chọn này, bạn có thể gọi hàm động `sys.dm_exec_query_plan_stats` để xem XML plan chứa các tham số chạy thực tế (`ParameterCompiledValue` và `ParameterRuntimeValue`).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3275,7 +3275,7 @@
       "F": "sys.dm_tran_locks"
     },
     "answer": "CF",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "**SalesSQLDb1** là một cơ sở dữ liệu Azure SQL (Azure SQL Database). Để kiểm tra các yêu cầu đang chạy và tình trạng khóa (blocking/locking) gây ra vấn đề hiệu suất, chúng ta sử dụng các DMV tiêu chuẩn của SQL Server/Azure SQL Database là **sys.dm_exec_requests** (C) (hiển thị thông tin về các yêu cầu hiện đang thực thi) và **sys.dm_tran_locks** (F) (hiển thị thông tin về các khóa đang hoạt động).\n\n*   Các tùy chọn như `sys.dm_pdw_nodes_tran_locks` và `sys.dm_pdw_nodes_os_wait_stats` là các DMV dành riêng cho Azure Synapse Analytics (SQL Data Warehouse) và không được sử dụng cho Azure SQL Database.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3367,7 +3367,7 @@
       "E": "a Log Analytics workspace"
     },
     "answer": "BE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "**SQL Insights** (một tính năng của Azure Monitor) yêu cầu hai thành phần chính để thiết lập ban đầu:\n\n1.  **Một Log Analytics workspace (E)**: Nơi thu thập, lưu trữ và truy vấn các dữ liệu và chỉ số giám sát từ cơ sở dữ liệu.\n2.  **Một máy ảo Virtual Machine (B)**: Được sử dụng làm máy chủ giám sát chuyên dụng (monitoring VM). Máy ảo này chạy tác nhân Telegraf để kết nối với cơ sở dữ liệu Azure SQL và thu thập dữ liệu hiệu năng, sau đó gửi chúng về Log Analytics workspace.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3773,7 +3773,7 @@
       "E": "Shrink individual databases."
     },
     "answer": "ACE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Cảnh báo Msg 1132 xuất hiện khi tổng dung lượng lưu trữ của các cơ sở dữ liệu trong Elastic Pool đạt tới ngưỡng giới hạn vật lý của pool (ở đây là 76800 MB). Để giải quyết cảnh báo này với nỗ lực quản trị tối thiểu, ba hành động độc lập có thể giải phóng hoặc tăng dung lượng khả dụng ngay lập tức là:\n\n1. **A. Increase the maximum storage of the elastic pool**: Tăng trực tiếp giới hạn lưu trữ tối đa của pool thông qua Azure Portal hoặc PowerShell/CLI. Đây là cách nhanh nhất và ít can thiệp vào cấu trúc dữ liệu nhất.\n2. **C. Remove a database from the pool**: Di chuyển một hoặc nhiều cơ sở dữ liệu ra khỏi elastic pool để trở thành cơ sở dữ liệu độc lập (single database) hoặc chuyển sang pool khác. Điều này giúp giảm ngay lập tức dung lượng lưu trữ đang bị chiếm dụng trong pool hiện tại.\n3. **E. Shrink individual databases**: Sử dụng lệnh DBCC SHRINKDATABASE hoặc DBCC SHRINKFILE để giải phóng dung lượng đĩa đã cấp phát (allocated storage) nhưng chưa sử dụng của các tệp dữ liệu về lại cho hệ điều hành/pool.\n\n*Tại sao các lựa chọn khác không phải là giải pháp hoàn chỉnh lập tức:*\n* **B. Delete data từ database** và **D. Enable data compression**: Mặc dù hai cách này giúp giảm dung lượng dữ liệu logic (logical data), nhưng dung lượng đĩa vật lý đã cấp phát (allocated space) cho các file dữ liệu SQL Database sẽ vẫn giữ nguyên và không được giải phóng trả lại cho pool trừ khi bạn thực hiện thêm thao tác **Shrink** dữ liệu. Do đó, chúng không tự giải quyết được cảnh báo giới hạn lưu trữ của pool ngay lập tức nếu không đi kèm shrink.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4015,7 +4015,7 @@
       "E": "Column5"
     },
     "answer": "DE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Tính năng **Always Encrypted** trong SQL Server và Azure SQL Database có một số hạn chế về kiểu dữ liệu. Nó **không hỗ trợ** mã hóa cho các cột sử dụng các kiểu dữ liệu sau:\n\n* `xml`\n* `timestamp` / `rowversion`\n* `image`\n* `ntext` / `text`\n* `sql_variant`\n* `hierarchyid`\n* `geography` / `geometry`\n* Các kiểu dữ liệu do người dùng tự định nghĩa (UDT - User-Defined Types) hoặc kiểu Alias.\n\nTrong kịch bản chuẩn của câu hỏi này (với schema tương ứng của Table1):\n* **Column1** sử dụng kiểu `xml` (không hỗ trợ)\n* **Column2** sử dụng kiểu `sql_variant` (không hỗ trợ)\n* **Column3** sử dụng kiểu `image` (không hỗ trợ)\n* **Column4** và **Column5** lần lượt sử dụng các kiểu dữ liệu chuẩn được hỗ trợ (như `nvarchar` hoặc `int`), do đó có thể bật mã hóa Always Encrypted.\n\nDo đó, hai đáp án đúng là **Column4** và **Column5** (tương ứng với **D** và **E**).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4191,7 +4191,7 @@
       "E": "Từ trung tâm quản trị Azure Active Directory, tạo một định danh bên ngoài (external identity)."
     },
     "answer": "AC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để tự động hóa việc gán quyền trong Azure SQL Database bằng Azure Automation bằng cách sử dụng tài khoản Azure AD (Microsoft Entra):\n\n1. **Tạo Service Principal (A):** Bạn cần tạo một Service Principal (App Registration) trong Azure AD đại diện cho ứng dụng tự động hóa (Azure Automation). Tài khoản này sẽ dùng để xác thực với Azure SQL Database thông qua cơ chế Azure AD authentication.\n2. **Tạo SQL User (C) từ Service Principal đó:** Trong các cơ sở dữ liệu trên SQL1, bạn cần chạy lệnh T-SQL `CREATE USER [Tên_Service_Principal] FROM EXTERNAL PROVIDER` để tạo một database user ánh xạ tới Service Principal trên. Sau đó, bạn cấp quyền phù hợp cho user này (ví dụ như `db_owner` hoặc quyền quản trị viên) để nó có thể thực hiện công việc tự động gán quyền cho các người dùng khác.\n\n*Lưu ý:* SQL login thông thường (D) hoặc managed identity cho chính máy chủ SQL1 (B) không giải quyết được việc xác thực của tiến trình Azure Automation. Do đó, các đáp án đúng là **A** và **C**.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4222,7 +4222,7 @@
       "E": "Tạo một cơ sở dữ liệu Azure SQL Database mới tên là DB2."
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để hệ thống tự động phục hồi sau thảm họa (Disaster Recovery) mà **không phải sửa đổi chuỗi kết nối (connection strings)** trên ứng dụng, bạn cần sử dụng tính năng **Auto-Failover Groups (Nhóm tự động chuyển vùng dự phòng)**:\n\n1. **Tạo máy chủ Server2 (C):** Nhóm chuyển vùng dự phòng yêu cầu một máy chủ đối tác ở một vùng địa lý khác (Azure paired region) để làm máy chủ phụ (secondary). Do đó bạn cần tạo Server2 ở vùng địa lý khác.\n2. **Thêm Failover Group trên Server1 (B):** Bạn cấu hình failover group trên máy chủ gốc (Server1) để liên kết với Server2. Khi đó, Azure cung cấp một điểm cuối người nghe ghi-đọc chung (read-write listener endpoint) không thay đổi. Ứng dụng kết nối tới điểm cuối listener này, và khi xảy ra sự cố vùng, hệ thống sẽ tự động chuyển hướng truy cập tới Server2 mà ứng dụng không cần cấu hình lại chuỗi kết nối.\n\n*Lưu ý:* Tính năng Geo-replication độc lập (A) yêu cầu bạn phải tự quản lý chuyển đổi dự phòng thủ công và cập nhật lại connection string để hướng tới máy chủ mới.\n\n*(Đáp án được gợi ý bởi AI)*",

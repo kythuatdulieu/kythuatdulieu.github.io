@@ -17,12 +17,8 @@ export async function getStaticPaths() {
 
 const { quizId } = Astro.params;
 const { quiz } = Astro.props;
-const quizTitle = `${quiz.name} (${quiz.provider}) — Luyện đề tiếng Việt | Kỹ thuật Dữ liệu`;
-const quizDescription = quiz.vi
-  ? `Ôn thi ${quiz.name} với ${quiz.count} câu hỏi song ngữ và giải thích bằng tiếng Việt. Lưu tiến độ tự động, xáo trộn câu hỏi và xem lại câu sai.`
-  : Number(quiz.viCoverage) > 0
-    ? `Luyện đề ${quiz.name} (${quiz.provider}) với ${quiz.count} câu hỏi; ${quiz.viCoverage}% câu có bản dịch tiếng Việt và giải thích. Lưu tiến độ, xáo trộn đề và xem lại câu sai.`
-    : `Luyện đề ${quiz.name} (${quiz.provider}) với ${quiz.count} câu hỏi tiếng Anh, giải thích và công cụ ôn tập. Lưu tiến độ, xáo trộn đề và xem lại câu sai.`;
+const quizTitle = `Quiz - ${quiz.name}`;
+const quizDescription = `${quiz.name} Practice Quiz - ${quiz.count} questions${quiz.vi ? ' with Vietnamese translation' : ''}.`;
 const canonicalUrl = toAbsoluteUrl(`/quizzes/${quizId}/`);
 const quizSchema = {
   '@context': 'https://schema.org',
@@ -33,7 +29,7 @@ const quizSchema = {
       name: quiz.name,
       description: quizDescription,
       url: canonicalUrl,
-      inLanguage: Number(quiz.viCoverage) > 0 ? ['vi-VN', 'en'] : 'en',
+      inLanguage: quiz.vi ? ['vi-VN', 'en'] : 'en',
       learningResourceType: 'Quiz',
       educationalUse: 'assessment',
       isPartOf: { '@type': 'WebSite', name: SITE_NAME, url: toAbsoluteUrl('/') },
@@ -142,11 +138,6 @@ const quizSchema = {
       <span class="score-icon">○</span>
       <span class="score-value" id="scoreUnanswered">{quiz.count}</span>
     </div>
-    <div class="score-item reviewed">
-      <span class="score-icon">◉</span>
-      <span class="score-value" id="scoreReviewed">0</span>
-      <span class="score-label">Đã xem</span>
-    </div>
     <div class="score-progress">
       <div class="progress-bar" id="progressBar"></div>
     </div>
@@ -159,6 +150,7 @@ const quizSchema = {
       <div class="question-header">
         <span class="question-badge" id="questionBadge">Question #1</span>
         <span class="topic-badge" id="topicBadge">Topic 1</span>
+        <button class="icon-btn pdf-btn" id="btnPdf" title="Mở trang PDF gốc">PDF</button>
         <button class="icon-btn pdf-btn" id="btnImage" title="Xem ảnh trang PDF">Ảnh</button>
       </div>
       <div class="question-text" id="questionText"></div>

@@ -11,7 +11,7 @@
       "E": "Create an external ID field for each object in the target org and map source record IDs to this field."
     },
     "answer": "BDE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để duy trì cấu trúc phân cấp mối quan hệ (như master-detail và lookup) phức tạp khi di chuyển dữ liệu giữa hai org Salesforce, Data Architect cần thực hiện các bước sau:\n\n* **B. Sử dụng Data Loader để xuất dữ liệu từ org nguồn và sau đó nhập/cập nhật (import/upsert) vào org đích theo thứ tự tuần tự:** Dữ liệu cần được tải lên theo trình tự logic, bắt đầu từ các đối tượng cha trước (ví dụ: Accounts), sau đó mới đến các đối tượng con (ví dụ: Contacts, Opportunities) để đảm bảo các bản ghi cha đã tồn tại khi liên kết.\n* **D. Thay thế ID bản ghi nguồn bằng ID bản ghi mới từ org đích trong tệp nhập dữ liệu:** Khi dữ liệu được import vào org đích, hệ thống sẽ sinh ra các Salesforce Record ID mới. Cần ánh xạ và thay thế ID cũ bằng ID mới này để đảm bảo tính toàn vẹn của mối quan hệ.\n* **E. Tạo một trường ID ngoại (External ID) cho mỗi đối tượng trong org đích và ánh xạ các ID bản ghi nguồn vào trường này:** Đây là phương pháp tối ưu nhất. Bằng cách lưu trữ ID của org nguồn vào một trường External ID ở org đích, bạn có thể thực hiện liên kết (relationship mapping) trực tiếp thông qua Data Loader trong các bước import/upsert tiếp theo mà không cần phải tra cứu chéo ID thủ công.\n\n*Tại sao các phương án khác sai:*\n* **A. Định nghĩa lại các mối quan hệ master-detail thành lookup:** Không cần thiết và làm thay đổi logic nghiệp vụ cũng như các quy tắc bảo mật kế thừa từ master-detail của hệ thống ban đầu.\n* **C. Giữ nguyên trường mối quan hệ với ID bản ghi nguồn:** Nếu giữ nguyên ID của org nguồn, hệ thống đích sẽ báo lỗi vì các ID này không tồn tại trên org mới.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -46,7 +46,7 @@
       "E": "Duplicate customer records across the systems and provide a two-way sync of data between the systems."
     },
     "answer": "ACD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để giải quyết triệt để tình trạng trùng lặp dữ liệu và thiếu sự nhất quán về thông tin khách hàng trên hệ thống phức tạp của NTO, Data Architect nên:\n\n* **A. Đầu tư vào công cụ lọc trùng dữ liệu (data duplication tool):** Công cụ này giúp làm sạch dữ liệu hiện tại bằng cách tìm kiếm, lọc trùng và hợp nhất (merge) các bản ghi bị lặp trên toàn bộ hệ thống doanh nghiệp.\n* **C. Tạo một cơ sở dữ liệu khách hàng master (Customer MDM) bên ngoài Salesforce:** Đóng vai trò là \"nguồn chân lý\" (System of Truth/Single Source of Truth - SSOT), đảm bảo thông tin khách hàng luôn chính xác và được đồng bộ chuẩn hóa tới tất cả các hệ thống vệ tinh.\n* **D. Tạo ID khách hàng duy nhất toàn cầu (Unique Global Customer ID):** Mã định danh duy nhất (ví dụ: GUID hoặc Enterprise Customer ID) được lưu trữ trên tất cả các hệ thống giúp dễ dàng đối chiếu, ánh xạ và duy trì danh tính duy nhất của khách hàng trên toàn bộ kiến trúc đa hệ thống.\n\n*Tại sao các phương án khác sai:*\n* **B. Sử dụng Salesforce CDC:** CDC chỉ truyền đi các thay đổi dữ liệu chứ không giải quyết được vấn đề làm sạch dữ liệu trùng lặp hay xây dựng danh tính khách hàng nhất quán.\n* **E. Nhân bản các bản ghi khách hàng và đồng bộ 2 chiều:** Cách tiếp cận này chỉ làm tăng thêm sự hỗn loạn của dữ liệu trùng lặp và gây xung đột dữ liệu (data conflicts).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -139,7 +139,7 @@
       "E": "Data standardization"
     },
     "answer": "BCD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Hệ thống **Master Data Management (MDM)** được thiết kế để giải quyết các vấn đề cốt lõi về chất lượng dữ liệu doanh nghiệp thông qua việc xây dựng một bản ghi khách hàng chuẩn nhất (Golden Record). Ba vấn đề chính mà MDM giải quyết gồm:\n\n* **B. Độ chính xác và chất lượng dữ liệu (Data accuracy and quality):** MDM liên tục làm sạch, kiểm tra tính hợp lệ và cập nhật dữ liệu từ nguồn tin cậy nhất để đảm bảo thông tin khách hàng luôn chính xác.\n* **C. Tính đầy đủ của dữ liệu (Data completeness):** MDM tổng hợp dữ liệu từ nhiều nguồn khác nhau (ví dụ: lấy số điện thoại từ Service Cloud, địa chỉ email từ Marketing Cloud) để tạo nên một bản ghi đầy đủ thông tin nhất về khách hàng.\n* **D. Trùng lặp dữ liệu (Data duplication):** Bằng cách áp dụng các thuật toán so khớp (matching & merging), MDM loại bỏ hoàn toàn việc trùng lặp thông tin khách hàng trên toàn doanh nghiệp.\n\n*Tại sao các phương án khác sai:*\n* **A. Mất mát dữ liệu và khôi phục (Data loss and recovery):** Đây là nhiệm vụ của các giải pháp sao lưu và phục hồi thảm họa (Backup & Disaster Recovery), không phải chức năng của MDM.\n* **E. Chuẩn hóa dữ liệu (Data standardization):** Mặc dù MDM có thể hỗ trợ chuẩn hóa dữ liệu, nhưng chuẩn hóa dữ liệu thường được xem là một bước chuẩn bị dữ liệu (Data Cleansing/Standardization) hơn là vấn đề kinh doanh chính được giải quyết bởi MDM như tính chính xác, tính đầy đủ và chống trùng lặp.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -347,7 +347,7 @@
       "D": "Leverage picklist and lookup fields where possible."
     },
     "answer": "CD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để đảm bảo và duy trì chất lượng dữ liệu sạch ngay từ khâu nhập liệu, các tính năng tiêu chuẩn (declarative features) của Salesforce là lựa chọn ưu tiên hàng đầu:\n\n* **C. Tận dụng Validation Rules và Workflows:** Các quy tắc kiểm tra tính hợp lệ (Validation Rules) giúp thực thi các định dạng bắt buộc và logic kinh doanh ngay khi bản ghi được lưu (áp dụng cho cả người dùng nhập trên giao diện lẫn API từ tích hợp ngoài).\n* **D. Tận dụng các trường Picklist và Lookup:** Việc giới hạn dữ liệu nhập thông qua các danh sách chọn (Picklists) giúp loại bỏ lỗi chính tả và chuẩn hóa giá trị nhập vào. Các trường liên kết (Lookup) giúp đảm bảo tính toàn vẹn tham chiếu (referential integrity) bằng cách buộc người dùng liên kết với các bản ghi hợp lệ đã tồn tại.\n\n*Tại sao các phương án khác sai:*\n* **A. Sử dụng công cụ AppExchange:** Mặc dù hữu ích cho việc làm sạch dữ liệu diện rộng, nhưng đây không phải là bước thiết lập cơ bản ban đầu để kiểm soát tính chính xác trực tiếp tại thời điểm nhập dữ liệu như Validation Rules và Picklists.\n* **B. Tận dụng Apex:** Viết code Apex để kiểm tra định dạng di động là giải pháp tùy biến phức tạp, nên ưu tiên các giải pháp cấu hình kéo-thả (Validation Rules) trước theo khuyến nghị của Salesforce.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -381,7 +381,7 @@
       "E": "Build process to manually search and merge duplicates."
     },
     "answer": "ABD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để giảm thiểu tối đa tình trạng trùng lặp lead từ nhiều nguồn thu nhận khác nhau, gây lãng phí chi phí và trải nghiệm không tốt cho khách hàng, Data Architect nên:\n\n* **A. Triển khai giải pháp bên thứ ba để làm sạch và làm phong phú dữ liệu:** Giúp tự động chuẩn hóa địa chỉ, kiểm tra số điện thoại/email hợp lệ từ đó nâng cao chất lượng dữ liệu đầu vào.\n* **B. Triển khai chiến lược chống trùng lặp:** Thiết lập các Quy tắc trùng lặp (Duplicate Rules) và Quy tắc so khớp (Matching Rules) trong Salesforce để cảnh báo hoặc chặn việc tạo lead trùng lặp mới.\n* **D. Chuẩn hóa thông tin lead trên tất cả các kênh:** Thiết lập quy chuẩn chung cho dữ liệu đầu vào (ví dụ: định dạng tên, số điện thoại, định danh) ở tất cả các nguồn đẩy về để hệ thống dễ dàng so khớp và chống trùng.\n\n*Tại sao các phương án khác sai:*\n* **C. Xây dựng giải pháp tùy chỉnh (custom):** Tránh viết code tùy chỉnh phức tạp để xác định/merge vì Salesforce đã cung cấp sẵn tính năng Duplicate Management cực kỳ mạnh mẽ.\n* **E. Hợp nhất thủ công:** Không hiệu quả và không thể mở rộng đối với các tổ chức bảo hiểm lớn nhận hàng ngàn lead mỗi ngày.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -722,7 +722,7 @@
       "E": "Leverage Salesforce features, such as validation rules, to avoid incomplete and incorrect records."
     },
     "answer": "ACE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để nâng cao chất lượng dữ liệu phục vụ báo cáo, ba giải pháp thiết thực nhất bao gồm: làm phong phú thông tin từ bên thứ ba (A), xây dựng bảng theo dõi chất lượng dữ liệu (C) và thiết lập các quy tắc kiểm tra/ngăn ngừa ngay khi nhập liệu (E).\n\n- **A (Làm phong phú dữ liệu)**: Sử dụng nhà cung cấp dữ liệu bên thứ ba giúp điền tự động và bổ sung các thông tin bị thiếu (enrichment).\n- **C (Giám sát dữ liệu)**: Thiết kế Data-Quality Dashboard giúp ban quản trị trực quan hóa các chỉ số chất lượng dữ liệu, phát hiện sớm các bản ghi lỗi thời hoặc không hoàn chỉnh để kịp thời sửa đổi.\n- **E (Ngăn ngừa dữ liệu xấu)**: Validation Rules giúp chặn ngay từ đầu việc nhập thông tin sai định dạng hoặc bỏ trống các trường bắt buộc.\n- **Lý do các lựa chọn khác không phù hợp**:\n  - **B sai**: Xây dựng Data Warehouse riêng biệt chỉ chuyển dịch vấn đề báo cáo sang nơi khác chứ không giải quyết tận gốc nguyên nhân chất lượng dữ liệu kém ngay tại hệ thống nguồn (Salesforce).\n  - **D sai**: Việc xuất dữ liệu ra ngoài để làm sạch thủ công rồi nhập lại là giải pháp tạm thời, tốn công sức và dễ gây không đồng nhất dữ liệu trong quá trình hoạt động thời gian thực.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -909,7 +909,7 @@
       "D": "Enable Set Audit Fields upon Record Creation permission."
     },
     "answer": "CD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để lưu trữ chính xác các dữ liệu lịch sử từ hệ thống cũ, quản trị viên cần kích hoạt quyền cập nhật trường hệ thống kiểm toán (Set Audit Fields upon Record Creation) và cho phép sở hữu bản ghi bởi người dùng không hoạt động (Update Records with Inactive Owners).\n\n- **D (Set Audit Fields upon Record Creation)**: Quyền này cho phép người dùng thiết lập các trường hệ thống chỉ đọc (như `CreatedDate`, `CreatedById`, `LastModifiedDate`, `LastModifiedById`) khi tạo mới bản ghi bằng các công cụ tải dữ liệu (Data Loader, v.v.).\n- **C (Update Records with Inactive Owners)**: Quyền này cho phép tải dữ liệu hoặc cập nhật các bản ghi được sở hữu bởi những người dùng đã bị vô hiệu hóa (Inactive) trong Salesforce mà không cần phải kích hoạt lại tài khoản của họ.\n- **Lý do các lựa chọn khác không phù hợp**:\n  - **A sai**: Salesforce không còn yêu cầu mở case hỗ trợ để bật tính năng này nữa; quản trị viên có thể tự kích hoạt trực tiếp trong phần User Interface Settings của Org.\n  - **B sai**: Quyền Modify All và View All liên quan đến việc đọc/ghi dữ liệu chung chứ không cho phép chỉnh sửa các trường hệ thống kiểm toán (audit fields) hay gán chủ sở hữu không hoạt động.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2146,7 +2146,7 @@
       "E": "You have a large amount of data that you don't want to copy into your Salesforce org."
     },
     "answer": "ABE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Salesforce Connect là giải pháp tích hợp cho phép hiển thị dữ liệu từ hệ thống bên ngoài trong Salesforce dưới dạng các đối tượng ngoại vi (external objects) mà không cần sao chép vật lý.\n\n- **Ba yếu tố chính khi cân nhắc sử dụng Salesforce Connect bao gồm:**\n  - **A. Truy cập thời gian thực (Real-time access):** Khi dữ liệu ở hệ thống ngoài liên tục thay đổi và Salesforce cần hiển thị dữ liệu mới nhất ngay lập tức mà không có độ trễ đồng bộ.\n  - **B. Lượng dữ liệu nhỏ tại một thời điểm (Small amounts of data at any one time):** Người dùng chỉ cần xem một lượng dữ liệu nhỏ tương ứng với bản ghi hiện tại đang thao tác.\n  - **E. Khối lượng dữ liệu lớn và không muốn sao chép (Large amount of data not copied):** Với 10 triệu dòng dữ liệu tồn kho, việc sao chép vật lý vào Salesforce sẽ làm tăng chi phí lưu trữ dữ liệu (Data Storage) và tăng độ phức tạp khi đồng bộ.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2206,7 +2206,7 @@
       "E": "Assign View All permissions to a group of users for the Account object."
     },
     "answer": "ABC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Lệch quyền sở hữu (Ownership Skew) xảy ra khi một người dùng đơn lẻ sở hữu hơn 10.000 bản ghi của một đối tượng. Việc này gây ra gánh nặng tính toán lại chia sẻ (sharing recalculations) khi người dùng này thay đổi vai trò hoặc nhóm.\n\n- **Các giải pháp khắc phục Ownership Skew:**\n  - **A. Đặt ở vai trò cao nhất (Top-most role):** Đặt người dùng sở hữu lệch ở đỉnh phân cấp vai trò giúp hạn chế việc tính toán lại phân quyền lan rộng sang các nhánh con.\n  - **B. Không gán vai trò (No role):** Đây là khuyến nghị tối ưu nhất. Khi người dùng không có vai trò, hệ thống sẽ bỏ qua việc tính toán lại cấu trúc vai trò của các bản ghi do họ sở hữu.\n  - **C. Tránh đưa vào nhóm công khai (Public Groups) của các quy tắc chia sẻ (Sharing Rules):** Giúp hệ thống không phải tính toán chia sẻ hàng loạt 100.000 bản ghi đó cho các nhóm người dùng khác.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2323,7 +2323,7 @@
       "D": "Implement a de-dupe solution and establish account ownership in Salesforce."
     },
     "answer": "BD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để khắc phục triệt để các phàn nàn về trùng lặp và chất lượng dữ liệu tài khoản:\n\n- **B. Tích hợp Salesforce với ERP và coi ERP là Nguồn chân lý duy nhất (System of Truth):** Đảm bảo thông tin khách hàng luôn được đồng bộ nhất quán từ hệ thống ERP gốc, tránh việc dữ liệu bị sai lệch hoặc nhập thủ công không kiểm soát trên Salesforce.\n- **D. Triển khai giải pháp lọc trùng và thiết lập quyền sở hữu tài khoản rõ ràng trong Salesforce:** Sử dụng các công cụ như Quy tắc đối khớp (Matching Rules) và Quy tắc trùng lặp (Duplicate Rules) trong Salesforce để chặn hoặc cảnh báo trùng lặp ngay khi tạo bản ghi. Thiết lập rõ quyền sở hữu giúp cải thiện tính quy trách nhiệm trong việc quản trị dữ liệu.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2423,7 +2423,7 @@
       "E": "Lưu trữ (archive) các bản ghi vào kho dữ liệu doanh nghiệp (EDW) trước khi xóa khỏi Salesforce."
     },
     "answer": "ABE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để giảm thiểu số lượng bản ghi và giải phóng dung lượng lưu trữ đang vượt giới hạn một cách an toàn và hiệu quả, quy trình đề xuất tối ưu của một Data Architect bao gồm:\n\n- **B là đúng**: Xác định các bản ghi không còn hoạt động hoặc không được cập nhật trong vòng 3 năm qua để đưa vào diện cần xử lý.\n- **E là đúng**: Lưu trữ (archive) các bản ghi này vào kho dữ liệu doanh nghiệp (Enterprise Data Warehouse - EDW) để đảm bảo doanh nghiệp vẫn có thể truy cập lại dữ liệu lịch sử khi có yêu cầu kiểm toán trước khi xóa vĩnh viễn khỏi Salesforce.\n- **A là đúng**: Sử dụng tùy chọn **Hard Delete trong Bulk API** giúp xóa vĩnh viễn các bản ghi ngay lập tức mà không đi qua Thùng rác (Recycle Bin), giúp giải phóng ngay lập tức dung lượng lưu trữ cho hệ thống.\n- **C là sai**: Batch Apex thông thường thực hiện xóa mềm (đưa vào Recycle Bin) và không hỗ trợ trực tiếp xóa cứng ở mức tối ưu hóa cao cho dữ liệu lớn như Bulk API.\n- **D là sai**: REST API không được thiết kế cho việc xóa cứng hàng loạt (bulk hard delete) số lượng lớn bản ghi và dễ gây cạn kiệt giới hạn API limit của org.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2520,7 +2520,7 @@
       "E": "Tận dụng các công cụ phần mềm trung gian (middleware) để gửi dữ liệu Opportunity hai chiều giữa các org."
     },
     "answer": "ABE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Đồng bộ hóa dữ liệu cơ hội hai chiều giữa hai org riêng biệt theo thời gian gần như thực (near-real time) đòi hỏi các phương pháp tích hợp dữ liệu chủ động và linh hoạt:\n\n- **A là đúng**: Các công cụ bên thứ ba trên AppExchange chuyên biệt cho tích hợp đa org (multi-org integration) giúp cấu hình đồng bộ hóa dữ liệu dễ dàng.\n- **B là đúng**: Heroku Connect cho phép đồng bộ hóa dữ liệu giữa Salesforce và cơ sở dữ liệu Heroku Postgres. Khi kết nối cả hai org Salesforce A và B vào cùng một database Heroku Postgres, dữ liệu cơ hội sẽ được đồng bộ hai chiều gần như thời gian thực một cách tự động.\n- **E là đúng**: Middleware (như MuleSoft, Dell Boomi) là giải pháp kiến trúc tiêu chuẩn để tích hợp hệ thống, xử lý đồng bộ hóa dữ liệu hai chiều thời gian thực và đảm bảo tính toàn vẹn của dữ liệu.\n- **C là sai**: Apex scheduler chạy định kỳ hàng ngày (daily) không thể đáp ứng yêu cầu đồng bộ thời gian gần như thực (near-real time).\n- **D là sai**: Salesforce Connect và cross-org adapter chỉ cung cấp khả năng xem và truy vấn dữ liệu từ xa dưới dạng đối tượng ngoại vi ảo (external objects) chứ không thực hiện việc đồng bộ hóa dữ liệu thực sự vào cơ sở dữ liệu của org đích.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2582,7 +2582,7 @@
       "D": "Sử dụng các đối tượng lớn (Big Objects) cho các ca hỗ trợ cũ hơn 2 năm và chạy tiến trình batch hàng đêm để di chuyển chúng."
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Với quy mô 5 triệu ca hỗ trợ mới mỗi năm, tổng số ca hỗ trợ cần lưu trữ từ năm thứ 3 đến năm thứ 7 lên tới 25 triệu bản ghi. Đây là một vấn đề về Khối lượng Dữ liệu Lớn (LDV) cần các giải pháp lưu trữ phụ trợ hiệu quả:\n\n- **A là đúng**: Di chuyển dữ liệu cũ hơn 2 năm sang một cơ sở dữ liệu bên ngoài giúp giải phóng dung lượng cho Salesforce org, đồng thời cho phép service agents truy vấn lại theo yêu cầu qua các công cụ truy cập dữ liệu bên ngoài.\n- **D là đúng**: **Big Objects** của Salesforce cung cấp giải pháp lưu trữ lưu trữ chi phí thấp trực tiếp trên nền tảng cho hàng triệu bản ghi lịch sử. Tiến trình Batch Apex chạy hàng đêm có thể tự động lọc các Case cũ hơn 2 năm, di chuyển chúng sang Big Object và xóa bản ghi gốc ở Case object.\n- **B là sai**: Sử dụng Custom object vẫn làm tăng bộ nhớ lưu trữ tiêu chuẩn (standard data storage) của Salesforce và không giải quyết được vấn đề dung lượng.\n- **C là sai**: Việc sử dụng Heroku External Objects để hiển thị dữ liệu bên ngoài là một mô hình thiết kế tốt, nhưng đáp án A và D là các đề xuất lưu trữ dữ liệu chính thức được khuyến nghị trực tiếp trong tài liệu Data Architect của Salesforce cho bài toán lưu trữ và dọn dẹp dữ liệu lớn.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2650,7 +2650,7 @@
       "E": "Sử dụng các truy vấn có tính chọn lọc (selective queries) để giảm lượng dữ liệu được trả về."
     },
     "answer": "ACE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Với quy mô dữ liệu cực lớn (100 triệu cơ hội), hiệu năng của dashboard bị ảnh hưởng nghiêm trọng do các báo cáo nguồn phải thực hiện quét toàn bộ bảng dữ liệu lớn. Để tối ưu hóa hiệu năng, chúng ta cần thực hiện các giải pháp sau:\n\n- **A là đúng**: Khử chuẩn hóa (Denormalize) dữ liệu bằng cách kéo các trường từ đối tượng cha liên quan trực tiếp vào đối tượng Opportunity để giảm số lượng phép nối bảng (joins) trong báo cáo, giúp đẩy nhanh tốc độ truy vấn cơ sở dữ liệu.\n- **C là đúng**: Lưu trữ (Archive) các cơ hội cũ không hoạt động (đã đóng từ lâu) sang hệ thống ngoài để giảm quy mô bảng dữ liệu cần quét trong Salesforce.\n- **E là đúng**: Sử dụng các truy vấn chọn lọc (Selective Queries) bằng cách lọc báo cáo theo các trường được lập chỉ mục (indexed fields) như `Id`, `CreatedDate`, `RecordType` hoặc các trường External ID nhằm tránh quét toàn bộ bảng (full table scan).\n- **B là sai**: Việc gửi email chỉ là một biện pháp tình thế, không giải quyết được gốc rễ vấn đề hiệu năng chạy thực tế của hệ thống.\n- **D là sai**: Lỗi timeout xảy ra do thời gian truy vấn dữ liệu từ cơ sở dữ liệu của báo cáo nguồn quá lâu, chứ không phải do tốc độ dựng đồ họa của trình duyệt. Do đó, chỉ xóa widget mà không tối ưu truy vấn báo cáo nguồn sẽ không giải quyết được vấn đề.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2842,7 +2842,7 @@
       "E": "Tạo các trường mới để lưu trữ thêm các giá trị từ tất cả các hệ thống."
     },
     "answer": "ABC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Hợp nhất dữ liệu (Consolidation) từ nhiều nguồn dữ liệu vào Salesforce trong chiến lược Master Data Management (MDM) yêu cầu các bước chuẩn bị và xử lý dữ liệu chặt chẽ:\n\n- **A là đúng**: Cần làm việc với các bên liên quan (stakeholders) để xác định quy tắc sinh tồn của trường và bản ghi (record and field survivorship rules) - nhằm quyết định giá trị từ hệ thống nào sẽ được ưu tiên giữ lại khi có sự xung đột thông tin.\n- **B là đúng**: Phân tích mô hình dữ liệu (data model) của từng hệ thống nguồn và thực hiện gap analysis để lập bản đồ ánh xạ (mapping) sang mô hình dữ liệu của Salesforce, xác định những trường nào bị thiếu cần tùy chỉnh.\n- **C là đúng**: Sử dụng công cụ ETL chuyên nghiệp là phương thức tối ưu để thực hiện việc di chuyển, chuyển đổi định dạng và lọc trùng lặp (deduplicate) dữ liệu chéo giữa các nguồn trước khi đưa vào Salesforce.\n- **D là sai**: Một ứng dụng AppExchange đơn thuần không thể tự xử lý quy trình hợp nhất phức tạp giữa Salesforce với ERP và CRM nội bộ nếu không có phân tích mô hình và quy trình ETL.\n- **E là sai**: Việc tạo trường mới một cách bừa bãi cho tất cả giá trị từ mọi hệ thống sẽ làm phá vỡ cấu trúc mô hình dữ liệu chuẩn của Salesforce và không đạt được mục tiêu hợp nhất dữ liệu chủ.\n\n*(Đáp án được gợi ý bởi AI)*",

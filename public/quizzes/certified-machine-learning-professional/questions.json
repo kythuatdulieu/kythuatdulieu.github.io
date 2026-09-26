@@ -2884,17 +2884,12 @@
     "id": 94,
     "topic": 1,
     "question": "A Data Scientist is developing a model training pipeline on Databricks and needs to track custom performance metrics during training. They want to log a custom evaluation score (team_score), a single hyperparameter, and a confusion matrix plot as part of their MLflow experiment.\nWhich code snippet correctly logs all three types of information in MLflow?",
-    "options": {
-      "A": "mlflow.log_param(\"max_depth\", 5)\nmlflow.log_metric(\"team_score\", 0.92)\nmlflow.log_artifact(open(\"confusion_matrix.png\"))",
-      "B": "mlflow.log_param(\"max_depth\", 5)\nmlflow.log_metric(\"team_score\", 0.92)\nmlflow.log_artifact(\"confusion_matrix.png\")",
-      "C": "mlflow.log_param(\"max_depth\", \"5\")\nmlflow.log_metric(\"team_score\", \"0.92\")\nmlflow.log_artifact(\"confusion_matrix.png\")",
-      "D": "mlflow.log_metric({\"team_score\": 0.92})\nmlflow.log_param([\"max_depth\", 5])\nmlflow.log_file(\"confusion_matrix.png\")"
-    },
+    "options": {},
     "answer": "B",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Đáp án **B**. Cả ba lệnh đều truyền đúng kiểu và đúng hàm cho MLflow Tracking:\n\n- `mlflow.log_param(\"max_depth\", 5)` ghi một hyperparameter tên `max_depth` với giá trị 5.\n- `mlflow.log_metric(\"team_score\", 0.92)` ghi metric số `team_score`.\n- `mlflow.log_artifact(\"confusion_matrix.png\")` ghi tệp biểu đồ đã được lưu trên đĩa vào artifacts của lần chạy MLflow. Hàm nhận đường dẫn tệp; truyền đối tượng tệp đang mở như lựa chọn A không đúng với tham số `local_path`.\n\nC sai vì truyền giá trị dạng chuỗi thay vì số cho metric. D dùng sai hình dạng tham số và một hàm không tồn tại trong API đang dùng.\n\n*(Đáp án được đối chiếu với ví dụ câu hỏi và tài liệu API MLflow.)*",
+    "explanation_vi": "Để ghi nhận các thông tin khác nhau trong một thử nghiệm MLflow (MLflow Experiment Run), ta sử dụng các hàm API tương ứng của MLflow:\n\n- **Siêu tham số (Hyperparameter):** Sử dụng `mlflow.log_param(key, value)` để lưu tham số cấu hình tĩnh (ví dụ: các siêu tham số huấn luyện).\n- **Chỉ số hiệu suất (Metric):** Sử dụng `mlflow.log_metric(key, value)` để lưu các chỉ số dạng số có thể thay đổi hoặc được đánh giá cuối cùng (ví dụ: `team_score`).\n- **Biểu đồ ma trận nhầm lẫn (Confusion Matrix Plot):** Sử dụng `mlflow.log_figure(fig, artifact_file)` (cho các đối tượng hình ảnh in-memory như Matplotlib/Plotly) hoặc `mlflow.log_artifact(local_path)` (cho các tệp đã lưu cục bộ) để ghi lại biểu đồ dưới dạng tệp bổ trợ (artifact).\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
       {
         "title": "MLflow Tracking - Logging Functions",
@@ -2906,12 +2901,7 @@
       }
     ],
     "question_vi": "Một nhà khoa học dữ liệu đang phát triển một đường ống huấn luyện mô hình trên Databricks và cần theo dõi các chỉ số hiệu suất tùy chỉnh trong quá trình huấn luyện. Họ muốn ghi lại một điểm đánh giá tùy chỉnh (team_score), một siêu tham số duy nhất, và một biểu đồ ma trận nhầm lẫn (confusion matrix plot) như một phần của thử nghiệm MLflow của họ.\nĐoạn mã nào sau đây ghi lại chính xác cả ba loại thông tin này trong MLflow?",
-    "options_vi": {
-      "A": "mlflow.log_param(\"max_depth\", 5)\nmlflow.log_metric(\"team_score\", 0.92)\nmlflow.log_artifact(open(\"confusion_matrix.png\"))",
-      "B": "mlflow.log_param(\"max_depth\", 5)\nmlflow.log_metric(\"team_score\", 0.92)\nmlflow.log_artifact(\"confusion_matrix.png\")",
-      "C": "mlflow.log_param(\"max_depth\", \"5\")\nmlflow.log_metric(\"team_score\", \"0.92\")\nmlflow.log_artifact(\"confusion_matrix.png\")",
-      "D": "mlflow.log_metric({\"team_score\": 0.92})\nmlflow.log_param([\"max_depth\", 5])\nmlflow.log_file(\"confusion_matrix.png\")"
-    }
+    "options_vi": {}
   },
   {
     "id": 95,

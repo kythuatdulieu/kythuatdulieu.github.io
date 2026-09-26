@@ -69,7 +69,7 @@
       "E": "Create a Conditional Access policy."
     },
     "answer": "BD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: B (Configure a custom subdomain.) và D (Create a private endpoint.)**\n\n• **Giải thích:**\n  - Để có thể xác thực với dịch vụ Speech Service thông qua Microsoft Entra ID (Azure AD) token, Microsoft yêu cầu tài nguyên Cognitive Services đó phải có cấu hình **custom subdomain** (ví dụ: `https://mycustomsubdomain.cognitiveservices.azure.com/`). Mặc định khi tạo tài nguyên, nó sử dụng endpoint khu vực (regional endpoint) và endpoint này không hỗ trợ xác thực bằng Entra ID.\n  - Đồng thời, khi bật custom subdomain cho dịch vụ Speech Service, bạn cần tạo **private endpoint** trong cấu hình mạng để đảm bảo rằng lưu lượng truy cập được định tuyến an toàn và hỗ trợ giao tiếp xác thực dựa trên tên miền tùy chỉnh này.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A (Enable a virtual network service endpoint):** Service endpoints chỉ cung cấp kết nối bảo mật đến dịch vụ từ một mạng ảo cụ thể chứ không cấu hình cơ chế định danh/tên miền tùy chỉnh cần thiết cho việc xác thực Entra ID của Speech Service.\n  - **C (Request an X.509 certificate):** Speech SDK xác thực qua Entra ID token hoặc API key, không sử dụng chứng chỉ X.509 để xác thực kết nối ứng dụng trực tiếp đến API.\n  - **E (Create a Conditional Access policy):** Mặc dù Conditional Access có thể dùng để kiểm soát quyền truy cập ở cấp độ tổ chức, nhưng đây là một thiết lập chính sách bảo mật phía Entra ID chung chung, không phải là bước cấu hình kỹ thuật bắt buộc trên tài nguyên Speech Service để cho phép nó hỗ trợ token authentication.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -191,7 +191,7 @@
       "E": "input"
     },
     "answer": "CD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: C (waterfall) và D (prompt)**\n\n• **Giải thích:**\n  - **Waterfall dialog (Hội thoại dạng thác nước):** Định nghĩa một chuỗi các bước tuyến tính, tuần tự để thu thập thông tin từ người dùng. Rất thích hợp cho quy trình đặt món ăn (ví dụ: Bước 1: Chọn món, Bước 2: Hỏi tùy chọn thêm, Bước 3: Xác nhận đơn hàng). Nó giúp giảm thiểu công sức phát triển vì lập trình viên không phải tự quản lý trạng thái phức tạp của các câu hỏi.\n  - **Prompt dialog (Hội thoại gợi nhắc):** Là các hộp thoại chuyên dụng dùng để hỏi người dùng các thông tin cụ thể (chữ, số, ngày tháng, danh sách lựa chọn...) và tự động kiểm tra tính hợp lệ của dữ liệu đầu vào. Các Prompt này được nhúng trực tiếp vào các bước của Waterfall dialog để hỏi người dùng thông tin tùy chỉnh cho từng món ăn.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A (adaptive):** Adaptive dialogs linh hoạt hơn nhưng phức tạp hơn rất nhiều, đòi hỏi nhiều công sức phát triển và thiết kế hơn, không phù hợp với mục tiêu \"minimize development effort\" của đề bài.\n  - **B (action):** Không phải là một kiểu dialog chuẩn trong Bot Framework SDK.\n  - **E (input):** Input dialogs thường là thành phần con bên trong Adaptive dialogs chứ không phải là loại dialog độc lập kết hợp với Waterfall.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -586,7 +586,7 @@
       "F": "Azure Key Vault is required."
     },
     "answer": "ABF",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: A, B, và F**\n\n• **Giải thích:**\n  - **F (Yêu cầu phải có Azure Key Vault):** Khóa do khách hàng quản lý (Customer-Managed Key - CMK) phải được lưu trữ và quản lý an toàn trong dịch vụ **Azure Key Vault** (hoặc Azure Key Vault Managed HSM) để Azure AI Search có thể truy xuất và giải mã dữ liệu chỉ mục.\n  - **A (Kích thước chỉ mục tăng lên):** Khi mã hóa dữ liệu, việc bổ sung các padding (phần đệm bảo mật), khóa bọc và siêu dữ liệu mã hóa làm cho kích thước lưu trữ của chỉ mục tăng lên so với dữ liệu không mã hóa.\n  - **B (Thời gian phản hồi truy vấn tăng lên):** Việc giải mã thời gian thực (real-time decryption) dữ liệu chỉ mục trong quá trình thực hiện truy vấn tìm kiếm sẽ làm tăng thời gian xử lý của CPU, dẫn đến thời gian hoàn thành truy vấn tăng nhẹ (tốc độ chậm hơn).\n\n• **Tại sao các đáp án khác không đúng:**\n  - **C:** CMK trong Azure Key Vault sử dụng các cặp khóa đối xứng hoặc bất đối xứng chuẩn, không yêu cầu thiết lập chứng chỉ X.509 tự ký riêng cho dịch vụ Search.\n  - **D, E:** Ngược lại với A và B (không thể giảm kích thước hay tăng tốc độ truy vấn khi bật mã hóa).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -671,7 +671,7 @@
       "D": "Create a CreateKbDTO object."
     },
     "answer": "BD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: B và D**\n\n• **Giải thích:**\n  - Để tạo một cơ sở tri thức (Knowledge Base) mới theo cách lập trình bằng SDK QnA Maker trong .NET, bạn cần thực hiện:\n    1. Khởi tạo một đối tượng **`CreateKbDTO` (Create Knowledge Base Data Transfer Object)** để định nghĩa cấu hình và nguồn dữ liệu đầu vào cho cơ sở tri thức (như danh sách các URL nguồn, ngôn ngữ, tên của cơ sở tri thức).\n    2. Gọi phương thức **`client.Knowledgebase.CreateAsync`** và truyền đối tượng `CreateKbDTO` vừa tạo vào làm tham số để gửi yêu cầu tạo cơ sở tri thức lên dịch vụ QnA Maker.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A (FileDTO):** Thường được sử dụng khi bạn muốn tạo cơ sở tri thức từ các tệp dữ liệu được tải lên trực tiếp (như tệp PDF, DOCX), không phải từ danh sách các URL.\n  - **C (QnADTO):** Đại diện cho các cặp Câu hỏi - Trả lời (QnA) thủ công được thêm trực tiếp vào mã nguồn, không phải được trích xuất tự động từ các URL nguồn.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -730,7 +730,7 @@
       "E": "Azure App Service"
     },
     "answer": "DE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: D (Azure Cognitive Search) và E (Azure App Service)**\n\n• **Giải thích:**\n  - Dịch vụ QnA Maker (phiên bản classic) phụ thuộc vào một số tài nguyên Azure nền tảng để lưu trữ dữ liệu và xử lý truy vấn:\n    1. **Azure Cognitive Search (Azure AI Search):** Được sử dụng để lưu trữ các cặp câu hỏi-trả lời đã được lập chỉ mục và thực hiện tính năng tìm kiếm văn bản đầy đủ (full-text search) để tìm câu trả lời phù hợp nhất.\n    2. **Azure App Service:** Được sử dụng để chạy (host) runtime ứng dụng web xử lý các API của QnA Maker.\n  - Khi bạn tạo một dịch vụ QnA Maker trên Azure Portal, trình thiết lập sẽ tự động cấu hình và tạo mới hai tài nguyên này đi kèm trong nhóm tài nguyên của bạn.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A, B, C:** Không phải là các tài nguyên tự động được tạo bắt buộc đi kèm khi khởi tạo dịch vụ QnA Maker.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -786,7 +786,7 @@
       "E": "appSecret"
     },
     "answer": "CE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: C (appId) và E (appSecret)**\n\n• **Giải thích:**\n  - Khi bạn đăng ký một chatbot bằng dịch vụ Bot Channels Registration (để liên kết bot với các kênh giao tiếp như Teams, Web Chat, Slack), Azure Bot Service yêu cầu xác thực bảo mật thông qua một ứng dụng đã đăng ký trong Microsoft Entra ID (Azure Active Directory).\n  - Để cấu hình bot hoạt động và giao tiếp an toàn, ứng dụng bot của bạn cần được định danh bằng **`appId` (Microsoft App ID)** và xác thực bằng **`appSecret` (Client Secret / App Password)** của ứng dụng Microsoft Entra ID đó.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A, B, D:** Mặc dù `botId`, `tenantId`, và `objectId` là các siêu dữ liệu quản trị hữu ích trong Azure, chúng không phải là cặp khóa xác thực bắt buộc cấu hình trực tiếp trong tệp cấu hình của ứng dụng bot để thiết lập kênh giao tiếp hoạt động ban đầu.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -843,7 +843,7 @@
       "F": "Set the analyzer property for the three product name variants."
     },
     "answer": "ABF",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: A, B, F**\n\n• **Giải thích:**\n  - Để cấu hình tính năng tự động hoàn thành (Autocomplete/Suggestions) trong Azure AI Search:\n    1. **B (Add a suggester...):** Bạn cần định nghĩa một **Suggester** duy nhất trong lược đồ chỉ mục (index schema) chứa danh sách các trường nguồn (source fields) được sử dụng để gợi ý (ở đây là ba trường tên sản phẩm).\n    2. **F (Set the analyzer...):** Các trường nguồn được sử dụng trong Suggester phải được cấu hình thuộc tính `analyzer` rõ ràng (hoặc dùng bộ phân tích mặc định tương thích) để lập chỉ mục từ vựng thích hợp cho việc gợi ý từ (ví dụ: dùng phân tích từ kiểu prefix).\n    3. **A (Make API queries to the autocomplete endpoint...):** Ở phía ứng dụng, khi người dùng nhập chữ, bạn sẽ gửi yêu cầu API đến điểm cuối tự động hoàn thành và truyền tên bộ gợi ý `suggesterName` trong nội dung yêu cầu để nhận về danh sách từ gợi ý hoàn thành.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **C:** Truy vấn đến điểm cuối tìm kiếm thông thường (`search`) để thực hiện tìm kiếm toàn văn bản chứ không phải để lấy danh sách từ tự động hoàn thành từ Suggester.\n  - **D:** Bạn không cần tạo một Suggester riêng biệt cho từng trường; thay vào đó, chỉ cần một Suggester duy nhất chứa tất cả các trường nguồn cần thiết.\n  - **E:** Thuộc tính `searchAnalyzer` chỉ được sử dụng để phân tích câu truy vấn lúc tìm kiếm, còn đối với việc xây dựng chỉ mục gợi ý cho Suggester, ta cần thiết lập bộ phân tích toàn diện lúc lập chỉ mục thông qua thuộc tính `analyzer`.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1082,7 +1082,7 @@
       "E": "In CSAccount1, modify the virtual network settings."
     },
     "answer": "AE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: A và E**.\n  - **A (Bật service endpoint cho CSAccount1 trên VNet1)**: Service Endpoint cho phép các tài nguyên trong mạng ảo Azure (như máy ảo, ứng dụng web) giao tiếp an toàn với CSAccount1 thông qua mạng nội bộ của Azure, thay vì định tuyến qua internet công cộng.\n  - **E (Sửa đổi các thiết lập mạng ảo trong CSAccount1)**: Bạn cần vào cài đặt tường lửa của CSAccount1 để chặn mọi lưu lượng truy cập từ Internet công cộng và chỉ cho phép lưu lượng đi đến từ các mạng con đã được bật Service Endpoint trên VNet1.\n\n• **Tại sao các lựa chọn khác sai**:\n  - **B (Access control - IAM)**: Chỉ dùng để quản lý phân quyền vai trò (chẳng hạn ai có quyền đọc/ghi tài nguyên), không giúp ngăn chặn các kết nối mạng trái phép bên ngoài.\n  - **C & D**: Sửa đổi cài đặt chung của mạng ảo hoặc tạo một subnet trống mà không định cấu hình kết nối Endpoint và Tường lửa dịch vụ thì không đáp ứng được yêu cầu bảo mật truy cập.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1406,7 +1406,7 @@
       "D": "Wrap the call to get_read_result within a loop that contains a delay."
     },
     "answer": "BD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: B và D** vì thao tác đọc văn bản (OCR) bằng Read API là một hoạt động bất đồng bộ (asynchronous operation). Khi bạn gọi API để bắt đầu thao tác đọc, nó sẽ trả về một địa chỉ vị trí hoạt động (`Operation-Location`). Ứng dụng sau đó cần truy vấn kết quả của hoạt động này. Để đảm bảo chương trình không cố gắng xử lý kết quả trước khi hoạt động hoàn tất:\n  - **B (Thêm mã để xác minh giá trị read_results.status):** Cần kiểm tra trạng thái (`status`) của kết quả trả về từ hoạt động (ví dụ: kiểm tra xem trạng thái có phải là 'succeeded' hay 'failed' hay không).\n  - **D (Bọc cuộc gọi đến get_read_result trong một vòng lặp có chứa khoảng thời gian chờ):** Cần thiết lập một vòng lặp liên tục kiểm tra trạng thái kết quả và tạm dừng (delay/sleep) một khoảng thời gian trước khi kiểm tra lại, cho đến khi trạng thái chuyển sang trạng thái kết thúc (không còn là 'running' hay 'notStarted').\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A (Loại bỏ tham số operation_id):** Sai vì `operation_id` là bắt buộc để xác định tác vụ bất đồng bộ cụ thể nào đang được truy vấn kết quả.\n  - **C (Xác minh trạng thái của giá trị read_operation_location):** Đường dẫn URL `read_operation_location` chỉ dùng để trích xuất `operation_id`, bản thân nó không thay đổi giá trị trạng thái hoạt động bên trong để phản ánh kết quả hoàn thành của tiến trình OCR.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1515,7 +1515,7 @@
       "E": "privacy and security"
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: B và C** vì:\n  - **B (Fairness - Sự công bằng):** Nguyên tắc này yêu cầu các hệ thống AI đối xử công bằng với tất cả mọi người mà không bị ảnh hưởng bởi các yếu tố như giới tính, chủng tộc, quốc tịch hay xuất thân. Yêu cầu đảm bảo kết quả công bằng (\"equitable results\") bất kể vị trí hay nền tảng của người dùng liên quan trực tiếp đến tính công bằng.\n  - **C (Inclusiveness - Tính bao trùm):** Nguyên tắc này nhấn mạnh việc thiết kế các hệ thống AI hướng đến việc phục vụ và tiếp cận được tất cả mọi người, không loại trừ bất kỳ ai dựa trên vị trí địa lý hoặc khả năng cá nhân.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A (Transparency):** Tập trung vào việc giải thích cách mô hình hoạt động và giúp người dùng hiểu các quyết định của hệ thống.\n  - **D (Reliability and safety):** Đảm bảo hệ thống hoạt động ổn định, chính xác và không gây hại.\n  - **E (Privacy and security):** Đảm bảo bảo vệ dữ liệu cá nhân của người dùng.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1604,7 +1604,7 @@
       "E": "area under the curve (AUC)"
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: A và D** vì sau khi huấn luyện một mô hình phân loại (classifier) trong Custom Vision, dịch vụ sẽ tự động tính toán và hiển thị các chỉ số hiệu suất chính trên trang tổng quan (dashboard) bao gồm:\n  - **Precision (Độ chính xác):** Tỷ lệ phần trăm các thẻ được dự đoán đúng trong số tất cả các dự đoán thẻ đó.\n  - **Recall (Độ phủ):** Tỷ lệ phần trăm các thẻ thực tế được dự đoán đúng bởi mô hình.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **B (F-score), C (Weighted accuracy), E (AUC):** Không phải là các chỉ số chính được hiển thị mặc định cho các mô hình phân loại Custom Vision trong giao diện portal của Custom Vision.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1636,7 +1636,7 @@
       "F": "nginx"
     },
     "answer": "CE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: C và E** vì:\n  - **Bot Framework Emulator (C):** Là một ứng dụng máy tính để bàn cho phép các nhà phát triển chatbot kiểm thử và gỡ lỗi chatbot của họ, cục bộ hoặc từ xa.\n  - **ngrok (E):** Là một công cụ tạo đường hầm (tunneling tool) cho phép chuyển tiếp lưu lượng từ một địa chỉ URL công khai (trên Internet) đến cổng cục bộ (localhost) của bạn. Điều này rất cần thiết khi chatbot của bạn được đăng ký trên Azure Bot Service nhưng mã nguồn của bạn đang chạy và gỡ lỗi cục bộ trên máy tính của bạn.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A (Fiddler):** Chỉ dùng để theo dõi lưu lượng mạng HTTP/HTTPS chung, không trực tiếp hỗ trợ đường hầm hoặc giao diện giả lập hội thoại chatbot.\n  - **B (Bot Framework Composer):** Là công cụ thiết kế hội thoại trực quan chứ không phải công cụ chuyên biệt để gỡ lỗi trực tiếp điểm cuối từ xa.\n  - **D (Bot Framework CLI), F (nginx):** Không hỗ trợ tạo đường hầm gỡ lỗi thời gian thực hoặc giả lập kênh hội thoại cho Bot Framework.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1668,7 +1668,7 @@
       "E": "source"
     },
     "answer": "ABE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: A, B và E** vì trong cấu hình của một phép chiếu bảng (table projection) thuộc kho tri thức (knowledge store) trong Azure AI Search, mỗi đối tượng bảng trong mảng `tables` yêu cầu các thuộc tính sau:\n  - **tableName (A):** Tên của bảng vật lý trong Azure Table storage nơi dữ liệu sẽ được lưu trữ.\n  - **generatedKeyName (B):** Tên của cột sẽ chứa khóa duy nhất được tạo tự động cho mỗi dòng của bảng.\n  - **source (E):** Đường dẫn trỏ tới dữ liệu nguồn trong skillset (ví dụ: `/document/merged_content` hoặc dữ liệu đã được phân tích).\n\n• **Tại sao các đáp án khác không đúng:**\n  - **C (dataSource), D (dataSourceConnection):** Không phải là các thuộc tính nằm trong nút cấu hình chiếu bảng (table projection definition) của skillset JSON.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1758,7 +1758,7 @@
       "F": "File6"
     },
     "answer": "ACF",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: ACF (File1, File3 & File6)** vì:\n  - Azure AI Document Intelligence (trước đây là Form Recognizer) yêu cầu các tệp huấn luyện mô hình custom template phải ở các định dạng được hỗ trợ như **PDF, JPEG/JPG, PNG, BMP, TIFF**. Các định dạng video (như MP4) hay ảnh động (như GIF) không được hỗ trợ để huấn luyện mô hình tùy chỉnh.\n  - Tổng dung lượng của tập tài liệu huấn luyện cho mô hình custom template tối đa là **50 MB** và kích thước mỗi tệp đơn lẻ phải tuân thủ giới hạn của dịch vụ (dưới 50 MB đối với tập huấn luyện mô hình custom template).\n  - Phân tích cụ thể:\n    - **File1 (PDF, 20 MB)**: Định dạng và dung lượng hợp lệ (< 50 MB).\n    - **File2 (MP4, 100 MB)**: Định dạng không hỗ trợ.\n    - **File3 (JPG, 20 MB)**: Định dạng và dung lượng hợp lệ (< 50 MB).\n    - **File4 (PDF, 100 MB)**: Vượt quá giới hạn dung lượng tệp huấn luyện (50 MB).\n    - **File5 (GIF, 1 MB)**: Định dạng không hỗ trợ cho mô hình custom template.\n    - **File6 (JPG, 40 MB)**: Định dạng và dung lượng hợp lệ (< 50 MB).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2201,7 +2201,7 @@
       "F": "toScript=Latn"
     },
     "answer": "CDF",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: C, D, F**\n  - **C (textType=html)**: Chỉ định định dạng của văn bản đầu vào là HTML (do đề bài yêu cầu dịch nội dung của một trang web). Điều này giúp API bảo toàn các thẻ HTML và cấu trúc của trang web trong quá trình dịch.\n  - **D (to=el)**: Xác định ngôn ngữ đích cần dịch sang là tiếng Hy Lạp (mã ngôn ngữ là `el`).\n  - **F (toScript=Latn)**: Chỉ định chữ viết đích cho phần chuyển tự là bảng chữ cái La-tinh (Latin script, viết tắt là `Latn`), giúp hiển thị dạng phiên âm chữ La-tinh của tiếng Hy Lạp theo yêu cầu.\n\n• **Tại sao các lựa chọn khác sai**:\n  - **A (toScript=Cyrl)**: Chuyển tự sang chữ viết Cyrillic (chữ Nga, v.v.), không đúng yêu cầu chữ La-tinh.\n  - **B (from=el)**: Xác định ngôn ngữ nguồn là tiếng Hy Lạp, trong khi tiếng Hy Lạp là ngôn ngữ đích.\n  - **E (textType=plain)**: Xác định định dạng văn bản thô, điều này có thể làm hỏng hoặc hiển thị sai các thẻ HTML của trang web đầu vào.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2271,7 +2271,7 @@
       "F": "Create a Language Understanding service."
     },
     "answer": "ABC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: A, B, C**\n  - **C (Register a Direct Line Speech channel)**: Kênh Direct Line Speech cho phép tích hợp giọng nói hai chiều giữa người dùng và chatbot.\n  - **B (Create a Speech service)**: Dịch vụ Azure Speech thực hiện các tác vụ chuyển đổi giọng nói thành văn bản (Speech-to-Text) và văn bản thành giọng nói (Text-to-Speech).\n  - **A (Enable WebSockets for the chatbot app)**: Kênh Direct Line Speech yêu cầu kết nối WebSocket thời gian thực giữa bot và dịch vụ để truyền phát âm thanh có độ trễ thấp.\n\n• **Tại sao các lựa chọn khác sai**:\n  - **D**: Cortana là kênh đã cũ và không còn được hỗ trợ.\n  - **E**: CORS không phải là yêu cầu kỹ thuật bắt buộc để bật tính năng giọng nói.\n  - **F**: Language Understanding (LUIS) xử lý hiểu ý định văn bản, không liên quan trực tiếp đến truyền phát âm thanh giọng nói.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2337,7 +2337,7 @@
       "F": "Supply the groups as a filter for the search requests."
     },
     "answer": "CDF",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: C, D, F**\n  - Để triển khai lọc bảo mật ở cấp độ tài liệu (security trimming):\n    - **D (Add allowed groups to each index entry)**: Thêm một trường danh sách các nhóm được phép truy cập (`allowed_groups`) vào mỗi tài liệu trong chỉ mục.\n    - **C (Retrieve the group memberships of the user)**: Khi người dùng thực hiện tìm kiếm, lấy danh sách nhóm mà họ thuộc về.\n    - **F (Supply the groups as a filter for the search requests)**: Gửi truy vấn kèm theo bộ lọc (filter) so khớp nhóm của người dùng với trường `allowed_groups` của tài liệu.\n\n• **Tại sao các lựa chọn khác sai**:\n  - **A**: Việc gửi access token trực tiếp đến dịch vụ tìm kiếm không tự thực hiện lọc nếu thiếu cấu hình trường và bộ lọc filter tương ứng.\n  - **B**: Lấy toàn bộ nhóm trong hệ thống là không cần thiết và kém hiệu năng.\n  - **E**: Tạo chỉ mục riêng cho từng nhóm là giải pháp không thể mở rộng khi số lượng nhóm lớn.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2435,7 +2435,7 @@
       "E": "objects"
     },
     "answer": "BE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: B và E**\n  - **B (storageConnectionString)**: Đây là chuỗi kết nối bắt buộc để liên kết Knowledge Store với tài khoản Azure Storage nơi lưu trữ dữ liệu.\n  - **E (objects)**: Một định nghĩa Knowledge Store yêu cầu cấu hình các phép chiếu (projections). Trong các tùy chọn được cung cấp, `objects` và `tables` là các loại hình chiếu hợp lệ. Theo đáp án thiết kế của bài thi, tổ hợp `B` và `E` (hoặc `B` và `D` trong một số phiên bản) được lựa chọn. Ở đây, `objects` lưu trữ dữ liệu dưới dạng JSON thuần túy trong Azure Blob Storage, phù hợp cho phân tích sau này, và `storageConnectionString` là cấu hình bắt buộc.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2731,7 +2731,7 @@
       "E": "Named Entity Recognition"
     },
     "answer": "BD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: B và D** vì:\n  - Chatbot này là **đa ngôn ngữ (multilingual)**, do đó trước hết cần nhận diện ngôn ngữ của tin nhắn gửi tới bằng cách sử dụng API **Detect Language (D)**.\n  - Sau khi biết ngôn ngữ, cần đánh giá xem tin nhắn đó là tích cực hay tiêu cực để đưa ra phản hồi phù hợp bằng cách sử dụng API **Sentiment Analysis (B)**.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A (Linked entities), C (Key Phrases) và E (Named Entity Recognition):** Không cung cấp thông tin về ngôn ngữ của tin nhắn hoặc cảm xúc tích cực/tiêu cực của người dùng.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2845,12 +2845,7 @@
     "id": 97,
     "topic": 1,
     "question": "You are building a social media extension that will convert text to speech. The solution must meet the following requirements:\n• Support messages of up to 400 characters.• Provide users with multiple voice options.• Minimize costs.\nYou create an Azure Cognitive Services resource.\nWhich Speech API endpoint provides users with the available voice options?",
-    "options": {
-      "A": "https://<region>.tts.speech.microsoft.com/cognitiveservices/v1",
-      "B": "https://<region>.voice.speech.microsoft.com/cognitiveservices/v1",
-      "C": "https://<region>.tts.speech.microsoft.com/cognitiveservices/voices/list",
-      "D": "https://<region>.voice.speech.microsoft.com/cognitiveservices/voices/list"
-    },
+    "options": {},
     "answer": "C",
     "isMulti": false,
     "page": null,
@@ -2970,7 +2965,7 @@
       "F": "Install the Orchestrator package."
     },
     "answer": "BCF",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: B, C, F** vì để kết hợp nhiều bot con (skills) vào một bot chính (root bot) và hỗ trợ định tuyến động ý định của người dùng đến đúng bot con phù hợp bằng Bot Framework Composer, bạn cần sử dụng bộ nhận diện điều phối Orchestrator:\n  - **Cài đặt gói Orchestrator (F):** Để cài đặt thư viện hỗ trợ chạy mô hình Orchestrator.\n  - **Tạo mô hình Orchestrator (C):** Để huấn luyện mô hình phân loại đầu vào và điều hướng hành vi.\n  - **Thay đổi loại Recognizer/Dispatch sang Orchestrator (B):** Định cấu hình bot chính sử dụng bộ điều phối này.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A, D và E:** Không liên quan đến tính năng điều hướng cuộc gọi và tích hợp các bot con thông qua Orchestrator.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3261,7 +3256,7 @@
       "E": "the racy classification score"
     },
     "answer": "BE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: B và E (the adult classification score & the racy classification score)** vì API Text Moderation trong Azure Content Moderator đánh giá văn bản dựa trên ba hạng mục phân loại chính và trả về điểm số xác suất từ 0 đến 1 cho:\n  - **Adult classification score (Hạng mục 1):** Cho biết mức độ hiện diện tiềm ẩn của ngôn từ có tính chất người lớn/thô tục rõ rệt.\n  - **Racy classification score (Hạng mục 2):** Cho biết mức độ hiện diện tiềm ẩn của ngôn từ gợi dục hoặc nhạy cảm nhẹ.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A (personal data):** Không phải là phản hồi phân loại kiểm duyệt nội dung tiêu chuẩn để lọc ngôn từ thô tục/nhạy cảm trực tiếp (nó dùng để phát hiện PII - thông tin nhận dạng cá nhân).\n  - **C (text classification):** Phân loại văn bản chung, không thuộc API Text Moderation.\n  - **D (OCR):** Dùng để trích xuất văn bản từ hình ảnh, không liên quan đến kiểm duyệt văn bản trực tiếp.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3508,7 +3503,7 @@
       "D": "From the Azure portal, enable log collection in Log Analytics, and then analyze the logs."
     },
     "answer": "AC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: A và C** vì:\n  - **A (Từ endpoint REST của tác vụ tạo lập ngôn ngữ, lấy tóm tắt đánh giá mô hình):** Cho phép bạn gọi API của dịch vụ để lấy thông tin tóm tắt kết quả đánh giá (evaluation results) sau khi mô hình được huấn luyện với tập kiểm thử.\n  - **C (Từ Language Studio, chọn Model performance):** Giao diện đồ họa của Language Studio cung cấp trang 'Model performance' để nhà phát triển xem các chỉ số đo lường chất lượng mô hình trực quan như F1-Score, Precision và Recall.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **B (Active Learning):** Thường được sử dụng sau khi triển khai để ghi nhận các câu lệnh thực tế từ người dùng và gán nhãn bổ sung, không dùng để đánh giá mô hình trước khi triển khai.\n  - **D (Log Analytics):** Chỉ dùng để giám sát vận hành hạ tầng và lưu trữ log hệ thống, không hỗ trợ tính toán các chỉ số toán học/độ chính xác của mô hình NLP.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3542,7 +3537,7 @@
       "E": "a dialog"
     },
     "answer": "DE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: D và E (an adaptive card & a dialog)** vì:\n  - **an adaptive card (thẻ thích ứng):** Là một cấu trúc giao diện người dùng đa nền tảng cho phép hiển thị các khối nội dung đa phương tiện, bao gồm văn bản và hình ảnh đi kèm với các nút bấm lựa chọn cho người dùng.\n  - **a dialog (hội thoại):** Là thành phần cốt lõi trong Bot Framework dùng để quản lý luồng điều khiển, gửi thông điệp chứa thẻ thích ứng đến người dùng và xử lý lựa chọn phản hồi tiếp theo của họ.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A (entity):** Được dùng để trích xuất thông tin có cấu trúc từ phát ngôn của người dùng (ví dụ: ngày tháng, tên riêng).\n  - **B (Azure function):** Dùng để chạy mã tùy chỉnh phía máy chủ, không liên quan trực tiếp đến việc định dạng hiển thị UI của bot.\n  - **C (utterance):** Là câu nói đầu vào của người dùng để bot phân tích ý định.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3867,7 +3862,7 @@
       "F": "Loại bỏ cấu hình setSpeak."
     },
     "answer": "ABE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: A, B, E** vì để cấu hình tích hợp giọng nói cho bot được phát triển qua Bot Framework Composer:\n  - **A (Configure language and voice):** Thiết lập ngôn ngữ và giọng nói để dịch vụ Text-to-Speech biết cần phát âm bằng ngôn ngữ và chất giọng nào.\n  - **B (Add endpoint and key):** Kết nối bot với tài nguyên Speech của Azure bằng thông tin xác thực.\n  - **E (Add Speech to bot responses):** Cấu hình thuộc tính lời nói (speak) cho các câu trả lời của bot (sử dụng định dạng SSML) để dịch vụ Speech có thể đọc to phản hồi đó.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **C, D:** Thuộc về phần xử lý ngôn ngữ tự nhiên (LUIS/CLU/Orchestrator) chứ không liên quan trực tiếp đến việc kích hoạt phát âm thanh / nhận diện giọng nói.\n  - **F:** Loại bỏ cấu hình `setSpeak` sẽ làm bot mất khả năng đọc các câu trả lời.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4002,7 +3997,7 @@
       "E": "image classification in Azure AI Custom Vision"
     },
     "answer": "CD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: C, D** vì:\n  - **image type detection (D - Nhận diện loại ảnh):** Tính năng nhận diện loại ảnh trong Azure AI Computer Vision giúp xác định xem ảnh là hình vẽ (clipart/drawing) hay ảnh chụp (photograph).\n  - **image descriptions (C - Mô tả hình ảnh):** Giúp tự động tạo câu phụ đề (caption) mô tả nội dung hình ảnh một cách tự nhiên bằng ngôn ngữ thông thường.\n  - Cả hai đều là tính năng có sẵn (prebuilt) trong Azure AI Computer Vision, giúp giảm thiểu tối đa công sức phát triển (không cần huấn luyện mô hình).\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A (object detection):** Dùng để phát hiện vị trí và nhãn của các đối tượng trong ảnh, không phân loại ảnh chụp/hình vẽ hay tạo phụ đề mô tả.\n  - **B (content tags):** Trích xuất danh sách các thẻ từ khóa, không tạo được câu phụ đề mô tả hoàn chỉnh.\n  - **E (image classification trong Custom Vision):** Yêu cầu bạn tự chuẩn bị tập dữ liệu, dán nhãn và huấn luyện mô hình, làm tăng đáng kể công sức phát triển.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4215,7 +4210,7 @@
       "E": "Train a custom large language model (LLM)."
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: B, C** vì:\n  - **Cung cấp nội dung tham chiếu (B - grounding content):** Kỹ thuật RAG (Retrieval-Augmented Generation) cung cấp ngữ cảnh, tài liệu chính xác trực tiếp vào prompt để mô hình dựa vào đó trả lời, giúp tăng độ chính xác và giảm thiểu hiện tượng 'ảo tưởng' (hallucination).\n  - **Thêm các cặp yêu cầu/phản hồi mẫu (C - Few-shot prompting):** Đưa ra các ví dụ cụ thể giúp mô hình nhanh chóng học được định dạng và giọng điệu phản hồi mong muốn.\n  - Cả hai cách trên đều thực hiện thông qua thiết kế Prompt (Prompt Engineering), không đòi hỏi lập trình phức tạp hay huấn luyện mô hình mới, giúp giảm thiểu tối đa công sức phát triển.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A, D, E:** Đều yêu cầu chuẩn bị lượng dữ liệu cực lớn, chi phí cao, thời gian huấn luyện lâu và công sức phát triển phức tạp để tinh chỉnh hoặc xây dựng mô hình mới.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4374,7 +4369,7 @@
       "E": "Azure AI Custom Vision"
     },
     "answer": "CD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "• **Đáp án đúng: C, D** vì:\n  - **Azure AI Content Safety (C):** Đây là dịch vụ chuyên biệt của Azure được thiết kế để kiểm duyệt nội dung độc hại, không phù hợp (hình ảnh và văn bản) được tải lên bởi người dùng.\n  - **Azure AI Vision (D):** Cung cấp API Phân tích hình ảnh (Image Analysis v3.2) với tính năng phát hiện nội dung người lớn (`Adult` visual feature), giúp xác định các ảnh nhạy cảm, gợi dục (racy) hoặc bạo lực (gory) có sẵn mà không cần lập trình phức tạp.\n\n• **Tại sao các đáp án khác không đúng:**\n  - **A (Document Intelligence):** Dùng để trích xuất văn bản từ biểu mẫu/tài liệu.\n  - **B (Defender for Cloud Apps):** Là giải pháp bảo mật đám mây (CASB) cho doanh nghiệp, không dùng để kiểm duyệt nội dung do người dùng ứng dụng tải lên.\n  - **E (Custom Vision):** Yêu cầu bạn tự chuẩn bị dữ liệu và tự huấn luyện mô hình phân loại, làm tăng công sức phát triển.\n\n*(Đáp án được gợi ý bởi AI)*",

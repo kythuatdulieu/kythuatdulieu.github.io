@@ -13,30 +13,20 @@ const ids = fs
   .filter((d) => d.isDirectory() && d.name !== 'shared' && !quizHidden.includes(d.name))
   .map((d) => d.name);
 
-function getQuizStats(id) {
+function countQuestions(id) {
   try {
     const j = JSON.parse(fs.readFileSync(path.join(quizRoot, id, 'questions.json'), 'utf8'));
-    const questions = Array.isArray(j) ? j : j.questions || [];
-    const localized = questions.filter((question) =>
-      Boolean(question.question_vi) &&
-      Boolean(question.explanation_vi) &&
-      Object.keys(question.options || {}).every((key) => Boolean(question.options_vi?.[key]))
-    ).length;
-    const viCoverage = questions.length ? Math.round((localized / questions.length) * 1000) / 10 : 0;
-    return {
-      count: questions.length,
-      vi: questions.length > 0 && localized === questions.length,
-      viCoverage,
-    };
+    const arr = Array.isArray(j) ? j : j.questions || [];
+    return arr.length;
   } catch {
-    return { count: null, vi: false, viCoverage: 0 };
+    return null;
   }
 }
 
 const list = ids
   .map((id) => {
     const meta = quizMeta[id] || { name: id, provider: 'Khác' };
-    return { id, name: meta.name, provider: meta.provider, ...getQuizStats(id) };
+    return { id, name: meta.name, provider: meta.provider, vi: !!meta.vi, count: countQuestions(id) };
   })
   .sort((a, b) => {
     const pa = quizProviders.indexOf(a.provider);

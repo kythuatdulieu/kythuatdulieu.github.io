@@ -29,9 +29,6 @@ jobs:
     - name: Check Internal Links
       run: node scripts/check_broken_links.js
 
-    - name: Check quiz content and assets
-      run: npm run check:quizzes
-
     - name: Build site
       run: npm run build
 

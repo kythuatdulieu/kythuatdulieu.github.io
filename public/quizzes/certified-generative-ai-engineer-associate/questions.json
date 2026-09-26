@@ -11,7 +11,7 @@
       "E": "Create an LLM-as-a-judge metric to evaluate how well previous questions are answered by the most appropriate chunk. Optimize the chunking parameters based upon the values of the metric."
     },
     "answer": "CE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": null,
@@ -126,7 +126,7 @@
       "E": "transcript Volume"
     },
     "answer": "DE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": null,
@@ -382,7 +382,7 @@
       "E": "Retrain the response generating model using ALiBi"
     },
     "answer": "CD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": null,
@@ -808,7 +808,7 @@
       "E": "Fine tune the response generation model"
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": null,
@@ -1025,7 +1025,7 @@
       "E": "React Components"
     },
     "answer": "AB",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": null,
@@ -1310,7 +1310,7 @@
       "E": "Number of model downloads last month"
     },
     "answer": "AB",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": null,

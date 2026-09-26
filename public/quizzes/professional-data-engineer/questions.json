@@ -156,7 +156,7 @@
       "E": "You already have labels for which samples are mutated and which are normal in the database."
     },
     "answer": "AC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Phát hiện bất thường không giám sát (Unsupervised Anomaly Detection) là phương pháp tìm kiếm các điểm dữ liệu khác biệt đáng kể so với phần lớn dữ liệu bình thường mà không cần dùng đến nhãn huấn luyện:\n\n*   **Đặc điểm A (Đột biến rất ít so với bình thường):** Các mô hình phát hiện bất thường hoạt động dựa trên giả định rằng các hành vi bất thường (đột biến) chiếm tỷ lệ rất nhỏ và hiếm gặp trong tập dữ liệu.\n*   **Đặc điểm C (Đột biến tương lai có đặc trưng khác đột biến hiện tại):** Nếu các đột biến mới có các đặc điểm thay đổi không lường trước được, phương pháp học có giám sát (supervised learning) sẽ thất bại vì nó chỉ nhận diện được những gì đã học. Ngược lại, phương pháp không giám sát chỉ cần biết thế nào là \"bình thường\", bất kỳ thứ gì lệch khỏi chuẩn bình thường đều bị gắn cờ là đột biến.\n*   **Tại sao các phương án khác sai:**\n    *   **B, D, E:** Thích hợp cho học có giám sát (Supervised Learning), nơi dữ liệu cân bằng, có nhãn rõ ràng và các mẫu tương lai tương đồng với mẫu quá khứ.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -306,7 +306,7 @@
       "F": "Decrease the regularization parameters"
     },
     "answer": "ACE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Hiện tượng quá khớp (overfitting) xảy ra khi mô hình quá phức tạp và bắt đầu học cả các chi tiết nhiễu trong tập huấn luyện, dẫn đến khả năng tổng quát hóa kém trên dữ liệu mới. Ba cách tiêu chuẩn để giải quyết overfitting bao gồm:\n\n*   **A. Thu thập thêm các mẫu huấn luyện:** Nhiều dữ liệu hơn sẽ giúp mô hình nhận diện các mẫu tổng quát tốt hơn thay vì học vẹt các chi tiết nhỏ.\n*   **C. Sử dụng một tập hợp đặc trưng nhỏ hơn:** Giảm bớt số chiều/số lượng đặc trưng đầu vào giúp đơn giản hóa mô hình, ngăn chặn việc mô hình học các mối quan hệ giả tạo trong dữ liệu.\n*   **E. Tăng các tham số điều chuẩn (Regularization):** Kỹ thuật điều chuẩn (như L1/L2 regularization) phạt các trọng số lớn trong mô hình, buộc mô hình phải giữ các trọng số nhỏ và đơn giản hơn, từ đó giảm thiểu quá khớp.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -699,7 +699,7 @@
       "F": "Use Google Stackdriver Audit Logging to determine policy violations."
     },
     "answer": "BDE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để thực thi nguyên tắc đặc quyền tối thiểu (least privilege) kiểm soát truy cập trong BigQuery, ba cách tiếp cận chính xác là:\n\n*   **B. Giới hạn quyền truy cập vào các bảng bằng vai trò (role)**: Cho phép cấu hình quyền truy cập chi tiết (Dataset-level hoặc Table-level) cho người dùng thông qua IAM roles.\n*   **D. Giới hạn quyền truy cập BigQuery API cho những người dùng được phê duyệt**: Đảm bảo chỉ những người có vai trò chạy truy vấn mới được phép gọi các API BigQuery tương ứng.\n*   **E. Tách biệt dữ liệu trên nhiều bảng hoặc cơ sở dữ liệu khác nhau**: Giúp phân chia dữ liệu nhạy cảm ra các vùng chứa khác nhau để dễ dàng áp dụng các chính sách bảo mật riêng lẻ.\n\nCác lựa chọn khác không giải quyết trực tiếp việc phân quyền truy cập tối thiểu:\n*   **A** chỉ ngăn chặn việc ghi dữ liệu, không giới hạn quyền đọc thông tin nhạy cảm.\n*   **C** mã hóa dữ liệu bảo vệ dữ liệu ở mức vật lý chống rò rỉ ngoại vi, chứ không kiểm soát quyền hạn nội bộ của người dùng.\n*   **F** Audit Logging là hoạt động giám sát (reactive) sau khi truy cập đã diễn ra, không ngăn chặn truy cập trái phép.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -736,7 +736,7 @@
       "F": "Use the appropriate identity and access management (IAM) roles for each client's users."
     },
     "answer": "BDF",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để đảm bảo tính độc lập và bảo mật dữ liệu giữa các khách hàng khác nhau sử dụng BigQuery:\n\n*   **B. Tải dữ liệu vào một dataset khác nhau cho mỗi khách hàng**: Dataset là đơn vị phân quyền truy cập cơ bản trong BigQuery, cho phép cô lập hoàn toàn tài nguyên dữ liệu của mỗi khách hàng.\n*   **D. Giới hạn quyền truy cập dataset của khách hàng cho những người dùng được phê duyệt**: Đảm bảo chỉ những người dùng được ủy quyền từ phía khách hàng đó mới có thể xem dataset tương ứng.\n*   **F. Sử dụng các vai trò IAM thích hợp cho người dùng của từng khách hàng**: Cấp các vai trò phù hợp như `BigQuery Data Viewer` trên các dataset cụ thể để đảm bảo bảo mật.\n\nCác lựa chọn khác không đúng:\n*   **A** phân vùng chỉ để tối ưu hóa hiệu năng và chi phí truy vấn, không có chức năng phân quyền bảo mật giữa các khách hàng.\n*   **C** sai cấu trúc phân cấp (dataset chứa bảng, bảng không chứa dataset).\n*   **E** sai vì khách hàng cần truy cập trực tiếp bằng tài khoản cá nhân của họ chứ không chỉ qua một service account duy nhất.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -773,7 +773,7 @@
       "F": "Unsupervised learning to predict the location of a transaction."
     },
     "answer": "BCD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Dựa trên tập dữ liệu lịch sử giao dịch ngân hàng hiện có (chưa có dán nhãn giao dịch gian lận trước đó):\n\n*   **B. Học không giám sát để phát hiện giao dịch gian lận**: Phù hợp vì các giao dịch gian lận thường hiếm gặp và chưa được dán nhãn, có thể sử dụng các thuật toán phát hiện bất thường (anomaly detection) để lọc ra các giao dịch bất thường.\n*   **C. Phân cụm (Clustering) để chia giao dịch thành N nhóm**: Dùng thuật toán phân cụm (như K-Means) để phân khúc khách hàng hoặc phân loại giao dịch có hành vi tương tự nhau.\n*   **D. Học có giám sát để dự đoán vị trí của giao dịch**: Vì trường thông tin vị trí giao dịch đã có sẵn trong dữ liệu lịch sử, nó đóng vai trò làm nhãn (label), giúp xây dựng mô hình dự đoán vị trí giao dịch dựa trên các thông số khác.\n\nCác lựa chọn khác không chính xác:\n*   **A** không thể thực hiện học có giám sát nếu dữ liệu chưa được dán nhãn sẵn giao dịch nào là gian lận.\n*   **E** học tăng cường không áp dụng cho dữ liệu phân tích bảng tĩnh.\n*   **F** dự đoán nhãn cụ thể (vị trí giao dịch) phải dùng học có giám sát, không dùng học không giám sát.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -932,7 +932,7 @@
       "F": "HDFS with Hive"
     },
     "answer": "BDE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Câu hỏi yêu cầu chọn ba cơ sở dữ liệu NoSQL phù hợp cho dữ liệu telemetry từ hàng triệu thiết bị IoT, với tốc độ tăng trưởng 100TB/năm, mỗi bản ghi có khoảng 100 thuộc tính, không yêu cầu ACID nhưng cần tính sẵn sàng cao, độ trễ thấp và có khả năng truy vấn theo từng trường riêng lẻ.\n\n*   **B. HBase**: Là một cơ sở dữ liệu cột rộng (wide-column store) phân tán được xây dựng trên nền tảng Hadoop (tương thích với Bigtable trên GCP). Nó rất phù hợp cho các tập dữ liệu lớn, phân tán, có khả năng mở rộng (scalable) cao và cung cấp độ trễ thấp cho các truy vấn theo hàng hoặc theo phạm vi, lý tưởng cho dữ liệu telemetry.\n*   **D. MongoDB**: Là một cơ sở dữ liệu tài liệu (document database) có khả năng mở rộng cao và hỗ trợ mô hình không có cấu trúc cố định (schema-less). Nó lưu trữ các tài liệu dạng JSON/BSON, cho phép truy vấn mạnh mẽ dựa trên các trường con riêng lẻ trong tài liệu.\n*   **E. Cassandra**: Là một cơ sở dữ liệu cột rộng phân tán, có khả năng chịu lỗi cực tốt, không có điểm lỗi duy nhất (single point of failure) và có khả năng mở rộng tuyến tính. Nó được thiết kế cho các hệ thống có tính sẵn sàng cao và độ trễ thấp, rất lý tưởng cho dữ liệu telemetry.\n\n**Các lựa chọn không phù hợp:**\n*   **A. Redis**: Là cơ sở dữ liệu in-memory cặp khóa-giá trị (key-value store). Mặc dù có độ trễ cực thấp, nó không phù hợp để lưu trữ lượng dữ liệu khổng lồ (100TB/năm) một cách bền bị và tiết kiệm chi phí.\n*   **C. MySQL**: Là cơ sở dữ liệu quan hệ (RDBMS) tuân thủ ACID. Nó không được thiết kế để xử lý hiệu quả lượng dữ liệu ghi khổng lồ và không cấu trúc từ hàng triệu thiết bị IoT ở quy mô 100TB/năm.\n*   **F. HDFS với Hive**: Hive được thiết kế cho các truy vấn phân tích hàng loạt (batch analytics) trên HDFS và có độ trễ cao, không đáp ứng được yêu cầu về độ trễ thấp (low latency) của hệ thống.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1001,7 +1001,7 @@
       "E": "Create a Google Cloud Identity and Access Management (Cloud IAM) role for the ODBC connection and shared ג€eventsג€"
     },
     "answer": "CD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để đảm bảo các ứng dụng bên thứ ba kết nối qua ODBC có thể truy cập dữ liệu một cách an toàn và tối ưu trong BigQuery, chúng ta cần thực hiện các bước sau:\n\n*   **C. Tạo một view mới dựa trên events_partitioned sử dụng Standard SQL**: Driver ODBC của BigQuery yêu cầu hoặc khuyên dùng Standard SQL để đảm bảo tính tương thích tốt nhất. View hiện tại `events` đang sử dụng Legacy SQL. Do đó, ta cần tạo một view mới dựa trên bảng gốc `events_partitioned` bằng Standard SQL.\n*   **D. Tạo một tài khoản dịch vụ (service account) cho kết nối ODBC dùng để xác thực**: Để các ứng dụng bên ngoài kết nối với BigQuery thông qua driver ODBC một cách tự động và an toàn, ta cần cấu hình xác thực sử dụng Service Account JSON key.\n\n**Các lựa chọn khác không phù hợp:**\n*   **A**: Việc tạo view mới dựa trên view cũ `events` (đang chạy Legacy SQL) vẫn giữ lại các vấn đề không tương thích của Legacy SQL.\n*   **B**: Không cần thiết phải nhân bản hoặc tạo thêm bảng phân vùng vật lý mới, vì view đã đáp ứng tốt việc lọc dữ liệu 14 ngày gần nhất.\n*   **E**: Cloud IAM phân quyền ở cấp độ project, dataset hoặc table/view chứ không trực tiếp gán vai trò IAM cho \"kết nối ODBC\" và chia sẻ view theo cách mô tả này.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1661,7 +1661,7 @@
       "E": "Monitor latency of read operations. Increase the size of the Cloud Bigtable cluster of read operations take longer than 100 ms."
     },
     "answer": "CD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để giám sát và đưa ra quyết định thay đổi quy mô (autoscaling/scaling) cho cụm Cloud Bigtable, bạn nên dựa vào các chỉ số hiệu năng thực tế như độ trễ của hoạt động (latency) và dung lượng lưu trữ (storage utilization).\n\n*   **C. Giám sát độ trễ ghi (write latency)**: Độ trễ của hoạt động tăng liên tục và kéo dài là dấu hiệu cho thấy các node hiện tại đang bị quá tải CPU để xử lý các yêu cầu ghi mới. Việc tăng số node sẽ giúp phân phối tải và giảm độ trễ.\n*   **D. Giám sát sử dụng bộ nhớ (storage utilization)**: Theo khuyến nghị của Google Cloud, để đảm bảo hiệu suất tốt nhất cho Cloud Bigtable, tỷ lệ sử dụng dung lượng lưu trữ trên mỗi node không nên vượt quá 70% đối với ổ SSD (hoặc 60% đối với ổ HDD). Vượt quá ngưỡng này yêu cầu phải thêm node để tăng giới hạn lưu trữ tối đa của cụm.\n*   **A, B. Key Visualizer**: Key Visualizer dùng để phân tích các mẫu truy cập (phát hiện điểm nóng - hot spot) chứ không phải công cụ chính để cảnh báo nâng cấp tài nguyên hệ thống dựa trên tải tổng thể.\n*   **E. Độ trễ đọc > 100ms**: Ngưỡng 100ms là quá cao đối với Bigtable (vốn được tối ưu ở mức mili-giây một chữ số), và chỉ số này không phản ánh trực tiếp sự cần thiết phải tăng dung lượng cụm như độ trễ ghi ổn định.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1795,7 +1795,7 @@
       "E": "Write an application that uses Cloud Datastore client libraries to read all the entities. Format the exported data into a JSON file. Apply compression before storing the data in Cloud Source Repositories."
     },
     "answer": "AB",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để sao lưu, lưu trữ dài hạn với chi phí thấp và hỗ trợ khôi phục hoặc sao chép dữ liệu Cloud Datastore sang môi trường khác:\n\n*   **A. Sử dụng managed export lưu trữ trong Cloud Storage Nearline/Coldline**: Managed export của Cloud Datastore cho phép xuất toàn bộ thực thể ra Cloud Storage. Sử dụng các phân lớp lưu trữ Nearline hoặc Coldline giúp giảm thiểu tối đa chi phí lưu trữ cho các bản sao lưu ít khi truy cập.\n*   **B. Import vào Datastore ở project khác/namespace khác**: Để phục vụ mục đích khôi phục hoặc tạo môi trường test/staging độc lập, bạn có thể thực hiện import tệp tin đã export từ Cloud Storage vào Datastore của một dự án khác hoặc sử dụng một namespace riêng biệt nhằm tránh xung đột dữ liệu hiện tại.\n*   **C, D**. Nạp dữ liệu vào BigQuery không giúp ích trực tiếp cho việc khôi phục point-in-time (PITR) về Cloud Datastore gốc hoặc nhân bản môi trường Datastore.\n*   **E**. Lưu trữ dữ liệu nén trong Cloud Source Repositories là không hợp lý vì công cụ quản lý mã nguồn (Git) không được thiết kế cho việc lưu trữ các bản sao lưu dữ liệu telemetry lớn.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2016,7 +2016,7 @@
       "E": "Create a temporary table in Cloud Spanner that will act as a buffer for new data. Create a new step in your pipeline to write to this table first, and then create a new pipeline to write from Cloud Spanner to BigQuery"
     },
     "answer": "AB",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Khi đường ống Dataflow gặp tình trạng quá tải trong các giờ cao điểm và các worker đều đạt mức sử dụng CPU tối đa, hệ thống cần bổ sung tài nguyên tính toán. Hai hành động hiệu quả nhất là co giãn ngang và co giãn dọc: A (Tăng số lượng worker tối đa - Increase the number of max workers) cho phép Dataflow tự động tạo thêm nhiều worker hơn để phân tán tải xử lý khi lượng dữ liệu tăng đột biến. B (Sử dụng loại máy cấu hình lớn hơn - Use a larger instance type) giúp tăng tài nguyên CPU và RAM của mỗi worker để xử lý nhiều thông điệp hơn cùng lúc. Việc chuyển vùng sang us-central1 (C) khi đích đến BigQuery ở EU sẽ gây độ trễ mạng lớn và tốn phí truyền dữ liệu liên vùng. Các lựa chọn D và E sử dụng Bigtable/Spanner làm bộ đệm trung gian là không cần thiết và tốn kém vì bản thân Pub/Sub đã hoạt động như một bộ đệm chịu tải cực tốt rồi.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2150,7 +2150,7 @@
       "E": "Copy a daily snapshot of transaction data to Cloud Storage and store it as an Avro file. Use BigQuery's support for external data sources to query."
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Câu hỏi yêu cầu tạo một pipeline dữ liệu để sao chép dữ liệu giao dịch theo thời gian vào BigQuery cho phân tích bởi đội khoa học dữ liệu. Dữ liệu ban đầu lớn (1.5 PB) và tăng nhanh (3 TB/ngày), được cấu trúc chặt chẽ, và sẽ được dùng để xây dựng mô hình ML. Mục tiêu là tối đa hóa hiệu suất và khả năng sử dụng cho đội khoa học dữ liệu.\n\n*   **Lựa chọn A (Denormalize the data as much as possible.)** là một chiến lược hiệu quả cho BigQuery. BigQuery được thiết kế để xử lý dữ liệu ở dạng denormalized (phi chuẩn hóa) với các trường lặp lại và lồng nhau để tối ưu hóa hiệu suất truy vấn, đặc biệt là cho các tác vụ phân tích và học máy. Việc denormalize dữ liệu giúp giảm số lượng phép JOIN phức tạp, tăng tốc độ truy vấn và đơn giản hóa các truy vấn cho các nhà khoa học dữ liệu. Với dữ liệu lớn và nhu cầu phân tích nhanh, đây là một best practice của BigQuery.\n\n*   **Lựa chọn D (Develop a data pipeline where status updates are appended to BigQuery instead of updated.)** cũng là một chiến lược hiệu quả. BigQuery được tối ưu hóa cho các thao tác ghi dữ liệu theo kiểu append (ghi thêm) và xử lý dữ liệu bất biến (immutable data). Các câu lệnh `UPDATE` hoặc `DELETE` trong BigQuery, đặc biệt trên các bảng lớn, có thể tốn kém về mặt chi phí và thời gian vì chúng thực chất tạo ra các bản sao mới của dữ liệu đã sửa đổi. Thay vì cập nhật trạng thái của hàng hiện có, việc ghi thêm các bản ghi mới phản ánh trạng thái cập nhật (ví dụ: một bản ghi mới với `transaction_id`, `new_status`, và `timestamp_of_update`) và sau đó sử dụng các hàm cửa sổ hoặc các truy vấn để lấy trạng thái mới nhất là một mẫu thiết kế phổ biến và hiệu quả về mặt chi phí/hiệu suất. Điều này cũng hỗ trợ việc lưu giữ lịch sử thay đổi trạng thái, rất hữu ích cho phân tích và ML.\n\n*   **Lựa chọn B (Preserve the structure of the data as much as possible.)** không phải là best practice cho BigQuery trong trường hợp này. Mặc dù BigQuery hỗ trợ các cấu trúc dữ liệu phức tạp, việc bảo toàn hoàn toàn cấu trúc chuẩn hóa (normalized) có thể dẫn đến nhiều phép JOIN tốn kém hiệu suất cho các truy vấn phân tích. Denormalization thường được ưu tiên để tối ưu hóa hiệu suất.\n\n*   **Lựa chọn C (Use BigQuery UPDATE to further reduce the size of the dataset.)** là không chính xác. `UPDATE` trong BigQuery không làm giảm kích thước dataset, mà ngược lại, có thể làm tăng chi phí và đôi khi cả kích thước lưu trữ ẩn vì nó tạo ra các phiên bản bảng mới. Khả năng cập nhật của BigQuery chủ yếu để sửa đổi dữ liệu chứ không phải để giảm kích thước một cách hiệu quả theo nghĩa tối ưu hóa lưu trữ.\n\n*   **Lựa chọn E (Copy a daily snapshot of transaction data to Cloud Storage and store it as an Avro file. Use BigQuery's support for external data sources to query.)** là một giải pháp không tối ưu cho hiệu suất. Mặc dù BigQuery có thể truy vấn dữ liệu bên ngoài từ Cloud Storage, hiệu suất truy vấn trên dữ liệu bên ngoài thường chậm hơn đáng kể so với dữ liệu được lưu trữ nguyên bản trong BigQuery tables. Với dataset 1.5 PB và tốc độ tăng trưởng 3 TB/ngày, việc dựa vào dữ liệu bên ngoài sẽ gây ra các vấn đề về hiệu suất cho đội khoa học dữ liệu, những người cần truy cập nhanh để xây dựng mô hình ML. Việc tải dữ liệu vào BigQuery là lựa chọn tốt hơn cho hiệu suất.\n\nVì vậy, hai chiến lược tối ưu là A và D.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3400,7 +3400,7 @@
       "E": "For each Cloud Storage bucket or BigQuery dataset, decide which projects need access. Find all the active members who have access to these projects, and create a Cloud IAM policy to grant access to all these users."
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để đơn giản hóa việc quản trị quyền truy cập khi tổ chức mở rộng và có nhiều dự án, Google Cloud đề xuất hai phương pháp cốt lõi:\n\n*   **B. Giới thiệu hệ thống phân cấp tài nguyên để tận dụng sự kế thừa chính sách kiểm soát truy cập**: Trong GCP, tài nguyên được tổ chức theo cấu trúc hình cây (Tổ chức -> Thư mục -> Dự án -> Tài nguyên). Chính sách IAM được áp dụng ở cấp độ cao hơn (như Thư mục hoặc Tổ chức) sẽ tự động được kế thừa bởi các tài nguyên con. Do đó, để nhóm IT trung tâm có quyền truy cập vào mọi dự án, ta chỉ cần gán quyền cho họ một lần duy nhất ở cấp Tổ chức hoặc Thư mục chung, thay vì cấu hình chính sách trên từng dự án riêng lẻ.\n*   **C. Tạo các nhóm riêng biệt cho các nhóm khác nhau và chỉ định các nhóm này trong chính sách Cloud IAM**: Google khuyên dùng Google Groups thay vì tài khoản người dùng cá nhân trong các chính sách IAM. Khi nhân sự thay đổi, quản trị viên chỉ cần thêm hoặc bớt người dùng khỏi nhóm, không cần sửa đổi chính sách IAM của dự án, giúp giảm thiểu đáng kể số lượng chính sách cần quản lý và hạn chế sai sót.\n\nCác lựa chọn khác không tối ưu:\n*   *A* (Deployment Manager) chỉ tự động hóa quy trình triển khai chứ không giải quyết bản chất của việc đơn giản hóa cấu trúc chính sách.\n*   *D* (chỉ dùng Service Account) và *E* (quản lý thủ công theo dự án/người dùng) sẽ tạo ra khối lượng công việc quản lý khổng lồ, đi ngược lại mục tiêu tối giản chính sách.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -8897,7 +8897,7 @@
       "E": "Insert each new CDC record and corresponding operation type in real time to the reporting table, and use a materialized view to expose only the newest version of each unique record."
     },
     "answer": "BD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để thực hiện quy trình Change Data Capture (CDC) trong BigQuery với độ trễ thấp và tối ưu hóa chi phí tính toán (giảm thiểu chi phí chạy các lệnh DML riêng lẻ vốn rất đắt đỏ trong BigQuery):\n*   **B (Ghi trực tiếp từng bản ghi CDC vào một bảng staging trong thời gian thực)** là bước đầu tiên cực kỳ hiệu quả vì BigQuery hỗ trợ ghi dữ liệu phát trực tuyến (streaming ingestion) vào bảng với tốc độ cao và chi phí thấp.\n*   **D (Định kỳ sử dụng DML MERGE để gộp nhiều thay đổi cùng lúc từ bảng staging vào bảng báo cáo)** giúp tối ưu hóa hiệu năng và chi phí truy vấn. Lệnh `MERGE` cho phép thực hiện đồng loạt các hành động chèn, cập nhật và xóa trong một lần quét bảng duy nhất, thay vì chạy hàng triệu lệnh DML nhỏ lẻ liên tục.\n*   **A sai**: Thực hiện các lệnh DML (INSERT/UPDATE/DELETE) nhỏ lẻ, liên tục cho từng bản ghi trong thời gian thực trên bảng báo cáo chính sẽ gây quá tải giới hạn quota của BigQuery và phát sinh chi phí tính toán khổng lồ.\n*   **C sai**: Chỉ chạy lệnh `DELETE` không giải quyết được yêu cầu cập nhật hoặc chèn dữ liệu mới.\n*   **E sai**: Mặc dù materialized views có thể tối ưu hóa hiệu suất truy vấn, việc chèn trực tiếp mọi bản ghi CDC trùng lặp vào bảng báo cáo mà không có cơ chế dọn dẹp/hợp nhất sẽ làm tăng dung lượng bảng nhanh chóng và làm chậm hiệu năng truy vấn dài hạn.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -8928,7 +8928,7 @@
       "E": "Modify your Dataflow pipeline to use the CoGroupByKey transform before writing to Bigtable"
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Khi gặp tình trạng ghi dữ liệu chậm vào Bigtable từ Dataflow và cần đáp ứng lượng truy cập đồng thời lớn:\n*   **B (Tăng số lượng worker Dataflow tối đa bằng cách đặt maxNumWorkers)** giúp mở rộng quy mô xử lý của pipeline Dataflow. Pipeline sẽ tự động tăng số lượng worker để xử lý và ghi dữ liệu song song nhiều hơn, giảm thời gian xử lý tổng thể.\n*   **C (Tăng số lượng node trong cụm Bigtable)** trực tiếp tăng băng thông ghi (write throughput) và khả năng xử lý truy vấn đồng thời của Bigtable. Mỗi node Bigtable cung cấp một lượng IOPS (thao tác đọc/ghi mỗi giây) cố định, do đó nâng số node giúp loại bỏ nghẽn cổ chai ở tầng lưu trữ.\n*   **A sai**: Chạy local execution chỉ dùng để thử nghiệm trên máy tính cá nhân, không thể mở rộng và đáp ứng môi trường production.\n*   **D & E sai**: Phép biến đổi `Flatten` hoặc `CoGroupByKey` không giúp tối ưu hóa trực tiếp hiệu năng ghi của Bigtable hay tăng khả năng xử lý đồng thời của dashboard.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -9438,7 +9438,7 @@
       "E": "The subscriber code does not acknowledge the messages that it pulls."
     },
     "answer": "CE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Khi tốc độ xử lý tin nhắn của Pub/Sub cao hơn nhiều so với dự kiến mà không có lỗi ghi nhận trong Cloud Logging, điều này chỉ ra hiện tượng tin nhắn bị xử lý lặp đi lặp lại nhiều lần (message redelivery). Hai nguyên nhân chính là:\n*   **E (The subscriber code does not acknowledge the messages that it pulls)**: Nếu code của Cloud Function không gửi xác nhận (ACK) về cho Pub/Sub sau khi xử lý thành công, Pub/Sub sẽ coi như tin nhắn chưa được xử lý và tiếp tục gửi lại tin nhắn đó sau khi hết thời gian chờ (ack deadline).\n*   **C (Error handling in the subscriber code is not handling run-time errors properly)**: Nếu code gặp lỗi runtime trong quá trình xử lý nhưng không bắt lỗi (catch) đúng cách để gửi phản hồi lỗi hoặc không gửi ACK/NACK phù hợp, tin nhắn cũng sẽ bị giữ lại và gửi đi gửi lại liên tục.\n\n*   **A, B, D sai**: Các lỗi về quota hay subscriber không xử lý kịp sẽ làm giảm tốc độ xử lý hoặc tăng độ trễ (backlog), chứ không tạo ra tốc độ xử lý ảo lớn đột biến do lặp lại tin nhắn.\n\n*(Đáp án được gợi ý bởi AI)*",

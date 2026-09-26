@@ -336,7 +336,7 @@
       "E": "Trích xuất cụm từ khóa."
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Dịch vụ Computer Vision hỗ trợ các tác vụ phân tích hình ảnh sau:\n- **B. Detect brands in an image**: Phát hiện logo hoặc thương hiệu của các nhãn hàng xuất hiện trong ảnh.\n- **C. Detect the color scheme in an image**: Phân tích và phát hiện màu sắc chủ đạo của bức ảnh.\n\n- **A sai** vì dự đoán giá cổ phiếu là tác vụ Hồi quy của Machine Learning.\n- **D và E sai** vì dịch thuật và trích xuất cụm từ khóa là các tác vụ của Xử lý ngôn ngữ tự nhiên (NLP).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -421,7 +421,7 @@
       "D": "Dịch văn bản trong hình ảnh giữa các ngôn ngữ."
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Dịch vụ Computer Vision của Azure cung cấp các tính năng có sẵn bao gồm:\n- **B. Detect faces in an image**: Phát hiện sự hiện diện của khuôn mặt cùng với các thuộc tính cơ bản như tuổi, giới tính.\n- **C. Recognize handwritten text**: Tính năng Read API hỗ trợ nhận dạng cả chữ in và chữ viết tay thông qua OCR.\n\n- **A sai** vì huấn luyện mô hình phân loại hình ảnh tùy chỉnh là nhiệm vụ của dịch vụ **Custom Vision**.\n- **D sai** vì dịch văn bản trong ảnh là tác vụ kết hợp và dịch thuật do dịch vụ **Translator** đảm nhận.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -595,7 +595,7 @@
       "D": "mô-đun (module)"
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Trong giao diện thiết kế kéo thả Azure Machine Learning designer, hai thành phần chính mà người dùng kéo vào canvas là:\n- **A. dataset**: Tập dữ liệu làm đầu vào.\n- **D. module**: Các khối chức năng thực hiện tiền xử lý dữ liệu, thuật toán huấn luyện hoặc đánh giá mô hình.\n\n- **B sai** vì Compute là tài nguyên tính toán được thiết lập cấu hình chạy chứ không kéo thả trực tiếp lên canvas.\n- **C sai** vì Pipeline là tập hợp tất cả các thành phần được kết nối trên canvas.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -825,7 +825,7 @@
       "D": "một dịch vụ tạo các tài liệu câu hỏi thường gặp (FAQ) bằng cách thu thập dữ liệu từ các trang web công cộng"
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "AI hội thoại (Conversational AI) là ứng dụng cho phép máy tính tương tác đàm thoại hai chiều tự nhiên với con người qua giọng nói hoặc văn bản:\n- **B. Chatbot hỗ trợ tự động trên website**: Giúp người dùng trò chuyện và tìm kiếm câu trả lời một cách chủ động.\n- **C. Menu thoại tự động trên điện thoại**: Tích hợp nhận diện giọng nói tự động để hiểu ý kiến và phân loại cuộc gọi của người dùng nhằm giảm tải cho nhân viên.\n\n- **A sai** vì hộp thư trả lời tự động ghi âm sẵn tĩnh không có tương tác động của AI.\n- **D sai** vì việc tự động tạo tài liệu FAQ từ các trang web là tác vụ thu thập/khai thác tri thức, không phải hội thoại hai chiều.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -856,7 +856,7 @@
       "E": "Nhập nội dung trò chuyện xã giao (chit-chat) từ một nguồn dữ liệu định sẵn."
     },
     "answer": "ACE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "QnA Maker của Azure hỗ trợ ba phương pháp chính để nạp và xây dựng cơ sở tri thức (Knowledge Base) câu hỏi và trả lời:\n- **A. Trích xuất tự động từ một trang web câu hỏi thường gặp (FAQ webpage)** có sẵn.\n- **C. Nhập thủ công các câu hỏi và câu trả lời (manually enter)** trực tiếp từ giao diện.\n- **E. Nhập dữ liệu trò chuyện tự do (chit-chat)** từ nguồn định nghĩa sẵn.\n\n- **B sai** vì AutoML dùng để huấn luyện mô hình dự đoán, không dùng để nạp câu hỏi cho QnA Maker.\n- **D sai** vì kết nối với kênh Cortana là để triển khai sử dụng bot chứ không phải phương pháp xây dựng nội dung câu hỏi trả lời cho bot.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -996,7 +996,7 @@
       "F": "reliability and safety"
     },
     "answer": "CDF",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Nguyên lý giải quyết:\n\n- Microsoft xây dựng và tuân theo 6 nguyên tắc đạo đức/trách nhiệm chính đối với sự phát triển của trí tuệ nhân tạo bao gồm:\n  - **Tính công bằng (Fairness)** (D)\n  - **Độ tin cậy và An toàn (Reliability and safety)** (F)\n  - **Tính bao trùm (Inclusiveness)** (C)\n  - **Quyền riêng tư và Bảo mật (Privacy and security)**\n  - **Tính minh bạch (Transparency)**\n  - **Trách nhiệm giải trình (Accountability)**\n- Các phương án khác như knowledgeability, decisiveness, opinionatedness không nằm trong các nguyên tắc này.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1083,7 +1083,7 @@
       "D": "Identify the retailer from a receipt."
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Nguyên lý giải quyết:\n\n- **Form Recognizer** (nay là **Azure AI Document Intelligence**) là dịch vụ dựa trên đám mây dùng để trích xuất văn bản, bảng biểu, cấu trúc thông tin từ các tài liệu số hóa như biểu mẫu, biên lai, hóa đơn:\n  - **Trích xuất số hóa đơn** (A): Được thực hiện hiệu quả bằng mô hình Hóa đơn dựng sẵn (prebuilt Invoice model).\n  - **Xác định nhà bán lẻ từ biên lai** (D): Được thực hiện bằng mô hình Biên lai dựng sẵn (prebuilt Receipt model).\n- Các phương án khác:\n  - **Dịch biểu mẫu**: Cần sử dụng dịch vụ dịch thuật **Translator**.\n  - **Tìm hình ảnh sản phẩm**: Cần sử dụng các dịch vụ xử lý thị giác như **Computer Vision** hoặc **Custom Vision**.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1112,7 +1112,7 @@
       "D": "creating a transcript of a telephone call or meeting"
     },
     "answer": "BD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Nguyên lý giải quyết:\n\n- **Speech recognition** (Nhận dạng giọng nói - Speech-to-Text) có nhiệm vụ chính là chuyển đổi lời nói trong tập tin âm thanh hoặc phát âm trực tiếp thành văn bản chữ viết.\n  - **Cung cấp phụ đề ẩn cho video** (B): Nghe âm thanh giọng nói trong video và tạo phụ đề tương ứng dạng văn bản.\n  - **Tạo bản ghi chép cuộc họp/cuộc gọi** (D): Chuyển đổi cuộc đối thoại trực tiếp thành văn bản ghi nhớ.\n- Các phương án A và C sử dụng công nghệ **Speech synthesis** (Tổng hợp giọng nói - Text-to-Speech), chuyển đổi văn bản có sẵn thành giọng đọc phát ra loa phát thanh.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1253,7 +1253,7 @@
       "D": "Create a dataset from a comma-separated value (CSV) file."
     },
     "answer": "AC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Nguyên lý giải quyết:\n\n- Menurut cấu trúc phân chia tài khoản/phiên bản trước đây của Azure Machine Learning:\n  - Giao diện đồ họa thiết kế kéo thả **Azure Machine Learning designer (C)** và giao diện chạy **Automated ML (A)** là các tính năng nâng cao chỉ hỗ trợ trên phiên bản **Enterprise** workspace.\n  - Tạo compute instance (B) hay khai báo dataset từ tệp CSV (D) đều có thể được thực hiện hoàn toàn bình thường ở phiên bản **Basic** workspace.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1283,7 +1283,7 @@
       "E": "First Name"
     },
     "answer": "AC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Nguyên lý giải quyết:\n\n- **Đặc trưng (Features)** là các cột thông tin đầu vào đóng vai trò là yếu tố ảnh hưởng trực tiếp và logic tới giá trị dự báo.\n  - **Trình độ học vấn (Education Level)** (A) và **Tuổi (Age)** (C) là các thông số cá nhân có mức độ liên quan mật thiết và trực tiếp tác động đến mức thu nhập thực tế của một người lao động.\n  - **First Name (E)** và **Last Name (B)** chỉ là thông tin định danh cá nhân, không có tính liên quan trực tiếp và có thể gây nhiễu/quá khớp cho mô hình học máy.\n  - **Income Range (D)** là mục tiêu cần dự đoán (nhãn - label) chứ không phải đặc trưng đầu vào.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1837,7 +1837,7 @@
       "D": "An AI character in a computer game speaking to a player"
     },
     "answer": "AD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "- **A và D là đúng**: Speech synthesis (Tổng hợp giọng nói - Text-to-Speech) chuyển đổi văn bản thành âm thanh nói. Đọc lại số thẻ tín dụng (A) và nhân vật AI trong game tự động nói chuyện (D) đều là chuyển đổi văn bản/dữ liệu thành giọng nói.\n- **B là sai**: Tạo phụ đề trực tiếp (captions) là Speech-to-text (chuyển giọng nói thành văn bản).\n- **C là sai**: Trích xuất cụm từ khóa từ âm thanh ghi âm yêu cầu Speech-to-text sau đó dùng NLP trích xuất từ khóa, không phải Speech synthesis.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1895,7 +1895,7 @@
       "D": "An authentication key"
     },
     "answer": "CD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "- **C và D là đúng**: Khi xuất bản một inference pipeline (quy trình suy luận) trong Azure Machine Learning designer thành một dịch vụ web (web service), bạn cần REST endpoint (đường dẫn URL dịch vụ) để gửi yêu cầu và authentication key (khóa xác thực) để được cấp quyền truy cập.\n- **A là sai**: Tên mô hình (model name) không đủ để truy cập dịch vụ web từ xa.\n- **B là sai**: Training endpoint được dùng cho quá trình huấn luyện lại, không dùng để truy cập dịch vụ suy luận.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1924,7 +1924,7 @@
       "D": "Translator"
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "- **B và C là đúng**: Để triển khai một chatbot trả lời các câu hỏi đơn giản có sẵn:\n  - QnA Maker (hoặc Language Service hiện nay) được sử dụng để xây dựng và quản lý cơ sở tri thức câu hỏi thường gặp (predefined answers).\n  - Azure Bot Service được sử dụng để tạo khung giao tiếp kết nối cơ sở tri thức này với các kênh liên lạc (như điện thoại, chat).\n- **A là sai**: Azure Machine Learning dùng để xây dựng các mô hình máy học tùy chỉnh phức tạp, không cần thiết cho chatbot câu hỏi thường gặp.\n- **D là sai**: Translator dùng để dịch thuật ngôn ngữ, không phải dịch vụ tạo bot hỏi đáp.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1954,7 +1954,7 @@
       "E": "Remove records that have missing values"
     },
     "answer": "CE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "- **C và E là đúng**: Giai đoạn thu nhận dữ liệu (data ingestion) và chuẩn bị dữ liệu (data preparation) bao gồm các công việc làm sạch và biến đổi dữ liệu.\n  - Kết hợp nhiều tập dữ liệu (C) là việc tích hợp dữ liệu từ nhiều nguồn.\n  - Loại bỏ các bản ghi bị thiếu giá trị (E) là một kỹ thuật làm sạch dữ liệu cơ bản.\n- **A, B là sai**: Đánh giá độ chính xác (A) và chấm điểm dữ liệu kiểm thử (B) là các bước thuộc giai đoạn huấn luyện và đánh giá mô hình.\n- **D là sai**: Sử dụng mô hình cho dự đoán thời gian thực là giai đoạn triển khai và vận hành (deployment).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2011,7 +2011,7 @@
       "D": "Scala"
     },
     "answer": "AB",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "- **A và B là đúng**: Azure Machine Learning designer cung cấp các mô-đun mã tùy chỉnh để người dùng viết mã riêng, đó là \"Execute Python Script\" và \"Execute R Script\". Vì vậy, Python và R là hai ngôn ngữ được hỗ trợ.\n- **C và D là sai**: C# và Scala không được hỗ trợ để viết mã trực tiếp trong các mô-đun mã tùy chỉnh của designer.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2074,7 +2074,7 @@
       "E": "Translation"
     },
     "answer": "CD",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "- **C và D là đúng**: Hệ thống điều khiển thiết bị thông minh bằng giọng nói cần thực hiện hai tác vụ NLP chính:\n  - Speech-to-text (C): Chuyển câu lệnh giọng nói của người dùng thành văn bản.\n  - Language modeling / Language understanding (D): Phân tích văn bản lệnh đó để hiểu ý định (intent) và thực thể (entity) cần điều khiển.\n- **A là sai**: Text-to-speech dùng để phát giọng nói từ văn bản, không dùng để nhận lệnh.\n- **B là sai**: Key phrase extraction chỉ trích xuất từ khóa chính, không đủ để phân tích ý định hành động của câu lệnh.\n- **E là sai**: Translation dùng để dịch thuật giữa các ngôn ngữ, không liên quan đến việc hiểu lệnh điều khiển.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2133,7 +2133,7 @@
       "D": "An assembly line robot that checks parts for defects."
     },
     "answer": "BC",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "- **B và C là đúng**: Các tác vụ xử lý ngôn ngữ tự nhiên (NLP) liên quan đến việc hiểu hoặc tạo ra ngôn ngữ của con người.\n  - Kịch bản B: Thiết bị thông minh hiểu câu hỏi thời tiết và trả lời bằng giọng nói/văn bản.\n  - Kịch bản C: Website sử dụng cơ sở tri thức để trò chuyện và trả lời người dùng.\n- **A là sai**: Đây là bài toán giám sát nhiệt độ dựa trên ngưỡng (rule-based hoặc anomaly detection).\n- **D là sai**: Đây là tác vụ của robot công nghiệp kết hợp thị giác máy tính để lắp ráp bộ phận, không liên quan đến ngôn ngữ tự nhiên.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2827,7 +2827,7 @@
       "D": "Anomaly Detector"
     },
     "answer": "AB",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "- **A và B là đúng**:\n  - **Language Service** (cụ thể là tính năng Question Answering) được sử dụng để xây dựng và truy vấn cơ sở tri thức (knowledge base) từ tài liệu nguồn bằng ngôn ngữ tự nhiên.\n  - **Azure Bot Service** cung cấp nền tảng và môi trường để triển khai giao diện hội thoại (bot) tương tác với người dùng.\n- **C là sai**: Form Recognizer (nay là Azure AI Document Intelligence) dùng để trích xuất cấu trúc văn bản từ biểu mẫu, không phải để tạo bot hỏi đáp.\n- **D là sai**: Anomaly Detector dùng để phát hiện bất thường trong dữ liệu chuỗi thời gian.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3263,7 +3263,7 @@
       "E": "describing the contents of an image"
     },
     "answer": "AE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "**Đáp án đúng: A và E** vì đây là các tác vụ cốt lõi của thị giác máy tính:\n* **A (Semantic Segmentation):** Phân đoạn ngữ nghĩa, gán các điểm ảnh (pixels) cho một nhãn đối tượng cụ thể.\n* **E (Image Captioning):** Mô tả hình ảnh, tạo ra các văn bản tự nhiên để mô tả những gì xuất hiện trong bức ảnh.\n\n* **Tại sao các đáp án khác không đúng:**\n  * **B (Anomaly Detection):** Là tác vụ phát hiện bất thường, thường áp dụng cho chuỗi thời gian hoặc dữ liệu số, không thuộc phạm vi thị giác máy tính cơ bản.\n  * **C (Data Visualization):** Là biểu diễn trực quan dữ liệu số, không liên quan đến thị giác máy tính.\n  * **D (Computer Graphics/Generative AI):** Tạo hình ảnh chân thực thuộc lĩnh vực đồ họa máy tính hoặc AI tạo sinh (như DALL-E), không phải tác vụ phân tích thị giác máy tính truyền thống.\n\n*(Đáp án được gợi ý bởi AI)*",

@@ -33,7 +33,7 @@
   {
     "id": 2,
     "topic": 1,
-    "question": "A data engineer is working with two tables, each shown in full.\n\n**sales** (customer_id, spend, units):\n(a1, 28.94, 7), (a3, 874.12, 23), (a4, 8.99, 1)\n\n**favorite_stores** (customer_id, store_id):\n(a1, s1), (a2, s1), (a4, s2)\n\nThe data engineer runs this query:\n`SELECT sales.customer_id, sales.spend, favorite_stores.store_id FROM sales LEFT JOIN favorite_stores ON sales.customer_id = favorite_stores.customer_id`\n\nWhich result is returned?",
+    "question": "A data engineer is working with two tables. Each of these tables is displayed below in its entirety.\nThe data engineer runs the following query to join these tables together:\nWhich of the following will be returned by the above query?",
     "options": {
       "A": "![](/images/quizzes/certified-data-engineer-associate/1774280608652-j5dsu9n5.png)",
       "B": "![](/images/quizzes/certified-data-engineer-associate/1774280610772-2diqdrsy.png)",
@@ -45,14 +45,14 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Đáp án **C**. Đây là `LEFT JOIN` với `sales` ở bên trái, nên kết quả giữ lại mọi khách hàng trong `sales` và ghép thông tin cửa hàng khi `customer_id` khớp.\n\n- `a1` khớp với `favorite_stores`, vì vậy `store_id = s1`.\n- `a3` không có dòng tương ứng ở bảng cửa hàng nhưng vẫn được giữ lại; `store_id` vì thế là `NULL`.\n- `a4` khớp với `s2`.\n- `a2` chỉ có trong `favorite_stores`, nên bị loại vì không có trong bảng bên trái `sales`.\n\nCâu lệnh chỉ chọn `customer_id`, `spend` và `store_id`, vì vậy cột `units` không xuất hiện trong kết quả. Đây là đúng ngữ nghĩa của `LEFT JOIN`: giữ mọi dòng bên trái, điền `NULL` cho cột bên phải khi không có kết quả khớp.\n\n*(Đáp án được đối chiếu theo truy vấn và dữ liệu trong đề; tài liệu tham khảo bên dưới.)*",
+    "explanation_vi": "Truy vấn thực hiện phép nối (JOIN) giữa hai bảng dựa trên khóa chung. Kết quả của phép nối khớp các dòng có giá trị khóa tương ứng từ cả hai bảng để tạo thành bảng kết quả C.\n\n*(Đáp án được gợi ý bởi AI)*",
     "references": [
       {
         "title": "JOIN - Databricks SQL Reference",
         "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-qry-select-join.html"
       }
     ],
-    "question_vi": "Một kỹ sư dữ liệu đang làm việc với hai bảng, mỗi bảng được hiển thị đầy đủ.\n\n**sales** (customer_id, spend, units):\n(a1, 28.94, 7), (a3, 874.12, 23), (a4, 8.99, 1)\n\n**favorite_stores** (customer_id, store_id):\n(a1, s1), (a2, s1), (a4, s2)\n\nKỹ sư chạy truy vấn:\n`SELECT sales.customer_id, sales.spend, favorite_stores.store_id FROM sales LEFT JOIN favorite_stores ON sales.customer_id = favorite_stores.customer_id`\n\nKết quả nào được trả về?",
+    "question_vi": "Một kỹ sư dữ liệu đang làm việc với hai bảng. Mỗi bảng này được hiển thị đầy đủ bên dưới.\nKỹ sư dữ liệu chạy truy vấn sau để kết nối (join) hai bảng này lại với nhau:\nTruy vấn trên sẽ trả về kết quả nào sau đây?",
     "options_vi": {
       "A": "![](/images/quizzes/certified-data-engineer-associate/1774280608652-j5dsu9n5.png)",
       "B": "![](/images/quizzes/certified-data-engineer-associate/1774280610772-2diqdrsy.png)",
@@ -1310,7 +1310,7 @@
       "E": "Unity Catalog"
     },
     "answer": "BE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Kiến trúc nền tảng Databricks được chia thành hai phần chính:\n\n1. **Control Plane (Tầng điều khiển)**: Được quản lý bởi Databricks và chạy trong tài khoản đám mây của Databricks. Nó chứa các dịch vụ như Notebooks, Quản lý công việc (Job Scheduling), **Điều phối tính toán (Compute Orchestration)**, và dịch vụ quản trị dữ liệu **Unity Catalog**.\n2. **Data Plane (Tầng dữ liệu)**: Chạy trong tài khoản đám mây của khách hàng hoặc mạng cô lập nơi dữ liệu thực tế được xử lý. Tầng này chứa các **Máy ảo (Virtual Machines)** cấu hình cho cụm Spark Cluster để tính toán dữ liệu.\n\n* **Tại sao B và E đúng**: Cả **Compute Orchestration** (quản lý điều phối khởi tạo cụm) và **Unity Catalog** (quản trị phân quyền và siêu dữ liệu) đều chạy trong hệ thống quản lý của Databricks (Control Plane).\n* **Tại sao các lựa chọn khác sai**: Máy ảo (A) và tài nguyên tính toán cổ điển (D) nằm ở Data Plane của khách hàng. Serverless Compute (C) là tài nguyên tính toán chạy trên hạ tầng mạng được Databricks quản lý riêng nhưng thực hiện nhiệm vụ xử lý dữ liệu của khách hàng (hoạt động như một Data plane đặc biệt), không thuộc tầng kiểm soát quản trị cốt lõi của Control Plane.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3980,7 +3980,7 @@
       "E": "Java"
     },
     "answer": "AB",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Các cụm tính toán Serverless (Serverless Compute) của Databricks dành cho Notebooks và Jobs hỗ trợ hai ngôn ngữ lập trình chính:\n\n*   **Python**\n*   **SQL**\n\nCác ngôn ngữ khác như Scala và R hiện tại chưa được hỗ trợ trên môi trường tính toán Serverless này do cơ chế hoạt động của Spark Connect.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4069,7 +4069,7 @@
       "E": "Fix the shuffle partitions to 50 to ensure the allocation"
     },
     "answer": "AB",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Lỗi `OutOfMemoryError: Java heap space` trên các worker xảy ra khi dung lượng dữ liệu xáo trộn hoặc xử lý trong một phân vùng lớn hơn giới hạn bộ nhớ heap của máy.\n\n*   **A. Thu hẹp các bộ lọc (Narrow the filters):** Giảm trực tiếp lượng dữ liệu đầu vào cần xử lý, giúp ngăn ngừa quá tải bộ nhớ.\n*   **B. Tăng kích thước các nút worker và kích hoạt tự động xáo trộn phân vùng (autoshuffle partitions):** Việc tăng kích thước worker giúp mỗi executor có nhiều bộ nhớ heap hơn. Kích hoạt tự động điều chỉnh số lượng phân vùng xáo trộn (Adaptive Query Execution - AQE Coalesce) giúp Spark tự động gom cụm hoặc chia nhỏ phân vùng một cách tối ưu tương thích với kích thước dữ liệu thực tế, tránh các phân vùng quá lớn gây OOM.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4361,7 +4361,7 @@
       "E": "Read-optimized"
     },
     "answer": "DE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Trong kiến trúc huy chương (Medallion Architecture) của Delta Lake:\n\n*   **Lớp Vàng (Gold Layer)** là lớp dữ liệu cuối cùng, được thiết kế để cung cấp dữ liệu sạch, đã được tổng hợp hoặc lọc để phục vụ trực tiếp cho báo cáo, phân tích kinh doanh (BI) và học máy (ML). Do đó, nó có các đặc điểm:\n    *   **De-normalised (Đáp án D đúng)**: Dữ liệu thường được phi chuẩn hóa (ví dụ: theo mô hình hình sao - Star Schema hoặc bảng phẳng) để giảm thiểu các phép Join phức tạp, giúp tăng tốc độ truy xuất.\n    *   **Read-optimized (Đáp án E đúng)**: Được tối ưu hóa tối đa cho việc đọc và truy vấn nhanh.\n*   **Giải thích các phương án khác**:\n    *   *Raw Data (Dữ liệu thô)* là đặc trưng của Lớp Đồng (Bronze Layer).\n    *   *Normalised (Đã chuẩn hóa)* thường là đặc trưng của Lớp Bạc (Silver Layer) nhằm giảm trùng lặp dữ liệu và lưu trữ lịch sử một cách sạch sẽ.\n    *   *Historical lineage* chủ yếu được lưu giữ từ Bronze sang Silver.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -5472,7 +5472,7 @@
       "E": "Using joins and groupBy to compute percent-of-total metrics."
     },
     "answer": "CE",
-    "isMulti": true,
+    "isMulti": false,
     "page": null,
     "image": null,
     "explanation_vi": "Để tính toán các chỉ số phân tích phức tạp trong PySpark:\n- **Sử dụng Window functions (Hàm cửa sổ - Lựa chọn C)**: Rất phù hợp cho các tính toán liên quan đến dữ liệu dạng chuỗi thời gian trượt (chẳng hạn như doanh thu lũy kế 7 ngày bằng cách sử dụng `rowsBetween` hoặc `rangeBetween`) và xếp hạng (như xác định top-N sử dụng `dense_rank` hoặc `row_number`).\n- **Sử dụng Joins và GroupBy (Lựa chọn E)**: Để tính tỷ lệ phần trăm trên tổng số (percent-of-total revenue), trước hết ta cần gộp nhóm (`groupBy`) để tính tổng doanh thu của toàn bộ hệ thống hoặc theo từng nhóm, sau đó thực hiện phép nối (`join`) bảng tổng này với bảng chi tiết ban đầu để chia doanh thu của từng bản ghi cho tổng doanh thu.\n\n*Phân tích các lựa chọn khác:*\n- **A sai**: RDD thường có hiệu năng kém hơn DataFrame do không tận dụng được bộ tối ưu hóa Spark Catalyst Optimizer và định dạng lưu trữ bộ nhớ Tungsten.\n- **B sai**: Việc tự triển khai các cửa sổ trượt bằng `mapPartitions` rất phức tạp, dễ xảy ra lỗi và không tối ưu bằng các hàm cửa sổ tích hợp sẵn của Spark SQL.\n- **D sai**: Thu thập dữ liệu lớn về driver (`collect`) có thể gây ra lỗi tràn bộ nhớ (Out Of Memory - OOM) và làm mất đi khả năng tính toán phân tán của Spark.\n\n*(Đáp án được gợi ý bởi AI)*",
