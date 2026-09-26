@@ -6,7 +6,7 @@
   "questions": [
     {
       "id": 1,
-      "question": "You have a Fabric workspace.You have semi-structured data.You need to read the data by using T-SQL, KQL, and Apache Spark. The data will only be written by using Spark.What should you use to store the data?",
+      "question": "You have a Microsoft Fabric workspace and semi-structured data. You must write the data by using Apache Spark and read it by using T-SQL, KQL, and Apache Spark. Where should you store the data?",
       "choices": {
         "A": "a lakehouse",
         "B": "an eventhouse",
@@ -14,12 +14,25 @@
         "D": "a warehouse"
       },
       "correctAnswer": "A",
-      "explanation_vi": "Lựa chọn A (a lakehouse) là chính xác vì Lakehouse trong Microsoft Fabric cho phép lưu trữ dữ liệu bán cấu trúc (semi-structured data) ở định dạng Delta Parquet. Spark có thể ghi trực tiếp vào Lakehouse. T-SQL có thể được sử dụng để truy vấn thông qua SQL Analytics Endpoint của Lakehouse. Apache Spark cũng có thể đọc trực tiếp từ đây. KQL Database cũng hỗ trợ tạo các shortcut/external table trỏ đến delta tables trong OneLake/Lakehouse để truy vấn bằng KQL.\n- Lựa chọn B (an eventhouse) được tối ưu hóa cho dữ liệu streaming và phân tích thời gian thực (KQL), không phải là giải pháp tốt nhất để ghi dữ liệu bằng Spark và đọc linh hoạt bằng T-SQL/Spark/KQL.\n- Lựa chọn C (a datamart) chỉ hỗ trợ T-SQL và không hỗ trợ Apache Spark hoặc KQL trực tiếp.\n- Lựa chọn D (a warehouse) yêu cầu ghi dữ liệu chủ yếu qua T-SQL và không hỗ trợ ghi trực tiếp từ Spark bằng các API native của Spark mà không qua các giao thức kết nối khác.",
-      "references": []
+      "explanation_vi": "Đáp án A — Lakehouse. Các yêu cầu khớp với cách Fabric Lakehouse lưu dữ liệu trong OneLake dưới dạng Delta: Apache Spark có thể đọc và ghi trực tiếp; SQL analytics endpoint cung cấp T-SQL chỉ đọc trên các bảng Delta; KQL có thể truy vấn dữ liệu OneLake thông qua shortcut trong KQL database, được hiển thị như external table. Một lakehouse vì vậy cho phép ba công cụ đọc cùng dữ liệu mà không phải nạp thêm một bản sao riêng.\n\n- B — Eventhouse phù hợp với dữ liệu sự kiện, luồng và phân tích thời gian thực bằng KQL. Nó không phải nơi lưu bảng Delta để Spark ghi và SQL analytics endpoint truy vấn theo yêu cầu này.\n- C — Datamart là lựa chọn thiên về mô hình hóa và truy vấn SQL phục vụ BI; đề bài cần ghi bằng Spark và đọc qua cả Spark lẫn KQL.\n- D — Warehouse phù hợp với dữ liệu có cấu trúc và quy trình SQL-first. Nó không cung cấp cùng quy trình ghi bảng Delta trực tiếp bằng Spark như Lakehouse.\n\nĐiểm cần phân biệt: T-SQL trên SQL analytics endpoint của Lakehouse chỉ đọc; thao tác ghi và cập nhật dữ liệu thực hiện bằng Spark.",
+      "references": [
+        {
+          "title": "What is a lakehouse? - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-overview"
+        },
+        {
+          "title": "SQL analytics endpoint for a lakehouse - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-sql-analytics-endpoint"
+        },
+        {
+          "title": "Create OneLake shortcuts in a KQL database - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/onelake-shortcuts"
+        }
+      ]
     },
     {
       "id": 2,
-      "question": "You have a Fabric F32 capacity that contains a workspace. The workspace contains a warehouse named DW1 that is modelled by using MD5 hash surrogate keys.DW1 contains a single fact table that has grown from 200 million rows to 500 million rows during the past year.You have Microsoft Power BI reports that are based on Direct Lake. The reports show year-over-year values.Users report that the performance of some of the reports has degraded over time and some visuals show errors.You need to resolve the performance issues. The solution must meet the following requirements:Provide the best query performance.Minimize operational costs.Which should you do?",
+      "question": "You have a Fabric F32 capacity that contains a workspace. The workspace contains a warehouse named DW1, modelled by using MD5 hash surrogate keys. DW1 contains one fact table that grew from 200 million rows to 500 million rows during the past year. Power BI reports based on Direct Lake show year-over-year values. Users report that some reports have become slower and some visuals show errors. You need to resolve the performance issues, provide the best query performance, and minimize operational costs. What should you do?",
       "choices": {
         "A": "Change the MD5 hash to SHA256.",
         "B": "Increase the capacity.",
@@ -28,17 +41,17 @@
         "E": "Create views."
       },
       "correctAnswer": "B",
-      "explanation_vi": "Lựa chọn B (Increase the capacity) là chính xác. Theo tài liệu chính thức từ Microsoft Learn về giới hạn Direct Lake của các SKU Fabric Capacity, SKU F32 giới hạn số lượng dòng tối đa trên mỗi bảng trong chế độ Direct Lake là 300 triệu dòng (300 million rows per table). Vì bảng Fact của DW1 đã tăng trưởng lên 500 triệu dòng (vượt quá giới hạn 300 triệu dòng của F32), Direct Lake sẽ tự động rơi vào trạng thái lỗi hoặc chuyển sang chế độ DirectQuery (DirectQuery fallback), gây giảm hiệu năng nghiêm trọng và phát sinh lỗi hiển thị. Việc nâng cấp dung lượng (tối thiểu lên SKU F64, hỗ trợ đến 1.5 tỷ dòng) là cần thiết để giữ mô hình trong chế độ Direct Lake.\n- Các lựa chọn khác như Bật V-Order (C) hay thay đổi kiểu dữ liệu khóa thay thế (D) hoặc đổi MD5 sang SHA256 (A) tuy có giúp tối ưu hóa dung lượng lưu trữ và bộ nhớ, nhưng không giải quyết được giới hạn cứng (hard guardrail) 300 triệu dòng trên mỗi bảng của F32. Do đó, nâng cấp capacity (B) là giải pháp duy nhất giải quyết triệt để lỗi và đảm bảo hiệu năng Direct Lake tốt nhất cho kích thước bảng này.",
+      "explanation_vi": "Đáp án B — tăng cấp dung lượng, tối thiểu lên F64 theo giới hạn trong đề. Direct Lake áp dụng giới hạn số dòng trên mỗi bảng theo SKU: F32 giới hạn ở 300 triệu dòng, còn F64 là 1,5 tỷ dòng. Bảng fact 500 triệu dòng đã vượt giới hạn của F32. Khi vượt giới hạn, mô hình có thể phải fallback sang DirectQuery; nếu đường fallback không dùng được thì truy vấn có thể lỗi. Nâng lên SKU đủ sức chứa là lựa chọn ở đây để giữ Direct Lake và hiệu năng truy vấn. Chọn SKU nhỏ nhất đáp ứng được giới hạn giúp tránh tăng chi phí quá mức.\n\n- A — SHA-256 tạo khóa dài hơn MD5, nên không giải quyết giới hạn dòng và còn có thể làm tăng kích thước mô hình.\n- C — V-Order tối ưu cách bố trí dữ liệu lưu trữ, nhưng không nâng giới hạn 300 triệu dòng của F32.\n- D — Kiểu khóa gọn hơn có thể giảm dung lượng bộ nhớ, nhưng bảng vẫn vượt giới hạn số dòng của F32.\n- E — Tạo view không làm giảm số dòng của bảng nền; với Direct Lake, việc dùng view có thể dẫn đến truy vấn qua SQL endpoint/DirectQuery thay vì đọc bảng Delta trực tiếp.\n\nYêu cầu “giảm thiểu chi phí” không có nghĩa chọn SKU rẻ hơn nhưng vẫn vượt giới hạn: trong các phương án được đưa ra, tăng lên SKU thấp nhất đủ chứa bảng mới đáp ứng đồng thời hiệu năng và chi phí.",
       "references": [
         {
           "title": "Direct Lake overview - Microsoft Fabric",
-          "url": "https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview"
+          "url": "https://learn.microsoft.com/en-us/power-bi/enterprise/directlake-overview"
         }
       ]
     },
     {
       "id": 3,
-      "question": "You have a Fabric workspace named Workspace1 that contains a lakehouse named Lakehouse1. Lakehouse1 contains the following tables:\nOrders -\nCustomer -\nEmployee -The Employee table contains Personally Identifiable Information (PII).A data engineer is building a workflow that requires writing data to the Customer table, however, the user does NOT have the elevated permissions required to view the contents of the Employee table.You need to ensure that the data engineer can write data to the Customer table without reading data from the Employee table.Which three actions should you perform? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "question": "You have a Fabric workspace named Workspace1 that contains a lakehouse named Lakehouse1. Lakehouse1 contains tables named Orders, Customer, and Employee. The Employee table contains personally identifiable information (PII). A data engineer must write data to the Customer table but must not be able to read the Employee table. Which three actions should you perform? Each correct answer presents part of the solution. NOTE: Each correct selection is worth one point.",
       "choices": {
         "A": "Share Lakehouse1 with the data engineer.",
         "B": "Assign the data engineer the Contributor role for Workspace2.",
@@ -48,12 +61,21 @@
         "F": "Create a new workspace named Workspace2 that contains a new lakehouse named Lakehouse2."
       },
       "correctAnswer": "DEF",
-      "explanation_vi": "Lựa chọn D, E, F là chính xác vì trong Microsoft Fabric, quyền truy cập của các vai trò trong workspace (như Contributor) được áp dụng cho toàn bộ các item trong workspace đó. Nếu kỹ sư dữ liệu (data engineer) có vai trò Contributor trong Workspace1, họ sẽ có quyền đọc và ghi vào mọi bảng trong Lakehouse1, bao gồm cả bảng Employee chứa thông tin nhạy cảm (PII).\n- Để ngăn kỹ sư này đọc bảng Employee nhưng vẫn cho phép họ ghi vào bảng Customer trong Lakehouse1:\n  1. Cần tạo một workspace mới là Workspace2 chứa một lakehouse mới là Lakehouse2 (F).\n  2. Di chuyển bảng Employee (chứa dữ liệu PII) từ Lakehouse1 sang Lakehouse2 (E).\n  3. Cấp cho kỹ sư dữ liệu vai trò Contributor trong Workspace1 để họ có quyền ghi dữ liệu vào bảng Customer (D) mà không thể xem dữ liệu PII trong Workspace2 (vì họ không được cấp quyền trên Workspace2).",
-      "references": []
+      "explanation_vi": "Đáp án D, E và F. Contributor trong một workspace có quyền tạo, đọc, cập nhật và xóa dữ liệu của các lakehouse trong workspace đó. Vì vậy, nếu bảng Customer và bảng Employee cùng nằm trong Lakehouse1, cấp Contributor ở Workspace1 cũng cho kỹ sư quyền đọc Employee. Cách tách quyền trong các lựa chọn là chuyển bảng chứa PII sang lakehouse thuộc workspace riêng, rồi chỉ cấp Contributor ở workspace chứa Customer.\n\n- D — Cấp Contributor ở Workspace1 để kỹ sư có thể ghi vào Customer. Quyền này cũng áp dụng rộng trong workspace, nên cần kết hợp với việc tách Employee.\n- F — Tạo Workspace2 và Lakehouse2 làm vùng lưu trữ riêng cho dữ liệu nhạy cảm.\n- E — Di chuyển Employee sang Lakehouse2 để bảng này không còn nằm trong workspace mà kỹ sư được cấp Contributor. Không cấp cho kỹ sư quyền ở Workspace2.\n- A — Chia sẻ Lakehouse1 không giới hạn quyền theo cách đề bài yêu cầu; chia sẻ không thay thế việc cô lập Employee khỏi quyền workspace rộng.\n- B — Contributor ở Workspace2 sẽ cho quyền đọc và ghi dữ liệu trong vùng chứa Employee, trái yêu cầu bảo mật.\n- C — Viewer vẫn là quyền đọc; không nên cấp quyền truy cập vào workspace chứa Employee khi yêu cầu là không được đọc bảng đó.\n\nTrong hệ thống thật, cần kiểm tra thêm quyền kế thừa, nhóm bảo mật và các bản sao/shortcut của bảng để chắc chắn PII không còn lộ qua đường khác.",
+      "references": [
+        {
+          "title": "Workspace roles and permissions in lakehouse - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/workspace-roles-lakehouse"
+        },
+        {
+          "title": "OneLake security - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/onelake/security/data-access-control-model"
+        }
+      ]
     },
     {
       "id": 4,
-      "question": "You have a Fabric workspace named Workspace1.You plan to integrate Workspace1 with Azure DevOps.You will use a Fabric deployment pipeline named deployPipeline1 to deploy items from Workspace1 to higher environment workspaces as part of a medallion architecture. You will run deployPipeline1 by using an API call from an Azure DevOps pipeline.You need to configure API authentication between Azure DevOps and Fabric.Which type of authentication should you use?",
+      "question": "You have a Fabric workspace named Workspace1 and plan to integrate it with Azure DevOps. An Azure DevOps pipeline will call the Fabric deployment pipeline API to deploy items from Workspace1 to higher-environment workspaces. Which authentication type should you configure between Azure DevOps and Fabric?",
       "choices": {
         "A": "service principal",
         "B": "Microsoft Entra username and password",
@@ -61,12 +83,21 @@
         "D": "workspace identity"
       },
       "correctAnswer": "A",
-      "explanation_vi": "Lựa chọn A (service principal) là chính xác vì để tích hợp CI/CD tự động và gọi các API của Fabric deployment pipeline từ Azure DevOps mà không cần tương tác của người dùng (non-interactive authentication), việc sử dụng Service Principal (phương thức định danh dịch vụ) của Microsoft Entra ID là phương pháp chuẩn và bảo mật nhất.\n- Lựa chọn B sử dụng tài khoản người dùng và mật khẩu, điều này vi phạm nguyên tắc bảo mật và không phù hợp cho các quy trình tự động hóa.\n- Lựa chọn C (managed private endpoint) là phương thức kết nối mạng bảo mật, không phải phương thức xác thực danh tính để gọi API.\n- Lựa chọn D (workspace identity) được sử dụng để định danh cho chính workspace Fabric khi truy cập các tài nguyên Azure khác, không phải để xác thực từ Azure DevOps vào Fabric.",
-      "references": []
+      "explanation_vi": "Đáp án A — service principal. Azure DevOps cần một danh tính ứng dụng có thể xác thực tự động, không cần người dùng đăng nhập mỗi lần chạy. Service principal của Microsoft Entra ID phù hợp cho lời gọi REST API trong quy trình CI/CD. API Fabric hỗ trợ service principal; quản trị viên Fabric cần bật tenant setting “Service principals can use Fabric APIs”, và principal phải được cấp quyền cần thiết trên workspace/pipeline.\n\n- B — Tên người dùng và mật khẩu là thông tin đăng nhập tương tác của một cá nhân, không phù hợp để một pipeline chạy ổn định mà không có người đăng nhập.\n- C — Managed private endpoint cấu hình kết nối mạng đến nguồn dữ liệu riêng; nó không phải danh tính xác thực để gọi Fabric REST API.\n- D — Workspace identity là danh tính mà một workload trong Fabric dùng khi truy cập tài nguyên khác; nó không đại diện cho Azure DevOps gọi vào Fabric.\n\nCâu hỏi chỉ yêu cầu chọn loại xác thực. Việc chọn service principal vẫn cần tenant setting và cấp quyền phù hợp mới đủ để API hoạt động.",
+      "references": [
+        {
+          "title": "Identity support for Microsoft Fabric REST APIs",
+          "url": "https://learn.microsoft.com/en-us/rest/api/fabric/articles/identity-support"
+        },
+        {
+          "title": "Deploy stage content - Fabric REST API",
+          "url": "https://learn.microsoft.com/en-us/rest/api/fabric/core/deployment-pipelines/deploy-stage-content"
+        }
+      ]
     },
     {
       "id": 5,
-      "question": "You have a Google Cloud Storage (GCS) container named storage1 that contains the files shown in the following table.\nYou have a Fabric workspace named Workspace1 that has the cache for shortcuts enabled. Workspace1 contains a lakehouse named Lakehouse1. Lakehouse1 has the shortcuts shown in the following table.\nYou need to read data from all the shortcuts.Which shortcuts will retrieve data from the cache?",
+      "question": "A Google Cloud Storage (GCS) container named storage1 contains three files: ProductFile.parquet (650 MB), StoreFile.parquet (300 MB), and TripsFile.parquet (900 MB). A Fabric workspace named Workspace1 has shortcut caching enabled and contains a lakehouse named Lakehouse1. Lakehouse1 contains three shortcuts: Products points to ProductFile.parquet, Stores points to StoreFile.parquet, and Trips points to TripsFile.parquet. You read each shortcut once, then read them again before the cache retention period expires. Which shortcuts can serve the second read from the cache?",
       "choices": {
         "A": "Stores only",
         "B": "Products only",
@@ -76,12 +107,17 @@
         "F": "Products and Trips only"
       },
       "correctAnswer": "D",
-      "explanation_vi": "Lựa chọn D (Products, Stores, and Trips) là chính xác vì tất cả các tệp dữ liệu này đều được lưu trữ trong Google Cloud Storage (GCS) container tên là storage1. Microsoft Fabric hỗ trợ tính năng Shortcut Caching cho các nguồn lưu trữ đám mây ngoài Azure (cross-cloud) như Google Cloud Storage (GCS) và Amazon S3. Do đó, tất cả các shortcut trỏ đến các tệp tin trên GCS (Stores, Products, và Trips) đều sẽ được lấy dữ liệu từ bộ nhớ cache khi tính năng này được kích hoạt ở cấp workspace.",
-      "references": []
+      "explanation_vi": "Đáp án D — cả Products, Stores và Trips đều đủ điều kiện. Fabric hỗ trợ shortcut caching cho nguồn GCS. Bộ nhớ đệm không lưu từng tệp riêng lẻ có kích thước lớn hơn 1 GB; cả ba tệp trong đề đều nhỏ hơn ngưỡng này. Lần đọc đầu lấy dữ liệu từ GCS và đưa tệp vào cache; lần đọc thứ hai trong thời gian lưu giữ có thể được phục vụ từ cache.\n\n- A, B, C và E chỉ liệt kê một phần các shortcut đủ điều kiện, nên bỏ sót tệp dưới 1 GB.\n- F bỏ sót Stores, dù StoreFile.parquet cũng là tệp GCS 300 MB và đủ điều kiện.\n\nTrong thực tế, cache có thể cần được cập nhật nếu nguồn đã có phiên bản mới hơn; thời hạn lưu giữ cũng được đặt ở cấp workspace.",
+      "references": [
+        {
+          "title": "Unify data sources with OneLake shortcuts - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts"
+        }
+      ]
     },
     {
       "id": 6,
-      "question": "You have a Fabric workspace that contains a Real-Time Intelligence solution and an eventhouse.Users report that from OneLake file explorer, they cannot see the data from the eventhouse.You enable OneLake availability for the eventhouse.What will be copied to OneLake?",
+      "question": "A Fabric workspace contains an Eventhouse with a KQL database. You enable OneLake availability at the database level and select Apply to existing tables. What data will be made available in OneLake?",
       "choices": {
         "A": "only data added to new databases that are added to the eventhouse",
         "B": "only the existing data in the eventhouse",
@@ -90,12 +126,17 @@
         "E": "only new data added to the eventhouse"
       },
       "correctAnswer": "D",
-      "explanation_vi": "Lựa chọn D (both new data and existing data in the eventhouse) là chính xác. Khi bạn kích hoạt tính năng OneLake availability (khả năng hiển thị trên OneLake) cho một Eventhouse hoặc KQL Database, Fabric sẽ tự động tạo cấu trúc bảng Delta tương ứng trong OneLake. Hệ thống sẽ sao chép cả dữ liệu lịch sử hiện có (existing data) và các dữ liệu mới được nạp vào sau đó (new data) của KQL database sang định dạng Delta Parquet trong OneLake, giúp các công cụ khác như OneLake File Explorer, Spark hay T-SQL có thể nhìn thấy và truy vấn toàn bộ dữ liệu này.",
-      "references": []
+      "explanation_vi": "Đáp án D — dữ liệu của các bảng hiện có và dữ liệu mới trong KQL database được bật OneLake availability sẽ có thể truy cập qua OneLake. Chi tiết “select Apply to existing tables” quyết định phần dữ liệu lịch sử được backfill. Sau khi bật ở cấp database, dữ liệu của các bảng mới cũng được cung cấp; việc đồng bộ giữ biểu diễn Delta trong OneLake cập nhật theo database.\n\n- A — Phạm vi là database đã bật tính năng, không chỉ các database mới được thêm vào Eventhouse.\n- B — Bỏ sót dữ liệu mới tiếp tục được nạp sau khi bật.\n- C — Sai vì tính năng làm cho dữ liệu KQL được truy cập qua OneLake.\n- E — Chỉ đúng nếu bật database-level nhưng không chọn áp dụng cho các bảng hiện có. Đề bài đã nêu rõ có chọn tùy chọn này.\n\nOneLake availability cung cấp biểu diễn Delta được đồng bộ; không nên hiểu đây là lệnh sao chép thủ công sang một kho vật lý độc lập.",
+      "references": [
+        {
+          "title": "Turn on OneLake availability for an eventhouse - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-house-onelake-availability"
+        }
+      ]
     },
     {
       "id": 7,
-      "question": "You have a Fabric workspace that contains a warehouse named Warehouse1.You have an on-premises Microsoft SQL Server database named Database1 that is accessed by using an on-premises data gateway.You need to copy data from Database1 to Warehouse1.Which item should you use?",
+      "question": "A Fabric workspace contains a warehouse named Warehouse1. An on-premises Microsoft SQL Server database named Database1 is accessed through an on-premises data gateway. You need to copy data from Database1 to Warehouse1. Which item should you use?",
       "choices": {
         "A": "a Dataflow Gen1 dataflow",
         "B": "a data pipeline",
@@ -103,12 +144,25 @@
         "D": "a notebook"
       },
       "correctAnswer": "B",
-      "explanation_vi": "Lựa chọn B (a data pipeline) là chính xác vì Data Pipeline trong Microsoft Fabric hỗ trợ Copy Activity để sao chép dữ liệu hiệu quả từ cơ sở dữ liệu on-premises (thông qua On-premises data gateway) sang các đích đến trong Fabric như Warehouse.\n- Lựa chọn A (a Dataflow Gen1 dataflow) là công cụ thế hệ cũ của Power BI, Fabric tích hợp Dataflow Gen2 thay vì Gen1 để lưu trữ dữ liệu vào các đích Fabric.\n- Lựa chọn C (a KQL queryset) chỉ được dùng để chạy các truy vấn KQL trên Eventhouse/KQL Database, không dùng để sao chép dữ liệu.\n- Lựa chọn D (a notebook) sử dụng mã Spark, không hỗ trợ kết nối trực tiếp và bảo mật qua On-premises data gateway một cách dễ dàng như Data Pipeline.",
-      "references": []
+      "explanation_vi": "Đáp án B — data pipeline. Copy activity trong Fabric Data Factory pipeline hỗ trợ kết nối SQL Server tại chỗ qua on-premises data gateway và có thể nạp dữ liệu vào Warehouse. Đây là luồng sao chép nguồn đến đích phù hợp trực tiếp với đề bài.\n\n- A — Dataflow Gen1 lưu kết quả trong kho nội bộ của dataflow; khả năng cấu hình Fabric Warehouse làm đích dữ liệu thuộc Dataflow Gen2. Vì đề yêu cầu ghi thẳng vào Warehouse1, Gen1 không đáp ứng đích này như pipeline.\n- C — KQL queryset dùng để viết và chạy truy vấn KQL trên KQL database, không điều phối việc sao chép SQL Server vào Warehouse.\n- D — Notebook phù hợp với xử lý bằng mã/Spark; pipeline cung cấp sẵn Copy activity và tích hợp gateway cho luồng này.\n\nPipeline cũng cho phép quản lý bước sao chép, lịch chạy và giám sát trong cùng một quy trình nạp dữ liệu.",
+      "references": [
+        {
+          "title": "Access on-premises data sources in Data Factory - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-factory/how-to-access-on-premises-data"
+        },
+        {
+          "title": "Ingest data into your warehouse by using pipelines - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-warehouse/ingest-data-pipelines"
+        },
+        {
+          "title": "Differences between Dataflow Gen1 and Dataflow Gen2 - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-factory/dataflows-gen2-overview"
+        }
+      ]
     },
     {
       "id": 8,
-      "question": "You have a Fabric workspace named Workspace1 that contains a notebook named Notebook1.In Workspace1, you create a new notebook named Notebook2.You need to ensure that you can attach Notebook2 to the same Apache Spark session as Notebook1.What should you do?",
+      "question": "A Fabric workspace named Workspace1 contains Notebook1. You create Notebook2 in the same workspace. You need Notebook2 to attach to the same Apache Spark session as Notebook1. What should you do?",
       "choices": {
         "A": "Enable high concurrency for notebooks.",
         "B": "Enable dynamic allocation for the Spark pool.",
@@ -116,12 +170,17 @@
         "D": "Increase the number of executors."
       },
       "correctAnswer": "A",
-      "explanation_vi": "Lựa chọn A (Enable high concurrency for notebooks) là chính xác. Trong Microsoft Fabric, tính năng High Concurrency (khả năng chạy đồng thời cao) cho phép nhiều notebook cùng chia sẻ và chạy trên một session Apache Spark duy nhất (Spark application). Khi tính năng này được bật cho một notebook hoặc môi trường, bạn có thể đính kèm nhiều notebook vào cùng một session đang hoạt động để chạy đồng thời và tối ưu hóa tài nguyên.\n- Các lựa chọn B (Dynamic allocation - cấp phát động), C (Thay đổi runtime version), và D (Tăng số lượng executor) chỉ liên quan đến cách Spark pool quản lý và phân bổ tài nguyên tính toán cho một session đơn lẻ, không giúp chia sẻ session giữa các notebook khác nhau.",
-      "references": []
+      "explanation_vi": "Đáp án A — bật high concurrency và chọn phiên high-concurrency hiện có khi chạy Notebook2. Chế độ này cho phép notebook dùng chung một Spark session thay vì khởi động session riêng. Để dùng chung, hai notebook phải do cùng người dùng chạy, ở cùng workspace, dùng cùng default lakehouse, cấu hình Spark và thư viện tương thích.\n\n- B — Dynamic allocation thay đổi cách session cấp phát executor; nó không ghép hai notebook vào cùng session.\n- C — Đổi runtime không bật cơ chế dùng chung session. Ngược lại, các notebook cần cấu hình tương thích để chia sẻ.\n- D — Tăng executor tăng tài nguyên của session nhưng không tạo liên kết session giữa các notebook.\n\nSau khi bật high concurrency, mở lựa chọn session của Notebook2 và gắn notebook vào phiên high-concurrency đang chạy của Notebook1.",
+      "references": [
+        {
+          "title": "Configure high concurrency mode for notebooks - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/data-engineering/configure-high-concurrency-session-notebooks"
+        }
+      ]
     },
     {
       "id": 9,
-      "question": "You have a Fabric workspace that contains a lakehouse named Lakehouse1. Data is ingested into Lakehouse1 as one flat table. The table contains the following columns.\nYou plan to load the data into a dimensional model and implement a star schema. From the original flat table, you create two tables named FactSales and DimProduct. You will track changes in DimProduct.You need to prepare the data.Which three columns should you include in the DimProduct table? Each correct answer presents part of the solution.NOTE: Each correct selection is worth one point.",
+      "question": "A Fabric workspace contains a lakehouse named Lakehouse1. Data is ingested into one flat table with these columns: Date, ProductName, ProductColor, TransactionID, SalesAmount, and ProductID. You plan to create a star schema with FactSales and DimProduct, and you will track changes in DimProduct. Which three columns from the flat table should be included in DimProduct? Each correct answer presents part of the solution. NOTE: Each correct selection is worth one point.",
       "choices": {
         "A": "Date",
         "B": "ProductName",
@@ -131,20 +190,34 @@
         "F": "ProductID"
       },
       "correctAnswer": "BCF",
-      "explanation_vi": "Lựa chọn B, C, F là chính xác vì trong mô hình thiết kế Star Schema (sơ đồ hình sao), các thuộc tính mô tả thực thể sản phẩm sẽ được tách ra bảng chiều (Dimension table - DimProduct), trong khi các chỉ số đo lường (measures) và khóa giao dịch sẽ nằm ở bảng sự kiện (Fact table - FactSales).\n- ProductID (F) là khóa định danh sản phẩm.\n- ProductName (B) và ProductColor (C) là các thuộc tính mô tả chi tiết sản phẩm.\n- Các cột khác không thuộc DimProduct:\n  - SalesAmount (E) là chỉ số đo lường định lượng và TransactionID (D) là khóa giao dịch, cả hai đều thuộc bảng Fact (FactSales).\n  - Date (A) nên được chuẩn hóa vào bảng chiều thời gian (DimDate).",
-      "references": []
+      "explanation_vi": "Đáp án B, C và F — ProductName, ProductColor và ProductID mô tả và định danh thực thể sản phẩm. Trong star schema, DimProduct chứa khóa nhận diện sản phẩm cùng các thuộc tính mô tả; FactSales giữ từng giao dịch và số đo doanh số. Vì đề còn yêu cầu theo dõi thay đổi, ProductID từ nguồn dùng để nhận diện cùng một sản phẩm qua các phiên bản thuộc tính; khi triển khai SCD, thường bổ sung surrogate key và các cột hiệu lực phiên bản, dù những cột đó không nằm trong danh sách lựa chọn.\n\n- A — Date là thuộc tính của chiều ngày riêng (DimDate), không phải chiều sản phẩm.\n- D — TransactionID định danh một sự kiện giao dịch, nên thuộc FactSales.\n- E — SalesAmount là số đo có thể tổng hợp của từng giao dịch, nên thuộc FactSales.\n\nKhông nên nhầm ProductID trong bảng nguồn với surrogate key mới tạo cho từng phiên bản DimProduct: đề yêu cầu chọn các cột có sẵn trong bảng phẳng.",
+      "references": [
+        {
+          "title": "Understand star schema and the importance for Power BI - Microsoft Learn",
+          "url": "https://learn.microsoft.com/en-us/power-bi/guidance/star-schema"
+        }
+      ]
     },
     {
       "id": 10,
-      "question": "You have a Fabric deployment pipeline that uses three workspaces named Dev, Test, and Prod.You need to deploy an eventhouse as part of the deployment process.What should you use to add the eventhouse to the deployment process?",
+      "question": "You have a Fabric deployment pipeline with three workspaces named Dev, Test, and Prod. You need to deploy an Eventhouse as part of this process. What should you use to add the Eventhouse to the deployment process?",
       "choices": {
         "A": "GitHub Actions",
         "B": "a deployment pipeline",
         "C": "an Azure DevOps pipeline"
       },
       "correctAnswer": "B",
-      "explanation_vi": "Lựa chọn B (a deployment pipeline) là chính xác vì Microsoft Fabric Deployment Pipelines (đường ống triển khai) hỗ trợ nguyên bản (natively) việc triển khai các KQL Database/Eventhouse cùng với các item khác trong workspace (như Lakehouse, Report, Data pipeline) qua các môi trường Dev, Test, và Prod mà không cần viết mã cấu hình phức tạp.\n- Lựa chọn A (GitHub Actions) và C (Azure DevOps pipeline) có thể được sử dụng để kích hoạt deployment pipeline này thông qua API, nhưng bản thân việc quản lý cấu trúc triển khai của các thành phần Fabric (bao gồm Eventhouse) được thực hiện trực tiếp bởi tính năng Deployment Pipeline của Fabric.",
-      "references": []
+      "explanation_vi": "Đáp án B — dùng Fabric deployment pipeline hiện có. Eventhouse là loại mục được hỗ trợ trong deployment pipelines của Fabric, nên bạn có thể đưa mục này vào workspace giai đoạn Dev rồi triển khai sang Test và Prod bằng quy trình tích hợp sẵn.\n\n- A — GitHub Actions có thể tự động hóa lời gọi API hoặc các bước CI/CD, nhưng không phải công cụ cần chọn để thêm Eventhouse vào deployment pipeline Fabric đã có.\n- C — Azure DevOps pipeline cũng có thể điều phối API trong một giải pháp CI/CD tùy chỉnh; câu hỏi đang hỏi cách thêm Eventhouse vào pipeline Fabric với ba giai đoạn đã cấu hình.\n\nSau khi triển khai, hãy kiểm tra cấu hình kết nối đích nếu Eventstream trỏ đến Eventhouse bằng Direct Ingestion, vì kết nối kiểu này có thể cần cấu hình lại tại workspace đích.",
+      "references": [
+        {
+          "title": "Git integration and deployment pipelines for Real-Time Intelligence - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/git-deployment-pipelines"
+        },
+        {
+          "title": "Overview of Fabric deployment pipelines - Microsoft Fabric",
+          "url": "https://learn.microsoft.com/en-us/power-bi/create-reports/deployment-pipelines-overview"
+        }
+      ]
     },
     {
       "id": 11,
