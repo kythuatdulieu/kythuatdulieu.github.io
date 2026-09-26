@@ -138,7 +138,7 @@
   {
     "id": 5,
     "topic": 1,
-    "question": "An analyst wants to divide one AI/BI dashboard into Development, Testing, and Production sections without creating separate dashboards. Which widget should they use?",
+    "question": "An analyst wants visually distinct Development, Testing, and Production sections on the same AI/BI dashboard page. Which widget can they use to add headings without creating separate dashboards?",
     "options": {
       "A": "Use a separate SQL warehouse for each section.",
       "B": "Create a separate dashboard for every section.",
@@ -157,7 +157,7 @@
         "url": "https://docs.databricks.com/aws/en/dashboards"
       }
     ],
-    "question_vi": "Nhà phân tích muốn chia một AI/BI dashboard thành các phần Development, Testing và Production mà không tạo nhiều dashboard. Họ nên dùng widget nào?",
+    "question_vi": "Nhà phân tích muốn chia trực quan một trang AI/BI dashboard thành các phần Development, Testing và Production bằng tiêu đề, nhưng không tạo nhiều dashboard. Họ nên dùng widget nào?",
     "options_vi": {
       "A": "Dùng một SQL warehouse riêng cho mỗi phần.",
       "B": "Tạo một dashboard riêng cho mỗi phần.",
@@ -859,13 +859,13 @@
   {
     "id": 28,
     "topic": 1,
-    "question": "Which of the following approaches can be used to ingest data directly from cloud-based object storage?",
+    "question": "An analyst wants to register files in cloud object storage as a table and query them without copying the files into Databricks-managed storage. Which approach describes the correct way to specify the source location?",
     "options": {
-      "A": "Create an external table while specifying the DBFS storage path to FROM",
-      "B": "Create an external table while specifying the DBFS storage path to PATH",
-      "C": "It is not possible to directly ingest data from cloud-based object storage",
-      "D": "Create an external table while specifying the object storage path to FROM",
-      "E": "Create an external table while specifying the object storage path to LOCATION"
+      "A": "Create an external table and specify the DBFS path with a FROM clause.",
+      "B": "Create an external table and specify the DBFS path with a PATH clause.",
+      "C": "Directly querying files in cloud object storage is not supported.",
+      "D": "Create an external table and specify the cloud path with a FROM clause.",
+      "E": "Create an external table and specify the cloud path with a LOCATION clause."
     },
     "answer": "E",
     "isMulti": false,
@@ -878,13 +878,13 @@
         "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using.html"
       }
     ],
-    "question_vi": "Cách tiếp cận nào sau đây có thể được sử dụng để nạp dữ liệu trực tiếp từ kho lưu trữ đối tượng dựa trên đám mây (cloud-based object storage)?",
+    "question_vi": "Nhà phân tích muốn đăng ký các tệp trong kho lưu trữ đối tượng trên đám mây thành một bảng và truy vấn trực tiếp mà không sao chép tệp vào vùng lưu trữ do Databricks quản lý. Cần chỉ định vị trí nguồn bằng cách nào?",
     "options_vi": {
-      "A": "Tạo một bảng ngoại (external table) và chỉ định đường dẫn lưu trữ DBFS cho FROM",
-      "B": "Tạo một bảng ngoại (external table) và chỉ định đường dẫn lưu trữ DBFS cho PATH",
-      "C": "Không thể trực tiếp nạp dữ liệu từ kho lưu trữ đối tượng đám mây",
-      "D": "Tạo một bảng ngoại (external table) và chỉ định đường dẫn lưu trữ đối tượng cho FROM",
-      "E": "Tạo một bảng ngoại (external table) và chỉ định đường dẫn lưu trữ đối tượng cho LOCATION"
+      "A": "Tạo external table và chỉ định đường dẫn DBFS bằng mệnh đề FROM.",
+      "B": "Tạo external table và chỉ định đường dẫn DBFS bằng mệnh đề PATH.",
+      "C": "Không thể truy vấn trực tiếp các tệp trong kho lưu trữ đối tượng trên đám mây.",
+      "D": "Tạo external table và chỉ định đường dẫn trên đám mây bằng mệnh đề FROM.",
+      "E": "Tạo external table và chỉ định đường dẫn trên đám mây bằng mệnh đề LOCATION."
     }
   },
   {
@@ -2414,7 +2414,7 @@
   {
     "id": 79,
     "topic": 1,
-    "question": "A managed table and an unmanaged (external) table were both created in Databricks SQL, and data were ingested into each table. Later, both tables were dropped.\nWhat is the status of data for each of those tables?",
+    "question": "A Unity Catalog managed table and a Unity Catalog external table are created in Databricks SQL and populated with data. Both are dropped. After the managed table's recovery period (seven days by default) expires and its data files are purged, what is the status of the underlying data?",
     "options": {
       "A": "The data in both tables were deleted.",
       "B": "The data in the managed table were deleted, and the data in the unmanaged (external) table were left untouched.",
@@ -2428,15 +2428,15 @@
     "explanation_vi": "**Đáp án B.** Managed table do Databricks quản lý dữ liệu nên khi DROP, metadata bị gỡ và các tệp dữ liệu đi theo quy trình retention/khôi phục của nền tảng. Với external table, lệnh bỏ metadata đăng ký nhưng để nguyên object ở đường dẫn bên ngoài. Vì vậy cần phân biệt “bảng không còn trong catalog” với “tệp vật lý đã bị xóa”; không dùng DROP external table như lệnh dọn sạch storage.\n\n**Lưu ý về ý nghĩa “deleted”:**\n- **A:** Sai vì DROP external table không xóa dữ liệu tại đường dẫn bên ngoài.\n- **C:** Đảo ngược hành vi giữa managed và external.\n- **D:** Managed data không đơn giản luôn được giữ nguyên như external data.\n- **B:** Đây là phân biệt trong mô hình quản lý vòng đời. Với Unity Catalog hiện đại, managed data có thể còn trong thời gian khôi phục/retention sau DROP; vì thế DROP không đồng nghĩa tệp bị xóa vật lý ngay tức thì.",
     "references": [
       {
-        "title": "DROP TABLE statement",
-        "url": "https://docs.databricks.com/sql/language-manual/sql-ref-syntax-ddl-drop-table.html"
+        "title": "Drop a managed table",
+        "url": "https://docs.databricks.com/aws/en/tables/managed"
       },
       {
-        "title": "Managed and external tables",
-        "url": "https://docs.databricks.com/tables/index.html"
+        "title": "DROP TABLE",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-table"
       }
     ],
-    "question_vi": "Một bảng được quản lý (managed table) và một bảng không được quản lý (external table) đều được tạo trong Databricks SQL, và dữ liệu đã được nạp vào cả hai bảng. Sau đó, cả hai bảng đều bị xóa (dropped).\nTình trạng dữ liệu của mỗi bảng này lúc này là như thế nào?",
+    "question_vi": "Một Unity Catalog managed table và một Unity Catalog external table được tạo trong Databricks SQL rồi nạp dữ liệu. Cả hai bảng đều bị xóa. Sau khi hết thời gian khôi phục của managed table (mặc định bảy ngày) và các tệp dữ liệu đã được dọn, dữ liệu bên dưới của mỗi bảng ở trạng thái nào?",
     "options_vi": {
       "A": "Dữ liệu trong cả hai bảng đều bị xóa.",
       "B": "Dữ liệu trong bảng managed bị xóa, còn dữ liệu trong bảng unmanaged (external) thì được giữ nguyên vẹn.",
@@ -4202,7 +4202,7 @@
   {
     "id": 139,
     "topic": 1,
-    "question": "A data analyst needs to automate scheduled ETL jobs that ingest and transform data from multiple sources. The analyst wants to use multiple programming languages for flexibility and ensure that the pipeline can automatically handle schema changes as new data arrives.\nWhich approach in Databricks should be used to meet this requirement?",
+    "question": "A data analyst needs scheduled ETL ingestion and transformation from multiple S3 or other cloud object-storage file feeds. They want to use SQL and Python and handle evolving file schemas with little custom code. Which Databricks approach best fits?",
     "options": {
       "A": "Databricks Workflows with Apache Spark notebooks and manual schema management",
       "B": "Unity Catalog with manual ETL scripts and cron-based scheduling",
@@ -4216,11 +4216,15 @@
     "explanation_vi": "**Đáp án D.** Lakeflow Spark Declarative Pipelines điều phối pipeline ingestion và transformation bằng SQL/Python, còn Auto Loader phát hiện file mới và hỗ trợ schema evolution cho nguồn object storage. Kết hợp chúng đáp ứng lịch chạy/pipeline đa ngôn ngữ với ingestion incremental ít custom code. Unity Catalog quản trị dữ liệu nhưng không tự là bộ lập lịch ETL; Workflows có thể điều phối notebook nhưng tự quản lý schema file thường đòi hỏi nhiều mã hơn.\n\n**Vì sao các lựa chọn khác không đáp ứng trọn bộ yêu cầu?**\n- **A:** Workflows có thể chạy notebook đa ngôn ngữ, nhưng đề còn cần xử lý schema file mới; phương án lại nêu manual schema management.\n- **B:** Unity Catalog quản trị tài sản, không phải orchestration service; cron và script rời làm tăng công vận hành.\n- **C:** Schema cố định cho từng bảng không tự tiếp nhận schema mới.\n- **D:** Lakeflow pipelines định nghĩa ingestion/transformation; Auto Loader phát hiện file mới và hỗ trợ schema evolution theo cấu hình.",
     "references": [
       {
-        "title": "Data engineering with Databricks",
-        "url": "https://docs.databricks.com/aws/en/data-engineering"
+        "title": "Lakeflow Spark Declarative Pipelines",
+        "url": "https://docs.databricks.com/aws/en/ldp/"
+      },
+      {
+        "title": "What is Auto Loader?",
+        "url": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/"
       }
     ],
-    "question_vi": "Một nhà phân tích dữ liệu cần tự động hóa các công việc ETL định kỳ để nạp và biến đổi dữ liệu từ nhiều nguồn. Nhà phân tích muốn sử dụng nhiều ngôn ngữ lập trình để linh hoạt và đảm bảo rằng pipeline có thể tự động xử lý các thay đổi schema (schema changes) khi dữ liệu mới được nạp vào.\nPhương pháp nào trong Databricks nên được sử dụng để đáp ứng yêu cầu này?",
+    "question_vi": "Một nhà phân tích dữ liệu cần ETL theo lịch để nạp và biến đổi dữ liệu từ nhiều luồng tệp trong S3 hoặc kho lưu trữ đối tượng trên đám mây. Họ muốn dùng cả SQL lẫn Python và xử lý schema tệp thay đổi với ít mã tùy chỉnh. Cách tiếp cận nào của Databricks phù hợp nhất?",
     "options_vi": {
       "A": "Databricks Workflows với các notebook Apache Spark và quản lý schema thủ công.",
       "B": "Unity Catalog với các script ETL thủ công và lập lịch dựa trên cron.",
