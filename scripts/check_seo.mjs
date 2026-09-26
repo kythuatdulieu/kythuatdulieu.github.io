@@ -96,8 +96,19 @@ if (!fs.existsSync(robotsPath)) {
 }
 
 const sitemapFiles = files.filter((file) => file.endsWith('.xml'));
-if (!sitemapFiles.some((file) => path.basename(file) === 'sitemap-index.xml')) {
+const sitemapIndexPath = path.join(distDir, 'sitemap-index.xml');
+if (!fs.existsSync(sitemapIndexPath)) {
 	errors.push('sitemap-index.xml is missing from the build output');
+}
+const sitemapAliasPath = path.join(distDir, 'sitemap.xml');
+if (!fs.existsSync(sitemapAliasPath)) {
+	errors.push('sitemap.xml alias is missing from the build output');
+} else if (fs.existsSync(sitemapIndexPath)) {
+	const sitemapIndex = fs.readFileSync(sitemapIndexPath, 'utf8');
+	const sitemapAlias = fs.readFileSync(sitemapAliasPath, 'utf8');
+	if (sitemapAlias !== sitemapIndex) {
+		errors.push('sitemap.xml must match the generated sitemap-index.xml');
+	}
 }
 for (const file of sitemapFiles) {
 	const sitemap = fs.readFileSync(file, 'utf8');
