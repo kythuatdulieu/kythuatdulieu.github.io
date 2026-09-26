@@ -819,15 +819,15 @@
     },
     {
       "id": 65,
-      "question": "A data analyst wants to create a Databricks SQL dashboard with multiple data visualizations and multiple counters.\nWhat must be completed before adding the data visualizations and counters to the dashboard?",
+      "question": "A data analyst wants to create a Databricks SQL dashboard with multiple data visualizations and counters. Which resource must be selected so the dashboard queries can run?",
       "choices": {
         "A": "All data visualizations and counters must be created using Queries.",
-        "B": "A SQL warehouse (formerly known as SQL endpoint) must be turned on and selected.",
+        "B": "A SQL warehouse that the analyst has permission to use.",
         "C": "A markdown-based tile must be added to the top of the dashboard displaying the dashboard’s name.",
         "D": "The dashboard owner must also be the owner of the queries, data visualizations, and counters."
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** Query cần compute để chạy trước khi kết quả có thể được vẽ thành chart hay counter, vì vậy analyst phải chọn một SQL warehouse sẵn sàng dùng. Warehouse thực thi query; visualization chỉ định cách biểu diễn kết quả. Không cần tạo sẵn mọi chart dưới dạng query riêng hay đặt một markdown tile làm điều kiện kỹ thuật. Quyền truy cập dữ liệu và warehouse vẫn phải được cấu hình cho người chạy.\n\n**Vì sao các lựa chọn khác không phải điều kiện tiên quyết?**\n- **A:** Visualization/counter có thể dùng kết quả từ query, nhưng yêu cầu “tạo tất cả trước” không phải điều kiện compute cần thiết.\n- **C:** Markdown tile chỉ thêm nội dung; dashboard vẫn chạy mà không cần tiêu đề dạng này.\n- **D:** Quyền sở hữu tài sản không bắt buộc phải gom vào cùng một owner; quyền truy cập phải đủ nhưng ownership không cần trùng nhau.\n- **B:** Warehouse được chọn là compute để chạy các truy vấn phục vụ dashboard."
+      "explanation_vi": "**Đáp án B — SQL warehouse.** Dashboard cần compute để thực thi các truy vấn tạo dữ liệu cho biểu đồ và counter. Vì vậy phải chọn một SQL warehouse mà người chạy có quyền sử dụng. Warehouse đang dừng vẫn có thể tự khởi động khi chạy truy vấn; người dùng không nhất thiết phải bật thủ công trước. Warehouse là compute, không phải nơi lưu dữ liệu.\n\n**Vì sao các lựa chọn khác không phải điều kiện cần?**\n- **A:** Có thể dùng Query làm nguồn cho visualization, nhưng không bắt buộc phải tạo mọi biểu đồ/counter thành Query riêng trước. Điều kiện compute vẫn là một warehouse có thể chạy truy vấn.\n- **C:** Markdown tile chỉ thêm tiêu đề hoặc hướng dẫn, không cung cấp compute và không bắt buộc phải có.\n- **D:** Người tạo dashboard không bắt buộc phải sở hữu tất cả query và visualization. Cần có quyền truy cập phù hợp vào dashboard, warehouse và dữ liệu, nhưng quyền sở hữu không cần trùng nhau.\n- **B:** SQL warehouse thực thi các truy vấn; chỉ cần chọn warehouse có quyền sử dụng, warehouse sẽ khởi động nếu đang dừng."
     },
     {
       "id": 66,
