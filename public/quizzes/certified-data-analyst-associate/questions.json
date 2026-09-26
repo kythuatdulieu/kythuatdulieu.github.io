@@ -42,14 +42,14 @@
       "A": "Partner Connect creates a new SQL warehouse and configures Fivetran to use it.",
       "B": "Partner Connect creates a new cluster for Fivetran and starts an ingestion pipeline.",
       "C": "Partner Connect creates a new schema and copies all source data into it automatically.",
-      "D": "The user selects an existing SQL warehouse; Partner Connect creates the connection credentials and opens Fivetran to finish setup.",
+      "D": "The user selects an existing SQL warehouse (and a catalog if using Unity Catalog); Partner Connect generates a user-associated personal access token and opens Fivetran to finish setup.",
       "E": "Fivetran runs inside Databricks SQL, so no partner account or connection is needed."
     },
     "answer": "D",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án D.** Partner Connect dùng một SQL warehouse hiện có làm đích của Fivetran; luồng kết nối tạo thông tin xác thực cho kết nối, không tự tạo warehouse.",
+    "explanation_vi": "**Đáp án D.** Hãy tách vai trò của hai bên: **Partner Connect khởi tạo kết nối**, còn **Fivetran cấu hình connector và đồng bộ dữ liệu**. Luồng thực tế là: trong Databricks, người dùng mở tile Fivetran, chọn SQL warehouse đang có (nếu warehouse đang dừng thì khởi động), rồi chọn catalog đích nếu workspace dùng Unity Catalog. Partner Connect tạo personal access token gắn với người dùng và mở trang Fivetran; tại đó người dùng đăng nhập hoặc tạo tài khoản, chọn nguồn dữ liệu, hoàn tất cấu hình connector và thiết lập lần đồng bộ. Chỉ chọn warehouse chưa làm dữ liệu chạy sang Databricks.\n\n**Vì sao các phương án còn lại sai?**\n- **A:** Partner Connect yêu cầu chọn một warehouse hiện có; nó không tự tạo warehouse mới.\n- **B:** Luồng này dùng SQL warehouse đã chọn; không tự tạo cluster riêng hay lập tức chạy pipeline.\n- **C:** Kết nối ban đầu không tự tạo schema rồi sao chép toàn bộ nguồn. Việc chọn catalog chỉ xác định nơi ghi; nguồn, cấu hình connector và lịch đồng bộ được hoàn tất trong Fivetran.\n- **E:** Fivetran là dịch vụ đối tác bên ngoài Databricks. Người dùng vẫn phải mở Fivetran và hoàn tất tài khoản/kết nối.",
     "references": [
       {
         "title": "Connect to Fivetran",
@@ -61,7 +61,7 @@
       "A": "Partner Connect tạo một SQL warehouse mới và cấu hình Fivetran sử dụng warehouse đó.",
       "B": "Partner Connect tạo cluster mới cho Fivetran và khởi chạy pipeline nạp dữ liệu.",
       "C": "Partner Connect tạo schema mới và tự động sao chép toàn bộ dữ liệu nguồn vào đó.",
-      "D": "Người dùng chọn SQL warehouse hiện có; Partner Connect tạo thông tin xác thực kết nối và mở Fivetran để hoàn tất thiết lập.",
+      "D": "Người dùng chọn SQL warehouse hiện có (và catalog nếu dùng Unity Catalog); Partner Connect tạo personal access token gắn với người dùng rồi mở Fivetran để hoàn tất thiết lập.",
       "E": "Fivetran chạy bên trong Databricks SQL nên không cần tài khoản đối tác hay kết nối."
     }
   },
