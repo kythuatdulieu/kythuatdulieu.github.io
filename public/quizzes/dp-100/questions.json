@@ -3903,7 +3903,7 @@
   {
     "id": 136,
     "topic": 1,
-    "question": "You plan to run a pipeline that has several steps. You write a script to run the pipeline.\n\nYou need to write a code segment that submits the pipeline, monitors the pipeline progress, and displays the pipeline run details once it completes. Which code segment should you use?",
+    "question": "You have submitted a pipeline and received a PipelineRun object named pipeline_run. You need to wait for the pipeline to complete, monitor the run, and display its output when it finishes. Which code segment should you use?",
     "options": {
       "A": "pipeline_run.get.metrics()",
       "B": "pipeline_run.wait_for_completion(show_output=True)",
@@ -3914,13 +3914,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để giám sát tiến trình thực thi của pipeline và hiển thị thông tin chi tiết (bao gồm cả nhật ký - logs) sau khi hoàn thành, ta sử dụng phương thức `wait_for_completion`:\n- **`pipeline_run.wait_for_completion(show_output=True)`**: Chặn tiến trình cục bộ cho đến khi lượt chạy pipeline kết thúc, đồng thời việc đặt `show_output=True` sẽ truyền và hiển thị trực tiếp các dòng nhật ký (STDOUT) ra bảng điều khiển console.\n- **`get_metrics()`**: Chỉ dùng để lấy các độ đo (metrics) đã được ghi lại trong lượt chạy, không dùng để chờ hay hiển thị log trực tiếp.\n- **`PipelineParameter`**: Dòng lệnh định nghĩa các tham số động cho pipeline khi chạy, không liên quan đến việc giám sát lượt chạy.\n- **`get_status()`**: Chỉ trả về trạng thái hiện tại của lượt chạy tại thời điểm gọi (như Running, Completed, Failed) mà không chặn tiến trình để chờ hay hiển thị chi tiết logs trực tiếp ra console.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "Sau khi gửi pipeline bằng `experiment.submit(...)`, Azure ML trả về đối tượng `PipelineRun`. Phương thức `wait_for_completion(show_output=True)` chờ lần chạy kết thúc và hiển thị đầu ra, nên đáp ứng yêu cầu.\n\n- **A — `get_metrics()`:** đọc metrics đã ghi nhận; không chờ pipeline hoàn tất hay hiển thị log đầu ra.\n- **C — `PipelineParameter`:** khai báo tham số đầu vào cho pipeline, không theo dõi một lần chạy.\n- **D — `get_status()`:** chỉ truy vấn trạng thái tại thời điểm gọi; không chờ đến khi hoàn tất hoặc hiển thị đầu ra.\n\n**Lưu ý:** biến `pipeline_run` giả định đã được tạo từ lệnh submit trước đó.",
     "references": [
       {
         "title": "Microsoft Learn: Run class - wait_for_completion",
         "url": "https://learn.microsoft.com/en-us/python/api/azureml-core/azureml.core.run.run#azureml-core-run-run-wait-for-completion"
       }
-    ]
+    ],
+    "question_vi": "Bạn đã gửi chạy pipeline và nhận được đối tượng PipelineRun tên là `pipeline_run`. Bạn cần chờ pipeline hoàn tất, theo dõi lần chạy và hiển thị đầu ra khi chạy xong. Nên dùng đoạn mã nào?",
+    "options_vi": {
+      "A": "pipeline_run.get.metrics() — lấy các metrics đã ghi nhận.",
+      "B": "pipeline_run.wait_for_completion(show_output=True) — chờ hoàn tất và hiển thị đầu ra.",
+      "C": "pipeline_param = PipelineParameter(name=\"stdout\", default_value=\"console\") — khai báo tham số pipeline.",
+      "D": "pipeline_run.get_status() — lấy trạng thái tại thời điểm gọi."
+    }
   },
   {
     "id": 137,
@@ -3942,7 +3949,14 @@
         "title": "Microsoft Learn: Evaluate Model (classic) - Paired t-test",
         "url": "https://learn.microsoft.com/en-us/azure/machine-learning/studio-module-reference/evaluate-model"
       }
-    ]
+    ],
+    "question_vi": "Bạn đang thực hiện kiểm định t ghép cặp (paired t-test). Hai điều kiện nào phải được đáp ứng? (Chọn hai.)",
+    "options_vi": {
+      "A": "Tất cả điểm số đều độc lập với nhau.",
+      "B": "Các điểm số được ghép thành từng cặp tương ứng.",
+      "C": "Phân phối lấy mẫu của hiệu số d có dạng phân phối chuẩn.",
+      "D": "Phân phối lấy mẫu của x1 - x2 có dạng phân phối chuẩn."
+    }
   },
   {
     "id": 138,
@@ -3964,7 +3978,14 @@
         "title": "Microsoft Learn: Import Data component reference",
         "url": "https://learn.microsoft.com/en-us/azure/machine-learning/component-reference/import-data"
       }
-    ]
+    ],
+    "question_vi": "Bạn đang tạo mô hình bằng Azure Machine Learning designer. Bạn cần huấn luyện mô hình bằng một tệp CSV trên website, nhưng chưa có dataset nào cho tệp này. Bạn nên làm gì để nạp dữ liệu với ít công sức quản trị nhất?",
+    "options_vi": {
+      "A": "Dùng mô-đun Convert to TXT.",
+      "B": "Thêm đối tượng Copy Data vào pipeline.",
+      "C": "Thêm mô-đun Import Data vào pipeline.",
+      "D": "Thêm đối tượng Dataset vào pipeline."
+    }
   },
   {
     "id": 139,
@@ -3984,12 +4005,17 @@
         "title": "Microsoft Learn: Import Data component - Regenerate output",
         "url": "https://learn.microsoft.com/en-us/azure/machine-learning/component-reference/import-data"
       }
-    ]
+    ],
+    "question_vi": "Lưu ý: Câu hỏi thuộc một nhóm dùng chung kịch bản; mỗi câu đưa ra một giải pháp khác nhau. Sau khi trả lời, bạn không thể quay lại câu này và câu này không xuất hiện trên màn hình xem lại.\n\nBạn tạo pipeline trong Azure Machine Learning designer. Pipeline dùng mô-đun Import Data để lấy một dataset lớn từ URL HTTP công khai, biến đổi dữ liệu rồi huấn luyện mô hình. Pipeline đã chạy thành công.\n\nDữ liệu ở URL HTTP được cập nhật. Bạn cần chạy lại pipeline và bảo đảm dữ liệu mới được dùng.\n\nGiải pháp: Trong mô-đun Import Data, chọn hộp kiểm Regenerate output.\n\nGiải pháp có đạt mục tiêu không?",
+    "options_vi": {
+      "A": "Có",
+      "B": "Không"
+    }
   },
   {
     "id": 140,
     "topic": 1,
-    "question": "You create a Python script that runs a training experiment in Azure Machine Learning. The script uses the Azure Machine Learning SDK for Python.You must add a statement that retrieves the names of the logs and outputs generated by the script.You need to reference a Python class object from the SDK for the statement.Which class object should you use?",
+    "question": "You create a Python script that runs a training experiment by using the Azure Machine Learning SDK for Python. You need to add a statement that retrieves the names of the logs and outputs generated by the script. Which SDK class should you use in the statement?",
     "options": {
       "A": "Run",
       "B": "ScriptRunConfig",
@@ -4006,12 +4032,19 @@
         "title": "Microsoft Learn: Run Class reference - get_file_names",
         "url": "https://learn.microsoft.com/en-us/python/api/azureml-core/azureml.core.run.run#azureml-core-run-run-get-file-names"
       }
-    ]
+    ],
+    "question_vi": "Bạn tạo script Python chạy một thí nghiệm huấn luyện bằng Azure Machine Learning SDK for Python. Bạn cần thêm câu lệnh để lấy tên các tệp log và đầu ra do script tạo ra. Câu lệnh cần dùng một lớp của SDK. Bạn nên dùng lớp nào?",
+    "options_vi": {
+      "A": "Run — đại diện cho một lần chạy thí nghiệm.",
+      "B": "ScriptRunConfig — cấu hình cách chạy script.",
+      "C": "Workspace — đại diện cho Azure Machine Learning workspace.",
+      "D": "Experiment — quản lý một nhóm các lần chạy."
+    }
   },
   {
     "id": 141,
     "topic": 1,
-    "question": "You use the following code to define the steps for a pipeline:\n```python\nfrom azureml.core import Workspace, Experiment, Run\nfrom azureml.pipeline.core import Pipeline\nfrom azureml.pipeline.steps import PythonScriptStep\n\nws = Workspace.from_config()\n. . .\nstep1 = PythonScriptStep(name=\"step1\", ...)\nstep2 = PythonScriptsStep(name=\"step2\", ...)\npipeline_steps = [step1, step2]\n```\n\nYou need to add code to run the steps. Which two code segments can you use to achieve this goal? Each correct answer presents a complete solution.",
+    "question": "You use the following code to define the steps for a pipeline:\n```python\nfrom azureml.core import Workspace, Experiment, Run\nfrom azureml.pipeline.core import Pipeline\nfrom azureml.pipeline.steps import PythonScriptStep\n\nws = Workspace.from_config()\n. . .\nstep1 = PythonScriptStep(name=\"step1\", ...)\nstep2 = PythonScriptStep(name=\"step2\", ...)\npipeline_steps = [step1, step2]\n```\n\nYou need to add code to run the steps. Which two code segments can you use to achieve this goal? Each correct answer presents a complete solution.",
     "options": {
       "A": "experiment = Experiment(workspace=ws, name='pipeline-experiment')\nrun = experiment.submit(config=pipeline_steps)",
       "B": "run = Run(pipeline_steps)",
@@ -4032,7 +4065,14 @@
         "title": "Microsoft Learn: Experiment class - submit method",
         "url": "https://learn.microsoft.com/en-us/python/api/azureml-core/azureml.core.experiment.experiment?view=azure-ml-py#azureml-core-experiment-experiment-submit"
       }
-    ]
+    ],
+    "question_vi": "Bạn dùng đoạn mã sau để định nghĩa các bước của pipeline:\n\n```python\nfrom azureml.core import Workspace, Experiment, Run\nfrom azureml.pipeline.core import Pipeline\nfrom azureml.pipeline.steps import PythonScriptStep\n\nws = Workspace.from_config()\n. . .\nstep1 = PythonScriptStep(name=\"step1\", ...)\nstep2 = PythonScriptStep(name=\"step2\", ...)\npipeline_steps = [step1, step2]\n```\n\nBạn cần thêm mã để chạy các bước này. Có thể dùng hai đoạn mã nào? Mỗi đáp án đúng là một giải pháp hoàn chỉnh.",
+    "options_vi": {
+      "A": "experiment = Experiment(workspace=ws, name=\"pipeline-experiment\")\nrun = experiment.submit(config=pipeline_steps)",
+      "B": "run = Run(pipeline_steps)",
+      "C": "pipeline = Pipeline(workspace=ws, steps=pipeline_steps)\nexperiment = Experiment(workspace=ws, name=\"pipeline-experiment\")\nrun = experiment.submit(pipeline)",
+      "D": "pipeline = Pipeline(workspace=ws, steps=pipeline_steps)\nrun = pipeline.submit(experiment_name=\"pipeline-experiment\")"
+    }
   },
   {
     "id": 142,
@@ -4054,7 +4094,14 @@
         "title": "Microsoft Learn: Experiment class - submit method",
         "url": "https://learn.microsoft.com/en-us/python/api/azureml-core/azureml.core.experiment.experiment?view=azure-ml-py#azureml-core-experiment-experiment-submit"
       }
-    ]
+    ],
+    "question_vi": "Bạn có đoạn mã sau để chuẩn bị chạy một script:\n\n```python\nfrom azureml.core import Workspace, Experiment, ScriptRunConfig\n\nws = Workspace.from_config()\nscript_config = ScriptRunConfig(source_directory=\"./training-script\", script=\"train.py\")\nscript_experiment = Experiment(workspace=ws, name=\"training-experiment\")\n```\n\nThí nghiệm phải chạy trên máy cục bộ bằng môi trường mặc định. Bạn cần thêm mã để bắt đầu thí nghiệm và chạy script. Nên dùng đoạn mã nào?",
+    "options_vi": {
+      "A": "run = script_experiment.start_logging() — bắt đầu ghi log cho một lần chạy tương tác.",
+      "B": "run = Run(experiment=script_experiment) — tạo đối tượng Run.",
+      "C": "ws.get_run(run_id=experiment.id) — lấy một lần chạy đã tồn tại.",
+      "D": "run = script_experiment.submit(config=script_config) — gửi cấu hình chạy script."
+    }
   },
   {
     "id": 143,
@@ -4076,7 +4123,14 @@
         "title": "Microsoft Learn: Deploy machine learning models with the designer",
         "url": "https://learn.microsoft.com/en-us/azure/machine-learning/tutorial-designer-automobile-price-deploy"
       }
-    ]
+    ],
+    "question_vi": "Bạn dùng Azure Machine Learning designer để tạo pipeline huấn luyện mô hình phân loại. Dataset có cả đặc trưng (features) và nhãn (label) cần cho việc huấn luyện. Sau đó, bạn tạo pipeline suy luận thời gian thực từ pipeline huấn luyện. Schema đầu vào của dịch vụ web có chứa cả cột nhãn mà mô hình cần dự đoán. Ứng dụng gọi dịch vụ không được yêu cầu gửi giá trị nhãn này.\n\nBạn nên sửa pipeline suy luận thế nào?",
+    "options_vi": {
+      "A": "Thêm mô-đun Select Columns in Dataset vào pipeline suy luận và chỉ giữ các cột ngoài cột nhãn.",
+      "B": "Xóa dataset khỏi pipeline huấn luyện rồi tạo lại pipeline suy luận thời gian thực.",
+      "C": "Xóa mô-đun Web Service Input khỏi pipeline suy luận.",
+      "D": "Thay dataset trong pipeline suy luận bằng mô-đun Enter Data Manually chỉ có các cột đặc trưng."
+    }
   },
   {
     "id": 144,
@@ -4098,7 +4152,14 @@
         "title": "Microsoft Learn: Deploy machine learning models with the designer",
         "url": "https://learn.microsoft.com/en-us/azure/machine-learning/tutorial-designer-automobile-price-deploy"
       }
-    ]
+    ],
+    "question_vi": "Bạn tạo và chạy pipeline huấn luyện bằng Azure Machine Learning designer, sau đó tạo pipeline suy luận thời gian thực. Bạn cần triển khai pipeline suy luận này thành dịch vụ web.\n\nTrước khi triển khai, bạn phải làm gì?",
+    "options_vi": {
+      "A": "Chạy pipeline suy luận thời gian thực.",
+      "B": "Tạo pipeline suy luận hàng loạt (batch inference).",
+      "C": "Sao chép pipeline huấn luyện.",
+      "D": "Tạo cụm tính toán Azure Machine Learning."
+    }
   },
   {
     "id": 145,
@@ -4118,7 +4179,12 @@
         "title": "Microsoft Learn: What is Azure AI Translator?",
         "url": "https://learn.microsoft.com/en-us/azure/ai-services/translator/translator-overview"
       }
-    ]
+    ],
+    "question_vi": "Câu hỏi này thuộc nhóm dùng chung một kịch bản nhưng mỗi câu đề xuất một giải pháp riêng. Hãy xác định giải pháp có đáp ứng yêu cầu hay không.\n\nBạn cần xây dựng mô hình học máy để dịch văn bản giữa hai ngôn ngữ. Mô hình phải học các chuỗi văn bản.\n\nĐề xuất: Dùng mạng đối kháng tạo sinh (Generative Adversarial Network — GAN).\n\nGiải pháp có đáp ứng yêu cầu không?",
+    "options_vi": {
+      "A": "Có",
+      "B": "Không"
+    }
   },
   {
     "id": 146,
@@ -4138,7 +4204,12 @@
         "title": "Microsoft Learn: Clean Missing Data component reference",
         "url": "https://learn.microsoft.com/en-us/azure/machine-learning/component-reference/clean-missing-data"
       }
-    ]
+    ],
+    "question_vi": "Câu hỏi này thuộc nhóm dùng chung một kịch bản nhưng mỗi câu đề xuất một giải pháp riêng. Hãy xác định giải pháp có đáp ứng yêu cầu hay không.\n\nDataset dùng để tạo mô hình có các giá trị null hoặc bị thiếu. Bạn định dùng mô-đun Clean Missing Data trong Azure Machine Learning Studio để phát hiện và xử lý chúng.\n\nĐề xuất: Dùng tùy chọn Custom substitution value (giá trị thay thế tùy chỉnh).\n\nGiải pháp có đáp ứng yêu cầu không?",
+    "options_vi": {
+      "A": "Có",
+      "B": "Không"
+    }
   },
   {
     "id": 147,
@@ -4158,7 +4229,12 @@
         "title": "Microsoft Learn: Clean Missing Data component reference",
         "url": "https://learn.microsoft.com/en-us/azure/machine-learning/component-reference/clean-missing-data"
       }
-    ]
+    ],
+    "question_vi": "Câu hỏi này thuộc nhóm dùng chung một kịch bản nhưng mỗi câu đề xuất một giải pháp riêng. Hãy xác định giải pháp có đáp ứng yêu cầu hay không.\n\nDataset dùng để tạo mô hình có các giá trị null hoặc bị thiếu. Bạn định dùng mô-đun Clean Missing Data trong Azure Machine Learning Studio để phát hiện và xử lý chúng.\n\nĐề xuất: Dùng tùy chọn Remove entire row (xóa toàn bộ hàng).\n\nGiải pháp có đáp ứng yêu cầu không?",
+    "options_vi": {
+      "A": "Có",
+      "B": "Không"
+    }
   },
   {
     "id": 148,
@@ -4180,7 +4256,14 @@
         "title": "Microsoft Learn: Connect Azure Databricks and Azure Machine Learning with MLflow",
         "url": "https://learn.microsoft.com/en-us/azure/machine-learning/how-to-use-mlflow-azure-databricks"
       }
-    ]
+    ],
+    "question_vi": "Bạn tạo Azure Machine Learning workspace tên ML-workspace và Azure Databricks workspace tên DB-workspace. DB-workspace có cụm DB-cluster.\n\nBạn cần dùng DB-cluster để chạy thí nghiệm từ notebook trong DB-workspace, đồng thời dùng ML-workspace để theo dõi metrics và artifacts MLflow được tạo ra. Giải pháp phải giảm tối đa lượng mã tùy chỉnh.\n\nBạn nên làm gì?",
+    "options_vi": {
+      "A": "Trong DB-cluster, cấu hình Advanced Logging.",
+      "B": "Trong DB-workspace, cấu hình Link Azure ML workspace.",
+      "C": "Trong ML-workspace, tạo attached compute.",
+      "D": "Trong ML-workspace, tạo compute cluster."
+    }
   },
   {
     "id": 149,
@@ -4202,7 +4285,14 @@
         "title": "Microsoft Learn: Train a machine learning model in the designer",
         "url": "https://learn.microsoft.com/en-us/azure/machine-learning/tutorial-designer-automobile-price-train-score"
       }
-    ]
+    ],
+    "question_vi": "Bạn dùng Azure Machine Learning designer để xây dựng thí nghiệm phân loại. Sau khi chia dataset thành tập huấn luyện và tập kiểm thử, bạn cấu hình thuật toán Two-Class Boosted Decision Tree. Bạn cần tính Area Under the Curve (AUC).\n\nCần nối các mô-đun theo thứ tự nào?",
+    "options_vi": {
+      "A": "Train Model → Score Model → Evaluate Model.",
+      "B": "Score Model → Evaluate Model → Train Model.",
+      "C": "Evaluate Model → Export Data → Train Model.",
+      "D": "Train Model → Score Model → Export Data."
+    }
   },
   {
     "id": 150,
@@ -4224,7 +4314,14 @@
         "title": "Microsoft Learn: Convert to Indicator Values component reference",
         "url": "https://learn.microsoft.com/en-us/azure/machine-learning/component-reference/convert-to-indicator-values"
       }
-    ]
+    ],
+    "question_vi": "Bạn cần xác định phần gạch chân trong câu sau có chính xác không:\n\n“Để chuyển đặc trưng phân loại thành biến chỉ báo nhị phân, hãy dùng mô-đun <u>Clean Missing Data</u>.”\n\nNếu phần gạch chân chính xác, chọn “No adjustment required”. Nếu sai, chọn phương án thay thế đúng.",
+    "options_vi": {
+      "A": "Không cần điều chỉnh.",
+      "B": "Convert to Indicator Values.",
+      "C": "Apply SQL Transformation.",
+      "D": "Group Categorical Values."
+    }
   },
   {
     "id": 151,
