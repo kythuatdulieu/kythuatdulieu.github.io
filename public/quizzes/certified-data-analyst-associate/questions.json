@@ -793,7 +793,7 @@
   {
     "id": 26,
     "topic": 1,
-    "question": "Which of the following is an advantage of using a Delta Lake-based data lakehouse over common data lake solutions?",
+    "question": "Which Delta Lake feature makes concurrent reads and writes to a data lake reliable by committing table changes atomically?",
     "options": {
       "A": "ACID transactions",
       "B": "Flexible schemas",
@@ -805,20 +805,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án A.** Delta Lake bổ sung giao dịch ACID cho dữ liệu trên object storage, giúp các lần đọc/ghi đồng thời nhất quán hơn.",
+    "explanation_vi": "**Đáp án A.** Delta Lake ghi nhận thay đổi trong transaction log và commit từng giao dịch theo cách nguyên tử. Nhờ đó, truy vấn không nhìn thấy một giao dịch ghi dở; các lựa chọn còn lại cũng có thể hữu ích nhưng không bảo đảm tính nhất quán khi đọc/ghi đồng thời.",
     "references": [
       {
         "title": "What is Delta Lake?",
-        "url": "https://docs.databricks.com/en/delta/index.html"
+        "url": "https://docs.databricks.com/aws/en/delta/"
       }
     ],
-    "question_vi": "Lợi ích nào sau đây là ưu điểm của việc sử dụng data lakehouse dựa trên Delta Lake so với các giải pháp data lake thông thường?",
+    "question_vi": "Tính năng nào của Delta Lake giúp các thao tác đọc và ghi đồng thời trên data lake đáng tin cậy bằng cách commit thay đổi của bảng một cách nguyên tử?",
     "options_vi": {
-      "A": "Giao dịch ACID (ACID transactions)",
-      "B": "Lược đồ linh hoạt (Flexible schemas)",
-      "C": "Xóa dữ liệu (Data deletion)",
-      "D": "Khả năng lưu trữ có thể mở rộng (Scalable storage)",
-      "E": "Các định dạng mã nguồn mở (Open-source formats)"
+      "A": "Giao dịch ACID",
+      "B": "Lược đồ linh hoạt",
+      "C": "Xóa dữ liệu",
+      "D": "Khả năng lưu trữ mở rộng",
+      "E": "Định dạng mã nguồn mở"
     }
   },
   {
@@ -1014,7 +1014,7 @@
   {
     "id": 33,
     "topic": 1,
-    "question": "A data analyst creates a Databricks SQL Query where the result set has the following schema: region STRING number_of_customer INTWhen the analyst clicks on the \"Add visualization\" button on the SQL Editor page, which of the following types of visualizations will be selected by default?",
+    "question": "In an AI/BI dashboard, an analyst adds a visualization widget without choosing a chart type. Which chart type is selected by default?",
     "options": {
       "A": "Violin Chart",
       "B": "Line Chart",
@@ -1026,14 +1026,14 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án C.** Với một cột phân loại (region) và một cột số (number_of_customer), biểu đồ cột phù hợp để so sánh giá trị giữa các vùng.",
+    "explanation_vi": "**Đáp án C.** Widget trực quan hóa mới trong AI/BI dashboard mặc định dùng biểu đồ cột (Bar chart). Có thể đổi kiểu biểu đồ sau khi tạo widget trong trình chỉnh sửa.",
     "references": [
       {
-        "title": "Visualizations in Databricks SQL",
-        "url": "https://docs.databricks.com/en/visualizations/index.html"
+        "title": "Manage visualizations in AI/BI dashboards",
+        "url": "https://docs.databricks.com/aws/en/dashboards/manage/visualizations"
       }
     ],
-    "question_vi": "Một nhà phân tích dữ liệu tạo một Truy vấn Databricks SQL có tập kết quả chứa schema như sau: `region STRING, number_of_customer INT`. Khi nhà phân tích nhấp vào nút \"Add visualization\" trên trang SQL Editor, loại trực quan hóa nào sau đây sẽ được chọn làm mặc định?",
+    "question_vi": "Trong AI/BI dashboard, nhà phân tích thêm một widget trực quan hóa mà chưa chọn kiểu biểu đồ. Kiểu biểu đồ nào được chọn mặc định?",
     "options_vi": {
       "A": "Biểu đồ violin (Violin Chart)",
       "B": "Biểu đồ đường (Line Chart)",
@@ -1107,32 +1107,32 @@
   {
     "id": 36,
     "topic": 1,
-    "question": "Which of the following statements about adding visual appeal to visualizations in the Visualization Editor is incorrect?",
+    "question": "In the Databricks SQL chart editor, where can an analyst set a custom color for a data series?",
     "options": {
-      "A": "Visualization scale can be changed.",
-      "B": "Data Labels can be formatted.",
-      "C": "Colors can be changed.",
-      "D": "Borders can be added.",
-      "E": "Tooltips can be formatted."
+      "A": "Visualization Editor > Colors",
+      "B": "Query History > Display",
+      "C": "SQL Warehouse settings > Theme",
+      "D": "Dashboard schedule > Colors",
+      "E": "User Settings > SQL Editor"
     },
-    "answer": "D",
+    "answer": "A",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án D.** Visualization Editor có thể cấu hình trục, màu, nhãn và tooltip; các tùy chọn biểu đồ được tài liệu hóa không có thiết lập thêm viền.",
+    "explanation_vi": "**Đáp án A.** Mở phần Colors trong Visualization Editor để chọn màu cho các chuỗi dữ liệu của biểu đồ. Đây là thiết lập của biểu đồ, không phải cấu hình warehouse hay lịch chạy dashboard.",
     "references": [
       {
-        "title": "Visualizations in Databricks SQL",
-        "url": "https://docs.databricks.com/en/visualizations/index.html"
+        "title": "Visualization charts",
+        "url": "https://docs.databricks.com/aws/en/visualizations/charts"
       }
     ],
-    "question_vi": "Phát biểu nào sau đây về việc thêm tính thẩm mỹ trực quan cho các trực quan hóa trong Visualization Editor là sai?",
+    "question_vi": "Trong trình chỉnh sửa biểu đồ của Databricks SQL, nhà phân tích đổi màu tùy chỉnh cho một chuỗi dữ liệu ở đâu?",
     "options_vi": {
-      "A": "Tỷ lệ trục (scale) của trực quan hóa có thể được thay đổi.",
-      "B": "Các nhãn dữ liệu (Data Labels) có thể được định dạng.",
-      "C": "Màu sắc (Colors) có thể được thay đổi.",
-      "D": "Khung viền (Borders) có thể được thêm vào.",
-      "E": "Hộp thoại chú thích (Tooltips) có thể được định dạng."
+      "A": "Visualization Editor > Colors",
+      "B": "Query History > Display",
+      "C": "SQL Warehouse settings > Theme",
+      "D": "Dashboard schedule > Colors",
+      "E": "User Settings > SQL Editor"
     }
   },
   {
@@ -1299,17 +1299,17 @@
     "topic": 1,
     "question": "How can a data analyst determine if query results were pulled from the cache?",
     "options": {
-      "A": "Go to the Query History tab and click on the text of the query. The slideout shows if the results came from the cache.",
+      "A": "Open the query in Query History and check the result_from_cache metric in the query details or Query History API response.",
       "B": "Go to the Alerts tab and check the Cache Status alert.",
       "C": "Go to the Queries tab and click on Cache Status. The status will be green if the results from the last run came from the cache.",
-      "D": "Go to the SQL Warehouse (formerly SQL Endpoints) tab and click on Cache. The Cache file will show the contents of the cache.",
-      "E": "Go to the Data tab and click Last Query. The details of the query will show if the results came from the cache."
+      "D": "Go to the SQL Warehouse tab and open Cache to view the cached file.",
+      "E": "Go to the Data tab and click Last Query."
     },
     "answer": "A",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án A.** Query History hiển thị chi tiết lần chạy; phần metrics cho biết kết quả được lấy từ result cache hay phải thực thi lại.",
+    "explanation_vi": "**Đáp án A.** Query History API có metric boolean result_from_cache; bảng system.query.history cũng có trường from_result_cache. Giá trị TRUE xác nhận kết quả đến từ result cache.",
     "references": [
       {
         "title": "Query history",
@@ -1318,21 +1318,25 @@
       {
         "title": "Query History API",
         "url": "https://docs.databricks.com/api/query-history/v1/query-history"
+      },
+      {
+        "title": "Query history system table reference",
+        "url": "https://docs.databricks.com/aws/en/admin/system-tables/query-history"
       }
     ],
     "question_vi": "Làm thế nào một nhà phân tích dữ liệu có thể xác định xem kết quả truy vấn có được lấy từ bộ nhớ đệm (cache) hay không?",
     "options_vi": {
-      "A": "Vào tab Query History, nhấp vào dòng văn bản của truy vấn. Bảng trượt ra (slideout) sẽ hiển thị nếu kết quả đến từ bộ nhớ đệm (cache).",
+      "A": "Mở truy vấn trong Query History và kiểm tra metric result_from_cache trong chi tiết truy vấn hoặc phản hồi của Query History API.",
       "B": "Vào tab Alerts và kiểm tra cảnh báo Cache Status.",
-      "C": "Vào tab Queries và nhấp vào Cache Status. Trạng thái sẽ có màu xanh lá cây nếu kết quả từ lần chạy cuối cùng đến từ bộ nhớ đệm.",
-      "D": "Vào tab SQL Warehouse (trước đây là SQL Endpoints) và nhấp vào Cache. Tệp Cache sẽ hiển thị nội dung của bộ nhớ đệm.",
-      "E": "Vào tab Data và nhấp vào Last Query. Chi tiết của truy vấn sẽ hiển thị nếu kết quả đến từ bộ nhớ đệm."
+      "C": "Vào tab Queries và nhấp vào Cache Status. Trạng thái sẽ có màu xanh nếu kết quả lần chạy cuối đến từ cache.",
+      "D": "Vào tab SQL Warehouse và mở Cache để xem tệp đã lưu.",
+      "E": "Vào tab Data và nhấp vào Last Query."
     }
   },
   {
     "id": 43,
     "topic": 1,
-    "question": "A data analyst has been asked to provide a list of options on how to share a dashboard with a client. It is a security requirement that the client does not gain access to any other information, resources, or artifacts in the database. Which of the following approaches cannot be used to share the dashboard and meet the security requirement?",
+    "question": "A data analyst must share a dashboard snapshot with an external client who must not receive access to the Databricks workspace or its other resources. The workspace admin has configured the client's email as an external notification destination.\nWhich approach cannot meet the security requirement?",
     "options": {
       "A": "Download the Dashboard as a PDF and share it with the client.",
       "B": "Set a refresh schedule for the dashboard and enter the client's email address in the \"Subscribers\" box.",
@@ -1344,14 +1348,18 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án D.** PAT có thể cho phép truy cập nhiều tài nguyên theo quyền của tài khoản phát hành, vượt quá phạm vi chỉ xem dashboard.",
+    "explanation_vi": "**Đáp án D.** PAT là bearer token dùng quyền của tài khoản tạo token. Chia sẻ token có thể cấp quyền truy cập các tài nguyên workspace khác theo quyền của tài khoản đó; giới hạn thời hạn một ngày không giới hạn phạm vi quyền. PDF, ảnh chụp, PNG và email snapshot chỉ gửi nội dung dashboard.",
     "references": [
       {
-        "title": "Share a dashboard",
-        "url": "https://docs.databricks.com/en/dashboards/share.html"
+        "title": "Schedule and subscribe to dashboard updates",
+        "url": "https://docs.databricks.com/aws/en/dashboards/share/schedule-subscribe"
+      },
+      {
+        "title": "Authentication using personal access tokens",
+        "url": "https://docs.databricks.com/aws/en/dev-tools/auth/pat"
       }
     ],
-    "question_vi": "Một nhà phân tích dữ liệu được yêu cầu cung cấp danh sách các phương án để chia sẻ dashboard với khách hàng. Yêu cầu bảo mật đặt ra là khách hàng không được phép truy cập vào bất kỳ thông tin, tài nguyên hoặc thành phần (artifacts) nào khác trong cơ sở dữ liệu. Cách tiếp cận nào dưới đây **không thể** được sử dụng để chia sẻ dashboard và đáp ứng yêu cầu bảo mật này?",
+    "question_vi": "Một nhà phân tích cần gửi ảnh chụp dashboard cho khách hàng bên ngoài, nhưng khách hàng không được cấp quyền vào workspace Databricks hay các tài nguyên khác. Quản trị viên workspace đã cấu hình email của khách hàng làm địa chỉ nhận thông báo bên ngoài.\nCách nào không đáp ứng yêu cầu bảo mật?",
     "options_vi": {
       "A": "Tải xuống Dashboard dưới dạng PDF và chia sẻ với khách hàng.",
       "B": "Thiết lập lịch làm mới cho dashboard và nhập địa chỉ email của khách hàng vào hộp \"Subscribers\" (Người đăng ký).",
@@ -1659,7 +1667,7 @@
   {
     "id": 54,
     "topic": 1,
-    "question": "A data analyst needs to share a Databricks SQL dashboard with stakeholders that are not permitted to have accounts in the Databricks deployment. The stakeholders need to be notified every time the dashboard is refreshed.\nWhich approach can the data analyst use to accomplish this task with minimal effort?",
+    "question": "A data analyst needs to notify stakeholders who cannot have Databricks accounts after each scheduled dashboard refresh. The workspace admin has configured their email addresses as external notification destinations.\nWhich approach requires the least manual effort?",
     "options": {
       "A": "By granting the stakeholders’ email addresses permissions to the dashboard",
       "B": "By adding the stakeholders’ email addresses to the refresh schedule subscribers list",
@@ -1670,14 +1678,14 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án B.** Dashboard schedule chạy lại truy vấn và có thể gửi snapshot sau mỗi lần chạy đến email subscriber, kể cả địa chỉ bên ngoài được cấu hình.",
+    "explanation_vi": "**Đáp án B.** Đăng ký email bên ngoài vào lịch dashboard để người nhận nhận snapshot sau mỗi lần chạy theo lịch. Họ không cần tài khoản Databricks; quản trị viên phải cấu hình địa chỉ email bên ngoài trước.",
     "references": [
       {
-        "title": "Share a dashboard",
-        "url": "https://docs.databricks.com/en/dashboards/share.html"
+        "title": "Schedule and subscribe to dashboard updates",
+        "url": "https://docs.databricks.com/aws/en/dashboards/share/schedule-subscribe"
       }
     ],
-    "question_vi": "Một nhà phân tích dữ liệu cần chia sẻ dashboard Databricks SQL với các bên liên quan (stakeholders) không được phép có tài khoản trong hệ thống Databricks. Các bên liên quan cần được thông báo mỗi khi dashboard được làm mới.\nCách tiếp cận nào dưới đây nhà phân tích dữ liệu có thể sử dụng để hoàn thành nhiệm vụ này với ít công sức nhất?",
+    "question_vi": "Một nhà phân tích cần thông báo cho các bên liên quan không thể có tài khoản Databricks sau mỗi lần làm mới dashboard theo lịch. Quản trị viên workspace đã cấu hình địa chỉ email của họ làm địa chỉ nhận thông báo bên ngoài.\nCách nào cần ít thao tác thủ công nhất?",
     "options_vi": {
       "A": "Bằng cách cấp quyền truy cập dashboard cho địa chỉ email của các bên liên quan",
       "B": "Bằng cách thêm địa chỉ email của các bên liên quan vào danh sách người đăng ký (subscribers) của lịch trình làm mới (refresh schedule)",
@@ -2315,7 +2323,7 @@
   {
     "id": 76,
     "topic": 1,
-    "question": "A data analyst has been asked to determine which customers have placed an order in the past year and which customers have not placed an order in the past year. This can be determined with one statement by joining the customers table (which is unique by customer ID) and the orders table.\nWhich type of join should the data analyst use?",
+    "question": "A report must list every customer and indicate whether that customer placed an order during the past year. Customers with no recent order must remain in the result. The date condition can be placed in the join condition.\nWhich join should the analyst use?",
     "options": {
       "A": "Left Semi Join",
       "B": "Left Join",
@@ -2326,14 +2334,14 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án B.** LEFT JOIN giữ mọi khách hàng và ghép đơn hàng nếu có; kiểm tra order_id IS NULL để nhận diện khách chưa mua.",
+    "explanation_vi": "**Đáp án B.** LEFT JOIN giữ lại mọi dòng từ bảng customers. Đặt điều kiện ngày của orders trong ON, rồi kiểm tra orders.order_id IS NULL để nhận diện khách không có đơn phù hợp; đặt điều kiện orders trong WHERE sẽ loại các dòng NULL này.",
     "references": [
       {
-        "title": "JOIN syntax in Databricks SQL",
-        "url": "https://docs.databricks.com/sql/language-manual/sql-ref-syntax-qry-select-join.html"
+        "title": "JOIN clause",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join"
       }
     ],
-    "question_vi": "Một nhà phân tích dữ liệu được yêu cầu xác định xem những khách hàng nào đã đặt hàng trong năm qua và những khách hàng nào chưa đặt hàng trong năm qua. Điều này có thể được xác định bằng một câu lệnh duy nhất bằng cách liên kết (join) bảng `customers` (chứa mã khách hàng duy nhất) và bảng `orders`.\nNhà phân tích dữ liệu nên sử dụng kiểu liên kết (join) nào?",
+    "question_vi": "Báo cáo cần liệt kê mọi khách hàng và cho biết mỗi người có đặt hàng trong năm qua hay không. Khách hàng không có đơn gần đây vẫn phải xuất hiện trong kết quả. Điều kiện ngày có thể đặt trong điều kiện join.\nNhà phân tích nên dùng kiểu join nào?",
     "options_vi": {
       "A": "Left Semi Join",
       "B": "Left Join",
@@ -2346,28 +2354,28 @@
     "topic": 1,
     "question": "What describes Partner Connect in Databricks?",
     "options": {
-      "A": "It allows for free use of Databricks partner tools through a common API.",
-      "B": "It allows multi-directional connection between Databricks and Databricks partners easier.",
-      "C": "It exposes connection information to third-party tools via Databricks partners.",
-      "D": "It is a feature that runs Databricks partner tools on a Databricks SQL Warehouse (formerly known as a SQL Endpoint)."
+      "A": "It provides free use of Databricks partner tools through a common API.",
+      "B": "It simplifies connecting a Databricks workspace to supported partner solutions.",
+      "C": "It exposes connection information to third-party tools without requiring setup in the partner service.",
+      "D": "It runs partner tools inside a Databricks SQL Warehouse."
     },
     "answer": "B",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án B.** Partner Connect tự động hóa các bước kết nối và trao đổi thông tin cần thiết giữa Databricks với dịch vụ đối tác.",
+    "explanation_vi": "**Đáp án B.** Partner Connect hướng dẫn và tự động hóa một phần cấu hình để nối workspace với dịch vụ đối tác được hỗ trợ. Công cụ đối tác vẫn chạy ở dịch vụ riêng và thường cần hoàn tất thiết lập tại đó.",
     "references": [
       {
         "title": "What is Databricks Partner Connect?",
-        "url": "https://docs.databricks.com/partner-connect/index.html"
+        "url": "https://docs.databricks.com/aws/en/partner-connect/"
       }
     ],
     "question_vi": "Điều nào sau đây mô tả đúng về Partner Connect trong Databricks?",
     "options_vi": {
-      "A": "Nó cho phép sử dụng miễn phí các công cụ của đối tác Databricks thông qua một API chung.",
-      "B": "Nó giúp việc kết nối đa chiều giữa Databricks và các đối tác của Databricks trở nên dễ dàng hơn.",
-      "C": "Nó để lộ thông tin kết nối cho các công cụ của bên thứ ba thông qua các đối tác của Databricks.",
-      "D": "Nó là một tính năng chạy các công cụ của đối tác Databricks trên một Databricks SQL Warehouse (trước đây được gọi là SQL Endpoint)."
+      "A": "Nó cho phép sử dụng miễn phí các công cụ đối tác Databricks thông qua một API chung.",
+      "B": "Nó giúp kết nối workspace Databricks với các giải pháp đối tác được hỗ trợ.",
+      "C": "Nó cung cấp thông tin kết nối cho công cụ bên thứ ba mà không cần thiết lập trong dịch vụ đối tác.",
+      "D": "Nó chạy công cụ đối tác bên trong Databricks SQL Warehouse."
     }
   },
   {
@@ -2493,30 +2501,30 @@
   {
     "id": 82,
     "topic": 1,
-    "question": "A dashboard contains a bar chart visualization. The bar chart has a Date widget parameter associated with it.\nWhich statement about the Date widget parameter is true?",
+    "question": "A dashboard dataset query uses a Date parameter in its WHERE clause, and the parameter is displayed as a date-range widget.\nWhat values does the widget provide to the query?",
     "options": {
-      "A": "The Date widget parameter provides a start date and an end date that is used by a WHERE clause in the query that provides data to the bar chart.",
-      "B": "The Date widget parameter provides a start date and an end date that sets the x-axis range of the bar chart.",
-      "C": "The Date widget parameter provides a start date and an end date that filters all visualizations in the dashboard.",
-      "D": "The Date widget parameter functions only as a text box that tells the dashboard's users what date range the dashboard is using."
+      "A": "A start date and an end date for the query to use in its WHERE clause.",
+      "B": "A start date and an end date that directly set the chart's x-axis range.",
+      "C": "A date range that automatically filters every visualization in the dashboard.",
+      "D": "A text label that only tells viewers which date range the dashboard represents."
     },
     "answer": "A",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án A.** Date range widget cung cấp giá trị đầu và cuối cho các tham số mà truy vấn dùng trong mệnh đề WHERE.",
+    "explanation_vi": "**Đáp án A.** Date parameter dạng Range cung cấp giá trị bắt đầu và kết thúc để thay thế tham số trong truy vấn dataset. Nó không tự đổi trục biểu đồ hay lọc mọi biểu đồ nếu các truy vấn không dùng tham số đó.",
     "references": [
       {
-        "title": "Dashboard parameters in Databricks",
-        "url": "https://docs.databricks.com/dashboards/parameters.html"
+        "title": "Dashboard parameters",
+        "url": "https://docs.databricks.com/aws/en/dashboards/manage/filters/parameters"
       }
     ],
-    "question_vi": "Một bảng điều khiển (dashboard) chứa một trực quan hóa biểu đồ cột (bar chart). Biểu đồ cột đó có một tham số widget Ngày (Date widget parameter) được liên kết với nó.\nPhát biểu nào sau đây về tham số widget Ngày là ĐÚNG?",
+    "question_vi": "Truy vấn của một dataset trong dashboard dùng tham số Date ở mệnh đề WHERE; tham số này được hiển thị bằng widget chọn khoảng ngày.\nWidget cung cấp giá trị nào cho truy vấn?",
     "options_vi": {
-      "A": "Tham số widget Ngày cung cấp ngày bắt đầu và ngày kết thúc được sử dụng bởi mệnh đề WHERE trong truy vấn cung cấp dữ liệu cho biểu đồ cột.",
-      "B": "Tham số widget Ngày cung cấp ngày bắt đầu và ngày kết thúc giúp thiết lập phạm vi trục x của biểu đồ cột.",
-      "C": "Tham số widget Ngày cung cấp ngày bắt đầu và ngày kết thúc giúp lọc tất cả các trực quan hóa trong dashboard.",
-      "D": "Tham số widget Ngày chỉ hoạt động như một hộp văn bản (text box) cho người dùng dashboard biết dashboard đang sử dụng phạm vi ngày nào."
+      "A": "Ngày bắt đầu và ngày kết thúc để truy vấn dùng trong mệnh đề WHERE.",
+      "B": "Ngày bắt đầu và ngày kết thúc để đặt trực tiếp phạm vi trục x của biểu đồ.",
+      "C": "Khoảng ngày tự động lọc mọi trực quan hóa trong dashboard.",
+      "D": "Nhãn văn bản chỉ cho người xem biết dashboard biểu thị khoảng ngày nào."
     }
   },
   {
@@ -2551,7 +2559,7 @@
   {
     "id": 84,
     "topic": 1,
-    "question": "A data analyst has produced a visualization. A stakeholder has viewed the visualization and is complaining that the visualization is difficult to interpret. After looking at the visualization, the analyst determines that the scale of the y-axis must be changed.\nWhere are the controls for changing the scale of the y-axis in Databricks SQL?",
+    "question": "In the Databricks SQL visualization editor, where can an analyst change a chart's y-axis scale or set a custom y-axis range?",
     "options": {
       "A": "Query Editor -> Y Axis",
       "B": "Dashboard Editor -> Axes -> Y Axis",
@@ -2562,14 +2570,14 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án C.** Chỉnh thang đo tại phần cấu hình Y Axis của biểu đồ trong Visualization Editor.",
+    "explanation_vi": "**Đáp án C.** Mở Visualization Editor của biểu đồ và cấu hình phần Y axis để đổi kiểu scale hoặc nhập phạm vi tùy chỉnh. Đây là thiết lập của biểu đồ, không nằm trong cài đặt chung của người dùng hay query editor.",
     "references": [
       {
-        "title": "Visualizations in Databricks notebooks",
-        "url": "https://docs.databricks.com/visualizations/index.html"
+        "title": "Visualization charts",
+        "url": "https://docs.databricks.com/aws/en/visualizations/charts"
       }
     ],
-    "question_vi": "Một nhà phân tích dữ liệu đã tạo ra một trực quan hóa (visualization). Một bên liên quan (stakeholder) đã xem trực quan hóa đó và phàn nàn rằng nó rất khó diễn giải. Sau khi xem xét trực quan hóa, nhà phân tích xác định rằng cần phải thay đổi thang đo (scale) của trục y.\nCác bảng điều khiển (controls) để thay đổi thang đo của trục y nằm ở đâu trong Databricks SQL?",
+    "question_vi": "Trong trình chỉnh sửa trực quan hóa của Databricks SQL, nhà phân tích đổi thang đo hoặc đặt phạm vi tùy chỉnh cho trục y ở đâu?",
     "options_vi": {
       "A": "Query Editor -> Y Axis",
       "B": "Dashboard Editor -> Axes -> Y Axis",
@@ -2769,11 +2777,11 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án B.** TRIGGERED cho biết lần đánh giá gần nhất thỏa điều kiện cảnh báo đã cấu hình.",
+    "explanation_vi": "**Đáp án B.** TRIGGERED là trạng thái của lần đánh giá gần nhất khi điều kiện cảnh báo được đáp ứng. OK cho biết điều kiện chưa được đáp ứng; ERROR nghĩa là truy vấn hoặc lần đánh giá gặp lỗi.",
     "references": [
       {
-        "title": "What are Databricks SQL alerts?",
-        "url": "https://docs.databricks.com/en/sql/user/alerts/index.html"
+        "title": "Create and manage SQL alerts",
+        "url": "https://docs.databricks.com/aws/en/sql/user/alerts/create"
       }
     ],
     "question_vi": "Một nhà phân tích dữ liệu đang kiểm tra trạng thái của các cảnh báo trong trang danh sách Databricks SQL Alerts. Một cảnh báo gần đây đã được thực thi và giá trị được giám sát đáp ứng điều kiện đã xác định và vượt quá ngưỡng, nghĩa là các tiêu chí cảnh báo đã được thỏa mãn.\nTrạng thái nào sẽ xuất hiện cho cảnh báo này trong danh sách?",
@@ -3048,7 +3056,7 @@
   {
     "id": 101,
     "topic": 1,
-    "question": "A data analyst team is building reliable, production-grade data pipelines on Databricks. They require a solution that allows them to define data transformations declaratively, automatically enforce data quality expectations, and handle errors without manual intervention.\nWhich Databricks capability addresses these requirements?",
+    "question": "A data team wants to define data transformations declaratively and attach data quality expectations to a production pipeline.\nWhich Databricks capability is designed for this?",
     "options": {
       "A": "Lakeflow Tables",
       "B": "Lakeflow Spark Declarative Pipelines",
@@ -3059,14 +3067,14 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án B.** Lakeflow Spark Declarative Pipelines mô tả pipeline theo kiểu khai báo và hỗ trợ expectations để kiểm tra chất lượng dữ liệu.",
+    "explanation_vi": "**Đáp án B.** Lakeflow Spark Declarative Pipelines cho phép khai báo bảng và các bước biến đổi, đồng thời gắn expectations để theo dõi hoặc xử lý dòng không đạt. Hành vi với dòng lỗi phụ thuộc vào cách cấu hình expectation.",
     "references": [
       {
-        "title": "Data engineering with Databricks",
-        "url": "https://docs.databricks.com/aws/en/data-engineering"
+        "title": "Lakeflow Spark Declarative Pipelines",
+        "url": "https://docs.databricks.com/aws/en/ldp/"
       }
     ],
-    "question_vi": "Một nhóm nhà phân tích dữ liệu đang xây dựng các đường ống dữ liệu (data pipelines) đáng tin cậy, quy mô production trên Databricks. Họ yêu cầu một giải pháp cho phép định nghĩa các biến đổi dữ liệu một cách khai báo (declaratively), tự động thực thi các ràng buộc chất lượng dữ liệu và xử lý lỗi mà không cần can thiệp thủ công.\nTính năng nào của Databricks đáp ứng các yêu cầu này?",
+    "question_vi": "Một nhóm dữ liệu muốn định nghĩa các phép biến đổi theo kiểu khai báo và gắn expectation về chất lượng dữ liệu vào pipeline production.\nTính năng nào của Databricks được thiết kế cho nhu cầu này?",
     "options_vi": {
       "A": "Lakeflow Tables",
       "B": "Lakeflow Spark Declarative Pipelines",
@@ -3735,7 +3743,7 @@
   {
     "id": 124,
     "topic": 1,
-    "question": "A company uses a star schema to analyze sales data. The sales fact table records transactions, and dimension tables include products, stores, and dates.\nHow are primary and foreign keys used to enable efficient joining between these tables?",
+    "question": "A company uses a star schema for sales analysis. The sales fact table records transactions, while product, store, and date dimensions each contain one row per entity.\nWhich key relationship represents this conventional design?",
     "options": {
       "A": "The fact table and dimension tables are joined using arbitrary columns, and primary/foreign key relationships are not required in a star schema.",
       "B": "The fact table contains primary keys that directly match the primary keys in each dimension table, allowing for one-to-one joins.",
@@ -3746,14 +3754,14 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án D.** Khóa chính của dimension được tham chiếu như khóa ngoại trong fact, tạo quan hệ nhiều dòng fact tới một dòng dimension.",
+    "explanation_vi": "**Đáp án D.** Mỗi dimension có khóa chính duy nhất; fact lưu khóa ngoại tham chiếu đến các dimension, nên nhiều dòng fact có thể liên kết với một dòng dimension. Trong Unity Catalog, khai báo PK/FK chỉ mang tính thông tin và không tự kiểm tra dữ liệu; cần kiểm tra chất lượng riêng.",
     "references": [
       {
         "title": "Constraints on Databricks",
-        "url": "https://docs.databricks.com/en/tables/constraints.html"
+        "url": "https://docs.databricks.com/aws/en/tables/constraints"
       }
     ],
-    "question_vi": "Một công ty sử dụng mô hình hình sao (star schema) để phân tích dữ liệu bán hàng. Bảng thực tế doanh số (sales fact table) ghi lại các giao dịch, và các bảng chiều (dimension tables) bao gồm các thông tin sản phẩm, cửa hàng và ngày tháng. Các khóa chính (primary keys) và khóa ngoại (foreign keys) được sử dụng như thế nào để cho phép kết nối (join) hiệu quả giữa các bảng này?",
+    "question_vi": "Một công ty dùng star schema để phân tích doanh số. Bảng fact ghi từng giao dịch, còn các dimension sản phẩm, cửa hàng và ngày chứa một dòng cho mỗi thực thể.\nQuan hệ khóa nào thể hiện thiết kế thông thường này?",
     "options_vi": {
       "A": "Bảng thực tế và các bảng chiều được kết nối bằng cách sử dụng các cột tùy ý, và các mối quan hệ khóa chính/khóa ngoại không bắt buộc trong mô hình hình sao.",
       "B": "Bảng thực tế chứa các khóa chính khớp trực tiếp với các khóa chính trong mỗi bảng chiều, cho phép kết nối một-một (one-to-one).",
@@ -3793,7 +3801,7 @@
   {
     "id": 126,
     "topic": 1,
-    "question": "A data engineer is ingesting large volumes of semi-structured log data stored in an S3 bucket into Databricks. The data arrives continuously throughout the day, and the engineer needs to implement an efficient, scalable solution that supports incremental loads, handles schema changes gracefully, and minimizes manual intervention.\nWhich approach should be used for ingesting this data?",
+    "question": "A data engineer continuously ingests semi-structured log files from S3 and wants incremental discovery with schema evolution enabled and minimal custom code.\nWhich approach best fits?",
     "options": {
       "A": "Build a custom Spark Structured Streaming job that tracks processed files via checkpointing and manual schema management.",
       "B": "Use Auto Loader to incrementally ingest data from S3.",
@@ -3804,14 +3812,14 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án B.** Auto Loader phát hiện tệp mới theo kiểu incremental và hỗ trợ schema inference/evolution khi nạp từ cloud storage.",
+    "explanation_vi": "**Đáp án B.** Auto Loader phát hiện và nạp các tệp mới theo kiểu incremental. Cần cấu hình schema inference/evolution và schemaLocation phù hợp; trong Lakeflow pipeline, nền tảng có thể quản lý metadata schema và checkpoint.",
     "references": [
       {
-        "title": "What is Auto Loader?",
-        "url": "https://docs.databricks.com/en/ingestion/auto-loader/index.html"
+        "title": "Configure schema inference and evolution in Auto Loader",
+        "url": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/schema"
       }
     ],
-    "question_vi": "Một kỹ sư dữ liệu đang nạp khối lượng lớn dữ liệu nhật ký (log) bán cấu trúc được lưu trữ trong một s3 bucket vào Databricks. Dữ liệu đến liên tục trong ngày và kỹ sư cần triển khai một giải pháp hiệu quả, có khả năng mở rộng hỗ trợ nạp tăng trưởng (incremental load), xử lý thay đổi lược đồ (schema changes) một cách mượt mà và giảm thiểu sự can thiệp thủ công. Cách tiếp cận nào nên được sử dụng để nạp dữ liệu này?",
+    "question_vi": "Một kỹ sư dữ liệu liên tục nạp các tệp log bán cấu trúc từ S3, muốn phát hiện tệp mới theo kiểu incremental, bật schema evolution và giảm mã tùy chỉnh.\nCách nào phù hợp nhất?",
     "options_vi": {
       "A": "Xây dựng một công việc Spark Structured Streaming tùy chỉnh để theo dõi các tệp đã xử lý thông qua checkpointing và quản lý lược đồ thủ công.",
       "B": "Sử dụng Auto Loader để nạp dữ liệu tăng trưởng dần từ S3.",
@@ -3862,11 +3870,11 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án B.** Có thể đổi clustering keys theo kiểu truy vấn mới mà không phải tổ chức lại toàn bộ bảng như khi đổi partitioning.",
+    "explanation_vi": "**Đáp án B.** Có thể đổi clustering keys để phù hợp mẫu truy vấn mới mà không cần định nghĩa lại partition layout của toàn bảng. Các tệp cũ không được sắp xếp lại ngay; OPTIMIZE sẽ recluster dữ liệu theo keys mới.",
     "references": [
       {
-        "title": "Use Delta Lake liquid clustering - Databricks",
-        "url": "https://docs.databricks.com/en/delta/clustering.html"
+        "title": "Use liquid clustering for Delta tables",
+        "url": "https://docs.databricks.com/aws/en/delta/clustering"
       }
     ],
     "question_vi": "Một nhà phân tích dữ liệu đang đánh giá các phương án để tối ưu hóa hiệu năng truy vấn trên một bảng lớn có các bộ lọc truy vấn thường xuyên thay đổi. Nhà phân tích đang cân nhắc giữa việc sử dụng Liquid Clustering và phân vùng theo kiểu Hive truyền thống (traditional Hive-style partitioning).\nƯu điểm chính của Liquid Clustering so với phân vùng truyền thống đối với các bảng có các mẫu truy vấn thay đổi liên tục là gì?",
@@ -3892,7 +3900,7 @@
     "isMulti": true,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án B và D.** Hướng dẫn ánh xạ thuật ngữ nghiệp vụ và mô tả cột cung cấp ngữ nghĩa cho tên như region_code, sku, channel_type.",
+    "explanation_vi": "**Đáp án B và D.** Hướng dẫn ánh xạ thuật ngữ nghiệp vụ và mô tả cột hoặc synonym giúp Genie hiểu các tên mơ hồ như region_code và channel_type. Lấy mẫu giá trị và thêm query ví dụ có thể bổ trợ, nhưng không trực tiếp định nghĩa ngữ nghĩa của cột.",
     "references": [
       {
         "title": "Tune Genie Agent quality",
@@ -3980,11 +3988,11 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án D.** Tách catalog cho production, development và testing tạo ranh giới namespace và quyền rõ ràng giữa các môi trường.",
+    "explanation_vi": "**Đáp án D.** Tách catalog theo môi trường tạo ranh giới namespace để quản lý grant độc lập. Cần cấp quyền thích hợp trên từng catalog; việc tạo catalog riêng không tự động cô lập quyền truy cập.",
     "references": [
       {
-        "title": "Unity Catalog best practices - Databricks",
-        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/best-practices.html"
+        "title": "Unity Catalog best practices",
+        "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/best-practices"
       }
     ],
     "question_vi": "Một công ty vừa bắt đầu sử dụng Nền tảng Databricks và hiện chỉ có một không gian làm việc (workspace). Họ cần quản lý quyền truy cập dữ liệu giữa các nhóm khác nhau và muốn đảm bảo các kiểm soát bảo mật và cô lập thích hợp.\nVới thiết lập này, phương pháp nào nên được sử dụng?",
@@ -4038,11 +4046,15 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án A.** Lakehouse Federation đăng ký MySQL thành foreign catalog để truy vấn và join từ Databricks; connector đẩy phần truy vấn được hỗ trợ về nguồn.",
+    "explanation_vi": "**Đáp án A.** Lakehouse Federation đăng ký MySQL dưới dạng foreign catalog để truy vấn qua Unity Catalog và kết hợp với bảng Delta trong Databricks. Connector có thể đẩy các phần truy vấn được hỗ trợ về nguồn, nhưng không bảo đảm toàn bộ phép join được thực thi tại MySQL.",
     "references": [
       {
-        "title": "Connect to external databases using Lakehouse Federation - Databricks",
-        "url": "https://docs.databricks.com/en/query-federation/index.html"
+        "title": "Query federated MySQL data",
+        "url": "https://docs.databricks.com/aws/en/query-federation/mysql"
+      },
+      {
+        "title": "Lakehouse Federation performance recommendations",
+        "url": "https://docs.databricks.com/aws/en/query-federation/performance-recommendations"
       }
     ],
     "question_vi": "Một nhà phân tích dữ liệu cần tạo một báo cáo bán hàng bằng cách join một bảng được quản lý bởi Unity Catalog với một bảng được lưu trữ trong cơ sở dữ liệu MySQL. Nhà phân tích muốn phép join này diễn ra hiệu quả, được thực hiện bên trong Databricks, và được quản trị bằng các quyền truy cập và truy xuất nguồn gốc (lineage) của Unity Catalog.\nPhương pháp nào nhà phân tích nên sử dụng để đáp ứng các yêu cầu này?",
