@@ -15,7 +15,7 @@
         "E": "Bronze"
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** Tầng Gold chứa dữ liệu đã được tinh chỉnh theo nhu cầu phân tích và báo cáo, nên thường là điểm truy cập chính của analyst."
+      "explanation_vi": "**Đáp án B — Gold.** Trong medallion architecture, Bronze giữ dữ liệu vừa nạp, Silver làm sạch và chuẩn hóa, còn Gold tổ chức dữ liệu đã được kiểm tra, tổng hợp theo nhu cầu báo cáo và phân tích nghiệp vụ. Vì vậy analyst thường bắt đầu từ Gold để có chỉ số và cấu trúc gần với câu hỏi kinh doanh. Gold không có nghĩa mọi dữ liệu đều phải được tổng hợp thành một bảng; đó là lớp dữ liệu đáng tin cậy, sẵn sàng cho mục đích sử dụng."
     },
     {
       "id": 2,
@@ -41,7 +41,7 @@
         "E": "As a complementary tool for quick in-platform BI work"
       },
       "correctAnswer": "E",
-      "explanation_vi": "**Đáp án E.** Databricks SQL phù hợp cho truy vấn và BI khám phá ngay trên lakehouse; nó bổ sung cho các công cụ BI chuyên sâu thay vì thay thế chúng."
+      "explanation_vi": "**Đáp án E.** Databricks SQL cho phép analyst chạy SQL và khám phá dữ liệu ngay trên lakehouse, sau đó tạo visualization hoặc dashboard để chia sẻ kết quả. Đây là lựa chọn tiện cho phân tích tương tác trên dữ liệu nằm trong Databricks. Các nền tảng BI chuyên dụng vẫn có thể cần cho quy trình xuất bản, thương hiệu hoặc tính năng trình bày nâng cao; câu hỏi hỏi công cụ trong hệ sinh thái Databricks, không khẳng định Databricks thay thế mọi BI."
     },
     {
       "id": 4,
@@ -54,7 +54,7 @@
         "E": "SQL Editor page"
       },
       "correctAnswer": "E",
-      "explanation_vi": "**Đáp án E.** SQL Editor là nơi viết, lưu và chạy truy vấn SQL trong workspace Databricks."
+      "explanation_vi": "**Đáp án E — SQL Editor.** SQL Editor là giao diện để soạn, chạy, lưu và quản lý truy vấn SQL trong workspace. Truy vấn cần một SQL warehouse làm compute, nhưng warehouse chỉ thực thi SQL chứ không phải nơi viết câu lệnh. Dashboard và Visualization Editor dùng kết quả truy vấn để trình bày; chúng không thay thế khu vực soạn SQL."
     },
     {
       "id": 5,
@@ -67,7 +67,7 @@
         "E": "Add dashboard parameters for each section."
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Ô văn bản Markdown cho phép thêm tiêu đề và nội dung có định dạng để chia dashboard thành các phần rõ ràng."
+      "explanation_vi": "**Đáp án C — Text widget.** Một dashboard có thể cần tiêu đề, hướng dẫn hoặc nhãn phân khu như Development, Test và Production. Text widget hỗ trợ nội dung Markdown nên analyst có thể tạo heading, chữ đậm và bố cục giải thích ngay trên dashboard. Visualization phục vụ dữ liệu có cấu trúc, còn text tile phù hợp để thêm ngữ cảnh cho người xem."
     },
     {
       "id": 6,
@@ -80,7 +80,7 @@
         "E": "Databricks SQL"
       },
       "correctAnswer": "E",
-      "explanation_vi": "**Đáp án E.** Databricks SQL cung cấp SQL warehouses, truy vấn, biểu đồ và dashboard; SQL warehouses có lựa chọn serverless."
+      "explanation_vi": "**Đáp án E.** Databricks SQL cung cấp các thành phần cần cho luồng phân tích: SQL warehouse để cấp compute, SQL để truy vấn lakehouse, và visualization/dashboard để trình bày kết quả. Serverless là một lựa chọn triển khai warehouse, không phải tính năng bắt buộc trong mọi cấu hình. Những phương án chỉ nói về lưu trữ, cluster hoặc notebook không bao phủ toàn bộ yêu cầu phân tích và chia sẻ bằng SQL."
     },
     {
       "id": 7,
@@ -93,7 +93,7 @@
         "E": "All of these considerations"
       },
       "correctAnswer": "E",
-      "explanation_vi": "**Đáp án E.** Xử lý PII phải tuân thủ đồng thời chính sách tổ chức và luật áp dụng tại nơi thu thập cũng như nơi xử lý dữ liệu."
+      "explanation_vi": "**Đáp án E.** PII có thể chịu đồng thời quy định pháp luật và chính sách nội bộ, tùy dữ liệu được thu thập ở đâu, xử lý ở đâu và dùng vào mục đích nào. Analyst cần dừng việc sử dụng dữ liệu ngoài phạm vi được phép và hỏi người phụ trách về quy trình xử lý phù hợp. Tự xóa bảng hoặc tự bỏ cột có thể phá hủy chứng cứ, ảnh hưởng người dùng khác và không thay thế việc báo cáo theo chính sách."
     },
     {
       "id": 8,
@@ -106,7 +106,7 @@
         "E": "Owner account information"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Delta Lake ghi metadata và lịch sử giao dịch trong thư mục _delta_log bên cạnh các tệp Parquet."
+      "explanation_vi": "**Đáp án C.** Delta Lake lưu các tệp dữ liệu thường ở định dạng Parquet và một transaction log trong thư mục _delta_log tại vị trí bảng. Log ghi lại các hành động tạo phiên bản, thêm hoặc xóa tệp và metadata schema, giúp đọc nhất quán và hỗ trợ ACID/time travel. Vì vậy Delta không lưu toàn bộ nội dung bảng thành một tệp metadata; dữ liệu và log là hai phần riêng."
     },
     {
       "id": 9,
@@ -118,7 +118,7 @@
         "D": "It provisions SQL warehouses for every catalog."
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** Catalog Explorer cho phép khám phá metadata, xem dữ liệu mẫu và quản lý quyền của các đối tượng dữ liệu."
+      "explanation_vi": "**Đáp án B — Catalog Explorer.** Catalog Explorer là giao diện để duyệt catalog/schema/table, xem metadata và dữ liệu mẫu, đồng thời kiểm tra hoặc quản lý quyền khi người dùng có đủ privilege. Data Explorer là tên giao diện cũ trong một số câu hỏi/tài liệu; các lựa chọn như Query Editor chủ yếu phục vụ soạn và chạy SQL. Việc nhìn thấy metadata không tự động cấp quyền đọc dữ liệu."
     },
     {
       "id": 10,
@@ -130,7 +130,7 @@
         "D": "Create a SQL warehouse owned by the target user."
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Chủ sở hữu có thể chuyển ownership bằng cách chọn người dùng đích trong trường Owner của trang bảng."
+      "explanation_vi": "**Đáp án C.** Ownership là thuộc tính quyền sở hữu của đối tượng bảng. Người có quyền quản lý phù hợp mở trang bảng trong Catalog Explorer rồi thay trường Owner bằng principal được chỉ định. Đây là thao tác chuyển quyền quản trị đối tượng; sửa owner của schema/database không đồng nghĩa thay owner của riêng bảng, và câu lệnh truy vấn thông thường không đổi metadata ownership."
     },
     {
       "id": 11,
@@ -143,7 +143,7 @@
         "E": "DROP TABLE table_name FROM database_name;"
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** DROP TABLE xóa metadata của bảng managed và dữ liệu do bảng quản lý; các bảng khác trong schema vẫn tồn tại."
+      "explanation_vi": "**Đáp án B.** Với managed table, Databricks quản lý cả metadata lẫn vị trí lưu tệp; vì vậy DROP TABLE xóa định nghĩa và dữ liệu do bảng quản lý theo chính sách lưu giữ/khôi phục áp dụng. Lệnh chỉ nhắm vào bảng đó, không xóa các bảng khác trong schema. Quy tắc này khác external table, nơi DROP thường bỏ đăng ký metadata nhưng giữ nguyên tệp tại external location."
     },
     {
       "id": 12,
@@ -156,7 +156,7 @@
         "E": "(75, canada), (76, canada), (90, canada)"
       },
       "correctAnswer": "E",
-      "explanation_vi": "**Đáp án E.** WHERE giữ lại các dòng thỏa cả hai điều kiện. SELECT chỉ trả về age và country, không trả về các cột khác."
+      "explanation_vi": "**Đáp án E.** WHERE áp dụng điều kiện theo logic ba giá trị của SQL: một dòng cần có age >= 75 và country = 'Canada' cùng đúng. Vì thế 75 và 90 ở Canada được giữ, 80 ở USA và 74 ở Canada bị loại; age NULL cho kết quả so sánh UNKNOWN nên cũng không qua WHERE. SELECT age, country chỉ xuất hai cột được nêu, dù bảng có thể có thêm cột."
     },
     {
       "id": 13,
@@ -169,7 +169,7 @@
         "E": "SELECT price(customer_spend, customer_units) AS customer_price FROM customer_summary;"
       },
       "correctAnswer": "E",
-      "explanation_vi": "**Đáp án E.** Gọi UDF bằng tên hàm và truyền hai cột làm đối số; alias customer_price đặt tên cho cột kết quả."
+      "explanation_vi": "**Đáp án E.** Hàm do người dùng định nghĩa được gọi như một biểu thức SQL: tên hàm theo sau bởi các đối số đúng thứ tự và kiểu dữ liệu mà hàm yêu cầu. Truyền cột customer và price khiến hàm tính trên từng dòng; AS customer_price chỉ đặt nhãn cho cột kết quả. Không cần viết lại thân hàm tại mỗi chỗ gọi hay dùng alias thay cho tên hàm."
     },
     {
       "id": 14,
@@ -182,7 +182,7 @@
         "E": "When the first statement is run, all rows from the customers table will be returned and only the customer_id from the orders table will be returned. When the second statement is run, only those rows in the customers table that do not have at least one match with the orders table on customer_id will be returned."
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** LEFT SEMI trả các dòng bên trái có ít nhất một dòng khớp; LEFT ANTI trả các dòng bên trái không có dòng khớp."
+      "explanation_vi": "**Đáp án B.** LEFT SEMI JOIN hoạt động như phép kiểm tra tồn tại: nó chỉ trả các dòng từ bảng bên trái nếu có ít nhất một dòng bên phải khớp, và không trả cột bên phải. LEFT ANTI JOIN trả các dòng bên trái không tìm thấy dòng khớp. INNER JOIN sẽ trả cột từ cả hai phía và có thể nhân dòng khi bên phải có nhiều bản ghi trùng khóa, nên không đồng nghĩa với hai phép lọc tồn tại này."
     },
     {
       "id": 15,
@@ -195,7 +195,7 @@
         "E": "The query is selecting region, but region should only occur in the ORDER BY clause."
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** region không được tổng hợp nên phải nằm trong GROUP BY khi SELECT đồng thời với COUNT(*)."
+      "explanation_vi": "**Đáp án B.** Truy vấn chọn region cùng COUNT(*), nên cần xác định COUNT được tính riêng cho từng region hay trên toàn bảng. Thêm GROUP BY region chia các dòng thành nhóm theo vùng trước khi đếm. Nếu bỏ GROUP BY, SQL không thể ghép một giá trị region tùy ý với một số đếm tổng; nếu chỉ muốn tổng toàn bảng thì phải bỏ region khỏi SELECT."
     },
     {
       "id": 16,
@@ -208,7 +208,7 @@
         "E": "It is more compatible with Spark's interpreters"
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** ANSI SQL giúp giảm khác biệt cú pháp giữa các hệ thống, nhờ đó truy vấn hiện có thường dễ chuyển sang Databricks SQL hơn."
+      "explanation_vi": "**Đáp án B.** ANSI mode hướng tới hành vi và cú pháp chuẩn SQL, giúp mã SQL dễ hiểu và giảm một số khác biệt khi chuyển giữa các hệ quản trị. Nó không phải cơ chế tăng tốc Photon, cũng không tự chuyển đổi toàn bộ truy vấn độc quyền của hệ khác. Khi bật hành vi ANSI, một số lỗi kiểu dữ liệu hoặc phép toán có thể được báo nghiêm ngặt hơn thay vì âm thầm ép kiểu."
     },
     {
       "id": 17,
@@ -221,7 +221,7 @@
         "E": "CREATE VIEW sales_by_employee AS SELECT employee_name, SUM(sale_amount) FROM employees GROUP BY employee_name;"
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** View lưu định nghĩa truy vấn chứ không chụp dữ liệu tại thời điểm tạo. JOIN ghép nhân viên với giao dịch, còn GROUP BY và SUM tính doanh số theo nhân viên."
+      "explanation_vi": "**Đáp án D.** Một ordinary view lưu câu SELECT để chạy lại khi được truy vấn, nên nó phản ánh dữ liệu nguồn hiện tại thay vì giữ một bản chụp kết quả tĩnh. JOIN ghép employees với sales theo khóa nhân viên; GROUP BY gom giao dịch theo nhân viên và SUM tính tổng doanh số mỗi người. Bảng vật lý hoặc materialized view có cơ chế lưu/refresh kết quả khác, còn chỉ SELECT tên và giao dịch sẽ không trả tổng cần thiết."
     },
     {
       "id": 18,
@@ -234,7 +234,7 @@
         "E": "SELECT product_id, region, CUME_DIST() OVER (PARTITION BY region ORDER BY sales) AS pct_rank FROM sales_table;"
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** PERCENT_RANK() OVER (PARTITION BY region ORDER BY sales) xếp hạng tương đối riêng trong từng vùng; ORDER BY xác định thứ tự doanh số."
+      "explanation_vi": "**Đáp án B.** PARTITION BY region chia dữ liệu thành các nhóm xếp hạng độc lập; ORDER BY sales chỉ định thứ tự trong mỗi nhóm. PERCENT_RANK trả vị trí tương đối trong khoảng 0 đến 1, với hàng đầu và cuối được xử lý theo định nghĩa của hàm. Bỏ PARTITION BY sẽ xếp mọi vùng chung một bảng; thay bằng CUME_DIST cho một thước đo phân phối khác."
     },
     {
       "id": 19,
@@ -247,7 +247,7 @@
         "E": "SELECT region, product, SUM(amount) FROM sales GROUP BY CUBE(region, product);"
       },
       "correctAnswer": "E",
-      "explanation_vi": "**Đáp án E.** CUBE(region, product) tạo tổng hợp cho mọi tổ hợp nhóm của hai cột, gồm tổng phụ theo từng cột và tổng toàn bộ."
+      "explanation_vi": "**Đáp án E.** CUBE(region, product) tính nhóm chi tiết theo cả vùng và sản phẩm, tổng phụ chỉ theo region, tổng phụ chỉ theo product, và grand total. Đây là bốn cấp tổ hợp của hai chiều. ROLLUP(region, product) chỉ theo thứ tự phân cấp nên không tạo subtotal chỉ theo product; GROUP BY thông thường chỉ tạo mức chi tiết."
     },
     {
       "id": 20,
@@ -260,7 +260,7 @@
         "E": "Sankey"
       },
       "correctAnswer": "E",
-      "explanation_vi": "**Đáp án E.** Sankey biểu diễn luồng và độ lớn chuyển tiếp giữa các bước, phù hợp để xem đường đi của người dùng."
+      "explanation_vi": "**Đáp án E — Sankey.** Sankey vẽ các nút và dải nối giữa chúng; độ rộng dải biểu thị lượng đi qua từng bước. Vì thế biểu đồ phù hợp để xem người dùng đi từ trang hoặc trạng thái nào sang đâu và luồng nào lớn nhất. Pie chart, histogram hay scatter plot trả lời câu hỏi về tỷ trọng, phân phối hoặc tương quan, không thể hiện chuỗi chuyển tiếp rõ như Sankey."
     },
     {
       "id": 21,
@@ -273,7 +273,7 @@
         "E": "The wrong query parameter is being used. Alerts only work with dropdown list query parameters, not dates."
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** SQL Alerts không hỗ trợ truy vấn có query parameter; cần đưa khoảng ngày vào logic truy vấn cố định hoặc dùng cách lập lịch khác."
+      "explanation_vi": "**Đáp án D.** Databricks SQL Alerts không hỗ trợ truy vấn chứa query parameters. Alert cần tự đánh giá một truy vấn có điều kiện ổn định; widget tham số phù hợp hơn với tương tác của người xem trong Query Editor/dashboard, nơi con người chọn giá trị. Vì vậy để dùng alert, hãy chuyển điều kiện thành logic cố định hoặc tạo truy vấn riêng cho từng ngưỡng cần giám sát. Không nên nhầm việc lịch chạy được với việc truy vấn có thể nhận tham số động."
     },
     {
       "id": 22,
@@ -286,7 +286,7 @@
         "E": "Data enhancement"
       },
       "correctAnswer": "E",
-      "explanation_vi": "**Đáp án E.** Data enhancement là làm giàu tập dữ liệu hiện có bằng thông tin bổ sung từ nguồn khác."
+      "explanation_vi": "**Đáp án E.** Data enhancement là việc bổ sung thông tin từ nguồn khác để làm dữ liệu hiện có hữu ích hơn cho một bài toán phân tích, chẳng hạn thêm phân khúc hoặc dữ liệu địa lý vào Gold. Đây khác với làm sạch dữ liệu thô ở Bronze/Silver hoặc chỉ trình bày dữ liệu trên dashboard. Bản thân việc thêm nguồn không đảm bảo chất lượng: analyst vẫn cần kiểm tra khóa nối, độ mới, quyền sử dụng và ý nghĩa các trường."
     },
     {
       "id": 23,
@@ -299,7 +299,7 @@
         "E": "The suppliers table now contains only the data from the new_suppliers table."
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** INSERT INTO ... TABLE ... nối các dòng nguồn vào bảng đích; thao tác append không loại bỏ dòng trùng."
+      "explanation_vi": "**Đáp án C.** INSERT INTO ... TABLE ... thêm các dòng từ bảng nguồn vào bảng đích; thao tác append không tự khử trùng lặp. Nếu nguồn chứa dòng đã có, dòng ấy vẫn được thêm, trừ khi truy vấn có điều kiện lọc hoặc dùng MERGE theo khóa. CREATE TABLE AS SELECT tạo bảng mới chứ không phải cách thêm vào bảng đang tồn tại; OVERWRITE sẽ thay dữ liệu hiện tại và có thể làm mất dòng cũ."
     },
     {
       "id": 24,
@@ -312,7 +312,7 @@
         "E": "Data analyst"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Data engineer thường làm việc chính với công cụ kỹ thuật dữ liệu và có thể dùng Databricks SQL như một dịch vụ bổ trợ."
+      "explanation_vi": "**Đáp án C — Data engineer.** Data engineers chủ yếu xây dựng và vận hành pipeline, thường làm việc trong dịch vụ Data Engineering & Science; họ có thể dùng Databricks SQL như công cụ phụ để kiểm tra đầu ra, truy vấn dữ liệu hoặc điều tra chất lượng. Business analyst, SQL analyst và BI/data analyst thường xem SQL là điểm tương tác chính để khám phá dữ liệu và báo cáo. Câu hỏi phân biệt dịch vụ chính với dịch vụ thứ cấp, không nói rằng kỹ sư dữ liệu không thể viết SQL."
     },
     {
       "id": 25,
@@ -325,7 +325,7 @@
         "E": "The table is converted to a managed table before it is dropped."
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Kết quả DESCRIBE cho biết đây là external table. DROP TABLE xóa đăng ký metadata nhưng không xóa các tệp tại LOCATION."
+      "explanation_vi": "**Đáp án C.** Với external table, tệp dữ liệu nằm ở đường dẫn bên ngoài do tổ chức quản lý; Databricks đăng ký metadata để truy vấn vị trí đó. DROP TABLE gỡ tên bảng và metadata khỏi catalog, nhưng không xóa dữ liệu vật lý ở external location. Đây là khác biệt quan trọng với managed table, nơi Databricks quản lý vòng đời tệp. Cần đảm bảo không xóa thủ công vị trí nguồn nếu còn hệ thống khác dùng."
     },
     {
       "id": 26,
@@ -338,7 +338,7 @@
         "E": "Open-source formats"
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** Delta Lake ghi nhận thay đổi trong transaction log và commit từng giao dịch theo cách nguyên tử. Nhờ đó, truy vấn không nhìn thấy một giao dịch ghi dở; các lựa chọn còn lại cũng có thể hữu ích nhưng không bảo đảm tính nhất quán khi đọc/ghi đồng thời."
+      "explanation_vi": "**Đáp án A.** ACID mô tả các đảm bảo giao dịch: thay đổi hoàn tất trọn vẹn hoặc không áp dụng (Atomicity), giữ các bất biến (Consistency), giao dịch đồng thời không làm đọc trạng thái dở dang (Isolation), và kết quả đã commit tồn tại (Durability). Trong lakehouse, Delta Lake dùng transaction log để phối hợp thay đổi trên các tệp. ACID không phải định dạng nén hay cơ chế tự sửa mọi lỗi nghiệp vụ trong dữ liệu."
     },
     {
       "id": 27,
@@ -351,7 +351,7 @@
         "E": "Use a serverless SQL warehouse."
       },
       "correctAnswer": "E",
-      "explanation_vi": "**Đáp án E.** Serverless SQL warehouse giảm độ trễ cấp phát compute khi truy vấn khởi chạy định kỳ và tự co giãn theo tải."
+      "explanation_vi": "**Đáp án E.** Serverless SQL warehouse giảm phần việc quản trị compute và có thể cấp tài nguyên nhanh, tự điều chỉnh quy mô theo tải; điều đó giúp giảm độ trễ khởi động cho truy vấn tương tác. Lựa chọn warehouse vẫn cần cân nhắc kích cỡ, concurrency và chi phí; serverless không làm mọi truy vấn tức thì hoặc miễn phí. Một cluster tự quản có thể phù hợp workload khác nhưng thường cần người vận hành cấu hình và quản lý."
     },
     {
       "id": 28,
@@ -364,7 +364,7 @@
         "E": "Create an external table while specifying the object storage path to LOCATION"
       },
       "correctAnswer": "E",
-      "explanation_vi": "**Đáp án E.** Với external table, LOCATION chỉ ra URI của dữ liệu trong object storage; Unity Catalog cần external location và quyền phù hợp."
+      "explanation_vi": "**Đáp án E.** LOCATION của external table trỏ tới thư mục dữ liệu hiện hữu trong object storage; bảng cung cấp tên và metadata để Databricks truy vấn các tệp đó. Trong Unity Catalog, quyền truy cập vị trí được quản trị qua external location và storage credential, không chỉ bằng việc ghi một chuỗi S3/ADLS vào câu lệnh. LOCATION vì vậy không có nghĩa dữ liệu được sao chép vào managed storage."
     },
     {
       "id": 29,
@@ -377,7 +377,7 @@
         "E": "The table was managed"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Bảng external chỉ quản lý metadata trong metastore; DROP TABLE không xóa dữ liệu ở vị trí lưu trữ bên ngoài."
+      "explanation_vi": "**Đáp án C.** DROP trên external table xóa metadata đăng ký bảng khỏi metastore, còn các tệp ở vị trí lưu trữ bên ngoài vẫn tồn tại. Nếu sau này đăng ký lại một bảng tại cùng vị trí, dữ liệu có thể được truy cập lại nếu cấu hình và quyền hợp lệ. Không suy luận rằng xóa tên bảng đồng nghĩa xóa object storage; với managed table, quy tắc vòng đời tệp khác."
     },
     {
       "id": 30,
@@ -390,7 +390,7 @@
         "E": "The temporary view is automatically converted to a managed table."
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** CREATE TEMP VIEW tạo view tạm theo phiên. Khi phiên kết thúc, định nghĩa view không còn khả dụng."
+      "explanation_vi": "**Đáp án B.** Temporary view chỉ tồn tại trong phạm vi session đã tạo nó, để người dùng đặt tên cho một truy vấn trung gian mà không tạo bảng lâu dài. Khi session kết thúc, view biến mất; nó không phải tài sản được các phiên khác dùng chung hay một bản sao dữ liệu. Nếu cần view dùng lâu dài và chia sẻ có kiểm soát, tạo view trong schema/catalog phù hợp."
     },
     {
       "id": 31,
@@ -403,7 +403,7 @@
         "E": "The dashboard cannot be refreshed that quickly"
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** Làm mới dashboard gần như liên tục sẽ chạy truy vấn thường xuyên trên SQL warehouse và có thể làm tăng chi phí compute."
+      "explanation_vi": "**Đáp án A.** Nếu dữ liệu Gold đến theo micro-batch mỗi phút mà dashboard cần cập nhật trong khoảng một phút, lịch refresh phải đủ thường xuyên và cần compute sẵn sàng để chạy truy vấn. Warehouse luôn bật có thể giảm thời gian khởi động nhưng phát sinh chi phí khi nhàn rỗi; cần cân đối freshness, warehouse auto-stop và chi phí. Refresh dashboard chỉ đọc trạng thái bảng hiện có, không làm pipeline streaming nạp dữ liệu nhanh hơn."
     },
     {
       "id": 32,
@@ -416,7 +416,7 @@
         "E": "When built-in functions need to run through the Catalyst Optimizer"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Higher-order functions áp dụng lambda lên các phần tử ARRAY ngay trong Spark SQL, tránh xử lý từng phần tử bằng vòng lặp bên ngoài."
+      "explanation_vi": "**Đáp án C.** Higher-order functions như TRANSFORM, FILTER hay EXISTS nhận một mảng cùng biểu thức lambda để xử lý phần tử ngay trong SQL. Điều này tránh phải explode mảng ra nhiều dòng chỉ để áp dụng logic đơn giản cho từng giá trị, rồi gom lại sau. Cần chọn đúng hàm theo mục đích: TRANSFORM đổi từng phần tử, FILTER loại phần tử, còn EXISTS kiểm tra điều kiện."
     },
     {
       "id": 33,
@@ -429,7 +429,7 @@
         "E": "There is no default. The user must choose a visualization type."
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Widget trực quan hóa mới trong AI/BI dashboard mặc định dùng biểu đồ cột (Bar chart). Có thể đổi kiểu biểu đồ sau khi tạo widget trong trình chỉnh sửa."
+      "explanation_vi": "**Đáp án C — Bar chart.** Một widget mới trong AI/BI dashboard mặc định tạo visualization dạng bar chart, sau đó người dùng có thể đổi loại biểu đồ và gán trường trục, nhóm hoặc giá trị. Mặc định không suy ra rằng mọi bộ dữ liệu đều phù hợp với bar chart. Nên chọn kiểu khác theo câu hỏi: trend theo thời gian thường dùng line, tỷ trọng có thể dùng chart khác, còn một số liệu tổng có thể dùng counter."
     },
     {
       "id": 34,
@@ -442,7 +442,7 @@
         "E": "A branch of statistics that uses quantitative variables that must take on an uncountable set of values."
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** Thống kê mô tả tóm tắt dữ liệu quan sát được bằng các số đo như trung bình, trung vị và độ phân tán; nó không suy luận toàn bộ tổng thể."
+      "explanation_vi": "**Đáp án A.** Thống kê mô tả tóm tắt những gì quan sát được trong bộ dữ liệu, ví dụ trung bình, trung vị, min/max và độ phân tán. Nó giúp hiểu phân phối và phát hiện dấu hiệu bất thường nhưng không tự suy ra kết luận cho toàn bộ tổng thể hay quan hệ nhân quả. Đó là phạm vi của suy luận thống kê và thiết kế phân tích phù hợp."
     },
     {
       "id": 35,
@@ -455,7 +455,7 @@
         "E": "When the variable contains a lot of extreme outliers"
       },
       "correctAnswer": "E",
-      "explanation_vi": "**Đáp án E.** Mean bị kéo mạnh bởi ngoại lệ, còn median ít nhạy hơn; nhiều giá trị cực đoan có thể làm hai số đo lệch đáng kể."
+      "explanation_vi": "**Đáp án E.** Trung bình cộng cộng mọi giá trị nên một vài ngoại lệ rất lớn hoặc rất nhỏ có thể kéo nó đáng kể. Trung vị chỉ phụ thuộc vị trí giữa sau khi sắp xếp nên thường bền vững hơn trước outlier. Khi dữ liệu lệch hoặc có ngoại lệ, so sánh cả mean lẫn median giúp hiểu phân phối; median không phải lúc nào cũng là đại lượng tốt nhất cho mọi câu hỏi."
     },
     {
       "id": 36,
@@ -468,7 +468,7 @@
         "E": "User Settings > SQL Editor"
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** Mở phần Colors trong Visualization Editor để chọn màu cho các chuỗi dữ liệu của biểu đồ. Đây là thiết lập của biểu đồ, không phải cấu hình warehouse hay lịch chạy dashboard."
+      "explanation_vi": "**Đáp án A.** Màu tùy chỉnh là cấu hình của visualization: mở trình chỉnh sửa biểu đồ và dùng phần Colors để đặt màu cho chuỗi hoặc giá trị. Cách này đổi cách trình bày chứ không thay đổi dữ liệu trong query. Nếu màu có ý nghĩa cố định, hãy dùng nhất quán và đủ tương phản để người xem không phải đoán mỗi màu đại diện điều gì."
     },
     {
       "id": 37,
@@ -481,7 +481,7 @@
         "E": "Automating complex notebook-based workflows with multiple tasks"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** JOIN là phép biến đổi quan hệ cốt lõi trong SQL để kết hợp các nguồn thành một tập dữ liệu phân tích."
+      "explanation_vi": "**Đáp án C.** Dùng SQL JOIN để ghép hai nguồn theo một khóa hoặc tập điều kiện tương ứng, rồi chọn cột cần dùng cho phân tích. Trước khi nối cần kiểm tra kiểu dữ liệu, độ duy nhất của khóa và quan hệ một-nhiều; nếu hai bên có nhiều dòng trùng khóa, kết quả có thể bị nhân bản. JOIN không tự giải quyết khác biệt về định nghĩa hoặc chất lượng giữa các nguồn."
     },
     {
       "id": 38,
@@ -494,7 +494,7 @@
         "E": "The analyst can choose a warehouse for the scheduled run."
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Truy vấn được lên lịch vẫn phải chạy trên một SQL warehouse được chọn; lịch chỉ xác định thời điểm chạy."
+      "explanation_vi": "**Đáp án C.** Câu phát biểu rằng scheduled query không dùng SQL warehouse là sai: truy vấn được lên lịch vẫn cần compute để thực thi, thường gắn với một SQL warehouse được chọn. Lịch chỉ quyết định lúc chạy, không phải một engine lưu trữ hay chạy độc lập. Khi cấu hình cần bảo đảm warehouse còn quyền truy cập dữ liệu và hoạt động theo lịch mong muốn."
     },
     {
       "id": 39,
@@ -507,7 +507,7 @@
         "E": "They will need to copy the Query and create one data visualization per query."
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** Một query có thể cấp dữ liệu cho nhiều visualization; thêm từng visualization dựa trên query đó vào cùng dashboard."
+      "explanation_vi": "**Đáp án B.** Có thể tạo nhiều visualization từ cùng một query nếu chúng cần cùng tập kết quả nhưng kể những khía cạnh khác nhau. Ví dụ query doanh thu theo ngày có thể được thể hiện thành line chart để xem xu hướng và bar chart để so sánh nhóm. Dùng chung query tránh sao chép logic; tuy vậy mỗi visualization vẫn cần cấu hình loại biểu đồ và trường trục phù hợp."
     },
     {
       "id": 40,
@@ -520,7 +520,7 @@
         "E": "flatten(products)"
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** explode(products) tạo một dòng cho mỗi phần tử mảng và lặp lại các cột còn lại. Hàm này không loại phần tử trùng."
+      "explanation_vi": "**Đáp án B.** EXPLODE(products) biến từng phần tử của mảng products thành một dòng riêng; transaction_id được lặp lại cho mỗi sản phẩm thuộc giao dịch. Nếu một sản phẩm xuất hiện hai lần trong mảng thì cả hai phần tử vẫn thành hai dòng, vì explode không khử trùng lặp. Muốn giữ cả giao dịch có mảng rỗng hoặc NULL, cần xem xét variant OUTER tương ứng."
     },
     {
       "id": 41,
@@ -533,7 +533,7 @@
         "E": "INSERT OVERWRITE TABLE table_silver SELECT * FROM table_bronze;"
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** SELECT DISTINCT * loại các dòng trùng hoàn toàn trên mọi cột trước khi CTAS ghi kết quả vào bảng mới."
+      "explanation_vi": "**Đáp án A.** SELECT DISTINCT * loại những dòng trùng hoàn toàn trên tất cả cột được chọn; CTAS (CREATE TABLE AS SELECT) ghi tập kết quả đó thành bảng mới table_silver. Nó không loại các dòng chỉ trùng một số cột nhưng khác cột khác. INSERT yêu cầu bảng đích tồn tại và thêm vào bảng hiện có, trong khi yêu cầu ở đây là tạo bảng mới."
     },
     {
       "id": 42,
@@ -546,7 +546,7 @@
         "E": "Go to the Data tab and click Last Query."
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** Query History API có metric boolean result_from_cache; bảng system.query.history cũng có trường from_result_cache. Giá trị TRUE xác nhận kết quả đến từ result cache."
+      "explanation_vi": "**Đáp án A.** Mở Query History, chọn lần chạy cần kiểm tra và xem chi tiết có chỉ báo kết quả được lấy từ result cache hay không; API Query History cũng trả cờ tương ứng cho lần thực thi. Chỉ thấy query chạy nhanh không chứng minh nó dùng cache, vì warehouse có thể đang ấm hoặc dữ liệu đã được đọc hiệu quả. Hãy kiểm tra đúng execution record, bởi cùng một câu SQL có thể chạy lúc có cache và lúc không."
     },
     {
       "id": 43,
@@ -559,7 +559,7 @@
         "E": "Download a PNG file of the visualizations in the dashboard and share them with the client."
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** PAT là bearer token dùng quyền của tài khoản tạo token. Chia sẻ token có thể cấp quyền truy cập các tài nguyên workspace khác theo quyền của tài khoản đó; giới hạn thời hạn một ngày không giới hạn phạm vi quyền. PDF, ảnh chụp, PNG và email snapshot chỉ gửi nội dung dashboard."
+      "explanation_vi": "**Đáp án D — PAT không đáp ứng yêu cầu.** Personal access token là thông tin xác thực dạng bearer: ai cầm token có thể gọi API trong phạm vi quyền của chủ token cho đến khi token hết hạn hoặc bị thu hồi. Đặt thời hạn một ngày chỉ giới hạn thời gian, không giới hạn token vào một snapshot hay vào dashboard cụ thể, nên người nhận có thể truy cập thêm tài nguyên mà tài khoản đó được phép dùng. PDF, PNG hoặc snapshot qua subscriber gửi nội dung tĩnh để xem mà không cấp quyền workspace."
     },
     {
       "id": 44,
@@ -572,7 +572,7 @@
         "E": "The area chart will convert to a Dashboard Parameter."
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** Dashboard parameter có thể được nối với tham số của nhiều visualization; mọi thành phần dùng cùng tham số nhận cùng giá trị đã chọn."
+      "explanation_vi": "**Đáp án B.** Khi gắn query parameter vào dashboard parameter, giá trị widget trên dashboard được truyền vào truy vấn. Mọi visualization dùng cùng tham số dashboard sẽ nhận cùng lựa chọn và được cập nhật nhất quán khi người xem đổi giá trị. Visualization không tham chiếu tham số đó sẽ không tự bị lọc; việc thêm một chart cũng không cố định giá trị parameter tại thời điểm tạo."
     },
     {
       "id": 45,
@@ -585,7 +585,7 @@
         "E": "Data enhancement"
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** Last-mile ETL là bước biến đổi bổ sung trên dữ liệu Gold để đáp ứng yêu cầu riêng của một nhóm phân tích."
+      "explanation_vi": "**Đáp án D — Last-mile ETL.** Pipeline đã đưa dữ liệu đến Gold, nhưng nhóm phân tích vẫn có thể áp dụng filter, join hoặc phép tính riêng cho báo cáo/dự án trước mắt. Lớp biến đổi cuối này thường gọi là last-mile ETL: nó chuẩn bị dữ liệu đã được tuyển chọn cho nhu cầu tiêu thụ cụ thể. Đây không nhất thiết là lỗi của Gold hay pipeline; cần quản lý logic để không tạo nhiều định nghĩa chỉ số mâu thuẫn."
     },
     {
       "id": 46,
@@ -597,7 +597,7 @@
         "D": "SELECT region, product, SUM(amount) FROM sales GROUP BY region, product;"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** ROLLUP(region, product) tạo các mức tổng hợp phân cấp: theo vùng và sản phẩm, tổng theo vùng, rồi tổng toàn bộ."
+      "explanation_vi": "**Đáp án C — ROLLUP(region, product).** ROLLUP theo thứ tự tạo nhóm chi tiết (region, product), subtotal theo region, rồi tổng toàn bảng; đó chính xác là ba mức được yêu cầu. Nó không tạo subtotal chỉ theo product vì product là cấp con trong thứ tự phân cấp. CUBE sẽ thêm cả mức product-only; GROUP BY region, product chỉ cho mức chi tiết."
     },
     {
       "id": 47,
@@ -609,7 +609,7 @@
         "D": "Generic optimizations"
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** Định dạng mở của lakehouse giảm phụ thuộc vào một kho dữ liệu độc quyền và cho phép nhiều công cụ đọc dữ liệu."
+      "explanation_vi": "**Đáp án A — open-source formats.** Delta Lake dựa trên các định dạng mở như Parquet và giao thức Delta, giúp dữ liệu không bị khóa hoàn toàn trong một kho proprietary và có thể dùng với hệ sinh thái công cụ rộng hơn. ACID và schema enforcement cũng là các khả năng có giá trị của Delta, nhưng câu hỏi hỏi lợi thế phân biệt so với data warehouse cổ điển và lựa chọn được nhắm tới là định dạng mở. Định dạng mở không có nghĩa mọi ứng dụng sẽ tự đọc được transaction log nếu không hỗ trợ Delta."
     },
     {
       "id": 48,
@@ -621,7 +621,7 @@
         "D": "Save the SQL statement in the Query History page"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Lưu câu lệnh thành Query để dùng lại, tạo visualization và thêm các kết quả đó vào dashboard."
+      "explanation_vi": "**Đáp án C — lưu thành Query.** Lưu câu SQL như một Query giúp mở lại, chạy lại và dùng query đó làm nguồn cho table, counter hoặc visualization trên dashboard. Dashboard là nơi bố trí các kết quả, không phải nơi lưu một câu SQL độc lập; Query History ghi nhận lần chạy nhưng không thay thế tài sản query có thể tái sử dụng. Notebook là môi trường khác và không phải luồng được hỏi trong SQL Editor."
     },
     {
       "id": 49,
@@ -633,7 +633,7 @@
         "D": "Segmenting customers into like groups using a clustering algorithm"
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** Ghép thêm dữ liệu ngoài vào Gold để bổ sung ngữ cảnh cho báo cáo là một dạng data enhancement trong phân tích."
+      "explanation_vi": "**Đáp án A.** Analyst lấy dataset kinh tế được stakeholder phê duyệt, ghép với Gold hiện có rồi bổ sung bối cảnh cho báo cáo bán hàng. Đây là augmenting Gold bằng thông tin bên ngoài: dữ liệu phân tích sẵn có được làm giàu để trả lời câu hỏi mới. Cần xác nhận thời gian, định nghĩa chỉ số và khóa join để dữ liệu mới không làm nhân bản doanh thu hoặc gây so sánh sai."
     },
     {
       "id": 50,
@@ -645,7 +645,7 @@
         "D": "SELECT user_id, email_address FROM my_table WHERE age = 25 AND country > 'Canada';"
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** SELECT chỉ định hai cột cần trả về; WHERE lọc theo tuổi và quốc gia mà không đưa cột điều kiện vào kết quả."
+      "explanation_vi": "**Đáp án B.** SELECT user_id, email_address giới hạn đầu ra ở đúng hai cột được yêu cầu. WHERE age > 25 AND country = 'Canada' chỉ giữ các dòng đồng thời thỏa cả hai điều kiện. SELECT * sẽ trả thêm cột ngoài yêu cầu; chọn age và country lại thiếu hai cột cần xem. Lưu ý nếu một điều kiện là NULL thì so sánh thường thành UNKNOWN và dòng đó không qua WHERE."
     },
     {
       "id": 51,
@@ -657,7 +657,7 @@
         "D": "Automated alerting systems"
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** Lợi thế của Databricks SQL là compute, dữ liệu và công cụ phân tích nằm trên cùng lakehouse, giảm bước di chuyển dữ liệu."
+      "explanation_vi": "**Đáp án A.** Điểm tiện lợi là dữ liệu, compute và công cụ phân tích nằm trên cùng nền tảng, nên analyst có thể truy vấn lakehouse trực tiếp mà không phải sao chép dữ liệu sang một BI service riêng chỉ để bắt đầu phân tích. Điều này có thể giảm độ trễ và số bản sao cần quản lý. Nó không chứng minh Databricks luôn có dashboarding tốt hơn mọi công cụ chuyên dụng; lợi thế được hỏi là sự tích hợp nền tảng."
     },
     {
       "id": 52,
@@ -669,7 +669,7 @@
         "D": "It can be used to automate query execution on multiple warehouses (formerly endpoints)."
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** Query History giúp xem và gỡ lỗi lần chạy trước; nó không phải bộ lập lịch để tự động chạy query trên nhiều warehouse."
+      "explanation_vi": "**Đáp án D.** Query History giúp tra cứu các lần chạy, thời lượng, lỗi và thông tin thực thi để debug hoặc điều tra truy vấn chậm; ở một số giao diện còn có thể mở Query Profile/query plan. Nó không phải bộ lập lịch để tự động chạy truy vấn trên nhiều warehouse. Lịch của query và lựa chọn warehouse được cấu hình ở tính năng scheduling riêng, vì vậy không nên gán chức năng điều phối cho trang lịch sử."
     },
     {
       "id": 53,
@@ -682,7 +682,7 @@
         "E": "Create a dashboard in Databricks; Tableau reads it without a connection."
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** Partner Connect chọn compute, tải connection file và mở Tableau Desktop; người dùng hoàn tất phương thức xác thực trong Tableau."
+      "explanation_vi": "**Đáp án A.** Partner Connect khởi tạo thông tin kết nối cho công cụ Tableau và cho analyst lấy connection file để mở trong Tableau Desktop; người dùng hoàn tất đăng nhập/xác thực ở ứng dụng đó. Databricks cung cấp compute endpoint và cấu hình kết nối chứ không cài Tableau Desktop bên trong workspace. Partner Connect cũng không phát một token dùng chung cho mọi người hoặc biến dashboard thành tệp có thể kết nối."
     },
     {
       "id": 54,
@@ -694,7 +694,7 @@
         "D": "By downloading the dashboard as a PDF and emailing it to the stakeholders each time it is refreshed"
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** Đăng ký email bên ngoài vào lịch dashboard để người nhận nhận snapshot sau mỗi lần chạy theo lịch. Họ không cần tài khoản Databricks; quản trị viên phải cấu hình địa chỉ email bên ngoài trước."
+      "explanation_vi": "**Đáp án B.** Thêm địa chỉ đã được cấu hình làm external notification destination vào danh sách subscribers của lịch dashboard. Mỗi lần lịch chạy, Databricks gửi snapshot hiện tại qua email nên stakeholder không cần tài khoản workspace để nhận bản xem. Chỉ cấp quyền không gửi thông báo; tải PDF rồi gửi thủ công lặp lại không phải cách ít công sức nhất. Snapshot là bản tại thời điểm gửi, không phải phiên truy cập dashboard tương tác."
     },
     {
       "id": 55,
@@ -706,7 +706,7 @@
         "D": "dbfs:/user/hive/warehouse/accounting.db"
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** LOCATION chỉ định chính xác thư mục lưu dữ liệu của schema trong ví dụ; hậu tố .db chỉ được thêm khi dùng vị trí mặc định."
+      "explanation_vi": "**Đáp án B.** Khi tạo schema accounting với LOCATION chỉ định rõ dbfs:/accounting/data, vị trí lưu của schema chính là đường dẫn đã cung cấp. Databricks không thêm hậu tố mặc định accounting.db khi người tạo đã chỉ định LOCATION. Hậu tố dạng .db gắn với vị trí warehouse mặc định trong Hive metastore, nên không nên áp dụng nó cho đường dẫn tùy chỉnh này."
     },
     {
       "id": 56,
@@ -718,7 +718,7 @@
         "D": "A data visualization tab on a Query page"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Dashboard gom nhiều query và visualization để người xem theo dõi cùng lúc."
+      "explanation_vi": "**Đáp án C — Dashboard.** Dashboard tập hợp nhiều truy vấn và visualization vào một giao diện để nhiều stakeholder xem cùng lúc. Query History chỉ là nhật ký chạy; warehouse chỉ cung cấp compute; tab visualization gắn với một query. Để người xem theo dõi nhiều xu hướng trong một chỗ, hãy bố trí các chart phù hợp trên cùng dashboard và cấp quyền xem theo chính sách."
     },
     {
       "id": 57,
@@ -731,7 +731,7 @@
         "E": "SELECT c.customer_id, COUNT(o.order_id) FROM customers c RIGHT JOIN orders o ON c.customer_id = o.customer_id GROUP BY c.customer_id;"
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** LEFT JOIN giữ cả khách hàng chưa có đơn; COUNT(order_id) đếm đơn khớp và trả 0 cho nhóm không có đơn."
+      "explanation_vi": "**Đáp án D.** LEFT JOIN giữ mọi customer, kể cả khi không có order khớp. Với khách không có đơn, các cột phía orders là NULL; COUNT(o.order_id) bỏ qua NULL nên đếm đúng 0. COUNT(*) lại đếm hàng đã được LEFT JOIN mở rộng, khiến khách không có đơn nhận 1; INNER JOIN loại hẳn những khách đó trước khi đếm."
     },
     {
       "id": 58,
@@ -743,7 +743,7 @@
         "D": "There is no difference between the bar chart and a histogram in Databricks SQL."
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Mỗi loại visualization làm nổi bật một quan hệ khác nhau; chọn biểu đồ theo câu hỏi phân tích cần trả lời."
+      "explanation_vi": "**Đáp án C.** Loại visualization nên được chọn theo câu hỏi mà analyst muốn trả lời: line làm rõ xu hướng, bar so sánh nhóm, histogram mô tả phân phối, v.v. Một dashboard có thể phối hợp nhiều loại biểu đồ để kể các khía cạnh khác nhau của cùng chủ đề. Bar chart và histogram không đồng nghĩa: một bên so sánh danh mục, bên kia chia biến số thành các khoảng."
     },
     {
       "id": 59,
@@ -755,7 +755,7 @@
         "D": "Downstream BI tools integrated with Databricks SQL"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** SQL warehouse là compute resource dành cho truy vấn Databricks SQL và kết nối BI."
+      "explanation_vi": "**Đáp án C — SQL warehouse.** SQL warehouse là compute resource chuyên thực thi truy vấn Databricks SQL và phục vụ workload BI. Nó không phải nơi lưu bảng; dữ liệu vẫn ở lakehouse/cloud storage. Standard hoặc single-node clusters có thể chạy workload Spark khác, còn truy vấn Databricks SQL được cấu hình với warehouse."
     },
     {
       "id": 60,
@@ -767,7 +767,7 @@
         "D": "Create an alert on the file and wait for Databricks to infer a table."
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** Tải CSV nhỏ qua New > Add or upload data > Create or modify a table để tạo managed Delta table."
+      "explanation_vi": "**Đáp án A.** Luồng giao diện cho phép tải CSV lên, chọn catalog/schema đích và tạo hoặc cập nhật bảng managed Delta từ dữ liệu đó. Managed table cho phép Unity Catalog/Databricks quản lý metadata và vòng đời lưu trữ theo cấu hình workspace. CSV nhỏ không cần đi qua Partner Connect, alert hay trang cài đặt warehouse; sau khi tạo, nên kiểm tra kiểu cột và dữ liệu suy luận trước khi dùng."
     },
     {
       "id": 61,
@@ -779,7 +779,7 @@
         "D": "CREATE OR REPLACE TABLE table_name FROM database_name USING (width INT, length INT, height INT);"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** CREATE OR REPLACE TABLE với khai báo cột nhưng không có AS SELECT tạo bảng rỗng và thay thế bảng cùng tên nếu đã tồn tại."
+      "explanation_vi": "**Đáp án C.** Khai báo các cột trong CREATE OR REPLACE TABLE tạo bảng mới với schema đã nêu; do không có AS SELECT nên không có hàng dữ liệu nào được chèn. OR REPLACE cho phép thay định nghĩa hiện tại cùng tên để bảng kết quả được tạo lại rỗng mỗi lần chạy. USING phải theo sau bởi một định dạng lưu trữ như DELTA, không phải danh sách cột; vì vậy A và B đặt schema ở vị trí sai."
     },
     {
       "id": 62,
@@ -791,7 +791,7 @@
         "D": "Data blending"
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** Data blending kết hợp dữ liệu từ các nguồn bổ sung để tạo một tập dữ liệu dùng chung cho phân tích."
+      "explanation_vi": "**Đáp án D — Data blending.** Hai nguồn chứa thông tin tương tự nhưng bổ sung cho nhau được kết hợp thành một dataset toàn diện để tái sử dụng trong nhiều dự án. Đó là data blending, tức ghép các nguồn theo khóa/ngữ nghĩa phù hợp để mở rộng bức tranh phân tích. Cần kiểm tra cấp độ hạt và khóa liên kết: nếu một phía có nhiều bản ghi cho cùng khóa thì phép nối có thể nhân dòng."
     },
     {
       "id": 63,
@@ -803,7 +803,7 @@
         "D": "INSERT INTO suppliers SELECT * FROM new_suppliers;"
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** MERGE ghép theo supplier_id và chỉ INSERT khi không tìm thấy khóa khớp, nên các supplier đã có không bị chèn lặp."
+      "explanation_vi": "**Đáp án A.** MERGE so sánh từng dòng new_suppliers với suppliers theo supplier_id. Nhánh WHEN NOT MATCHED chỉ chèn dòng nguồn không có supplier_id tương ứng ở đích; dòng đã có khóa khớp thì không bị thêm lần nữa. INSERT đơn thuần không kiểm tra trùng khóa, còn UPDATE không phải thao tác thêm nhà cung cấp mới. Để chạy đúng, hai bảng phải có cột khóa tương thích và nguồn nên có tối đa một dòng cho mỗi khóa đích."
     },
     {
       "id": 64,
@@ -815,7 +815,7 @@
         "D": "A refresh schedule with a Structured Streaming cluster"
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** Lịch làm mới không dài hơn chu kỳ cập nhật dữ liệu giúp dashboard nhận các micro-batch mới trong ngưỡng 10 phút."
+      "explanation_vi": "**Đáp án B.** Dữ liệu Gold được cập nhật theo micro-batch mỗi 10 phút, nên dashboard cần được refresh theo nhịp không dài hơn yêu cầu 10 phút để truy vấn lại bảng sau khi có batch mới. Subscriber chỉ quyết định ai nhận snapshot, không làm dashboard cập nhật thường xuyên hơn; Structured Streaming cluster là compute của pipeline nạp dữ liệu, không phải lịch refresh dashboard. Thực tế nên dành dư địa cho thời gian chạy pipeline và query, vì hai chu kỳ đều đúng 10 phút có thể khiến độ trễ tổng vượt ngưỡng."
     },
     {
       "id": 65,
@@ -827,7 +827,7 @@
         "D": "The dashboard owner must also be the owner of the queries, data visualizations, and counters."
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** Cần chọn SQL warehouse để thực thi query cung cấp dữ liệu cho visualization và counter."
+      "explanation_vi": "**Đáp án B.** Query cần compute để chạy trước khi kết quả có thể được vẽ thành chart hay counter, vì vậy analyst phải chọn một SQL warehouse sẵn sàng dùng. Warehouse thực thi query; visualization chỉ định cách biểu diễn kết quả. Không cần tạo sẵn mọi chart dưới dạng query riêng hay đặt một markdown tile làm điều kiện kỹ thuật. Quyền truy cập dữ liệu và warehouse vẫn phải được cấu hình cho người chạy."
     },
     {
       "id": 66,
@@ -839,7 +839,7 @@
         "D": "SELECT region, product, RANK() OVER (PARTITION BY region ORDER BY sales DESC) AS sales_rank FROM sales_table;"
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** RANK() với PARTITION BY region xếp hạng độc lập trong từng vùng; doanh số giảm dần đặt mức bán cao nhất ở hạng 1."
+      "explanation_vi": "**Đáp án D.** PARTITION BY region tạo một bảng xếp hạng riêng cho từng vùng, còn ORDER BY sales DESC đặt doanh thu lớn nhất ở đầu. RANK gán cùng hạng cho giá trị bằng nhau và để trống các hạng kế tiếp: ví dụ 100, 90, 90, 80 nhận 1, 2, 2, 4. DENSE_RANK sẽ không có khoảng trống; ROW_NUMBER luôn cho số thứ tự riêng, kể cả khi doanh thu bằng nhau."
     },
     {
       "id": 67,
@@ -851,7 +851,7 @@
         "D": "Business analyst"
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** Business analyst thường dùng Databricks SQL làm dịch vụ chính để truy vấn và phân tích dữ liệu."
+      "explanation_vi": "**Đáp án D — Business analyst.** Business analyst thường dùng Databricks SQL làm dịch vụ chính để truy vấn dữ liệu, khám phá insight và xây báo cáo. Data scientist và data engineer có thể tương tác với SQL, nhưng trọng tâm công việc của họ thường nằm ở dịch vụ ML hoặc engineering. Đây là mô tả persona điển hình của nền tảng, không phải giới hạn quyền dùng sản phẩm của từng chức danh."
     },
     {
       "id": 68,
@@ -863,7 +863,7 @@
         "D": "Simple, exploratory visualizations on big data"
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** Databricks SQL phù hợp với phân tích khám phá trực tiếp trên dữ liệu lớn; công cụ trình bày chuyên biệt phù hợp hơn cho báo cáo xuất bản."
+      "explanation_vi": "**Đáp án D.** Databricks SQL phù hợp để khám phá đơn giản, tương tác trên dữ liệu lớn ngay tại nơi dữ liệu đang được xử lý. Các phương án presentation-grade hoặc tài liệu marketing thường đòi hỏi khả năng thiết kế và xuất bản chuyên biệt hơn, còn custom interactive chart trên tập nhỏ có thể thuận tiện ở công cụ khác. Câu hỏi so sánh trường hợp sử dụng tương đối, không nói Databricks không thể tạo biểu đồ."
     },
     {
       "id": 69,
@@ -875,7 +875,7 @@
         "D": "Subqueries can be used like other built-in functions to transform data into different data types."
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Subquery là truy vấn lồng trong câu SQL khác, có thể tạo tập kết quả trung gian mà không cần tạo bảng hoặc view."
+      "explanation_vi": "**Đáp án C.** Subquery là SELECT lồng trong một truy vấn lớn hơn, có thể cung cấp tập kết quả trung gian trực tiếp cho FROM, WHERE hoặc biểu thức khác mà không cần lưu thành bảng/view riêng. Nó không phải UDF: mục đích của subquery là truy vấn dữ liệu, còn UDF đóng gói logic tính toán có tên. Cú pháp cụ thể còn phụ thuộc vị trí dùng và truy vấn ngoài."
     },
     {
       "id": 70,
@@ -887,7 +887,7 @@
         "D": "Monitoring the performance of deployed machine learning solutions"
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** Last-mile ETL biến đổi Gold cho một phân tích cụ thể trước khi sử dụng; đây là công việc phổ biến trong Databricks SQL."
+      "explanation_vi": "**Đáp án B — phân tích-specific ETL trên Gold.** Analyst lấy bảng Gold rồi bổ sung bộ lọc, join hoặc phép tính cho một báo cáo/dự án cụ thể; phần chuẩn bị dữ liệu cuối này là last-mile ETL. Nó khác với xây một mô hình dự báo tự động hay vận hành pipeline streaming. Vì mỗi dự án có thể tạo logic riêng, nên cần ghi rõ định nghĩa chỉ số và cân nhắc đưa phép biến đổi dùng chung trở lại pipeline chuẩn."
     },
     {
       "id": 71,
@@ -899,7 +899,7 @@
         "D": "products[1]"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Cú pháp products[0] lấy phần tử đầu tiên vì chỉ số ARRAY trong Spark SQL bắt đầu từ 0."
+      "explanation_vi": "**Đáp án C — products[0].** Trong cú pháp truy cập ARRAY theo chỉ số của Spark SQL/Databricks SQL, chỉ số bắt đầu từ 0, nên vị trí đầu tiên là products[0]. products[1] chỉ phần tử thứ hai. Cú pháp này khác với hàm element_at, nơi chỉ số dương bắt đầu từ 1; tránh trộn quy ước giữa toán tử ngoặc vuông và hàm truy cập."
     },
     {
       "id": 72,
@@ -911,7 +911,7 @@
         "D": "The Dashboard Editor"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Khi query không gắn với dashboard hay alert, có thể cấu hình lịch chạy từ SQL Editor."
+      "explanation_vi": "**Đáp án C — Query Editor.** Khi query chạy độc lập, không gắn với dashboard hoặc alert, lịch thực thi được cấu hình từ trang Query Editor của truy vấn. Dashboard schedule làm mới các dataset trong dashboard; alert theo dõi điều kiện kết quả; chúng là các tính năng riêng. Lịch query vẫn cần chọn warehouse và chủ sở hữu/credential có quyền đọc dữ liệu lúc chạy."
     },
     {
       "id": 73,
@@ -923,7 +923,7 @@
         "D": "INSERT INTO silver.sales SELECT * FROM gold.sales_summary;"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** CTAS đọc bảng Silver, tổng hợp theo product_id rồi tạo bảng Gold mới từ kết quả."
+      "explanation_vi": "**Đáp án C.** CTAS tạo bảng Gold mới trực tiếp từ kết quả SELECT trên Silver. SELECT giữ product_id, SUM cộng sales_amount, và GROUP BY product_id đảm bảo có một dòng tổng cho mỗi sản phẩm. Các lựa chọn khác đọc sai chiều từ Gold/ Bronze hoặc ghi kết quả vào Silver, không tạo bảng Gold từ dữ liệu Silver."
     },
     {
       "id": 74,
@@ -935,7 +935,7 @@
         "D": "Review the Owner field in the table page using the SQL Editor"
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** Trang bảng trong Catalog Explorer hiển thị metadata, gồm chủ sở hữu của managed table."
+      "explanation_vi": "**Đáp án A.** Mở trang của chính managed table trong Catalog Explorer và kiểm tra trường Owner để biết principal đang sở hữu đối tượng. Trang schema/database mô tả container chứ không nhất thiết cho biết owner của mỗi bảng; SQL Editor là nơi chạy lệnh, không phải vị trí giao diện được hỏi. Thông tin có thể nhìn thấy không đồng nghĩa người xem có quyền thay đổi owner."
     },
     {
       "id": 75,
@@ -947,7 +947,7 @@
         "D": "Variance is a measure of how far a set of values is spread out from the set's central value."
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** Variance đo độ phân tán quanh trung bình bằng cách tính trung bình bình phương độ lệch."
+      "explanation_vi": "**Đáp án D.** Variance đo độ phân tán của một tập giá trị quanh trung bình: tính bình phương độ lệch của từng giá trị rồi lấy trung bình theo quy ước tổng thể hoặc mẫu. Nó không mô tả khoảng cách của một quan sát đơn lẻ đến min/max và cũng không phải thước đo trung tâm. Bình phương làm variance mang đơn vị bình phương; standard deviation lấy căn bậc hai để trở lại đơn vị ban đầu."
     },
     {
       "id": 76,
@@ -959,7 +959,7 @@
         "D": "Left Anti Join"
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** LEFT JOIN giữ lại mọi dòng từ bảng customers. Đặt điều kiện ngày của orders trong ON, rồi kiểm tra orders.order_id IS NULL để nhận diện khách không có đơn phù hợp; đặt điều kiện orders trong WHERE sẽ loại các dòng NULL này."
+      "explanation_vi": "**Đáp án B — LEFT JOIN.** Đặt điều kiện thời gian của orders trong mệnh đề ON để chỉ ghép các đơn thuộc năm vừa qua, nhưng vẫn giữ mọi dòng customers. Với người không có đơn phù hợp, các cột phía orders là NULL; analyst có thể dùng CASE/IS NULL để hiển thị “không có đơn gần đây”. Nếu đưa điều kiện orders.date vào WHERE, các dòng không khớp sẽ bị loại và kết quả gần như INNER JOIN."
     },
     {
       "id": 77,
@@ -971,7 +971,7 @@
         "D": "It runs partner tools inside a Databricks SQL Warehouse."
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** Partner Connect hướng dẫn và tự động hóa một phần cấu hình để nối workspace với dịch vụ đối tác được hỗ trợ. Công cụ đối tác vẫn chạy ở dịch vụ riêng và thường cần hoàn tất thiết lập tại đó."
+      "explanation_vi": "**Đáp án B.** Partner Connect giúp khởi tạo kết nối giữa workspace Databricks với các dịch vụ đối tác được hỗ trợ, thường bằng cách chọn compute và tạo thông tin kết nối rồi mở ứng dụng đối tác. Nó không khiến phần mềm đối tác chạy bên trong SQL warehouse và không miễn phí mọi dịch vụ đối tác. Thường người dùng vẫn phải đăng nhập, hoàn thiện tài khoản và cấu hình connector tại phía đối tác."
     },
     {
       "id": 78,
@@ -983,7 +983,7 @@
         "D": "Drop the column containing PII data and continue with the project without notifying anybody."
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Dừng xử lý PII trái quyền và báo người phụ trách để dữ liệu được xử lý theo chính sách bảo mật, pháp lý."
+      "explanation_vi": "**Đáp án C.** Khi phát hiện PII mà mình không được phép xem, analyst nên dừng xử lý và báo supervisor/data owner để họ đánh giá quyền, mục đích sử dụng và quy định liên quan. Tự xóa bảng hoặc bỏ cột có thể phá hủy dữ liệu của nhóm khác; tiếp tục dùng dataset mà không báo cáo cũng không giải quyết vi phạm truy cập. Cần xử lý theo quy trình bảo mật và pháp lý của tổ chức."
     },
     {
       "id": 79,
@@ -995,7 +995,7 @@
         "D": "The data in both tables were left untouched."
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** DROP TABLE xóa dữ liệu managed sau thời hạn khôi phục (mặc định 7 ngày); tệp của external table vẫn ở vị trí bên ngoài."
+      "explanation_vi": "**Đáp án B.** Managed table do Databricks quản lý dữ liệu nên khi DROP, metadata bị gỡ và các tệp dữ liệu đi theo quy trình retention/khôi phục của nền tảng. Với external table, lệnh bỏ metadata đăng ký nhưng để nguyên object ở đường dẫn bên ngoài. Vì vậy cần phân biệt “bảng không còn trong catalog” với “tệp vật lý đã bị xóa”; không dùng DROP external table như lệnh dọn sạch storage."
     },
     {
       "id": 80,
@@ -1007,7 +1007,7 @@
         "D": "A categorical variable in which the number of categories continues to increase over time"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Biến liên tục là biến định lượng có thể nhận vô số giá trị thực trong một khoảng, thay vì chỉ các mức đếm được."
+      "explanation_vi": "**Đáp án C.** Biến liên tục là đại lượng định lượng có thể nhận một tập giá trị không đếm được trong một khoảng, chẳng hạn thời gian hoặc nhiệt độ đo liên tục. Biến rời rạc chỉ nhận giá trị hữu hạn hoặc đếm được, như số lần giao dịch; biến phân loại thì biểu thị nhóm chứ không phải lượng đo. Histogram chia miền giá trị số thành các khoảng để xem phân phối của biến liên tục."
     },
     {
       "id": 81,
@@ -1019,7 +1019,7 @@
         "D": "Delta SQL"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Databricks SQL mặc định dùng ANSI mode cho các workspace mới; một số cú pháp Spark vẫn được hỗ trợ theo cấu hình."
+      "explanation_vi": "**Đáp án C — ANSI.** Databricks SQL mặc định dùng ANSI dialect/mode cho workspace mới theo thiết lập được mô tả trong câu hỏi. ANSI làm các hành vi SQL chuẩn hơn, chẳng hạn chuyển đổi kiểu sai có thể báo lỗi thay vì âm thầm trả NULL; Spark SQL vẫn là nền tảng với một số mở rộng riêng. Vì thế “ANSI là mặc định” không có nghĩa mọi truy vấn từ hệ quản trị khác sẽ chạy nguyên vẹn mà không cần kiểm tra."
     },
     {
       "id": 82,
@@ -1031,7 +1031,7 @@
         "D": "A text label that only tells viewers which date range the dashboard represents."
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** Date parameter dạng Range cung cấp giá trị bắt đầu và kết thúc để thay thế tham số trong truy vấn dataset. Nó không tự đổi trục biểu đồ hay lọc mọi biểu đồ nếu các truy vấn không dùng tham số đó."
+      "explanation_vi": "**Đáp án A.** Date-range parameter cung cấp hai giá trị đầu và cuối để query dùng trong biểu thức WHERE, ví dụ lọc dữ liệu trong khoảng được người xem chọn. Query phải tham chiếu parameter phù hợp thì kết quả mới đổi. Widget không tự kéo giãn trục x và cũng không lọc mọi biểu đồ trong dashboard; các dataset khác chỉ thay đổi nếu chúng cùng dùng parameter được liên kết."
     },
     {
       "id": 83,
@@ -1043,7 +1043,7 @@
         "D": "When simple logic needs to be optimized for scaling purposes"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** UDF phù hợp khi logic cần thiết không thể biểu đạt hợp lý bằng các hàm tích hợp sẵn."
+      "explanation_vi": "**Đáp án C.** UDF hữu ích khi logic nghiệp vụ cần thiết quá đặc thù để biểu đạt gọn bằng các built-in functions có sẵn. Trước khi viết UDF, nên kiểm tra hàm SQL/Spark tương đương vì built-in thường được optimizer hỗ trợ tốt hơn và dễ hiểu hơn. UDF không phải cơ chế phân quyền dữ liệu; giới hạn người được xem cần dùng quyền Unity Catalog hoặc view phù hợp."
     },
     {
       "id": 84,
@@ -1055,7 +1055,7 @@
         "D": "Settings -> User Settings -> Scaling"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Mở Visualization Editor của biểu đồ và cấu hình phần Y axis để đổi kiểu scale hoặc nhập phạm vi tùy chỉnh. Đây là thiết lập của biểu đồ, không nằm trong cài đặt chung của người dùng hay query editor."
+      "explanation_vi": "**Đáp án C.** Trục y là cấu hình của biểu đồ, nên mở Visualization Editor rồi chỉnh phần Y Axis để chọn linear/log scale hoặc nhập min/max tùy phiên bản giao diện. Query Editor chỉ định nghĩa tập dữ liệu, còn dashboard editor sắp xếp tile và bộ lọc. Giới hạn trục không thay đổi giá trị gốc; hãy ghi rõ nếu phạm vi bị cắt để người đọc không hiểu sai độ lớn chênh lệch."
     },
     {
       "id": 85,
@@ -1067,7 +1067,7 @@
         "D": "Databricks SQL"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Delta Lake là lớp lưu trữ mở bổ sung giao dịch, schema enforcement, lịch sử phiên bản và tối ưu bố cục cho data lake."
+      "explanation_vi": "**Đáp án C — Delta Lake.** Delta Lake là dự án mã nguồn mở bổ sung transaction log và các khả năng quản lý bảng lên trên data lake, như giao dịch ACID, kiểm soát schema, lịch sử phiên bản và hỗ trợ tối ưu. Apache Spark là engine tính toán; MLflow phục vụ vòng đời ML; Databricks SQL là dịch vụ truy vấn. Delta Lake tăng độ tin cậy và quản trị dữ liệu hồ nhưng không tự thay thế mọi thành phần lưu trữ hoặc compute."
     },
     {
       "id": 86,
@@ -1079,7 +1079,7 @@
         "D": "TRANSFORM(dollars_spent, dollars_spent / 100) AS hundreds_spent"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** TRANSFORM nhận ARRAY và lambda; biểu thức value -> value / 100 biến đổi độc lập từng phần tử."
+      "explanation_vi": "**Đáp án C.** TRANSFORM nhận mảng dollars_spent cùng lambda value -> value / 100; với mỗi phần tử, lambda trả về giá trị đã chia 100 và kết quả vẫn là một ARRAY. Alias AS hundreds_spent đặt tên cho cột đầu ra. Tham số đầu tiên của TRANSFORM phải là mảng, còn biểu thức tính từng phần tử cần mũi tên lambda; viết dollars_spent / 100 trực tiếp không chỉ ra giá trị hiện tại cần biến đổi."
     },
     {
       "id": 87,
@@ -1091,7 +1091,7 @@
         "D": "Settings"
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** Quyền trên catalog, schema, table và view được xem hoặc cấp trong Catalog Explorer ở khu vực Data."
+      "explanation_vi": "**Đáp án B — Catalog Explorer.** Quyền ở catalog, schema, table và view được quản lý qua Catalog Explorer khi người dùng có quyền xem/chỉnh sửa tương ứng. Người quản trị chọn đối tượng, mở phần Permissions/Grants rồi cấp quyền cho group theo nguyên tắc ít quyền nhất. Dashboard hoặc SQL warehouse quản lý nội dung/compute chứ không phải giao diện để cấp quyền trên đối tượng Unity Catalog."
     },
     {
       "id": 88,
@@ -1103,7 +1103,7 @@
         "D": "Data mesh"
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** Medallion architecture tổ chức dữ liệu thành Bronze, Silver và Gold với chất lượng được cải thiện qua từng lớp."
+      "explanation_vi": "**Đáp án A — Medallion architecture.** Medallion tổ chức luồng dữ liệu thành các lớp như Bronze, Silver, Gold; mỗi lớp bổ sung chất lượng và cấu trúc so với lớp trước. Bronze thường gần dữ liệu nguồn, Silver làm sạch/chuẩn hóa và Gold phục vụ phân tích theo miền nghiệp vụ. Đây là một pattern thiết kế, không phải định dạng file hay tính năng streaming; cách triển khai cụ thể tùy nhu cầu dữ liệu."
     },
     {
       "id": 89,
@@ -1115,7 +1115,7 @@
         "D": "Use the DESCRIBE HISTORY table_name command"
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** DESCRIBE HISTORY hiển thị các phiên bản và thao tác đã ghi vào transaction log của bảng Delta."
+      "explanation_vi": "**Đáp án D — DESCRIBE HISTORY.** Lệnh này đọc lịch sử commit của bảng Delta, gồm version, thời gian, operation và thông tin liên quan đến thao tác đã ghi nhận. Nó phù hợp để audit thay đổi ở cấp bảng và xác định phiên bản dùng cho time travel. SELECT logs FROM table không truy vấn transaction log; VACUUM dọn file hết hạn và có thể làm giảm khả năng truy cập lịch sử cũ."
     },
     {
       "id": 90,
@@ -1127,7 +1127,7 @@
         "D": "USE CATALOG on the parent catalog."
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** Unity Catalog cần USE CATALOG và USE SCHEMA để truy cập namespace, ngoài SELECT trên bảng."
+      "explanation_vi": "**Đáp án D — USE CATALOG.** Để đọc bảng Unity Catalog, user cần quyền đi qua namespace cha: USE CATALOG trên catalog, USE SCHEMA trên schema và SELECT trên bảng. Đề đã có hai quyền sau, nên thiếu USE CATALOG là nút chặn cần khắc phục. MANAGE hoặc OWNERSHIP rộng hơn mức cần thiết và không nên cấp thay cho privilege truy cập cụ thể."
     },
     {
       "id": 91,
@@ -1139,7 +1139,7 @@
         "D": "Status: SUCCESS"
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** TRIGGERED là trạng thái của lần đánh giá gần nhất khi điều kiện cảnh báo được đáp ứng. OK cho biết điều kiện chưa được đáp ứng; ERROR nghĩa là truy vấn hoặc lần đánh giá gặp lỗi."
+      "explanation_vi": "**Đáp án B — TRIGGERED.** Trạng thái phản ánh lần đánh giá gần nhất: nếu giá trị thỏa điều kiện và vượt ngưỡng cấu hình thì alert ở trạng thái TRIGGERED. OK có nghĩa lần đánh giá mới nhất không còn thỏa ngưỡng; nó không khẳng định cảnh báo chưa từng được kích hoạt trước đó. ERROR/UNKNOWN liên quan đến việc đánh giá lỗi hoặc chưa đủ dữ liệu, không phải kết quả điều kiện đúng."
     },
     {
       "id": 92,
@@ -1151,7 +1151,7 @@
         "D": "CLONE with VERSION AS OF"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Time travel truy vấn phiên bản hoặc thời điểm trước của Delta table để so sánh với trạng thái hiện tại."
+      "explanation_vi": "**Đáp án C — Time travel.** Delta time travel cho phép đọc một phiên bản cụ thể hoặc trạng thái tại thời điểm trước, rồi so sánh với truy vấn trên phiên bản hiện tại. Có thể dùng VERSION AS OF hoặc TIMESTAMP AS OF tùy yêu cầu tái lập. Khả năng truy cập lịch sử phụ thuộc transaction log và các data file cần thiết còn trong thời gian lưu giữ; chạy VACUUM có thể khiến phiên bản quá cũ không còn đọc được."
     },
     {
       "id": 93,
@@ -1163,7 +1163,7 @@
         "D": "Databricks Assistant"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Genie cho phép hỏi dữ liệu bằng ngôn ngữ tự nhiên và sinh SQL trên các bảng đã được tuyển chọn, mô tả."
+      "explanation_vi": "**Đáp án C — Genie Agent.** Genie Agent (tên trước đây là Genie Space) cho phép người dùng đặt câu hỏi bằng ngôn ngữ tự nhiên trên tập dữ liệu đã được tuyển chọn và nhận SQL cùng kết quả/biểu đồ. Chất lượng phụ thuộc metadata, mô tả cột, hướng dẫn và ví dụ mà chuyên gia cấu hình. Unity Catalog quản lý dữ liệu và quyền; Databricks Assistant hỗ trợ nhiều tác vụ tương tác khác nhưng không phải tên tính năng hỏi dữ liệu được mô tả ở đây."
     },
     {
       "id": 94,
@@ -1175,7 +1175,7 @@
         "D": "array_contains(tags, 'sql')"
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** array_contains(tags, 'sql') kiểm tra một phần tử cụ thể có nằm trong ARRAY hay không."
+      "explanation_vi": "**Đáp án D — array_contains(tags, 'sql').** Hàm này kiểm tra xem ARRAY tags có chứa giá trị phần tử bằng 'sql' hay không và dùng được như predicate trong WHERE. So sánh tags = 'sql' đem cả mảng so với một chuỗi, còn IN yêu cầu biểu thức scalar ở vị trí phù hợp. Nếu mảng là NULL, kết quả predicate cũng có thể là NULL và dòng đó không được giữ bởi WHERE."
     },
     {
       "id": 95,
@@ -1187,7 +1187,7 @@
         "D": "UPDATE TABLE main.analytics.sales_data ADD COMMENT 'Certified dataset';"
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** Gắn trạng thái chuẩn bằng governed tag system.certification_status = certified; cần quyền ASSIGN cho tag này."
+      "explanation_vi": "**Đáp án A.** SET TAG ON TABLE gắn governed tag system.certification_status với giá trị certified lên đúng đối tượng Unity Catalog. Đây là trạng thái chứng nhận có ý nghĩa quản trị, khác với comment tự do hay một tag tùy chọn tên certified=true. Người thực hiện cần privilege ASSIGN cho governed tag và quyền thích hợp trên bảng; tag chỉ mô tả/truyền trạng thái, không tự kiểm chứng chất lượng dữ liệu."
     },
     {
       "id": 96,
@@ -1199,7 +1199,7 @@
         "D": "Bytes spilled to disk per operator"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Peak memory theo operator cho biết bước nào giữ nhiều bộ nhớ nhất và có khả năng gây lỗi tài nguyên."
+      "explanation_vi": "**Đáp án C — Memory peak per operator.** Query Profile hiển thị mức bộ nhớ đỉnh của từng operator; so sánh metric này giúp tìm bước join/aggregate đang chiếm bộ nhớ lớn nhất khi truy vấn lỗi tài nguyên. Shuffle read hoặc spill cũng hữu ích để điều tra chi phí truyền/ghi dữ liệu, nhưng chúng trả lời câu hỏi khác. Memory peak chỉ ra nơi cần tập trung xem xét, chưa tự chứng minh duy nhất nguyên nhân; cần kiểm tra thêm kích thước đầu vào, phân phối khóa và plan."
     },
     {
       "id": 97,
@@ -1211,7 +1211,7 @@
         "D": "Open Genie Code (formerly Databricks Assistant) and use Diagnose Error to explain the failure and suggest a correction."
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** Genie Code có thể chẩn đoán lỗi trong SQL Editor, giải thích nguyên nhân và gợi ý truy vấn sửa để người dùng kiểm tra."
+      "explanation_vi": "**Đáp án D.** Mở Genie Code (trước đây Databricks Assistant) và chọn Diagnose Error để nó giải thích lỗi SQL cùng gợi ý cách sửa. Người dùng cần đối chiếu gợi ý với schema, kiểu dữ liệu và ý định truy vấn trước khi chạy lại; AI có thể đưa ra giả định sai. Tắt ANSI hoặc restart warehouse không chẩn đoán cú pháp/logic lỗi, và thay query bằng visualization không giải quyết nguyên nhân."
     },
     {
       "id": 98,
@@ -1223,7 +1223,7 @@
         "D": "Reference Table"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Link table lưu quan hệ nhiều-nhiều giữa các Hub và thường chứa khóa ngoại tham chiếu các Hub liên quan."
+      "explanation_vi": "**Đáp án C — Link table.** Trong Data Vault 2.0, Hub giữ business key của thực thể, Satellite giữ thuộc tính/lịch sử mô tả Hub hoặc Link, còn Link biểu diễn quan hệ giữa các Hub. Vì quan hệ kinh doanh có thể nhiều-nhiều, Link lưu khóa tham chiếu đến các Hub liên quan cùng metadata lịch sử. Reference table phục vụ mã/giá trị tham chiếu, không thay vai trò của Link."
     },
     {
       "id": 99,
@@ -1235,7 +1235,7 @@
         "D": "search tag = ‘confidential’"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Cú pháp tag:confidential tìm đối tượng có khóa tag confidential; thêm :value nếu cần lọc cả giá trị."
+      "explanation_vi": "**Đáp án C — tag:confidential.** Cú pháp tag:<tag_key> tìm đối tượng có khóa tag confidential, bất kể giá trị của khóa đó là gì. Nếu cần lọc đồng thời theo giá trị, cú pháp là tag:<tag_key>:<tag_value>. Vì đề cho confidential là tên khóa, không phải chuỗi giá trị như true, chỉ gõ tag:confidential là cách tương ứng."
     },
     {
       "id": 100,
@@ -1247,7 +1247,7 @@
         "D": "The Gold layer contains de-normalized data models optimized for analytics, reporting, and machine learning."
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** Gold chứa mô hình đã tuyển chọn, thường phi chuẩn hóa và được tổ chức cho dashboard, báo cáo hoặc mô hình phân tích."
+      "explanation_vi": "**Đáp án D.** Gold là lớp được cấu trúc theo nhu cầu tiêu thụ, thường chứa dữ liệu đã tổng hợp hoặc mô hình phi chuẩn hóa để truy vấn báo cáo, BI và một số workload ML hiệu quả. Bronze lưu dữ liệu gần nguồn; làm sạch, khử trùng lặp và hợp nhất dữ liệu thuộc bước chuẩn bị thường gắn với Silver. Gold không đơn thuần là kho backup; chất lượng và ý nghĩa của các metric vẫn cần được quản trị."
     },
     {
       "id": 101,
@@ -1259,7 +1259,7 @@
         "D": "Lakeflow Connect"
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** Lakeflow Spark Declarative Pipelines cho phép khai báo bảng và các bước biến đổi, đồng thời gắn expectations để theo dõi hoặc xử lý dòng không đạt. Hành vi với dòng lỗi phụ thuộc vào cách cấu hình expectation."
+      "explanation_vi": "**Đáp án B — Lakeflow Spark Declarative Pipelines.** Đây là dịch vụ định nghĩa pipeline theo kiểu khai báo: kỹ sư mô tả bảng và quan hệ biến đổi, nền tảng quản lý quá trình thực thi và phụ thuộc. Data quality expectations có thể đo lường dòng hợp lệ và được cấu hình để ghi nhận, loại bỏ hoặc làm pipeline thất bại khi dữ liệu không đạt. Lakeflow Jobs điều phối task tổng quát; Lakeflow Connect tập trung vào connector/ingestion, không phải lựa chọn mô tả transformation cùng expectations."
     },
     {
       "id": 102,
@@ -1271,7 +1271,7 @@
         "D": "The time travel query will fail because the default data file retention period is 7 days, and VACUUM operations have likely removed the required data files."
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** VACUUM xóa các tệp không còn được bảng tham chiếu sau thời hạn lưu giữ. Nếu tệp cần cho phiên bản 10 ngày đã bị xóa, time travel thất bại."
+      "explanation_vi": "**Đáp án D.** Time travel cần cả metadata lịch sử trong transaction log lẫn các data file mà phiên bản cũ tham chiếu. Nếu VACUUM đã xóa đúng các tệp cần để dựng lại phiên bản 10 ngày trước, truy vấn không thể khôi phục dữ liệu chỉ từ log; mặc định thời hạn lưu data file thường là 7 ngày. Log retention 30 ngày không giữ nội dung tệp, nên không đủ để đọc phiên bản khi dữ liệu vật lý đã mất."
     },
     {
       "id": 103,
@@ -1283,7 +1283,7 @@
         "D": "Overwrite the source emails with masked strings, then restore them manually for authorized users."
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** Dynamic view có thể dùng is_account_group_member() trong CASE để che cột PII theo nhóm; chỉ cấp quyền cho người dùng trên view."
+      "explanation_vi": "**Đáp án B.** Tạo dynamic view với điều kiện phân quyền ở cấp hàng/cột, dùng is_account_group_member('pii_readers') để trả email thật cho nhóm được phép và giá trị đã mask cho những người còn lại. Người dùng báo cáo chỉ nên được cấp SELECT trên view, không cấp trực tiếp bảng gốc có email. View này thực thi chính sách khi đọc; CSV trên DBFS hoặc lời nhắc người dùng tự tránh cột không tạo được kiểm soát bảo mật."
     },
     {
       "id": 104,
@@ -1295,7 +1295,7 @@
         "D": "Set spark.sql.default.database to corp_data.reporting.sales_data in the warehouse configuration."
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** USE CATALOG và USE SCHEMA đặt namespace mặc định của phiên SQL để tên bảng không đầy đủ được phân giải đúng."
+      "explanation_vi": "**Đáp án B.** Tên sales_data không đầy đủ chỉ được phân giải dựa trên catalog và schema hiện hành của session. Chạy USE CATALOG corp_data rồi USE SCHEMA reporting cập nhật namespace mặc định cho đúng phiên SQL, nhờ đó truy vấn ngắn hoạt động mà không đổi tên bảng hay quyền. Cấu hình workspace/warehouse toàn cục không đồng nghĩa tự cập nhật current schema của mọi session đang chạy."
     },
     {
       "id": 105,
@@ -1307,7 +1307,7 @@
         "D": "A privilege granted on a schema applies only to the schema object, never to tables inside it."
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** Quyền cấp ở catalog hoặc schema được kế thừa xuống đối tượng con; hầu hết quyền cấp ở metastore không kế thừa, ngoại trừ READ METADATA."
+      "explanation_vi": "**Đáp án A.** Unity Catalog cho phép privilege được cấp ở catalog/schema kế thừa xuống các object con theo quy tắc của privilege đó, giúp tránh cấp lặp từng bảng. Hầu hết grant trên metastore không lan xuống toàn bộ catalog và table; READ METADATA là ngoại lệ được nêu trong tài liệu. Kế thừa không có nghĩa mọi quyền là giống nhau hoặc tất cả thành viên được đọc dữ liệu—cần xem riêng privilege cần thiết và quyền trên từng cấp."
     },
     {
       "id": 106,
@@ -1319,7 +1319,7 @@
         "D": "Create an external table; Unity Catalog then owns and deletes the files at the external location."
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** Managed table để Unity Catalog quản lý vòng đời và lưu trữ. Predictive Optimization có thể tự chạy bảo trì khi được bật cho account hoặc đối tượng."
+      "explanation_vi": "**Đáp án B.** Unity Catalog managed table để nền tảng quản lý metadata, vị trí lưu trữ và vòng đời dữ liệu; đây là loại bảng phù hợp khi tổ chức muốn Databricks chịu trách nhiệm storage/lifecycle. Predictive Optimization có thể tự áp dụng bảo trì/optimization được hỗ trợ khi bật ở phạm vi thích hợp. External table vẫn trỏ tới storage do bên ngoài quản lý, còn temporary table có vòng đời ngắn và không tự chuyển thành managed."
     },
     {
       "id": 107,
@@ -1331,7 +1331,7 @@
         "D": "Spark cache always improves performance, so every DataFrame should be cached."
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Disk cache tự lưu bản sao cục bộ của tệp Parquet từ S3, ABFS và các hệ thống tệp khác; Delta Lake cũng dùng Parquet nên được hỗ trợ."
+      "explanation_vi": "**Đáp án C.** Disk cache tự giữ bản sao cục bộ của các Parquet file đã đọc từ remote storage, bao gồm file dữ liệu của Delta table; lần đọc lại phù hợp có thể giảm I/O mạng. Cache file không phải cache mọi CSV/JSON dưới dạng row đã giải mã và cũng không bảo đảm query nào cũng nhanh hơn. Spark cache là một cơ chế khác, tiêu thụ tài nguyên và chỉ nên dùng khi cùng dữ liệu được tái sử dụng đủ nhiều."
     },
     {
       "id": 108,
@@ -1343,7 +1343,7 @@
         "D": "Create an OpenSharing share with only the approved tables, create an open recipient, and deliver its credentials securely."
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** OpenSharing (tên trước đây là Delta Sharing) chia sẻ đúng các bảng được chọn ở chế độ chỉ đọc cho recipient bên ngoài; recipient có thể đọc bằng client tương thích mà không cần workspace Databricks."
+      "explanation_vi": "**Đáp án D.** OpenSharing cho phép provider tạo một share chỉ chứa các bảng đã duyệt và một recipient bên ngoài, sau đó cấp credential cho client tương thích theo quy trình an toàn. Recipient có thể đọc dữ liệu được chia sẻ ở chế độ read-only mà không cần tài khoản/workspace Databricks của provider. Không thêm toàn bộ nhà nghiên cứu vào workspace và không gửi bản CSV rời nếu cần quyền truy cập có quản trị, cập nhật và audit."
     },
     {
       "id": 109,
@@ -1355,7 +1355,7 @@
         "D": "Clone the dashboard because an existing dashboard cannot accept more visualizations."
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Chỉnh sửa dashboard, thêm visualization từ dataset phù hợp, cấu hình kiểu biểu đồ và lưu bản nháp."
+      "explanation_vi": "**Đáp án C.** Để hiển thị tỷ lệ đúng trong dashboard, dataset/query phải tính hoặc trả về giá trị phần trăm; sau đó thêm visualization kiểu counter và chọn trường kết quả tương ứng. Lưu bản nháp để thay đổi có hiệu lực trong dashboard đang chỉnh sửa. Counter chỉ trình bày một giá trị, không tự suy ra tỷ lệ từ dữ liệu giao dịch; dashboard hiện hữu vẫn có thể được mở rộng."
     },
     {
       "id": 110,
@@ -1367,7 +1367,7 @@
         "D": "Set up a streaming table to ingest new sales data in real time."
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** Materialized view lưu kết quả tổng hợp để tái sử dụng; dữ liệu ít thay đổi giúp giảm tính toán lặp cho báo cáo."
+      "explanation_vi": "**Đáp án B — Materialized view.** Materialized view lưu kết quả của phép tổng hợp, nên báo cáo chạy nhiều lần có thể đọc kết quả đã tính thay vì quét và nhóm lại bảng giao dịch lớn mỗi lượt. Khi nguồn chỉ đổi hằng ngày, có thể refresh kết quả theo nhịp dữ liệu thay vì tính lại cho mọi lần xem. Ordinary view tính lại logic khi truy vấn; streaming table giải quyết ingest liên tục, không phải cách tối ưu đúng cho báo cáo daily aggregation này."
     },
     {
       "id": 111,
@@ -1379,7 +1379,7 @@
         "D": "REVOKE USE CATALOG ON SCHEMA finance_catalog FROM developers;"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** USE CATALOG là quyền cần thu hồi để ngăn nhóm truy cập catalog; USAGE không phải privilege Unity Catalog hiện hành."
+      "explanation_vi": "**Đáp án C.** Quyền Unity Catalog hiện hành để truy cập catalog là USE CATALOG, nên thu hồi đúng privilege đó bằng REVOKE USE CATALOG ON CATALOG finance_catalog FROM developers. USAGE là tên quyền của hệ thống/metastore cũ và không thay thế cú pháp privilege này. Thu hồi trên schema sẽ nhắm sai object; các quyền riêng như SELECT có thể vẫn còn nhưng không thể truy cập namespace nếu thiếu USE CATALOG."
     },
     {
       "id": 112,
@@ -1391,7 +1391,7 @@
         "D": "SELECT * FROM orders LEFT JOIN customers ON orders.customer_id = customers.customer_id AND orders.region_id = customers.region_id;"
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** INNER JOIN chỉ giữ cặp dòng khớp và điều kiện ON phải so sánh cả customer_id lẫn region_id."
+      "explanation_vi": "**Đáp án C.** INNER JOIN chỉ giữ cặp dòng khi điều kiện ON đúng; ở đây điều kiện phải đồng thời khớp customer_id và region_id. Dùng một khóa duy nhất có thể ghép nhầm khách hàng cùng mã ở khu vực khác, còn LEFT JOIN sẽ giữ thêm dòng orders không khớp. Hai phép so sánh được nối bằng AND để yêu cầu cả hai khóa đều bằng nhau."
     },
     {
       "id": 113,
@@ -1403,7 +1403,7 @@
         "D": "Delete the flagged responses to erase them from the model."
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** Hướng dẫn miền nghiệp vụ và query ví dụ cung cấp thuật ngữ, phép nối và logic cần thiết để Genie sinh SQL đúng hơn."
+      "explanation_vi": "**Đáp án B.** Hãy làm rõ hướng dẫn miền nghiệp vụ và thêm SQL mẫu đã được kiểm chứng để thể hiện cách hiểu đúng về thuật ngữ, khóa nối và phép tính. Ví dụ giúp Genie chọn pattern SQL sát câu hỏi hơn; cần dùng dữ liệu và logic đã được xác thực thay vì thêm hàng loạt bảng không liên quan. Phản hồi bị đánh dấu sai là tín hiệu cần xem lại cấu hình và ví dụ, không phải thứ để xóa dấu vết hay tắt feedback."
     },
     {
       "id": 114,
@@ -1415,7 +1415,7 @@
         "D": "ALTER TABLE main.analytics.sales_data SET TAGS ('system.certification_status' = 'deprecated');"
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** Tag system.certification_status = deprecated đánh dấu đối tượng là không còn được khuyến nghị; đây là governed tag của Unity Catalog."
+      "explanation_vi": "**Đáp án A.** SET TAG ON TABLE cập nhật governed tag system.certification_status thành deprecated cho đúng bảng. Đây là metadata trạng thái được Unity Catalog hiểu và hiển thị, không phải comment hoặc TBLPROPERTIES tự đặt tên tương tự. Người thực hiện cần quyền gán governed tag; đánh dấu deprecated giúp người dùng nhận biết tài sản không còn được khuyến nghị, nhưng không tự ngăn mọi truy vấn lên bảng."
     },
     {
       "id": 115,
@@ -1427,7 +1427,7 @@
         "D": "Let users edit the underlying datasets to improve answers."
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** Đánh dấu truy vấn đã kiểm chứng là Trusted Asset giúp Genie tái dùng câu trả lời SQL đáng tin cho các câu hỏi quen thuộc."
+      "explanation_vi": "**Đáp án B.** Truy vấn hoặc function đã được kiểm tra và trả lời đúng cho câu hỏi thường gặp có thể được đánh dấu Trusted Asset để Genie dùng làm nguồn tham chiếu đáng tin cậy. Điều này bổ sung vào dữ liệu có quản trị, instructions và ví dụ; nó không thay thế việc rà soát SQL, quyền truy cập hay metadata. Không nên tự động tin mọi câu trả lời sinh ra hoặc cho phép người dùng sửa trực tiếp dữ liệu nguồn."
     },
     {
       "id": 116,
@@ -1439,7 +1439,7 @@
         "D": "SELECT category, COUNT(*) FROM products GROUP BY category WHERE COUNT(*) > 10 AND AVG(price) > 50;"
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** GROUP BY tạo một nhóm cho mỗi category; HAVING lọc các nhóm bằng COUNT và AVG sau khi tổng hợp."
+      "explanation_vi": "**Đáp án A.** GROUP BY category tạo một nhóm cho mỗi danh mục; COUNT(*) và AVG(price) được tính trên từng nhóm. HAVING chạy sau aggregation nên có thể lọc theo COUNT lớn hơn 10 và AVG lớn hơn 50 cùng lúc. WHERE chạy trước khi nhóm hình thành, vì vậy không dùng COUNT(*)/AVG(price) trực tiếp ở đó; thứ tự cú pháp đặt HAVING sau GROUP BY."
     },
     {
       "id": 117,
@@ -1451,7 +1451,7 @@
         "D": "It manages structured data in tabular format and unstructured files like images in blob storage."
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** Unity Catalog quản lý dữ liệu dạng bảng bằng tables/views và tệp phi cấu trúc bằng volumes."
+      "explanation_vi": "**Đáp án A.** Unity Catalog quản lý dữ liệu có cấu trúc qua tables/views và tệp phi cấu trúc qua volumes, đồng thời áp dụng namespace, quyền và khả năng quản trị. Volume cung cấp đường dẫn được quản trị cho tệp như ảnh, PDF hoặc JSON; không cần chuyển mọi tệp thành Delta table. Dữ liệu vẫn nằm trên object storage, còn UC giữ metadata và quyền truy cập."
     },
     {
       "id": 118,
@@ -1463,7 +1463,7 @@
         "D": "order_quantity IS NULL OR order_quantity <> -1"
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** Điều kiện giữ lại giá trị NULL hoặc mọi order_quantity khác -1, nên chỉ loại các dòng có giá trị lỗi -1."
+      "explanation_vi": "**Đáp án D.** SQL dùng logic ba giá trị: so sánh NULL <> -1 không cho TRUE mà cho UNKNOWN, vì vậy predicate chỉ order_quantity <> -1 sẽ làm mất dòng NULL trong WHERE. Điều kiện order_quantity IS NULL OR order_quantity <> -1 giữ lại các dòng chưa biết hoặc có giá trị khác -1, đồng thời loại chính xác giá trị lỗi -1. ABS(x) <> 1 cũng loại cả +1 ngoài ý muốn."
     },
     {
       "id": 119,
@@ -1475,7 +1475,7 @@
         "D": "Add the parameters as variables in a Python notebook cell and reference them in the SQL query."
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** Named parameter markers như :region và :year tạo widget để nhập giá trị khi chạy query trong SQL Editor."
+      "explanation_vi": "**Đáp án B.** Named parameter markers :region và :year đánh dấu giá trị sẽ nhập riêng khi chạy query trong SQL Editor; input widget cho phép thử nhiều tổ hợp mà không sửa văn bản SQL. Parameter đại diện cho giá trị biểu thức, không dùng để thay tên cột/bảng. Đây cũng an toàn và dễ tái sử dụng hơn việc sửa chuỗi SQL thủ công cho từng lần chạy."
     },
     {
       "id": 120,
@@ -1487,7 +1487,7 @@
         "D": "SQL Warehouses function as data storage systems that maintain cached query results and provide direct access to Delta tables without requiring additional compute resources"
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** SQL warehouse là compute chuyên cho truy vấn SQL và workload BI; Photon tăng tốc thực thi các toán tử được hỗ trợ."
+      "explanation_vi": "**Đáp án B.** SQL warehouse là compute chuyên cho thực thi truy vấn SQL và kết nối BI/analytics tools; Photon có thể tăng tốc những toán tử/workload được hỗ trợ. Warehouse không phải hệ thống lưu trữ và cũng không phải compute đa ngôn ngữ tổng quát như cluster tương tác. Khả năng serverless, autoscaling và hiệu năng tùy cấu hình/region, nên không diễn giải rằng mọi query đều chạy nhanh như nhau."
     },
     {
       "id": 121,
@@ -1499,7 +1499,7 @@
         "D": "Open Configure > Examples and add an example query with a natural-language title and matching SQL."
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** Trong Configure > Examples, thêm câu hỏi mẫu cùng SQL tương ứng; Genie dùng ví dụ để khớp và suy rộng cách xử lý câu hỏi tương tự."
+      "explanation_vi": "**Đáp án D.** Trong phần Configure > Examples, thêm câu hỏi nghiệp vụ bằng ngôn ngữ tự nhiên cùng SQL đã xác minh tương ứng. Genie dùng cặp ví dụ như chỉ dẫn cụ thể về cách diễn giải câu hỏi và logic truy vấn, rồi có thể áp dụng pattern cho câu tương tự. Chỉ đưa câu hỏi vào mô tả mà không có SQL không tạo được ánh xạ chính xác; notebook rời hoặc spreadsheet không gắn cấu hình cũng không đóng vai trò example asset."
     },
     {
       "id": 122,
@@ -1511,7 +1511,7 @@
         "D": "Query History, which lists runs and opens per-run metrics and Query Profile."
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** Query History có các lần chạy, thời lượng, dữ liệu đọc, số dòng và liên kết đến Query Profile để chẩn đoán từng lần thực thi."
+      "explanation_vi": "**Đáp án D — Query History.** Query History liệt kê từng lần chạy, thời gian thực thi và các thông tin như dữ liệu đọc/kết quả; từ một execution record, analyst có thể mở Query Profile để xem các operator và bottleneck. Query Profile là phân tích chi tiết của một lần chạy, không phải lịch sử tổng hợp dài hạn; dashboard editor và Lakehouse Monitoring có mục đích khác. So sánh nhiều lần chạy giúp phân biệt vấn đề dữ liệu, cache và compute."
     },
     {
       "id": 123,
@@ -1523,7 +1523,7 @@
         "D": "Create a workspace account for every external viewer; the Conversation API cannot be used by applications."
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** Ứng dụng bên ngoài gọi Genie Conversation API bằng danh tính dịch vụ phù hợp; Unity Catalog vẫn kiểm soát quyền trên dữ liệu."
+      "explanation_vi": "**Đáp án A.** Backend của ứng dụng ngoài có thể gọi Genie Conversation API bằng danh tính dịch vụ được cấp quyền phù hợp; API xử lý hội thoại thay cho việc buộc từng khách hàng bên ngoài đăng nhập vào workspace. Unity Catalog và cấu hình Genie vẫn giới hạn dữ liệu mà danh tính đó được phép truy vấn, nên cần bảo vệ credential ở backend và kiểm soát người dùng ứng dụng. External embedding của dashboard là luồng chia sẻ dashboard khác, không tự cung cấp chức năng hỏi Genie."
     },
     {
       "id": 124,
@@ -1535,7 +1535,7 @@
         "D": "Each dimension table has a primary key, which is referenced as a foreign key in the fact table. This structure allows the fact table to join with multiple dimension tables for analytical queries."
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** Mỗi dimension có khóa chính duy nhất; fact lưu khóa ngoại tham chiếu đến các dimension, nên nhiều dòng fact có thể liên kết với một dòng dimension. Trong Unity Catalog, khai báo PK/FK chỉ mang tính thông tin và không tự kiểm tra dữ liệu; cần kiểm tra chất lượng riêng."
+      "explanation_vi": "**Đáp án D.** Trong star schema, mỗi dimension có khóa duy nhất cho một thực thể; fact lưu các khóa ngoại đó cùng số đo của sự kiện, nên nhiều giao dịch có thể nối về cùng một dòng dimension. Quan hệ thường nhiều fact-to-one dimension, không phải one-to-one giữa bảng fact và dimension. Khai báo PK/FK trong Unity Catalog có tính chất thông tin/documentation, vì thế cần bảo đảm tính duy nhất và toàn vẹn tham chiếu bằng kiểm tra dữ liệu riêng."
     },
     {
       "id": 125,
@@ -1547,7 +1547,7 @@
         "D": "Scatter chart with revenue on the x-axis and profit margin on the y-axis for all transactions."
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** Line chart nhiều chuỗi thể hiện xu hướng doanh thu theo tháng và cho phép so sánh các danh mục qua thời gian."
+      "explanation_vi": "**Đáp án A — Multi-series line chart.** Đặt tháng trên trục x, revenue trên trục y và mỗi product category thành một chuỗi riêng để thấy thay đổi theo thời gian. Các đường cho phép so sánh xu hướng giữa ba danh mục và nhận ra mùa vụ hoặc giai đoạn suy giảm qua hai năm. Counter chỉ tóm tắt một con số; pie chart cuối kỳ bỏ mất chiều thời gian; scatter ở transaction-level trả lời tương quan revenue/profit margin khác câu hỏi."
     },
     {
       "id": 126,
@@ -1559,7 +1559,7 @@
         "D": "Use Delta Sharing to share data with Databricks from external systems."
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** Auto Loader phát hiện và nạp các tệp mới theo kiểu incremental. Cần cấu hình schema inference/evolution và schemaLocation phù hợp; trong Lakeflow pipeline, nền tảng có thể quản lý metadata schema và checkpoint."
+      "explanation_vi": "**Đáp án B — Auto Loader.** Auto Loader theo dõi object storage và phát hiện tệp mới theo kiểu incremental, đồng thời hỗ trợ suy luận và tiến hóa schema khi cấu hình phù hợp. Điều này giảm nhu cầu tự viết logic quét tệp, ghi checkpoint và theo dõi schema. Tính năng không tự quyết định mọi thay đổi schema an toàn: cần chọn schema location, chính sách evolution và cách xử lý cột mới theo yêu cầu downstream."
     },
     {
       "id": 127,
@@ -1571,7 +1571,7 @@
         "D": "APPROX_COUNT_DISTINCT requires less memory by storing only the first 1000 unique values."
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** APPROX_COUNT_DISTINCT dùng HyperLogLog++ để ước lượng nhanh với bộ nhớ thấp; relativeSD mặc định là 5%."
+      "explanation_vi": "**Đáp án C.** APPROX_COUNT_DISTINCT dùng HyperLogLog++ để ước lượng số giá trị duy nhất mà không cần giữ/so sánh toàn bộ tập distinct chính xác, nên thường tiết kiệm bộ nhớ và chạy nhanh trên cardinality rất lớn. relativeSD mặc định 5% điều chỉnh mức sai số tương đối kỳ vọng; giảm relativeSD thường cần nhiều trạng thái hơn. Kết quả là ước lượng, không phải đếm chính xác, vì vậy chỉ dùng khi độ chính xác này phù hợp nghiệp vụ."
     },
     {
       "id": 128,
@@ -1583,7 +1583,7 @@
         "D": "Liquid Clustering supports more data types than partitioning, including nested structures and arrays."
       },
       "correctAnswer": "B",
-      "explanation_vi": "**Đáp án B.** Có thể đổi clustering keys để phù hợp mẫu truy vấn mới mà không cần định nghĩa lại partition layout của toàn bảng. Các tệp cũ không được sắp xếp lại ngay; OPTIMIZE sẽ recluster dữ liệu theo keys mới."
+      "explanation_vi": "**Đáp án B.** Liquid Clustering cho phép đổi clustering keys khi mẫu truy vấn thay đổi mà không phải định nghĩa lại Hive partition layout và viết lại toàn bộ bảng chỉ để đổi partition keys. Việc đổi key không tự sắp xếp lại tất cả file đã tồn tại ngay lập tức; cần chạy OPTIMIZE/reclustering để bố cục mới được áp dụng dần. Đây là tính linh hoạt về bố cục truy vấn, không phải cơ chế backup hoặc cam kết nén tốt hơn."
     },
     {
       "id": 129,
@@ -1596,7 +1596,7 @@
         "E": "Add query examples without describing the business terms or columns."
       },
       "correctAnswer": "B,D",
-      "explanation_vi": "**Đáp án B và D.** Hướng dẫn ánh xạ thuật ngữ nghiệp vụ và mô tả cột hoặc synonym giúp Genie hiểu các tên mơ hồ như region_code và channel_type. Lấy mẫu giá trị và thêm query ví dụ có thể bổ trợ, nhưng không trực tiếp định nghĩa ngữ nghĩa của cột.",
+      "explanation_vi": "**Đáp án B và D.** Instructions ánh xạ từ ngôn ngữ người dùng, như “region”, sang cột đúng; mô tả cột và business synonyms trong Unity Catalog cung cấp ngữ cảnh ngay cạnh dữ liệu. Kết hợp hai nguồn metadata này giúp Genie phân biệt region_code với các cột mã/loại khác và chọn predicate thích hợp. Lấy mẫu giá trị hoặc thêm ví dụ SQL có thể hỗ trợ, nhưng không thay thế việc định nghĩa rõ thuật ngữ và ý nghĩa cột.",
       "isMulti": true
     },
     {
@@ -1609,7 +1609,7 @@
         "D": "Export a PDF once and use it as a live interactive dashboard."
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** External embedding dùng ứng dụng trung gian với service principal và OAuth; cấu hình domain được phép cùng quyền dữ liệu cần thiết, không cần workspace account cho từng người xem."
+      "explanation_vi": "**Đáp án A.** External embedding được thiết kế để nhúng dashboard đã publish vào portal cho người xem không có tài khoản Databricks. Ứng dụng/portal xác thực người dùng và dùng service principal/OAuth theo cấu hình hỗ trợ; admin giới hạn domain được phép và cấp đúng quyền dữ liệu/compute. Chia sẻ workspace link hay cấp admin cho khách hàng vừa không đáp ứng mô hình nhúng vừa mở rộng quyền quá mức; PDF chỉ là ảnh chụp tĩnh."
     },
     {
       "id": 131,
@@ -1621,7 +1621,7 @@
         "D": "A dedicated physical server for each Genie Agent."
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Genie cần dữ liệu được quản lý trong Unity Catalog cùng metadata, câu hỏi/SQL mẫu và hướng dẫn miền nghiệp vụ."
+      "explanation_vi": "**Đáp án C.** Một Genie Agent hoạt động tốt cần dataset được tuyển chọn và chú thích rõ trong Unity Catalog, câu SQL mẫu đúng, cùng instructions phản ánh từ vựng và quy tắc nghiệp vụ. Metadata giúp gắn câu hỏi tự nhiên với cột; ví dụ minh họa cách nối và tính; instructions giải nghĩa các khái niệm nội bộ. Thêm mọi bảng không liên quan có thể làm tăng nhập nhằng, còn mỗi agent không cần máy chủ riêng."
     },
     {
       "id": 132,
@@ -1633,7 +1633,7 @@
         "D": "Create a catalog for production, another for development, and another for testing."
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** Tách catalog theo môi trường tạo ranh giới namespace để quản lý grant độc lập. Cần cấp quyền thích hợp trên từng catalog; việc tạo catalog riêng không tự động cô lập quyền truy cập."
+      "explanation_vi": "**Đáp án D.** Tạo catalog riêng cho production, development và testing tạo ranh giới namespace và nơi áp dụng grants theo môi trường trong cùng workspace. Cần cấu hình quyền và quy trình promotion rõ ràng; chỉ tạo catalog không tự cách ly người dùng hay dữ liệu nếu quyền vẫn được cấp rộng. Cách chia này tránh trộn bảng thử nghiệm và production trong cùng schema, nhưng không thay thế kiểm soát workspace/network khi yêu cầu cô lập mạnh hơn."
     },
     {
       "id": 133,
@@ -1645,7 +1645,7 @@
         "D": "Use the display() function or %sql to run the query, then click the + icon in the result cell to add a visualization."
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** Sau khi chạy SQL hoặc display() trong notebook, dùng nút thêm visualization tại kết quả để cấu hình biểu đồ ngay trong notebook."
+      "explanation_vi": "**Đáp án D.** Sau khi chạy truy vấn bằng %sql hoặc tạo kết quả qua display(), nhấn biểu tượng + ở result cell để thêm visualization và chọn line chart với trường tuần trên trục x, số người dùng trên trục y. Biểu đồ được tạo ngay trong notebook từ kết quả cell, không cần export sang Excel hoặc chuyển qua dashboard. Nếu mục tiêu là chia sẻ lâu dài, có thể cân nhắc dashboard sau khi hoàn tất khám phá."
     },
     {
       "id": 134,
@@ -1657,7 +1657,7 @@
         "D": "Register the MySQL table as a temporary view in Databricks using a standard Spark JDBC read, then join it with the Unity Catalog-managed table using Databricks SQL."
       },
       "correctAnswer": "A",
-      "explanation_vi": "**Đáp án A.** Lakehouse Federation đăng ký MySQL dưới dạng foreign catalog để truy vấn qua Unity Catalog và kết hợp với bảng Delta trong Databricks. Connector có thể đẩy các phần truy vấn được hỗ trợ về nguồn, nhưng không bảo đảm toàn bộ phép join được thực thi tại MySQL."
+      "explanation_vi": "**Đáp án A.** Lakehouse Federation tạo foreign catalog cho MySQL để Databricks truy vấn bảng từ nguồn mà không cần nạp toàn bộ dữ liệu trước; sau đó SQL có thể JOIN bảng federated với Delta table. Unity Catalog quản lý metadata, quyền và lineage cho truy cập liên bang. Connector có thể push down một số phép lọc/tính toán, nhưng không đảm bảo toàn bộ JOIN chạy trong MySQL; hiệu năng phụ thuộc connector, truy vấn và mạng."
     },
     {
       "id": 135,
@@ -1669,7 +1669,7 @@
         "D": "CREATE TABLE catalog.schema.table_name USING PARQUET LOCATION 's3://my-bucket/data/';"
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** USING PARQUET LOCATION tạo external table trỏ đến thư mục Parquet đã có; Unity Catalog quản lý quyền trên metadata của bảng."
+      "explanation_vi": "**Đáp án D.** CREATE TABLE ... USING PARQUET LOCATION trỏ bảng Unity Catalog tới các tệp Parquet đã có ở đường dẫn S3, nên không sao chép chúng sang vị trí managed mới. Vì bảng là external, UC quản lý metadata/quyền nhưng storage vẫn ở vị trí bên ngoài. Câu hỏi giả định external location và privilege đã có; nếu thiếu cấu hình hoặc quyền, cú pháp đúng vẫn không đủ để tạo bảng."
     },
     {
       "id": 136,
@@ -1682,7 +1682,7 @@
         "E": "Photon uses a native vectorized columnar engine to accelerate supported scans and aggregations."
       },
       "correctAnswer": "A,E",
-      "explanation_vi": "**Đáp án A và E.** Photon dùng engine native vector hóa theo cột để tăng tốc scan và aggregation; nó tương thích với Spark API nên workload hiện tại thường không cần sửa mã.",
+      "explanation_vi": "**Đáp án A và E.** Photon là engine thực thi native, vector hóa theo cột, có thể tăng tốc scan, join và aggregation được hỗ trợ. Nó tương thích với Spark API, nên nhiều workload SQL/DataFrame hiện có có thể hưởng lợi mà không cần viết lại code. Photon không chạy từng hàng để tăng tương thích và cũng không tự tạo cluster song song; phần cải thiện phụ thuộc loại phép toán, dữ liệu và compute.",
       "isMulti": true
     },
     {
@@ -1695,7 +1695,7 @@
         "D": "It enables governed discovery and access to external data and analytics assets through OpenSharing (formerly Delta Sharing), without manual replication."
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** Marketplace phân phối dữ liệu và tài sản analytics có quản trị; OpenSharing (tên trước đây là Delta Sharing) cho phép dùng dữ liệu bên ngoài mà không phải sao chép thủ công."
+      "explanation_vi": "**Đáp án D.** Databricks Marketplace giúp tìm và truy cập dữ liệu/tài sản analytics của nhà cung cấp; với OpenSharing, provider cấp quyền chia sẻ có kiểm soát mà consumer không cần tải một bản sao thủ công vào workspace. Quyền được giới hạn theo share/recipient và dữ liệu có thể được cập nhật ở nguồn theo cơ chế chia sẻ. Marketplace không phải chợ mua compute hay dịch vụ tự chạy pipeline ETL."
     },
     {
       "id": 138,
@@ -1707,7 +1707,7 @@
         "D": "Ask all users to press the “Refresh” button on the dashboard whenever they want updated data."
       },
       "correctAnswer": "C",
-      "explanation_vi": "**Đáp án C.** Schedule tích hợp chạy lại dataset và làm mới kết quả theo chu kỳ đã chọn."
+      "explanation_vi": "**Đáp án C.** Lịch tích hợp của dashboard tự chạy lại các dataset theo chu kỳ đã chọn và làm mới kết quả hiển thị, nên người dùng không cần bấm Refresh. Schedule cũng có thể gửi snapshot cho subscribers, nhưng gửi thông báo là tùy chọn riêng. Browser extension hoặc xuất PDF chỉ tạo giải pháp thủ công/ảnh chụp; lịch refresh cần warehouse và quyền truy cập hợp lệ khi chạy."
     },
     {
       "id": 139,
@@ -1719,7 +1719,7 @@
         "D": "Lakeflow Spark Declarative Pipelines with Auto Loader"
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** Lakeflow Spark Declarative Pipelines định nghĩa pipeline bằng SQL hoặc Python; Auto Loader phát hiện tệp mới và xử lý tiến hóa schema."
+      "explanation_vi": "**Đáp án D.** Lakeflow Spark Declarative Pipelines điều phối pipeline ingestion và transformation bằng SQL/Python, còn Auto Loader phát hiện file mới và hỗ trợ schema evolution cho nguồn object storage. Kết hợp chúng đáp ứng lịch chạy/pipeline đa ngôn ngữ với ingestion incremental ít custom code. Unity Catalog quản trị dữ liệu nhưng không tự là bộ lập lịch ETL; Workflows có thể điều phối notebook nhưng tự quản lý schema file thường đòi hỏi nhiều mã hơn."
     },
     {
       "id": 140,
@@ -1731,7 +1731,7 @@
         "D": "SELECT product_id, sale_date, SUM(sale_amount) AS daily_total FROM sales GROUP BY product_id, sale_date;"
       },
       "correctAnswer": "D",
-      "explanation_vi": "**Đáp án D.** GROUP BY product_id, sale_date gộp các giao dịch thành một nhóm cho mỗi sản phẩm-ngày; SUM tính tổng trong từng nhóm."
+      "explanation_vi": "**Đáp án D.** Window SUM giữ lại từng dòng giao dịch, nên thêm cột tổng nhưng không gộp các giao dịch có cùng product_id và sale_date; đó là lý do query ban đầu có nhiều dòng mỗi ngày. GROUP BY hai cột khóa gom tất cả giao dịch trong từng cặp sản phẩm-ngày thành một nhóm, còn SUM(sale_amount) cộng trong nhóm. Không đưa sale_amount riêng vào SELECT vì giá trị đó khác nhau giữa giao dịch và sẽ chia nhóm nhỏ hơn, phá yêu cầu đúng một dòng mỗi ngày."
     }
   ]
 }
