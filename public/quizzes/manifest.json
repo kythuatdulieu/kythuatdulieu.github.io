@@ -1,5 +1,12 @@
 [
  {
+  "id": "certified-data-analyst-associate",
+  "name": "Data Analyst Associate",
+  "provider": "Databricks",
+  "vi": true,
+  "count": 140
+ },
+ {
   "id": "databricks-de-advanced",
   "name": "Data Engineer Professional",
   "provider": "Databricks",
@@ -12,13 +19,6 @@
   "provider": "Databricks",
   "vi": true,
   "count": 92
- },
- {
-  "id": "certified-data-analyst-associate",
-  "name": "Data Analyst Associate",
-  "provider": "Databricks",
-  "vi": false,
-  "count": 140
  },
  {
   "id": "certified-data-engineer-associate",

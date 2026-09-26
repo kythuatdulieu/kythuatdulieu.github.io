@@ -26,7 +26,7 @@ export const quizMeta = {
   'certified-data-engineer-associate': { name: 'Data Engineer Associate', provider: 'Databricks' },
   'certified-machine-learning-associate': { name: 'Machine Learning Associate', provider: 'Databricks' },
   'certified-machine-learning-professional': { name: 'Machine Learning Professional', provider: 'Databricks' },
-  'certified-data-analyst-associate': { name: 'Data Analyst Associate', provider: 'Databricks' },
+  'certified-data-analyst-associate': { name: 'Data Analyst Associate', provider: 'Databricks', vi: true },
 
   // AWS
   'aws-certified-ai-practitioner-aif-c01': { name: 'AI Practitioner (AIF-C01)', provider: 'AWS' },

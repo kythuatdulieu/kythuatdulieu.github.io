@@ -372,6 +372,11 @@ function parseMarkdown(markdownText) {
           </div>
         ))}
       </div>
+      {question.isMulti && (
+        <button class="multi-submit-btn" id="btnSubmitMulti" type="button" disabled>
+          Xác nhận (0/{question.answer?.includes(',') ? question.answer.split(',').length : question.answer?.length || 1})
+        </button>
+      )}
 
       {Object.keys(question.options).length === 0 && (
         <div class="no-options-container" style="margin-top: 1.5rem; text-align: center;">
@@ -473,7 +478,7 @@ function parseMarkdown(markdownText) {
   </section>
 
   <!-- Interactive JavaScript -->
-  <script is:inline define:vars={{ quizId, questionId, questionIndex, correctAnswer: question.answer }}>
+  <script is:inline define:vars={{ quizId, questionId, questionIndex, correctAnswer: question.answer, isMulti: !!question.isMulti }}>
     (function() {
       'use strict';
 
@@ -492,6 +497,10 @@ function parseMarkdown(markdownText) {
       const optionItems = document.querySelectorAll('.option-item');
       const explanationBox = document.getElementById('explanationBox');
       const btnPdf = document.getElementById('btnPdf');
+      const btnSubmitMulti = document.getElementById('btnSubmitMulti');
+      const correctAnswers = normalizeAnswers(correctAnswer);
+      const requiredAnswers = correctAnswers.length || 1;
+      const selectedAnswers = new Set();
 
       let state = {
         userAnswers: {},
@@ -512,13 +521,32 @@ function parseMarkdown(markdownText) {
       // Apply initial settings
       updateViVisibility(state.showVietnamese);
       
-      const savedAnswer = state.userAnswers[questionId];
+      let savedAnswer = state.userAnswers[questionId];
+      if (isMulti && savedAnswer !== undefined && savedAnswer !== 'VIEWED' &&
+          normalizeAnswers(savedAnswer).length !== requiredAnswers) {
+        // Older direct-question pages saved only the first click for multi-answer questions.
+        delete state.userAnswers[questionId];
+        savedAnswer = undefined;
+        saveState();
+      }
+
       if (savedAnswer !== undefined) {
         showResults(savedAnswer);
       } else {
-        // Add click events to option items
         optionItems.forEach(item => {
           item.addEventListener('click', handleOptionClick);
+        });
+        updateMultiSubmit();
+      }
+
+      if (btnSubmitMulti) {
+        btnSubmitMulti.addEventListener('click', function() {
+          if (!isMulti || selectedAnswers.size !== requiredAnswers) return;
+          const submitted = Array.from(selectedAnswers).sort().join(',');
+          state.userAnswers[questionId] = submitted;
+          state.currentIndex = questionIndex;
+          saveState();
+          showResults(submitted);
         });
       }
 
@@ -529,9 +557,7 @@ function parseMarkdown(markdownText) {
         } else {
           btnShowAnswer.addEventListener('click', function() {
             state.userAnswers[questionId] = 'VIEWED';
-            try {
-              localStorage.setItem(STATE_KEY, JSON.stringify(state));
-            } catch (err) {}
+            saveState();
             showResults('VIEWED');
           });
         }
@@ -551,31 +577,42 @@ function parseMarkdown(markdownText) {
         if (clickedItem.classList.contains('disabled')) return;
         
         const selectedLetter = clickedItem.getAttribute('data-letter');
+
+        if (isMulti) {
+          if (selectedAnswers.has(selectedLetter)) {
+            selectedAnswers.delete(selectedLetter);
+            clickedItem.classList.remove('selected');
+          } else if (selectedAnswers.size < requiredAnswers) {
+            selectedAnswers.add(selectedLetter);
+            clickedItem.classList.add('selected');
+          }
+          updateMultiSubmit();
+          return;
+        }
         
-        // Save to state
         state.userAnswers[questionId] = selectedLetter;
         state.currentIndex = questionIndex; // Sync to load this question index in full mode
-        
-        try {
-          localStorage.setItem(STATE_KEY, JSON.stringify(state));
-        } catch (err) {}
-
+        saveState();
         showResults(selectedLetter);
       }
 
       // Show Correct/Wrong colors and explanation
-      function showResults(selectedLetter) {
+      function showResults(selectedAnswer) {
+        const selected = selectedAnswer === 'VIEWED' ? [] : normalizeAnswers(selectedAnswer);
         optionItems.forEach(item => {
           item.classList.add('disabled');
+          item.classList.remove('selected');
           item.removeEventListener('click', handleOptionClick);
           
           const letter = item.getAttribute('data-letter');
-          if (letter === correctAnswer) {
+          if (correctAnswers.includes(letter)) {
             item.classList.add('correct-answer');
-          } else if (letter === selectedLetter) {
+          } else if (selected.includes(letter)) {
             item.classList.add('wrong-answer');
           }
         });
+        selectedAnswers.clear();
+        if (btnSubmitMulti) btnSubmitMulti.style.display = 'none';
 
         const btnShowAnswer = document.getElementById('btnShowAnswer');
         if (btnShowAnswer) {
@@ -586,6 +623,26 @@ function parseMarkdown(markdownText) {
         if (explanationBox) {
           explanationBox.style.display = 'block';
         }
+      }
+
+      function normalizeAnswers(answer) {
+        if (answer === undefined || answer === null || answer === '' || answer === 'VIEWED') return [];
+        const value = String(answer).replace(/\s/g, '');
+        return (value.includes(',') ? value.split(',') : value.split(''))
+          .filter(Boolean)
+          .sort();
+      }
+
+      function updateMultiSubmit() {
+        if (!btnSubmitMulti || !isMulti) return;
+        btnSubmitMulti.textContent = 'Xác nhận (' + selectedAnswers.size + '/' + requiredAnswers + ')';
+        btnSubmitMulti.disabled = selectedAnswers.size !== requiredAnswers;
+      }
+
+      function saveState() {
+        try {
+          localStorage.setItem(STATE_KEY, JSON.stringify(state));
+        } catch (err) {}
       }
 
       // Toggle VI translation
