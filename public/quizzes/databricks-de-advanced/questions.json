@@ -678,13 +678,13 @@
       "D": "Mô hình hóa dữ liệu streaming như các dòng bản ghi mới append vào bảng vô hạn",
       "E": "Phụ thuộc mạng node phân tán giữ state cache"
     },
-    "explanation_vi": "**Structured Streaming** mô hình hóa luồng dữ liệu đến như một bảng vô hạn (`unbounded table`) được liên tục thêm các dòng mới (append). Đây là mô hình lập trình cốt lõi giúp đồng nhất xử lý batch và streaming trong **Spark SQL**.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** Mô hình lập trình cốt lõi của Structured Streaming xem luồng đầu vào như một bảng không giới hạn: mỗi sự kiện mới tương ứng với một hàng được thêm vào bảng. Bạn viết truy vấn DataFrame/SQL gần giống truy vấn batch; Spark thực thi truy vấn tăng dần khi dữ liệu đến và cập nhật bảng kết quả. Mặc định Spark xử lý theo micro-batch; chế độ continuous là một lựa chọn thực thi khác, không làm thay đổi mô hình lập trình.\n\n**Vì sao các đáp án khác không đúng?** A nói về GPU, nhưng GPU không phải nền tảng định nghĩa Structured Streaming. B nhầm nguồn dữ liệu/message bus như Kafka với engine xử lý; Structured Streaming có thể đọc Kafka nhưng không được xây dựng như một bản sao của Kafka. C gán mô hình này cho phần cứng chuyên dụng, điều không đúng. E nhắc đến state phân tán, có thể xuất hiện trong phép tính stateful, nhưng không mô tả mô hình lập trình tổng quát.\n\n📚 **Tham khảo:** [Structured Streaming Programming Guide — Programming Model](https://spark.apache.org/docs/3.5.6/structured-streaming-programming-guide.html)",
     "page": null,
     "image": "img/q_23.jpg",
     "references": [
       {
-        "title": "Structured Streaming Programming Guide",
-        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html"
+        "title": "Structured Streaming Programming Guide — Programming Model",
+        "url": "https://spark.apache.org/docs/3.5.6/structured-streaming-programming-guide.html"
       }
     ]
   },
@@ -700,7 +700,7 @@
       "E": "`spark.sql.adaptive.advisoryPartitionSizeInBytes`"
     },
     "answer": "A",
-    "question_vi": "Tham số nào ảnh hưởng trực tiếp kích thước `spark-partition` khi ingest dữ liệu?",
+    "question_vi": "Tham số nào đặt giới hạn trực tiếp lên lượng dữ liệu được gom vào mỗi phân vùng đầu vào khi Spark đọc các tệp?",
     "options_vi": {
       "A": "`spark.sql.files.maxPartitionBytes`",
       "B": "`spark.sql.autoBroadcastJoinThreshold`",
@@ -708,13 +708,13 @@
       "D": "`spark.sql.adaptive.coalescePartitions.minPartitionNum`",
       "E": "`spark.sql.adaptive.advisoryPartitionSizeInBytes`"
     },
-    "explanation_vi": "Tham số ``spark.sql.files.maxPartitionBytes`` quy định kích thước phân vùng Spark tối đa khi đọc tệp từ các nguồn dạng tệp (Parquet, JSON, ORC). Mặc định là 128 MB. Việc điều chỉnh tham số này trực tiếp ảnh hưởng đến số lượng phân vùng được tạo ra khi nạp dữ liệu.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A — `spark.sql.files.maxPartitionBytes`.** Với nguồn dạng tệp như Parquet, JSON hoặc ORC, tham số này đặt số byte tối đa Spark cố gắng gom vào một input partition. Trong tài liệu Spark hiện hành, mặc định là 128 MiB. Tăng hoặc giảm giới hạn có thể làm thay đổi số partition tạo ra khi đọc tệp.\n\n**Phân biệt các lựa chọn:** B (`autoBroadcastJoinThreshold`) quyết định kích thước tối đa của bảng để Spark cân nhắc broadcast trong join; nó không chia input file. C (`openCostInBytes`) là ước lượng chi phí mở tệp, giúp Spark gom nhiều tệp nhỏ vào partition; nó ảnh hưởng cách đóng gói nhưng không phải giới hạn byte tối đa được hỏi. D là số partition tối thiểu được gợi ý khi AQE gộp shuffle partitions. E là kích thước mục tiêu cho partition sau shuffle khi AQE coalesce. Hai tham số D/E thuộc giai đoạn tối ưu shuffle, không phải đọc dữ liệu đầu vào.\n\n📚 **Tham khảo:** [Spark SQL Performance Tuning — Tuning Partitions](https://spark.apache.org/docs/latest/sql-performance-tuning.html#tuning-partitions)",
     "page": null,
     "image": "img/q_24.jpg",
     "references": [
       {
-        "title": "Spark SQL Performance Tuning Guide",
-        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html"
+        "title": "Spark SQL Performance Tuning — Tuning Partitions",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html#tuning-partitions"
       }
     ]
   },
@@ -730,7 +730,7 @@
       "E": "Credential validation errors while pulling data from an external system."
     },
     "answer": "D",
-    "question_vi": "**Spark UI** cho thấy thời gian max của một `task` cao gấp ~100 lần min/median trong một stage. Nguyên nhân kéo dài job?",
+    "question_vi": "Một job Spark chạy lâu hơn dự kiến. Trong cùng một stage, thời gian task nhỏ nhất và trung vị gần nhau, nhưng task lâu nhất mất khoảng 100 lần lâu hơn. Tình huống nào có khả năng làm toàn job chậm?",
     "options_vi": {
       "A": "Task queue do `thread pool` sai",
       "B": "Spill vì volume gắn ngoài nhỏ",
@@ -738,13 +738,13 @@
       "D": "Skew vì một số `partition` nhận nhiều dữ liệu hơn",
       "E": "Lỗi credential khi pull dữ liệu ngoài"
     },
-    "explanation_vi": "Hiện tượng chênh lệch thời gian cực lớn giữa thời gian hoàn thành dài nhất (`max duration`) và trung vị (`median duration`) của các `task` trong một `stage` là dấu hiệu điển hình của việc lệch dữ liệu (**Data Skew**). Lúc này, một số phân vùng (`partition`) nhận lượng dữ liệu lớn hơn rất nhiều so với trung bình, khiến `task` xử lý phân vùng đó kéo dài thời gian hoàn thành của cả `stage`.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D — data skew (lệch dữ liệu).** Khi một số Spark partition chứa nhiều bản ghi hoặc dữ liệu nặng hơn hẳn các partition còn lại, task xử lý chúng trở thành *straggler*. Một stage phải chờ các task của stage hoàn thành, nên vài task rất chậm có thể kéo dài toàn job dù phần lớn task đã xong. Tỉ lệ max/min cực lớn trong khi median vẫn bình thường là dấu hiệu phù hợp với kiểu mất cân bằng này.\n\n**Cách xác nhận trên Spark UI:** so sánh `Input`, `Shuffle Read`, số bản ghi và thời gian của từng task. Nếu task chậm đọc lượng dữ liệu lớn bất thường thì giả thuyết skew mạnh hơn. Nếu có `memory/disk spill`, hãy điều tra áp lực bộ nhớ; spill cũng làm task chậm nhưng là dấu hiệu khác, không thể kết luận chỉ từ thời gian. A nói về xếp hàng/thread pool nhưng đề không cung cấp dấu hiệu scheduler; B quy nguyên nhân spill cho dung lượng volume mà chưa có metric spill; C/E là sự cố mạng hoặc credential, không được thể hiện bởi mẫu lệch task này.\n\n📚 **Tham khảo:** [Databricks: Diagnose a long Spark stage — Skew and spill](https://docs.databricks.com/aws/en/optimizations/spark-ui-guide/long-spark-stage-page)",
     "page": null,
     "image": "img/q_25.jpg",
     "references": [
       {
-        "title": "Adaptive query execution - Databricks",
-        "url": "https://docs.databricks.com/en/optimizations/aqe"
+        "title": "Diagnose a long Spark stage — Skew and spill",
+        "url": "https://docs.databricks.com/aws/en/optimizations/spark-ui-guide/long-spark-stage-page"
       }
     ]
   },
@@ -760,7 +760,7 @@
       "E": "• Total VMs:2\n• 200 GB per Executor\n• 80 Cores / Executor"
     },
     "answer": "B",
-    "question_vi": "Cấu hình cluster (400GB RAM, 160 cores, 1 executor/`VM`). Job có wide transformation. Cấu hình nào nhanh nhất?",
+    "question_vi": "Các cấu hình dưới đây đều có tổng cộng 400 GB RAM, 160 core và một executor trên mỗi VM. Bộ đề hỏi cấu hình nào cho hiệu năng cao nhất với job có ít nhất một wide transformation (shuffle).",
     "options_vi": {
       "A": "1 `VM`; 400GB; 160 cores/executor",
       "B": "8 `VM`; 50GB; 20 cores/executor",
@@ -768,20 +768,20 @@
       "D": "4 `VM`; 100GB; 40 cores/executor",
       "E": "2 `VM`; 200GB; 80 cores/executor"
     },
-    "explanation_vi": "Cấu hình 8 `VM`s, 50 GB RAM, 20 Cores mỗi Executor là sự cân bằng tối ưu giữa tính song song và chi phí `overhead` khi `shuffle` (**wide transformation**) cho tổng tài nguyên 400 GB RAM và 160 Cores. Nếu chia quá nhỏ (ví dụ 16 `VM`s), chi phí kết nối mạng và quản lý file `shuffle` sẽ tăng cao. Nếu chia quá to (ví dụ 1-2 `VM`s), **JVM** quá lớn sẽ gây dừng do **Garbage Collection (GC)** lâu và giảm hiệu quả song song.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án theo khóa gợi ý của bộ đề: B** — 8 executor, mỗi executor 50 GB RAM và 20 core. Đây có vẻ là lựa chọn “cân bằng” mà nguồn đề muốn hướng tới, tránh cấu hình cực đoan chỉ có một executor rất lớn (A) hoặc dàn ra nhiều executor nhỏ hơn (C).\n\n**Nhưng cần hiểu giới hạn của câu hỏi:** chỉ từ tổng RAM, tổng core và việc có một wide transformation thì không thể chứng minh B luôn nhanh nhất. Số partition và kích thước shuffle, loại VM, băng thông mạng/đĩa cục bộ, mức song song thực tế và hành vi GC đều ảnh hưởng kết quả. Databricks cũng mô tả sizing là một đánh đổi phụ thuộc workload; hướng dẫn cho complex batch ETL thậm chí khuyên cân nhắc ít worker hơn để giảm dữ liệu shuffle giữa các worker. Vì vậy, B là đáp án bộ đề gợi ý, không phải quy tắc tối ưu chung. Với job thật, cần benchmark các cấu hình trên cùng dữ liệu và theo dõi Spark UI.\n\nA gom toàn bộ tài nguyên vào một executor; C tăng số worker lên 16; D và E là các điểm trung gian khác. Không có dữ kiện về workload/VM để loại trừ chắc chắn từng phương án chỉ dựa trên thời gian chạy. Đây là câu hỏi thiếu điều kiện để có đáp án “maximum performance” duy nhất.\n\n📚 **Tham khảo:** [Databricks: Classic compute configuration best practices — Compute sizing considerations](https://docs.databricks.com/aws/en/compute/cluster-config-best-practices)",
     "page": null,
     "image": "img/q_26.jpg",
     "references": [
       {
-        "title": "Cluster configuration best practices - Databricks",
-        "url": "https://docs.databricks.com/en/compute/cluster-config-best-practices"
+        "title": "Classic compute configuration best practices — Compute sizing considerations",
+        "url": "https://docs.databricks.com/aws/en/compute/cluster-config-best-practices"
       }
     ]
   },
   {
     "id": 27,
     "topic": 1,
-    "question": "A junior data engineer on your team has implemented the following code block. The view `new_events` contains a batch of records with the same schema as the `events` Delta table. The `event_id` field serves as a unique key for this table.\nWhen this query is executed, what will happen with new records that have the same `event_id` as an existing record?",
+    "question": "A junior data engineer on your team implemented this Delta Lake MERGE statement:\n\n```sql\nMERGE INTO events\nUSING new_events\nON events.event_id = new_events.event_id\nWHEN NOT MATCHED THEN INSERT *\n```\n\nThe view `new_events` contains a batch with the same schema as the `events` Delta table. The `event_id` field is used as the match key. When the statement runs, what happens to source rows whose `event_id` matches an existing target row?",
     "options": {
       "A": "They are merged.",
       "B": "They are ignored.",
@@ -790,7 +790,7 @@
       "E": "They are deleted."
     },
     "answer": "B",
-    "question_vi": "`MERGE` với view `new_`events`` (cùng schema `events`, `event_id` là khóa). Khi chạy, bản ghi mới có `event_id` trùng bản hiện có sẽ thế nào?",
+    "question_vi": "Một kỹ sư mới viết câu lệnh Delta Lake `MERGE` dưới đây. View `new_events` có cùng schema với bảng `events`; `event_id` là điều kiện so khớp. Khi chạy, hàng nguồn có `event_id` đã tồn tại trong bảng đích sẽ thế nào?",
     "options_vi": {
       "A": "Được `merge`",
       "B": "Bị bỏ qua",
@@ -798,20 +798,20 @@
       "D": "Được `insert`",
       "E": "Bị `delete`"
     },
-    "explanation_vi": "Vì câu lệnh `MERGE` chỉ định nghĩa nhánh ``WHEN NOT MATCHED THEN INSERT *`` và thiếu nhánh ``WHEN MATCHED``, nên đối với các bản ghi mới có ``event_id`` trùng khớp với bản ghi hiện có trong bảng đích, chúng sẽ bị bỏ qua (ignored) và không có bất kỳ hành động cập nhật hay chèn trùng nào xảy ra.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B — bị bỏ qua, không thay đổi bảng đích.** Điều kiện `ON` xác định hàng nguồn có khớp hàng đích hay không. Ở đây chỉ có nhánh `WHEN NOT MATCHED THEN INSERT *`, nên nhánh đó chỉ chạy khi không tìm được hàng đích tương ứng. Câu lệnh không có `WHEN MATCHED THEN UPDATE` hay `DELETE`; do đó với một hàng đã khớp, không có hành động nào được khai báo và hàng đích giữ nguyên.\n\n**Vì sao các lựa chọn khác sai?** A “merge” không phải một hành động riêng cho hàng đã khớp. C cần nhánh `WHEN MATCHED THEN UPDATE`. D là hành động của nhánh `WHEN NOT MATCHED`, không áp dụng cho hàng đã tồn tại. E cần nhánh `WHEN MATCHED THEN DELETE` hoặc `WHEN NOT MATCHED BY SOURCE THEN DELETE`.\n\nLưu ý: câu trả lời chỉ nói về hàng nguồn khớp một hàng đích theo điều kiện `ON`; `MERGE` không tự bảo đảm cột `event_id` là duy nhất nếu dữ liệu nguồn/đích có bản ghi trùng.\n\n📚 **Tham khảo:** [Databricks SQL: MERGE INTO](https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into)",
     "page": null,
     "image": "img/q_27.jpg",
     "references": [
       {
-        "title": "Delta Lake Merge Into - Databricks",
-        "url": "https://docs.databricks.com/en/sql/language-manual/delta-merge-into"
+        "title": "Databricks SQL: MERGE INTO",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into"
       }
     ]
   },
   {
     "id": 28,
     "topic": 1,
-    "question": "A junior data engineer seeks to leverage Delta Lake's Change Data Feed functionality to create a Type 1 table representing all of the values that have ever been valid for all rows in a bronze table created with the property `delta.enableChangeDataFeed = true`. They plan to execute the following code as a daily job:\nWhich statement describes the execution and results of running the above query multiple times?",
+    "question": "A junior data engineer wants to build an append-only audit table containing inserted rows and post-update row images from a Bronze table with Change Data Feed enabled. They schedule this batch code to run daily:\n\n```python\nfrom pyspark.sql.functions import col\n\n(spark.read.format(\"delta\")\n    .option(\"readChangeFeed\", \"true\")\n    .option(\"startingVersion\", 0)\n    .table(\"bronze\")\n    .filter(col(\"_change_type\").isin([\"update_postimage\", \"insert\"]))\n    .write\n    .mode(\"append\")\n    .table(\"bronze_history\")\n)\n```\n\nWhich statement describes the result when this job is run multiple times?",
     "options": {
       "A": "Each time the job is executed, newly updated records will be merged into the target table, overwriting previous values with the same\nprimary keys.",
       "B": "Each time the job is executed, the entire available history of inserted or updated records will be appended to the target table, resulting in\nmany duplicate entries.",
@@ -820,7 +820,7 @@
       "E": "Each time the job is executed, only those records that have been inserted or updated since the last execution will be appended to the target\ntable, giving the desired result."
     },
     "answer": "B",
-    "question_vi": "Muốn dùng **Change Data Feed** để tạo bảng **SCD Type 1** chứa mọi giá trị từng tồn tại từ bảng bronze (**CDF** bật). Job hàng ngày chạy câu lệnh append toàn bộ **CDF**. Hệ quả khi chạy nhiều lần?",
+    "question_vi": "Một kỹ sư muốn tạo bảng audit chỉ append, lưu các hàng được insert và ảnh sau cập nhật (`update_postimage`) từ bảng Bronze đã bật Change Data Feed. Họ lên lịch chạy đoạn batch code sau mỗi ngày:\n\n```python\nfrom pyspark.sql.functions import col\n\n(spark.read.format(\"delta\")\n    .option(\"readChangeFeed\", \"true\")\n    .option(\"startingVersion\", 0)\n    .table(\"bronze\")\n    .filter(col(\"_change_type\").isin([\"update_postimage\", \"insert\"]))\n    .write\n    .mode(\"append\")\n    .table(\"bronze_history\")\n)\n```\n\nĐiều gì xảy ra khi job này chạy nhiều lần?",
     "options_vi": {
       "A": "Mỗi lần chạy, bản cập nhật mới merge vào bảng đích, ghi đè giá trị trùng khóa",
       "B": "Mỗi lần chạy, toàn bộ lịch sử insert/update sẽ append, tạo rất nhiều bản trùng",
@@ -828,13 +828,13 @@
       "D": "Mỗi lần chạy tính chênh lệch giữa bản gốc và hiện tại, có thể trùng",
       "E": "Mỗi lần chạy chỉ append bản ghi thay đổi kể từ lần trước, cho kết quả đúng"
     },
-    "explanation_vi": "Bởi vì đoạn mã sử dụng chế độ đọc batch tĩnh từ **Change Data Feed** (``spark.read`` với tùy chọn ``startingVersion``) và ghi ở chế độ ``.mode(\"append\")``, nên mỗi lần chạy job, toàn bộ lịch sử thay đổi từ phiên bản bắt đầu sẽ được đọc lại và ghi chèn (append) vào bảng đích, tạo ra rất nhiều bản ghi trùng lặp.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B — các lần chạy sau sẽ append lại những thay đổi cũ và tạo bản ghi trùng.** Đây là batch read (`spark.read`), và `startingVersion = 0` luôn yêu cầu đọc lại CDF từ version 0 đến version mới nhất hiện có mỗi lần chạy. `mode(\"append\")` nối toàn bộ kết quả vừa đọc vào `bronze_history`; batch read không tự nhớ lần chạy trước hay tự cập nhật version đã xử lý.\n\nA sai vì code không dùng `MERGE` theo khóa để ghi đè giá trị cũ. C sai vì mode là `append`, không phải `overwrite`. D sai vì code không tự so sánh snapshot đầu với snapshot hiện tại; nó đọc các change record CDF. E chỉ đúng nếu pipeline theo dõi và tiến version đã xử lý (hoặc dùng Structured Streaming với checkpoint), điều code hiện tại không làm.\n\n**Lưu ý về retention:** CDF không phải kho lưu trữ vĩnh viễn; chỉ đọc được các version còn trong cửa sổ lưu giữ. Nếu mục tiêu là lưu lịch sử lâu dài, hãy xử lý tăng dần, lưu checkpoint/version tiến độ và ghi vào bảng archive bền vững.\n\n📚 **Tham khảo:** [Databricks: Use change data feed](https://docs.databricks.com/aws/en/tables/features/change-data-feed)",
     "page": null,
     "image": "img/q_28.jpg",
     "references": [
       {
-        "title": "Use Delta Lake change data feed on Databricks",
-        "url": "https://docs.databricks.com/en/tables/features/change-data-feed"
+        "title": "Databricks: Use change data feed",
+        "url": "https://docs.databricks.com/aws/en/tables/features/change-data-feed"
       }
     ]
   },
@@ -844,34 +844,34 @@
     "question": "A new data engineer notices that a critical field was omitted from an application that writes its Kafka source to **Delta Lake**. This happened even though the critical field was in the Kafka source. That field was further missing from data written to dependent, long-term storage. The retention threshold on the Kafka service is seven days. The pipeline has been in production for three months.\nWhich describes how **Delta Lake** can help to avoid data loss of this nature in the future?",
     "options": {
       "A": "The Delta log and Structured Streaming checkpoints record the full history of the Kafka producer.",
-      "B": "Delta Lake schema evolution can retroactively calculate the correct value for newly added fields, as long as the data was in the original\nsource.",
+      "B": "Delta Lake schema evolution can retroactively calculate the correct value for newly added fields, as long as the data was in the original source.",
       "C": "Delta Lake automatically checks that all fields present in the source data are included in the ingestion layer.",
       "D": "Data can never be permanently dropped or deleted from Delta Lake, so data loss is not possible under any circumstance.",
-      "E": "Ingesting all raw data and metadata from Kafka to a bronze Delta table creates a permanent, replayable history of the data state."
+      "E": "Ingesting all raw data and source metadata from Kafka into a retained Bronze Delta table creates durable, replayable input for rebuilding downstream tables."
     },
     "answer": "E",
     "question_vi": "Một kỹ sư dữ liệu mới phát hiện một trường quan trọng bị bỏ sót khi ghi dữ liệu **Kafka** vào **Delta Lake**, dù trường này có trong nguồn **Kafka** và các bảng phụ thuộc cũng thiếu. **Kafka** chỉ giữ dữ liệu 7 ngày, pipeline chạy 3 tháng. **Delta Lake** giúp tránh mất dữ liệu này thế nào trong tương lai?",
     "options_vi": {
-      "A": "Delta log và checkpoint của Structured Streaming ghi lại toàn bộ lịch sử của Kafka producer.",
-      "B": "Schema evolution của Delta Lake có thể tính lại giá trị cho trường mới nếu dữ liệu đã có trong nguồn.",
-      "C": "Delta Lake tự động kiểm tra mọi trường nguồn đều được nạp vào lớp ingestion.",
-      "D": "Dữ liệu không bao giờ bị xóa vĩnh viễn khỏi Delta Lake nên không thể mất dữ liệu.",
-      "E": "Ghi toàn bộ dữ liệu và metadata thô từ Kafka vào bảng bronze Delta tạo lịch sử có thể phát lại vĩnh viễn."
+      "A": "Delta log và checkpoint của Structured Streaming ghi lại toàn bộ lịch sử do Kafka producer phát ra.",
+      "B": "Schema evolution của Delta Lake có thể tính ngược giá trị cho trường mới nếu dữ liệu từng có trong nguồn.",
+      "C": "Delta Lake tự kiểm tra để bảo đảm mọi trường nguồn đều được nạp vào lớp ingestion.",
+      "D": "Dữ liệu không bao giờ bị xóa vĩnh viễn khỏi Delta Lake nên không thể mất dữ liệu trong bất kỳ trường hợp nào.",
+      "E": "Nạp toàn bộ dữ liệu thô và metadata nguồn từ Kafka vào bảng Delta Bronze có chính sách lưu giữ phù hợp tạo đầu vào bền vững để phát lại và dựng lại các bảng downstream."
     },
-    "explanation_vi": "Việc nạp toàn bộ dữ liệu thô và siêu dữ liệu (raw data & metadata) từ **Kafka** vào một bảng Delta lớp **Bronze** tạo ra một lịch sử lưu trữ vĩnh viễn và có thể phát lại (replayable history). Khi xảy ra lỗi logic (như bỏ sót trường), ta có thể dễ dàng chạy lại (replay/backfill) dữ liệu từ bảng **Bronze** này mà không bị giới hạn bởi thời gian lưu trữ ngắn (retention threshold) của **Kafka**.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án E.** Nếu pipeline đưa payload thô cùng metadata nguồn (chẳng hạn topic/partition/offset hoặc thời điểm ingest) vào Bronze và giữ chúng đủ lâu, nhóm có thể sửa logic rồi dựng lại Silver/Gold từ bản ghi gốc. Điều này giải quyết trường hợp Kafka đã xóa message sau 7 ngày nhưng lỗi chỉ được phát hiện vài tháng sau.\n\n**Các lựa chọn khác:** A sai vì Delta transaction log ghi nhận thay đổi của bảng Delta, không lưu toàn bộ lịch sử message từ Kafka; checkpoint lưu tiến độ xử lý của query, không phải bản sao dữ liệu nguồn. B sai vì schema evolution thay đổi cấu trúc/schema, không khôi phục giá trị đã không được ingest. C sai vì Delta không tự biết một trường nghiệp vụ nào đó đã bị bỏ khỏi phép ánh xạ. D sai vì file và version vẫn có thể bị xóa theo retention/VACUUM hoặc chính sách quản trị.\n\n“Có thể phát lại” chỉ đúng nếu Bronze thực sự nhận đủ dữ liệu và chính sách retention không xóa nó trước khi cần backfill; Delta không tự giữ dữ liệu vĩnh viễn.\n\n📚 **Tham khảo:** [Databricks: Best practices for reliability — raw/Bronze layer](https://docs.databricks.com/aws/en/lakehouse-architecture/reliability/best-practices)",
     "page": null,
     "image": "img/q_29.jpg",
     "references": [
       {
-        "title": "What is the medallion lakehouse architecture? - Databricks",
-        "url": "https://docs.databricks.com/en/lakehouse/medallion"
+        "title": "Databricks: Best practices for reliability — raw/Bronze layer",
+        "url": "https://docs.databricks.com/aws/en/lakehouse-architecture/reliability/best-practices"
       }
     ]
   },
   {
     "id": 30,
     "topic": 1,
-    "question": "A nightly job ingests data into a Delta Lake table using the following code: The next step in the pipeline requires a function that returns an object that can be used to manipulate new records that have not yet been processed to the next table in the pipeline.\nWhich code snippet completes this function definition? `def new_records():`",
+    "question": "A nightly job ingests data into a Delta table using this code:\n\n```python\nfrom pyspark.sql.functions import current_timestamp, input_file_name\nfrom pyspark.sql.column import Column\n\ndef ingest_daily_batch(time_col: Column, year: int, month: int, day: int):\n    (spark.read\n        .format(\"parquet\")\n        .load(f\"/mnt/daily_batch/{year}/{month}/{day}\")\n        .select(\n            \"*\",\n            time_col.alias(\"ingest_time\"),\n            input_file_name().alias(\"source_file\")\n        )\n        .write\n        .mode(\"append\")\n        .saveAsTable(\"bronze\")\n    )\n```\n\nThe downstream step should process the initial table snapshot and then pick up only newly appended records across scheduled runs; assume its streaming query uses a persistent checkpoint. Which function returns the appropriate source DataFrame?",
     "options": {
       "A": "`return spark.readStream.table(\"bronze\")`",
       "B": "`return spark.readStream.load(\"bronze\")`",
@@ -879,8 +879,8 @@
       "D": "`return spark.read.option(\"readChangeFeed\", \"true\").table(\"bronze\")`",
       "E": "`return spark.read.table(\"bronze\").filter(col(\"source_file\") != f\"/mnt/daily_batch/{year}/{month}/{day}\")`"
     },
-    "answer": "D",
-    "question_vi": "Job nightly nạp dữ liệu vào bảng **Delta** bronze. Bước kế tiếp cần hàm trả về đối tượng để xử lý các bản ghi mới chưa đẩy sang bảng tiếp theo. Đoạn code nào hoàn thiện hàm `new_records()`?",
+    "answer": "A",
+    "question_vi": "Job chạy mỗi tối ingest dữ liệu vào bảng Delta theo đoạn code sau:\n\n```python\nfrom pyspark.sql.functions import current_timestamp, input_file_name\nfrom pyspark.sql.column import Column\n\ndef ingest_daily_batch(time_col: Column, year: int, month: int, day: int):\n    (spark.read\n        .format(\"parquet\")\n        .load(f\"/mnt/daily_batch/{year}/{month}/{day}\")\n        .select(\n            \"*\",\n            time_col.alias(\"ingest_time\"),\n            input_file_name().alias(\"source_file\")\n        )\n        .write\n        .mode(\"append\")\n        .saveAsTable(\"bronze\")\n    )\n```\n\nBước downstream cần xử lý snapshot ban đầu, rồi nhận các bản ghi append mới ở những lần chạy tiếp theo; giả sử streaming query downstream dùng checkpoint bền vững. Hàm nào trả về DataFrame nguồn phù hợp?",
     "options_vi": {
       "A": "`return spark.readStream.table(\"bronze\")`",
       "B": "`return spark.readStream.load(\"bronze\")`",
@@ -888,13 +888,17 @@
       "D": "`return spark.read.option(\"readChangeFeed\", \"true\").table(\"bronze\")`",
       "E": "`return spark.read.table(\"bronze\").filter(col(\"source_file\") != f\"/mnt/daily_batch/{year}/{month}/{day}\")`"
     },
-    "explanation_vi": "Để lấy các bản ghi mới hoặc thay đổi từ bảng **Delta** bronze làm đầu vào cho bước tiếp theo trong pipeline batch, sử dụng tùy chọn ``readChangeFeed = true`` khi đọc bảng sẽ trả về DataFrame chứa các thay đổi (inserts, updates, deletes) kể từ phiên bản trước đó.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A — `spark.readStream.table(\"bronze\")`.** Đây là streaming read từ bảng Delta. Lần đầu, query có thể xử lý snapshot hiện có; checkpoint lưu tiến độ đã xử lý để các lần chạy sau tiếp tục từ dữ liệu mới. Vì đề cho biết nguồn chỉ append và query có checkpoint bền vững, cách đọc này khớp yêu cầu.\n\n**Vì sao các lựa chọn khác sai?** B gọi `readStream.load(\"bronze\")`, tức đọc một đường dẫn bằng data source mặc định, không nêu đây là catalog table Delta. C là batch read có điều kiện `ingest_time == current_timestamp()`; thời điểm hiện tại không phải mốc tiến độ và gần như không khớp chính xác giá trị timestamp đã ghi. D bật batch Change Data Feed nhưng không chỉ định `startingVersion` hoặc `startingTimestamp`; batch CDF cần một điểm bắt đầu, và cách này cũng không tự ghi nhớ tiến độ giữa các lần chạy. E dùng `!=` với đường dẫn của batch hiện tại nên lọc ra các file khác ngày, tức có thể chọn cả dữ liệu cũ.\n\nNếu bảng có `UPDATE`/`DELETE`, không nên coi Delta append stream là CDC tổng quát; khi đó cần CDF hoặc cơ chế CDC phù hợp. Checkpoint và retention nguồn cũng phải được quản lý để không mất tiến độ/dữ liệu.\n\n📚 **Tham khảo:** [Delta Lake streaming reads and writes](https://docs.databricks.com/aws/en/structured-streaming/delta-lake), [Change Data Feed batch reads](https://docs.databricks.com/aws/en/tables/features/change-data-feed)",
     "page": null,
     "image": "img/q_30.jpg",
     "references": [
       {
-        "title": "Use Delta Lake change data feed on Databricks",
-        "url": "https://docs.databricks.com/en/tables/features/change-data-feed"
+        "title": "Delta Lake table streaming reads and writes",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/delta-lake"
+      },
+      {
+        "title": "Use change data feed on Databricks",
+        "url": "https://docs.databricks.com/aws/en/tables/features/change-data-feed"
       }
     ]
   },
@@ -903,35 +907,35 @@
     "topic": 1,
     "question": "A junior data engineer is working to implement logic for a Lakehouse table named `silver_device_recordings`. The source data contains 100 unique fields in a highly nested JSON structure.\nThe `silver_device_recordings` table will be used downstream to power several production monitoring dashboards and a production model. At present, 45 of the 100 fields are being used in at least one of these applications.\nThe data engineer is trying to determine the best approach for dealing with schema declaration given the highly-nested structure of the data and the numerous fields.\nWhich of the following accurately presents information about Delta Lake and Databricks that may impact their decision-making process?",
     "options": {
-      "A": "The Tungsten encoding used by Databricks is optimized for storing string data; newly-added native support for querying JSON strings\nmeans that string types are always most efficient.",
+      "A": "The Tungsten encoding used by Databricks is optimized for storing string data; newly-added native support for querying JSON strings means that string types are always most efficient.",
       "B": "Because Delta Lake uses Parquet for data storage, data types can be easily evolved by just modifying file footer information in place.",
-      "C": "Human labor in writing code is the largest cost associated with data engineering workloads; as such, automating table declaration logic\nshould be a priority in all migration workloads.",
-      "D": "Because Databricks will infer schema using types that allow all observed data to be processed, setting types manually provides greater\nassurance of data quality enforcement.",
-      "E": "Schema inference and evolution on Databricks ensure that inferred types will always accurately match the data types used by downstream\nsystems."
+      "C": "Human labor in writing code is the largest cost associated with data engineering workloads; as such, automating table declaration logic should be a priority in all migration workloads.",
+      "D": "Schema inference may not enforce the business types expected by downstream systems. Explicitly declaring the schema for a curated Delta table gives the engineer control over column types, and Delta schema enforcement can reject incompatible writes.",
+      "E": "Schema inference and evolution on Databricks ensure that inferred types will always accurately match the data types used by downstream systems."
     },
     "answer": "D",
     "question_vi": "Bảng `silver_device_recordings` có 100 trường JSON lồng nhau, 45 trường được dùng downstream. Cần chọn cách khai báo schema phù hợp. Thông tin nào về **Delta**/**Databricks** giúp quyết định?",
     "options_vi": {
-      "A": "Mã hóa Tungsten tối ưu cho chuỗi; hỗ trợ truy vấn JSON string mới nên luôn nên dùng kiểu string.",
-      "B": "Delta dùng Parquet nên chỉ cần chỉnh footer file là tiến hoá kiểu dữ liệu dễ dàng.",
-      "C": "Chi phí lớn nhất là viết code nên tự động hoá khai báo luôn ưu tiên.",
-      "D": "Databricks suy luận schema để chứa mọi dữ liệu quan sát được; đặt kiểu thủ công giúp kiểm soát chất lượng tốt hơn.",
-      "E": "Suy luận và tiến hoá schema luôn khớp chính xác với kiểu mà hệ downstream dùng."
+      "A": "Mã hóa Tungsten tối ưu cho lưu chuỗi; vì Databricks hỗ trợ truy vấn JSON string nên kiểu string luôn hiệu quả nhất.",
+      "B": "Delta Lake lưu bằng Parquet nên có thể tiến hoá kiểu dữ liệu dễ dàng chỉ bằng cách sửa footer của file tại chỗ.",
+      "C": "Viết code là chi phí lớn nhất của mọi workload dữ liệu nên mọi dự án migration đều phải ưu tiên tự động khai báo bảng.",
+      "D": "Suy luận schema có thể không áp đặt được kiểu nghiệp vụ mà hệ downstream kỳ vọng. Khai báo rõ schema cho bảng Delta đã curate giúp chủ động kiểu cột; schema enforcement của Delta có thể từ chối dữ liệu ghi không tương thích.",
+      "E": "Suy luận và tiến hoá schema trên Databricks luôn bảo đảm kiểu dữ liệu suy ra khớp chính xác với hệ downstream."
     },
-    "explanation_vi": "Vì cơ chế suy luận schema (**schema inference**) tự động của Databricks sẽ cố gắng sử dụng các kiểu dữ liệu rộng nhất để đảm bảo tất cả dữ liệu quan sát được đều nạp thành công (điều này có thể làm giảm chất lượng dữ liệu), việc khai báo schema thủ công (**manual schema definition**) cung cấp cơ chế đảm bảo thực thi chất lượng dữ liệu nghiêm ngặt và độ tin cậy cao hơn cho các ứng dụng downstream.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** Khi bảng Silver được dùng cho dashboard và model production, schema nên thể hiện hợp đồng dữ liệu mà các consumer mong đợi: tên cột, kiểu dữ liệu và cấu trúc lồng nhau. Khai báo schema giúp lỗi lệch kiểu xuất hiện sớm ở ranh giới ingest/ghi bảng, thay vì âm thầm đưa dữ liệu có kiểu không phù hợp xuống downstream. Delta schema enforcement kiểm tra cột và kiểu dữ liệu khi ghi (một số phép cast an toàn vẫn được phép), nên đây là một lớp bảo vệ chất lượng hữu ích.\n\n**Các phương án khác:** A khẳng định string luôn hiệu quả nhất — không đúng; lưu mọi thứ thành string làm mất ngữ nghĩa kiểu và có thể phát sinh parse ở mỗi lần dùng. B sai vì Parquet/Delta không tiến hoá schema bằng cách sửa footer file tại chỗ; thay đổi phải qua metadata/DDL hoặc schema evolution được hỗ trợ. C là nhận định chi phí chủ quan, không phải đặc tính kỹ thuật của Delta. E sai vì inference/evolution không thể bảo đảm tự động khớp mọi hợp đồng dữ liệu downstream.\n\nVới dữ liệu JSON lồng sâu, có thể giữ payload thô ở Bronze để tránh làm rơi trường lạ, rồi khai báo/kiểm tra schema rõ ràng ở Silver. Schema enforcement áp dụng khi ghi bảng Delta; nó không tự phát hiện trường nguồn bị bỏ khỏi logic ánh xạ.\n\n📚 **Tham khảo:** [Databricks: Schema enforcement](https://docs.databricks.com/aws/en/tables/schema-enforcement)",
     "page": null,
     "image": "img/q_31.jpg",
     "references": [
       {
-        "title": "Schema enforcement on Databricks",
-        "url": "https://docs.databricks.com/en/stateful-applications/schema-evolution"
+        "title": "Databricks: Schema enforcement",
+        "url": "https://docs.databricks.com/aws/en/tables/schema-enforcement"
       }
     ]
   },
   {
     "id": 32,
     "topic": 1,
-    "question": "The data engineering team maintains the following code: Assuming that this code produces logically correct results and the data in the source tables has been de-duplicated and validated, which statement describes what will occur when this code is executed?",
+    "question": "The data engineering team maintains the following code:\n\n```python\naccountDF = spark.table(\"accounts\")\norderDF = spark.table(\"orders\")\nitemDF = spark.table(\"items\")\n\norderWithItemDF = (orderDF.join(\n    itemDF,\n    orderDF.itemID == itemDF.itemID\n).select(\n    orderDF.accountID,\n    orderDF.itemID,\n    itemDF.itemName\n))\n\nfinalDF = (accountDF.join(\n    orderWithItemDF,\n    accountDF.accountID == orderWithItemDF.accountID\n).select(\n    orderWithItemDF[\"*\"],\n    accountDF.city\n))\n\n(finalDF.write\n    .mode(\"overwrite\")\n    .table(\"enriched_itemized_orders_by_account\")\n)\n```\n\nAssuming the joins produce logically correct results and the source tables have been de-duplicated and validated, what will happen when this code runs?",
     "options": {
       "A": "A batch job will update the `enriched_itemized_orders_by_account` table, replacing only those rows that have different values than the current version of the table, using `accountID` as the primary key.",
       "B": "The `enriched_itemized_orders_by_account` table will be overwritten using the current valid version of data in each of the three tables referenced in the join logic.",
@@ -940,7 +944,7 @@
       "E": "No computation will occur until `enriched_itemized_orders_by_account` is queried; upon query materialization, results will be calculated using the current valid version of data in each of the three tables referenced in the join logic."
     },
     "answer": "B",
-    "question_vi": "Đoạn code join ba bảng vào enriched_itemized_orders_by_account (logic đúng, nguồn đã dedup). Điều gì xảy ra khi chạy?",
+    "question_vi": "Nhóm kỹ thuật dữ liệu duy trì đoạn PySpark sau. Giả sử các phép join cho kết quả logic đúng, dữ liệu nguồn đã loại trùng và được kiểm tra. Điều gì xảy ra khi chạy code này?\n\n```python\naccountDF = spark.table(\"accounts\")\norderDF = spark.table(\"orders\")\nitemDF = spark.table(\"items\")\n\norderWithItemDF = (orderDF.join(\n    itemDF,\n    orderDF.itemID == itemDF.itemID\n).select(\n    orderDF.accountID,\n    orderDF.itemID,\n    itemDF.itemName\n))\n\nfinalDF = (accountDF.join(\n    orderWithItemDF,\n    accountDF.accountID == orderWithItemDF.accountID\n).select(\n    orderWithItemDF[\"*\"],\n    accountDF.city\n))\n\n(finalDF.write\n    .mode(\"overwrite\")\n    .table(\"enriched_itemized_orders_by_account\")\n)\n```",
     "options_vi": {
       "A": "Job batch cập nhật bảng, chỉ thay những hàng khác biệt, khoá chính `accountID`.",
       "B": "Bảng được `overwrite` bằng phiên bản hiện tại của ba bảng nguồn trong join.",
@@ -948,13 +952,13 @@
       "D": "Job incremental phát hiện có hàng mới ở nguồn, tính lại toàn bộ và `overwrite` bảng đích.",
       "E": "Không tính toán tới khi bảng được truy vấn; khi truy vấn sẽ tính từ dữ liệu hiện tại của nguồn."
     },
-    "explanation_vi": "Bởi vì câu lệnh sử dụng chế độ ghi đè ``mode(\"overwrite\")`` khi ghi dữ liệu kết quả join từ ba bảng nguồn vào bảng đích ``enriched_itemized_orders_by_account``, toàn bộ dữ liệu hiện tại trong bảng đích sẽ bị thay thế hoàn toàn bằng phiên bản hợp lệ hiện tại của dữ liệu nguồn.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** `spark.table(...)` đọc snapshot hiện tại của ba bảng nguồn; các phép `join` và `select` tạo một DataFrame batch. DataFrame Spark được tính lazy, và lệnh ghi ở cuối sẽ kích hoạt phép tính. `mode(\"overwrite\")` yêu cầu thay dữ liệu hiện có của bảng đích bằng toàn bộ kết quả `finalDF` vừa tạo, chứ không chỉ thay những hàng khác biệt.\n\nA sai vì code không có `MERGE`, khóa chính hay logic so sánh từng hàng để cập nhật chọn lọc. C sai vì không có streaming query hoặc state store. D sai vì không phát hiện riêng hàng mới rồi chạy tăng dần; toàn bộ join batch được thực hiện theo dữ liệu hiện có mỗi lần lệnh chạy. E sai vì bảng không phải view lazy chờ consumer truy vấn — thao tác `write` là action và thực thi việc ghi ngay.\n\nĐây là overwrite toàn bảng theo ngữ nghĩa batch. Câu hỏi không nêu cấu hình selective/partition overwrite, nên không có căn cứ hiểu là chỉ ghi đè một phần.\n\n📚 **Tham khảo:** [PySpark DataFrameWriter.mode](https://spark.apache.org/docs/3.5.9/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameWriter.mode.html)",
     "page": null,
     "image": "img/q_32.jpg",
     "references": [
       {
-        "title": "Overwrite Delta tables - Databricks",
-        "url": "https://docs.databricks.com/en/delta/selective-overwrite"
+        "title": "PySpark DataFrameWriter.mode",
+        "url": "https://spark.apache.org/docs/3.5.9/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameWriter.mode.html"
       }
     ]
   },

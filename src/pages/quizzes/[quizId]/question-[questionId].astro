@@ -315,7 +315,7 @@ function parseMarkdown(markdownText) {
         {questionSegments.length > 0 ? (
           questionSegments.map((segment, idx) => (
             <>
-              <span style="white-space: pre-wrap;">{segment}</span>
+              <div class="question-markdown" set:html={parseMarkdown(segment)} />
               {idx < questionSegments.length - 1 && questionImages[idx] && (
                 <div class="question-image" style="text-align: center; margin: 1rem 0;">
                   <img src={`/quizzes/${quizId}/${questionImages[idx]}`} alt="Hình ảnh câu hỏi" style="max-width: 100%; border-radius: 8px; border: 1px solid var(--border);" />
@@ -333,7 +333,7 @@ function parseMarkdown(markdownText) {
           {questionSegmentsVi.length > 0 ? (
             questionSegmentsVi.map((segment, idx) => (
               <>
-                <span style="white-space: pre-wrap;">{segment}</span>
+                <div class="question-markdown" set:html={parseMarkdown(segment)} />
                 {idx < questionSegmentsVi.length - 1 && questionImages[idx] && (
                   <div class="question-image" style="text-align: center; margin: 1rem 0;">
                     <img src={`/quizzes/${quizId}/${questionImages[idx]}`} alt="Hình ảnh câu hỏi" style="max-width: 100%; border-radius: 8px; border: 1px solid var(--border);" />
