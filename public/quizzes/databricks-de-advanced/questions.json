@@ -1654,13 +1654,17 @@
       "D": "Wheels",
       "E": "jars"
     },
-    "explanation_vi": "Đáp án đúng: D. **Databricks** hỗ trợ cài đặt các gói thư viện **Python** tùy chỉnh dưới dạng phân phối chuẩn **Python Wheels** (tệp tin `.whl`). Bạn có thể tải các tệp tin `.whl` lên workspace, **Unity Catalog** volumes, hoặc cấu hình cài đặt từ kho chứa ngoài thông qua các công cụ quản lý thư viện của cụm tính toán.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D — Wheels.** Python wheel (đuôi .whl) là định dạng gói phân phối Python mà pip/Databricks có thể cài để đưa mã thư viện vào môi trường chạy. Tùy cách quản lý môi trường, wheel có thể được cài từ workspace files, Unity Catalog volumes, cloud storage hoặc khai báo làm dependency của job.\n\n**Loại trừ từng đáp án:**\n- **A — sbt sai:** công cụ build trong hệ sinh thái Scala/JVM, không phải định dạng package Python.\n- **B — CRAN sai:** kho package của R. Databricks hỗ trợ cài thư viện R từ CRAN, nhưng câu hỏi giới hạn vào mã Python.\n- **C — npm sai:** trình quản lý package của JavaScript/Node.js.\n- **D đúng:** wheel là gói Python đã build, dùng để phân phối và cài thư viện Python tùy chỉnh.\n- **E — JARs sai trong ngữ cảnh này:** JAR dành cho thư viện Java/Scala. Databricks có hỗ trợ JAR nói chung, nhưng JAR không phải gói Python.\n\n**Mẹo nhớ:** Python → wheel/PyPI; Java/Scala → JAR/Maven; R → CRAN. Chọn theo ngôn ngữ được nêu, không chỉ theo định dạng mà nền tảng có hỗ trợ.",
     "page": null,
-    "image": "img/q_53.jpg",
+    "image": null,
     "references": [
       {
-        "title": "Libraries - Databricks",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "Install libraries on Databricks",
+        "url": "https://docs.databricks.com/aws/en/libraries"
+      },
+      {
+        "title": "Install libraries from workspace files",
+        "url": "https://docs.databricks.com/aws/en/libraries/workspace-files-libraries"
       }
     ]
   },
@@ -1676,7 +1680,7 @@
       "E": "`pylib.source`"
     },
     "answer": "B",
-    "question_vi": "Biến **Python** nào chứa danh sách thư mục tìm module?",
+    "question_vi": "Khi Python thực hiện lệnh import, biến nào chứa danh sách thư mục mà trình thông dịch lần lượt tìm module?",
     "options_vi": {
       "A": "`importlib.resource_path`",
       "B": "`sys.path`",
@@ -1684,13 +1688,17 @@
       "D": "`pypi.path`",
       "E": "`pylib.source`"
     },
-    "explanation_vi": "Đáp án đúng: B. Biến `sys.path` trong mô-đun `sys` của **Python** là một danh sách các chuỗi ký tự chỉ định các đường dẫn thư mục mà trình thông dịch sẽ tìm kiếm khi thực hiện lệnh `import`. Bạn có thể thay đổi danh sách này trong thời gian chạy (chẳng hạn như dùng `sys.path.append()`) để khai báo các thư mục chứa mã nguồn tùy chỉnh khác.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B — sys.path.** Khi chạy import my_package, Python tìm module theo các đường dẫn trong sys.path. Đây là danh sách chuỗi được khởi tạo từ cấu hình môi trường (chẳng hạn PYTHONPATH) và các vị trí mặc định. Chương trình có thể sửa danh sách khi chạy, nhưng trong dự án nên cài dependency theo cách tái lập thay vì tùy tiện chỉnh đường dẫn.\n\n**Loại trừ:**\n- **A — importlib.resource_path sai:** không phải biến chuẩn chứa các thư mục tra cứu module. importlib.resources làm việc với tài nguyên đi kèm package.\n- **B đúng:** sys.path thuộc module chuẩn sys và là danh sách đường dẫn dùng trong cơ chế import.\n- **C — os.path sai:** cung cấp hàm xử lý đường dẫn tệp như join/exists/dirname; không lưu module search path.\n- **D — pypi.path sai:** PyPI là kho package trực tuyến, không có biến chuẩn pypi.path trong Python.\n- **E — pylib.source sai:** không phải biến chuẩn điều khiển import.\n\n**Ví dụ:** nếu /opt/app/lib nằm trong sys.path thì Python có thể tìm package ở đó. sys.path.append(...) hữu ích khi chẩn đoán, nhưng chỉ tác động tiến trình hiện tại và có thể gây xung đột phiên bản.",
     "page": null,
-    "image": "img/q_54.jpg",
+    "image": null,
     "references": [
       {
-        "title": "sys.path - Python 3 Standard Library Documentation",
+        "title": "sys.path — Python documentation",
         "url": "https://docs.python.org/3/library/sys.html#sys.path"
+      },
+      {
+        "title": "The initialization of the module search path — Python documentation",
+        "url": "https://docs.python.org/3/library/sys_path_init.html"
       }
     ]
   },
@@ -1706,7 +1714,7 @@
       "E": "Ensures that all steps interact correctly to achieve the desired end result."
     },
     "answer": "C",
-    "question_vi": "Lợi ích chính của unit test trong ứng dụng **PySpark** (dù tốn công thiết kế/refactor)?",
+    "question_vi": "Thiết kế ứng dụng PySpark để có unit test có thể đòi hỏi refactor đáng kể. Lợi ích nào giải thích hợp lý nhất cho công sức bổ sung đó?",
     "options_vi": {
       "A": "Cải thiện chất lượng dữ liệu.",
       "B": "Xác nhận một use case hoàn chỉnh.",
@@ -1714,13 +1722,17 @@
       "D": "Triển khai/chạy nhanh hơn.",
       "E": "Đảm bảo mọi bước tương tác đúng để đạt mục tiêu."
     },
-    "explanation_vi": "Đáp án đúng: C. Việc thiết kế ứng dụng **PySpark** hỗ trợ unit test đòi hỏi lập trình viên phải mô-đun hóa các hàm biến đổi dữ liệu một cách độc lập và loại bỏ các phụ thuộc cứng vào tài nguyên hệ thống. Lợi ích lớn nhất bù đắp cho công sức thiết kế này là quá trình khắc phục sự cố (troubleshooting) dễ dàng hơn rất nhiều, vì mỗi giai đoạn của đường ống dẫn dữ liệu đều có thể được cô lập và kiểm thử một cách riêng biệt trước khi tích hợp vào pipeline lớn.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** Unit test kiểm tra hàm hoặc thành phần nhỏ trong điều kiện có kiểm soát. Để cô lập logic, nhóm thường tách phép biến đổi thành hàm rõ đầu vào/đầu ra và giảm phụ thuộc cứng vào Spark session, storage hay dịch vụ ngoài. Khi test thất bại, phạm vi điều tra nhỏ hơn: có thể khoanh vùng phép biến đổi, quy tắc dữ liệu hoặc trường hợp biên gây lỗi, thay vì dò cả pipeline.\n\n**Loại trừ:**\n- **A sai:** test có thể bắt lỗi quy tắc dữ liệu sớm nhưng tự nó không làm dữ liệu đầu vào sạch hơn; đây không phải lợi ích cụ thể được hỏi.\n- **B sai:** kiểm tra một use case hoàn chỉnh gần với acceptance/end-to-end test; unit test tập trung vào phần nhỏ cô lập.\n- **C đúng:** tách bước để kiểm tra riêng giúp troubleshooting và định vị lỗi dễ hơn.\n- **D sai:** test không tự làm job chạy hoặc deploy nhanh hơn. Bắt lỗi sớm có thể giảm rework về lâu dài, nhưng không phải bảo đảm về runtime/deployment.\n- **E sai:** kiểm tra nhiều thành phần tương tác đúng là mục tiêu của integration test, khác với unit test vốn cô lập một thành phần.\n\n**Ví dụ:** tách hàm chuẩn hóa mã bưu chính khỏi phần đọc/ghi bảng. Có thể đưa DataFrame nhỏ vào hàm và kiểm tra kết quả/null mà không chạy toàn bộ job production. Unit test bổ sung cho integration test chứ không thay thế nó.",
     "page": null,
-    "image": "img/q_55.jpg",
+    "image": null,
     "references": [
       {
-        "title": "Developer tools - Databricks",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "Architecture strategies for testing — Microsoft Well-Architected Framework",
+        "url": "https://learn.microsoft.com/en-us/azure/well-architected/operational-excellence/testing"
+      },
+      {
+        "title": "Testing in .NET — unit and integration testing concepts",
+        "url": "https://learn.microsoft.com/en-us/dotnet/core/testing/"
       }
     ]
   },
@@ -1736,7 +1748,7 @@
       "E": "Validates behavior of individual elements of your application."
     },
     "answer": "A",
-    "question_vi": "Mô tả nào đúng về integration testing?",
+    "question_vi": "Phát biểu nào mô tả đúng mục tiêu của integration testing (kiểm thử tích hợp)?",
     "options_vi": {
       "A": "Xác nhận tương tác giữa các phân hệ ứng dụng.",
       "B": "Yêu cầu framework test tự động.",
@@ -1744,20 +1756,24 @@
       "D": "Xác nhận một use case ứng dụng.",
       "E": "Xác nhận hành vi của từng thành phần riêng lẻ."
     },
-    "explanation_vi": "Đáp án đúng: A. Kiểm thử tích hợp (integration testing) là quá trình xác thực sự tương tác và luồng trao đổi dữ liệu giữa các phân hệ (subsystems) hoặc mô-đun khác nhau của ứng dụng khi chúng được kết hợp lại. Điều này khác với unit testing (kiểm tra tính cô lập của từng phần nhỏ) hay system testing (kiểm tra toàn bộ use case từ đầu đến cuối).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** Integration test xác minh các thành phần sau khi nối với nhau có trao đổi dữ liệu và phối hợp đúng không. Mỗi phần có thể qua unit test riêng nhưng vẫn lỗi ở ranh giới: schema/field name lệch, định dạng ngày khác nhau, thiếu quyền hoặc phản hồi dịch vụ không đúng hợp đồng.\n\n**Loại trừ:**\n- **A đúng:** kiểm tra tương tác giữa các phân hệ là mục tiêu trực tiếp của integration testing.\n- **B sai:** không bắt buộc framework tự động; tự động hóa hữu ích nhưng không phải tiêu chí định nghĩa.\n- **C sai:** cũng không bắt buộc thao tác thủ công; integration test có thể tự động.\n- **D sai:** xác thực toàn bộ use case từ đầu đến cuối gần với end-to-end/acceptance test; integration test có thể chỉ kiểm tra một luồng giữa vài thành phần.\n- **E sai:** kiểm tra một hàm/lớp riêng lẻ là unit testing, vốn cố cô lập phần đang thử.\n\n**Ví dụ:** job đọc đơn hàng từ Delta, gọi dịch vụ định danh rồi ghi bảng tổng hợp. Unit test kiểm tra riêng phép tính doanh thu; integration test kiểm tra schema đầu vào, hợp đồng phản hồi dịch vụ và thao tác ghi bảng đích. Loại test này nhắm vào lỗi ở chỗ các phần ghép với nhau.",
     "page": null,
-    "image": "img/q_56.jpg",
+    "image": null,
     "references": [
       {
-        "title": "Developer tools - Databricks",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "Architecture strategies for testing — Microsoft Well-Architected Framework",
+        "url": "https://learn.microsoft.com/en-us/azure/well-architected/operational-excellence/testing"
+      },
+      {
+        "title": "Testing in .NET — unit and integration testing concepts",
+        "url": "https://learn.microsoft.com/en-us/dotnet/core/testing/"
       }
     ]
   },
   {
     "id": 57,
     "topic": 1,
-    "question": "Which **REST API** call can be used to review the notebooks configured to run as tasks in a multi-task job?",
+    "question": "Which REST API call retrieves the configuration of a specific multi-task job, including the notebooks configured to run as its tasks?",
     "options": {
       "A": "`/jobs/runs/list`",
       "B": "`/jobs/runs/get-output`",
@@ -1766,7 +1782,7 @@
       "E": "`/jobs/list`"
     },
     "answer": "D",
-    "question_vi": "Lệnh **REST API** nào dùng để xem các notebook được cấu hình làm tác vụ trong một multi-task job?",
+    "question_vi": "Muốn lấy cấu hình của một multi-task job cụ thể, bao gồm các notebook được khai báo làm task, nên gọi endpoint REST API nào của Databricks?",
     "options_vi": {
       "A": "`/jobs/runs/list`",
       "B": "`/jobs/runs/get-output`",
@@ -1774,20 +1790,24 @@
       "D": "`/jobs/get`",
       "E": "`/jobs/list`"
     },
-    "explanation_vi": "Đáp án đúng: D. Endpoint `/jobs/get` trong **REST API** của **Databricks** được sử dụng để lấy thông tin chi tiết về cấu hình của một job cụ thể (qua `job_id`). Kết quả trả về sẽ chứa định nghĩa tĩnh của job bao gồm mảng `tasks`, trong đó chỉ rõ đường dẫn đến các notebook được gán cho mỗi task trong một multi-task job.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D — GET /jobs/get.** Gửi job_id tới endpoint này để lấy định nghĩa một job, gồm mảng tasks và cấu hình notebook task như notebook_path. Nó trả lời “job này được khai báo chạy notebook nào?”, không phải “lần chạy vừa rồi có trạng thái gì?”. API hiện hành dùng /api/2.2/jobs/get.\n\n**Phân biệt endpoint:**\n- **A — /jobs/runs/list:** liệt kê lịch sử các lần chạy.\n- **B — /jobs/runs/get-output:** đọc output của một lần chạy cụ thể.\n- **C — /jobs/runs/get:** lấy trạng thái/thông tin một run theo run_id.\n- **D đúng:** lấy cấu hình job cụ thể theo job_id, gồm các task đã khai báo.\n- **E — /jobs/list:** liệt kê nhiều job. Một số cách gọi có thể mở rộng task, nhưng khi biết job cần xem thì get là endpoint trực tiếp và rõ nhất.\n\n**Cách nhớ:** jobs/get = cấu hình; jobs/list = danh sách job; jobs/runs/get = một lần thực thi; runs/list = lịch sử; runs/get-output = đầu ra.",
     "page": null,
-    "image": "img/q_57.jpg",
+    "image": null,
     "references": [
       {
-        "title": "Get a job definition - Jobs API - Databricks",
-        "url": "https://docs.databricks.com/en/sql/language-manual/functions/get"
+        "title": "Get a single job — Databricks Jobs API",
+        "url": "https://docs.databricks.com/api/workspace/jobs/get"
+      },
+      {
+        "title": "Updating from Jobs API 2.1 to 2.2",
+        "url": "https://docs.databricks.com/aws/en/reference/jobs-api-2-2-updates"
       }
     ]
   },
   {
     "id": 58,
     "topic": 1,
-    "question": "A **Databricks** job has been configured with 3 tasks, each of which is a **Databricks** notebook. Task A does not depend on other tasks. Tasks B and C run in parallel, with each having a serial dependency on Task A.",
+    "question": "A Databricks job has been configured with 3 tasks, each of which is a Databricks notebook. Task A does not depend on other tasks. Tasks B and C run in parallel, with each having a serial dependency on Task A.\n\nIf tasks A and B complete successfully but task C fails during a scheduled run, which statement describes the resulting state?",
     "options": {
       "A": "All logic expressed in the notebook associated with tasks A and B will have been successfully completed; some operations in Task C may have completed successfully.",
       "B": "All logic expressed in the notebook associated with tasks A and B will have been successfully completed; any changes made in Task C will be rolled back due to task failure.",
@@ -1796,7 +1816,7 @@
       "E": "Unless all tasks complete successfully, no changes will be committed to the **Lakehouse**; because Task C failed, all commits will be rolled back automatically."
     },
     "answer": "A",
-    "question_vi": "Một job **Databricks** có 3 task (đều là notebook). Task A độc lập; tasks B và C chạy song song nhưng đều phụ thuộc nối tiếp vào A. Nếu task C thất bại, tình trạng nào đúng?",
+    "question_vi": "Một job Databricks gồm 3 task notebook. Task A không phụ thuộc task nào. Task B và C chạy song song sau khi A hoàn tất; cả hai phụ thuộc vào A.\n\nNếu A và B hoàn tất thành công nhưng C thất bại trong lần chạy theo lịch, trạng thái nào mô tả đúng kết quả?",
     "options_vi": {
       "A": "Mọi logic trong notebooks A và B đã chạy xong thành công; một phần thao tác của C có thể đã hoàn tất.",
       "B": "Mọi logic trong notebooks A và B đã chạy xong; các thay đổi của C sẽ được rollback do task thất bại.",
@@ -1804,20 +1824,28 @@
       "D": "Vì toàn bộ task được quản lý dưới dạng đồ thị phụ thuộc, không thay đổi nào được commit cho tới khi tất cả task thành công.",
       "E": "Nếu chưa tất cả task thành công thì không commit; do C lỗi nên mọi commit đều bị rollback tự động."
     },
-    "explanation_vi": "Đáp án đúng: A. Với cấu hình này, Task A chạy trước tiên và đã hoàn thành thành công. Sau đó, Tasks B và C được khởi chạy song song. Vì Task B và Task C là các tác vụ độc lập chạy song song, việc Task C bị lỗi không ảnh hưởng đến Task B (Task B vẫn chạy hoàn thành thành công). Đồng thời, do các tác vụ trong **Databricks** thực hiện các cam kết dữ liệu (commits) riêng lẻ và không có cơ chế tự động rollback toàn bộ khi một tác vụ khác trong cụm DAG bị lỗi, các thay đổi thành công của Task A, Task B và một phần của Task C (nếu có trước khi lỗi) vẫn được lưu giữ trong **Lakehouse**.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** DAG quyết định thứ tự và điều kiện chạy; nó không biến toàn job thành một transaction duy nhất. A chạy trước, rồi B và C đủ điều kiện chạy song song. Vì B và C không phụ thuộc nhau, lỗi ở C không tự hủy kết quả của B. Một thao tác trong C cũng có thể hoàn tất trước khi bước sau phát sinh lỗi.\n\n**Commit dữ liệu:** Delta Lake bảo đảm nguyên tử cho từng transaction ghi vào bảng: transaction cụ thể commit trọn vẹn hoặc không được áp dụng một phần. Điều đó không đồng nghĩa DAG tự mở transaction xuyên mọi notebook/task. Nếu cần transaction nhiều statement/bảng, phải chủ động dùng cơ chế transaction được hỗ trợ; job graph không tự tạo transaction này. Nếu A và B đã commit dữ liệu rồi C lỗi, các commit đó vẫn tồn tại. Nếu C đã commit một lệnh ghi rồi lỗi ở lệnh sau, commit trước cũng không tự rollback.\n\n**Loại trừ:**\n- **A đúng:** A/B có thể hoàn tất; một số thao tác C cũng có thể đã chạy hoặc commit trước lỗi.\n- **B sai:** lỗi task không tự rollback các thay đổi C đã commit.\n- **C sai:** B không bị chặn bởi lỗi C vì hai task chỉ cùng phụ thuộc A.\n- **D sai:** DAG không hoãn mọi ghi cho tới khi toàn job thành công.\n- **E sai:** Databricks không tự đảo các commit thành công của A/B khi một task khác lỗi.\n\nNếu pipeline cần publish nhất quán, hãy thiết kế staging, idempotency, retry/repair và bước publish có điều kiện; đừng giả định task lỗi sẽ hoàn tác các task trước.",
     "page": null,
-    "image": "img/q_58.jpg",
+    "image": null,
     "references": [
       {
-        "title": "Introduction to Databricks Jobs",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "Configure task dependencies — Databricks Jobs",
+        "url": "https://docs.databricks.com/aws/en/jobs/run-if"
+      },
+      {
+        "title": "What are ACID guarantees on Databricks?",
+        "url": "https://docs.databricks.com/aws/en/lakehouse/acid"
+      },
+      {
+        "title": "What is Delta Lake in Databricks?",
+        "url": "https://docs.databricks.com/aws/en/delta"
       }
     ]
   },
   {
     "id": 59,
     "topic": 1,
-    "question": "A **Delta Lake** table was created with the below query:\nRealizing that the original query had a typographical error, the below code was executed:\n`ALTER TABLE prod.sales_by_stor RENAME TO prod.sales_by_store`\nWhich result will occur after running the second command?",
+    "question": "A Delta Lake table was created with the following query:\n```sql\nCREATE TABLE prod.sales_by_stor\nUSING DELTA\nLOCATION \"/mnt/prod/sales_by_store\"\n```\nThe table name contains a typographical error. The following command is then run:\n```sql\nALTER TABLE prod.sales_by_stor RENAME TO prod.sales_by_store\n```\nWhich result will occur after running the ALTER TABLE command?",
     "options": {
       "A": "The table reference in the metastore is updated and no data is changed.",
       "B": "The table name change is recorded in the Delta transaction log.",
@@ -1826,7 +1854,7 @@
       "E": "A new Delta transaction log is created for the renamed table."
     },
     "answer": "A",
-    "question_vi": "Một bảng **Delta Lake** được tạo rồi đổi tên bằng: `ALTER TABLE prod.sales_by_stor RENAME TO prod.sales_by_store`. Kết quả sau lệnh thứ hai là gì?",
+    "question_vi": "Một bảng Delta Lake được tạo bằng lệnh:\n```sql\nCREATE TABLE prod.sales_by_stor\nUSING DELTA\nLOCATION \"/mnt/prod/sales_by_store\"\n```\nTên bảng bị gõ sai. Sau đó chạy:\n```sql\nALTER TABLE prod.sales_by_stor RENAME TO prod.sales_by_store\n```\nKết quả nào xảy ra sau lệnh ALTER TABLE?",
     "options_vi": {
       "A": "Cập nhật tham chiếu bảng trong metastore, dữ liệu không đổi.",
       "B": "Ghi lại thay đổi tên bảng trong transaction log của **Delta Lake**.",
@@ -1834,20 +1862,24 @@
       "D": "Cập nhật tham chiếu trong metastore và di chuyển toàn bộ file dữ liệu.",
       "E": "Tạo một transaction log **Delta Lake** mới cho bảng được đổi tên."
     },
-    "explanation_vi": "Đáp án đúng: A. Lệnh `ALTER TABLE ... RENAME TO` chỉ cập nhật tên tham chiếu của bảng trong Hive Metastore (hoặc **Unity Catalog**) và không thực hiện bất kỳ sự thay đổi hay di chuyển nào đối với các tệp dữ liệu vật lý nằm trên hệ thống lưu trữ bên dưới (Object Storage / DBFS).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** RENAME TO đổi tên định danh bảng trong catalog/metastore. Người dùng truy vấn bằng tên mới, còn tệp Delta vẫn tại LOCATION /mnt/prod/sales_by_store. Lệnh không chép hay di chuyển dữ liệu chỉ vì tên bảng thay đổi.\n\n**Loại trừ:**\n- **A đúng:** tham chiếu/tên bảng cập nhật; các hàng và tệp dữ liệu không đổi.\n- **B sai:** đây là thao tác metadata, không phải cập nhật nội dung hàng tạo commit dữ liệu mới trong Delta log.\n- **C sai:** không drop rồi tạo lại toàn bộ tệp/metadata; việc đó không cần thiết để đổi tên.\n- **D sai:** RENAME không chuyển tệp khỏi LOCATION. Tên catalog và vị trí vật lý là hai thứ riêng.\n- **E sai:** không tạo transaction log Delta mới; log gắn với dữ liệu tại đường dẫn lưu trữ.\n\n**Phân biệt metadata/data:** catalog ánh xạ tên bảng tới thông tin bảng và vị trí lưu. RENAME đổi tên dùng để tham chiếu, không đổi LOCATION. Với Unity Catalog, tên đích phải ở cùng catalog; phạm vi hỗ trợ còn phụ thuộc metastore.",
     "page": null,
-    "image": "img/q_59.jpg",
+    "image": null,
     "references": [
       {
-        "title": "ALTER TABLE - Databricks SQL Language Manual",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-alter-table"
+        "title": "ALTER TABLE — Databricks SQL language reference",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table"
+      },
+      {
+        "title": "What is Delta Lake in Databricks?",
+        "url": "https://docs.databricks.com/aws/en/delta"
       }
     ]
   },
   {
     "id": 60,
     "topic": 1,
-    "question": "The data engineering team maintains a table of aggregate statistics through batch nightly updates. This includes total sales for the previous day alongside totals and averages for a variety of time periods including the 7 previous days, year-to-date, and quarter-to-date. This table is named `store_sales_summary` and the schema is as follows:\nThe table `daily_store_sales` contains all the information needed to update `store_sales_summary`. The schema for this table is: `store_id` INT, `sales_date` DATE, `total_sales` FLOAT. If `daily_store_sales` is implemented as a Type 1 table and the `total_sales` column might be adjusted after manual data auditing, which approach is the safest to generate accurate reports in the `store_sales_summary` table?",
+    "question": "The data engineering team refreshes a summary table nightly. Its schema is:\n```\nstore_sales_summary:\n  store_id INT\n  total_sales_qtd FLOAT\n  avg_daily_sales_qtd FLOAT\n  total_sales_ytd FLOAT\n  avg_daily_sales_ytd FLOAT\n  previous_day_sales FLOAT\n  total_sales_7d FLOAT\n  avg_daily_sales_7d FLOAT\n  updated TIMESTAMP\n```\nThe source table daily_store_sales contains store_id INT, sales_date DATE, and total_sales FLOAT. It is a Type 1 table: total_sales can be corrected after a manual audit, replacing its previous value. The team prioritizes straightforward correctness and can recompute the summary from the current source each night. Which approach is safest?",
     "options": {
       "A": "Implement the appropriate aggregate logic as a batch read against the `daily_store_sales` table and overwrite the `store_sales_summary` table with each update.",
       "B": "Implement the appropriate aggregate logic as a batch read against the `daily_store_sales` table and append new rows nightly to the `store_sales_summary` table.",
@@ -1856,7 +1888,7 @@
       "E": "Use Structured Streaming to subscribe to the change data feed for `daily_store_sales` and apply changes to the aggregates in the `store_sales_summary` table with each update."
     },
     "answer": "A",
-    "question_vi": "Bảng `daily_store_sales` (Type 1) có thể được chỉnh sửa tổng doanh thu sau kiểm toán. Cách an toàn nhất để báo cáo chính xác vào bảng `store_sales_summary` là gì?",
+    "question_vi": "Nhóm làm mới bảng tổng hợp mỗi đêm. Schema bảng:\n```\nstore_sales_summary:\n  store_id INT\n  total_sales_qtd FLOAT\n  avg_daily_sales_qtd FLOAT\n  total_sales_ytd FLOAT\n  avg_daily_sales_ytd FLOAT\n  previous_day_sales FLOAT\n  total_sales_7d FLOAT\n  avg_daily_sales_7d FLOAT\n  updated TIMESTAMP\n```\nBảng nguồn daily_store_sales có store_id INT, sales_date DATE và total_sales FLOAT. Đây là bảng Type 1: total_sales có thể được sửa sau kiểm toán thủ công, thay thế giá trị cũ. Nhóm ưu tiên cách dễ bảo đảm tính đúng và có thể tính lại summary từ dữ liệu nguồn hiện tại mỗi đêm. Cách nào an toàn nhất?",
     "options_vi": {
       "A": "Tính tổng hợp bằng batch đọc `daily_store_sales` rồi overwrite toàn bộ `store_sales_summary` mỗi lần.",
       "B": "Tính tổng hợp bằng batch và append bản ghi mới hàng đêm vào `store_sales_summary`.",
@@ -1864,20 +1896,28 @@
       "D": "Dùng Structured Streaming đọc `daily_store_sales` và upsert vào `store_sales_summary`.",
       "E": "Dùng Structured Streaming theo dõi change data feed của `daily_store_sales` và cập nhật aggregates mỗi lần."
     },
-    "explanation_vi": "Đáp án đúng: A. Vì bảng nguồn `daily_store_sales` được triển khai dưới dạng Type 1 SCD (dữ liệu cũ bị ghi đè và không lưu lịch sử), các giá trị của cột `total_sales` có thể bị chỉnh sửa hồi tố (retroactive updates) sau khi được kiểm toán thủ công. Để đảm bảo các báo cáo thống kê tổng hợp trong bảng `store_sales_summary` (như doanh thu 7 ngày trước, doanh thu lũy kế năm YTD, quý QTD) luôn chính xác 100%, phương án an toàn nhất là thực hiện một tác vụ batch định kỳ để tính toán lại toàn bộ các chỉ số tổng hợp từ dữ liệu nguồn hiện tại và thực hiện ghi đè (`overwrite`) hoàn toàn bảng summary đó mỗi đêm.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** Trong bảng Type 1, giá trị cũ có thể bị ghi đè sau kiểm toán. Sửa doanh thu của một ngày có thể ảnh hưởng previous-day, rolling 7-day, QTD và YTD. Khi có thể quét lại nguồn mỗi đêm và ưu tiên tính đúng đơn giản, batch đọc trạng thái nguồn hiện tại, tính lại toàn bộ chỉ số rồi overwrite summary sẽ đồng bộ mọi cửa sổ với dữ liệu hiện có.\n\n**Loại trừ:**\n- **A đúng nhất theo điều kiện đề:** full recompute tránh sai lệch tích lũy và không cần tự suy đoán các kỳ bị ảnh hưởng bởi sửa đổi hồi tố. Ghi đè cần được triển khai bằng thao tác ghi an toàn/atomic phù hợp với Delta.\n- **B sai:** append giữ summary cũ lẫn mới; dashboard có thể đếm phiên bản cũ lần nữa.\n- **C có thể đúng nếu thiết kế kỹ, nhưng không phải cách đơn giản/an toàn nhất ở đây:** upsert cần xác định khóa và tính lại mọi kỳ bị ảnh hưởng. MERGE chỉ hàng ngày có thể để QTD/YTD/rolling totals sai.\n- **D sai theo bối cảnh:** stream đọc bảng Delta không tự xử lý mọi update/delete để sửa các aggregate; đề yêu cầu batch hằng đêm.\n- **E là hướng incremental có thể xây chính xác, nhưng CDF không tự tính aggregate:** feed gồm insert, update_preimage, update_postimage, delete. Consumer phải xử lý cặp before/after, xác định cửa sổ bị ảnh hưởng và quản lý replay/checkpoint.\n\nĐề hỏi “safest” khi full recompute được chấp nhận, không hỏi phương án rẻ nhất cho bảng cực lớn. Với bảng lớn, incremental CDC/CDF cũng có thể chính xác nếu chứng minh được xử lý thay đổi hồi tố và từng cửa sổ; chỉ bật streaming/upsert không đủ.",
     "page": null,
-    "image": "img/q_60.jpg",
+    "image": null,
     "references": [
       {
-        "title": "What is Delta Lake?",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "What is Delta Lake in Databricks?",
+        "url": "https://docs.databricks.com/aws/en/delta"
+      },
+      {
+        "title": "Use change data feed on Databricks",
+        "url": "https://docs.databricks.com/aws/en/tables/features/change-data-feed"
+      },
+      {
+        "title": "table_changes function — Databricks SQL",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/functions/table_changes"
       }
     ]
   },
   {
     "id": 61,
     "topic": 1,
-    "question": "A member of the data engineering team has submitted a short notebook that they wish to schedule as part of a larger data pipeline. Assume that the commands provided below produce the logically correct results when run as presented. Which command should be removed from the notebook before scheduling it as a job?",
+    "question": "A data engineer is preparing a notebook to schedule as part of a larger pipeline. Assume the commands produce logically correct data when run in order:\n```\nCmd 1\nrawDF = spark.table(\"raw_data\")\n\nCmd 2\nrawDF.printSchema()\n\nCmd 3\nflattenedDF = rawDF.select(\"*\", \"values.*\")\n\nCmd 4\nfinalDF = flattenedDF.drop(\"values\")\n\nCmd 5\nfinalDF.explain()\n\nCmd 6\ndisplay(finalDF)\n\nCmd 7\nfinalDF.write.mode(\"append\").saveAsTable(\"flat_data\")\n```\nWhich command should be removed before scheduling the notebook as a job?",
     "options": {
       "A": "Cmd 2",
       "B": "Cmd 3",
@@ -1886,7 +1926,7 @@
       "E": "Cmd 6"
     },
     "answer": "E",
-    "question_vi": "Một notebook ngắn được lên lịch chạy trong pipeline. Lệnh nào nên bỏ trước khi lập lịch?",
+    "question_vi": "Data engineer chuẩn bị notebook để đưa vào pipeline chạy theo lịch. Giả sử các lệnh tạo dữ liệu đúng về logic khi chạy theo thứ tự:\n```\nCmd 1\nrawDF = spark.table(\"raw_data\")\n\nCmd 2\nrawDF.printSchema()\n\nCmd 3\nflattenedDF = rawDF.select(\"*\", \"values.*\")\n\nCmd 4\nfinalDF = flattenedDF.drop(\"values\")\n\nCmd 5\nfinalDF.explain()\n\nCmd 6\ndisplay(finalDF)\n\nCmd 7\nfinalDF.write.mode(\"append\").saveAsTable(\"flat_data\")\n```\nNên bỏ lệnh nào trước khi lập lịch notebook thành job?",
     "options_vi": {
       "A": "Cmd 2",
       "B": "Cmd 3",
@@ -1894,13 +1934,21 @@
       "D": "Cmd 5",
       "E": "Cmd 6"
     },
-    "explanation_vi": "Đáp án đúng: E. Cmd 6 chứa lệnh hiển thị dữ liệu trực quan (`display()`). Khi lập lịch chạy một notebook như một job tự động, các lệnh hiển thị này là không cần thiết, tiêu tốn tài nguyên tính toán để kết xuất dữ liệu và có thể gây lỗi hoặc treo job nếu lượng dữ liệu kết xuất vượt quá giới hạn kích thước output của driver (thường là 20MB đến 30MB). Vì vậy, cần loại bỏ các lệnh này trước khi triển khai lên môi trường production.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án E — Cmd 6, display(finalDF).** display dựng kết quả DataFrame để người dùng xem trong giao diện notebook; nó không ghi bảng đích — Cmd 7 mới ghi flat_data. Với job tự động không có người xem bảng, display thường dư thừa, có thể kích hoạt thêm action Spark để lấy dữ liệu và tạo output không cần thiết.\n\n**Các lựa chọn khác:**\n- **A — Cmd 2, printSchema():** in schema để chẩn đoán; không kết xuất toàn bộ các dòng.\n- **B — Cmd 3:** bung các trường lồng trong values, là phép biến đổi tạo kết quả đề yêu cầu.\n- **C — Cmd 4:** bỏ cột values sau khi đã bung các trường.\n- **D — Cmd 5, explain():** in logical/physical plan để gỡ lỗi; không thay thế bước ghi, output thường nhỏ.\n- **E đúng:** hiển thị bảng tương tác không cần cho pipeline định kỳ. Databricks giới hạn table output (10.000 dòng hoặc 2 MB) và tổng output notebook trên job cluster. Điều đó không có nghĩa mọi display đều làm job lỗi; lý do chính là tránh action/output không phục vụ job.\n\nMột display nhỏ vẫn có thể chạy bình thường. Nếu cần kiểm định production, dùng assertion hoặc ghi metrics/log có chủ đích thay vì dựa vào render bảng.",
     "page": null,
-    "image": "img/q_61.jpg",
+    "image": null,
     "references": [
       {
-        "title": "Introduction to Databricks Jobs",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "Known limitations of Databricks notebooks",
+        "url": "https://docs.databricks.com/aws/en/notebooks/notebook-limitations"
+      },
+      {
+        "title": "Notebook outputs and results",
+        "url": "https://docs.databricks.com/aws/en/notebooks/notebook-outputs"
+      },
+      {
+        "title": "DataFrame.explain — Apache Spark Python API",
+        "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.explain.html"
       }
     ]
   },
@@ -1916,7 +1964,7 @@
       "E": "Configure a job that executes every time new data lands in a given directory."
     },
     "answer": "B",
-    "question_vi": "Đội báo cáo cần dữ liệu cập nhật mỗi giờ; pipeline ETL mất 10 phút. Cấu hình chi phí thấp nhất đáp ứng SLA?",
+    "question_vi": "Nhóm báo cáo cần dữ liệu dashboard được cập nhật mỗi giờ. Pipeline trích xuất, biến đổi và nạp dữ liệu mất khoảng 10 phút mỗi lần chạy. Trong điều kiện vận hành bình thường, cấu hình nào đáp ứng SLA với chi phí thấp nhất?",
     "options_vi": {
       "A": "Kích hoạt job thủ công khi đội báo cáo refresh dashboard.",
       "B": "Lịch một job chạy mỗi giờ trên job cluster mới.",
@@ -1924,10 +1972,27 @@
       "D": "Lịch job chạy mỗi giờ trên interactive cluster chuyên dụng.",
       "E": "Job kích hoạt mỗi lần có dữ liệu mới trong thư mục."
     },
-    "explanation_vi": "Đáp án đúng: B. Việc lên lịch (schedule) chạy pipeline mỗi giờ một lần trên một cụm job mới (transient job cluster) là giải pháp tối ưu nhất về chi phí. Cụm job chỉ hoạt động trong đúng 10 phút cần thiết để xử lý và tự động tắt ngay sau khi hoàn thành. Tổng thời gian tính phí của cụm chỉ là 10 phút * 24 lần = 4 tiếng/ngày. So với việc giữ một cụm tương tác (interactive cluster) chạy liên tục hoặc chạy Structured Streaming liên tục (cluster hoạt động 24/24), giải pháp transient job cluster giúp tiết kiệm hơn 80% chi phí compute và có đơn giá DBU rẻ hơn đáng kể.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** Lên lịch job mỗi giờ và dùng compute dành cho job. Mỗi lần chạy có thể khởi tạo compute, xử lý batch rồi kết thúc; không cần giữ compute hoạt động suốt thời gian còn lại chỉ để chờ lần chạy sau. Với ETL batch 10 phút mỗi giờ, cách này thường tránh đáng kể thời gian idle của interactive cluster.\n\n**Đánh giá lựa chọn:**\n- **A sai:** chạy thủ công phụ thuộc người dùng và không đảm bảo dữ liệu tự cập nhật mỗi giờ.\n- **B đúng:** lịch thể hiện trực tiếp SLA; job compute dừng sau lượt chạy. Cần tính cả thời gian khởi động để vẫn vừa cửa sổ.\n- **C kém phù hợp:** Structured Streaming với trigger 60 phút là mô hình query streaming dài hạn; đề chỉ cần batch hữu hạn hằng giờ, nên thêm vận hành mà không đem lại lợi ích cần thiết.\n- **D kém kinh tế hơn:** interactive/all-purpose compute có thể được tái sử dụng, nhưng nếu giữ chạy giữa hai lượt thì phát sinh idle. Auto-termination giúp giảm nhưng job compute phù hợp hơn cho job production định kỳ.\n- **E sai cadence:** file-arrival trigger chạy khi có file mới; nếu file đến không đều, job có thể chạy nhiều lần hoặc không chạy đúng nhịp mỗi giờ.\n\nKhông thể kết luận mức tiết kiệm cố định chỉ từ đề: chi phí còn phụ thuộc startup, cấu hình compute, thời gian chạy và giá cloud. Lý do chọn B là đáp ứng lịch và tránh trả cho compute tương tác nhàn rỗi giữa các batch.",
     "page": null,
-    "image": "img/q_62.jpg",
-    "references": []
+    "image": null,
+    "references": [
+      {
+        "title": "Automate jobs with schedules and triggers",
+        "url": "https://docs.databricks.com/aws/en/jobs/triggers"
+      },
+      {
+        "title": "Configure compute for jobs",
+        "url": "https://docs.databricks.com/aws/en/jobs/compute"
+      },
+      {
+        "title": "Manage classic compute",
+        "url": "https://docs.databricks.com/aws/en/compute/clusters-manage"
+      },
+      {
+        "title": "Trigger jobs when new files arrive",
+        "url": "https://docs.databricks.com/aws/en/jobs/file-arrival-triggers"
+      }
+    ]
   },
   {
     "id": 63,
