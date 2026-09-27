@@ -1293,7 +1293,7 @@
   {
     "id": 43,
     "topic": 1,
-    "question": "The data governance team has instituted a requirement that all tables containing Personally Identifiable Information (PII) must be clearly annotated. This includes adding column comments, table comments, and setting the custom table property `contains_pii = true`. The following SQL DDL statement is executed to create a new table:\nWhich command allows manual confirmation that these three requirements have been met?",
+    "question": "The data governance team requires every table containing personally identifiable information (PII) to have a column comment, a table comment, and the custom table property `contains_pii = true`. The following SQL creates the table:\n\n```sql\nCREATE TABLE dev.pii_test\n  (id INT, name STRING COMMENT 'PII')\nCOMMENT 'Contains PII'\nTBLPROPERTIES ('contains_pii' = 'True');\n```\n\nWhich command lets an administrator manually verify all three metadata requirements?",
     "options": {
       "A": "`DESCRIBE EXTENDED dev.pii_test`",
       "B": "`DESCRIBE DETAIL dev.pii_test`",
@@ -1302,7 +1302,7 @@
       "E": "`SHOW TABLES dev`"
     },
     "answer": "A",
-    "question_vi": "Yêu cầu PII: thêm comment cột/bảng và thuộc tính `contains_pii = true`. Lệnh nào kiểm tra thủ công đủ 3 yêu cầu?",
+    "question_vi": "Nhóm quản trị dữ liệu yêu cầu mọi bảng có thông tin định danh cá nhân (PII) phải có comment cho cột, comment cho bảng và thuộc tính tùy chỉnh `contains_pii = true`. SQL sau tạo bảng:\n\n```sql\nCREATE TABLE dev.pii_test\n  (id INT, name STRING COMMENT 'PII')\nCOMMENT 'Contains PII'\nTBLPROPERTIES ('contains_pii' = 'True');\n```\n\nLệnh nào giúp quản trị viên kiểm tra thủ công đủ cả ba metadata này?",
     "options_vi": {
       "A": "`DESCRIBE EXTENDED dev.pii_test`",
       "B": "`DESCRIBE DETAIL dev.pii_test`",
@@ -1310,50 +1310,58 @@
       "D": "`DESCRIBE HISTORY dev.pii_test`",
       "E": "`SHOW TABLES dev`"
     },
-    "explanation_vi": "Lệnh `DESCRIBE EXTENDED` trả về thông tin chi tiết về cấu trúc bảng bao gồm cả chú thích cột (column comments), chú thích bảng (table comments) ở phần metadata bổ sung, và danh sách các thuộc tính tùy chỉnh của bảng (table properties) bao gồm cả `contains_pii = true`.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang hỏi gì?** Bảng đã được tạo; việc cần làm là kiểm tra metadata xem ba chỗ ghi chú có được lưu hay chưa: comment của cột `name`, comment cấp bảng và table property `contains_pii`. Đây không phải câu hỏi kiểm tra dữ liệu bên trong bảng.\n\n**Đáp án A — `DESCRIBE EXTENDED dev.pii_test`.** Phần mô tả schema liệt kê từng cột cùng kiểu dữ liệu và comment; phần metadata mở rộng cung cấp thông tin của bảng, trong đó có table comment và các thuộc tính bảng. Vì vậy một lần chạy lệnh này cho phép đối chiếu cả ba yêu cầu bằng mắt. Trên phiên bản hỗ trợ, `DESCRIBE TABLE EXTENDED ... AS JSON` còn trả metadata có cấu trúc để kiểm tra bằng chương trình.\n\n**Vì sao các lựa chọn khác không đủ?**\n- **B — `DESCRIBE DETAIL`:** chủ yếu trả thông tin tổng quan của Delta table như định dạng, vị trí và số liệu tệp/bảng; không phải màn hình kiểm tra đồng thời comment từng cột, comment bảng và property.\n- **C — `SHOW TBLPROPERTIES`:** xem được `contains_pii`, nhưng không xác nhận comment của cột `name` và comment của bảng.\n- **D — `DESCRIBE HISTORY`:** liệt kê các phiên bản và thao tác đã ghi vào Delta log; nó trả lời “bảng đã thay đổi thế nào”, không phải “metadata hiện tại có đủ ba ghi chú không”.\n- **E — `SHOW TABLES`:** liệt kê bảng trong schema, không hiển thị đầy đủ metadata đang cần kiểm tra.\n\n**Cách tự xác nhận:** trong kết quả A, tìm dòng cột `name` để xem comment `PII`, rồi kiểm tra phần metadata có `Contains PII` và `contains_pii=True`. Tên/định dạng các dòng hiển thị có thể thay đổi theo phiên bản, nhưng đây là lệnh phù hợp để người vận hành kiểm tra thủ công.",
     "page": null,
     "image": "img/q_43.jpg",
     "references": [
       {
-        "title": "DESCRIBE TABLE - Databricks",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-aux-describe-table"
+        "title": "DESCRIBE TABLE — Databricks SQL reference",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-table"
       }
     ]
   },
   {
     "id": 44,
     "topic": 1,
-    "question": "The data governance team is reviewing code used for deleting records for compliance with **GDPR**. They note the following logic is used to delete records from the **Delta Lake** table named `users`. Assuming that `user_id` is a unique identifying key and that `delete_requests` contains all users that have requested deletion, which statement describes whether successfully executing the above logic guarantees that the records to be deleted are no longer accessible and why?",
+    "question": "The data governance team is reviewing a GDPR deletion workflow for a Delta Lake table named `users`. It runs:\n\n```sql\nDELETE FROM users\nWHERE user_id IN (\n  SELECT user_id FROM delete_requests\n);\n```\n\nAssume `user_id` is unique and `delete_requests` contains every user who requested deletion. Does successful execution guarantee that the deleted records are no longer accessible, and why?",
     "options": {
-      "A": "Yes; **Delta Lake** ACID guarantees provide assurance that the `DELETE` command succeeded fully and permanently purged these records.",
+      "A": "Yes; Delta Lake ACID guarantees provide assurance that the DELETE command succeeded fully and permanently purged these records.",
       "B": "No; the Delta cache may return records from previous versions of the table until the cluster is restarted.",
       "C": "Yes; the Delta cache immediately updates to reflect the latest data files recorded to disk.",
-      "D": "No; the **Delta Lake** `DELETE` command only provides ACID guarantees when combined with the `MERGE INTO` command.",
-      "E": "No; files containing deleted records may still be accessible with time travel until a `VACUUM` command is used to remove invalidated data files."
+      "D": "No; the Delta Lake DELETE command only provides ACID guarantees when combined with the MERGE INTO command.",
+      "E": "No; the current table snapshot hides the rows, but their old data files can remain available through time travel until VACUUM removes eligible files."
     },
     "answer": "E",
-    "question_vi": "Đánh giá logic `DELETE FROM users WHERE user_id IN (delete_requests)` theo **GDPR**. Sau khi chạy có đảm bảo không truy cập được bản ghi xoá?",
+    "question_vi": "Nhóm quản trị dữ liệu đang rà soát quy trình xóa theo GDPR trên bảng Delta Lake `users`. Quy trình chạy:\n\n```sql\nDELETE FROM users\nWHERE user_id IN (\n  SELECT user_id FROM delete_requests\n);\n```\n\nGiả sử `user_id` là duy nhất và `delete_requests` chứa mọi người đã yêu cầu xóa. Chạy lệnh thành công có đảm bảo các bản ghi đó không còn truy cập được hay không, và vì sao?",
     "options_vi": {
-      "A": "Có; ACID của **Delta Lake** đảm bảo `DELETE` thành công và xoá vĩnh viễn.",
-      "B": "Không; Delta cache có thể trả dữ liệu phiên bản cũ tới khi restart cluster.",
-      "C": "Có; Delta cache cập nhật ngay theo file mới.",
-      "D": "Không; `DELETE` chỉ ACID khi kết hợp `MERGE INTO`.",
-      "E": "Không; file chứa bản ghi xoá vẫn truy cập qua time travel cho tới khi `VACUUM` dọn file."
+      "A": "Có; ACID của Delta Lake bảo đảm DELETE thành công và xóa vật lý vĩnh viễn các bản ghi.",
+      "B": "Không; Delta cache có thể trả bản ghi từ phiên bản cũ cho tới khi khởi động lại cluster.",
+      "C": "Có; Delta cache lập tức cập nhật theo các file dữ liệu mới nhất trên đĩa.",
+      "D": "Không; DELETE của Delta Lake chỉ có ACID khi kết hợp với MERGE INTO.",
+      "E": "Không; snapshot hiện tại ẩn các dòng đó, nhưng file cũ có thể còn được truy cập qua time travel cho đến khi VACUUM dọn các file đủ điều kiện."
     },
-    "explanation_vi": "Mặc dù lệnh `DELETE` đánh dấu dữ liệu đã bị xóa trong phiên bản hiện tại, các tệp dữ liệu vật lý cũ vẫn tồn tại trên ổ đĩa để hỗ trợ tính năng quay ngược thời gian (Time Travel). Để đáp ứng tuân thủ **GDPR** (quyền được quên), dữ liệu cũ phải được xóa vĩnh viễn khỏi bộ lưu trữ vật lý bằng cách chạy lệnh `VACUUM` trên bảng **Delta Lake**.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang hỏi gì?** Câu lệnh `DELETE` có xóa dòng khỏi trạng thái hiện tại của bảng hay còn bảo đảm xóa sạch dữ liệu cũ khỏi storage, kể cả khả năng đọc phiên bản trước? Hai việc này khác nhau.\n\n**Đáp án E.** Delta Lake ghi một phiên bản mới của bảng trong đó các `user_id` khớp điều kiện không còn xuất hiện trong snapshot hiện tại. Giao dịch có ACID không đồng nghĩa các file Parquet cũ bị xóa vật lý ngay lập tức. Những file không còn được phiên bản mới tham chiếu có thể vẫn nằm trong object storage và dữ liệu lịch sử có thể được khôi phục/truy vấn qua time travel trong thời gian lưu giữ. `VACUUM` mới xóa các file cũ đã quá ngưỡng retention được phép.\n\n**Vì sao các lựa chọn khác sai?**\n- **A:** ACID bảo đảm giao dịch cập nhật trạng thái bảng nhất quán; nó không hứa xóa ngay mọi bản sao vật lý và lịch sử.\n- **B:** Vấn đề chính không phải cache cũ cần restart. Delta quản lý snapshot/cache theo phiên bản; lý do file còn tồn tại là thiết kế time travel và retention.\n- **C:** Cache cập nhật theo snapshot mới không có nghĩa các file của snapshot cũ đã bị xóa khỏi storage.\n- **D:** `DELETE` là thao tác Delta hợp lệ và có tính giao dịch độc lập; không cần bọc trong `MERGE` mới có ACID.\n- **E:** phân biệt đúng trạng thái logic hiện tại với vòng đời của file vật lý cũ.\n\n**Lưu ý quan trọng cho GDPR:** Không tắt kiểm tra retention safety hoặc chạy `VACUUM` thiếu cân nhắc chỉ để xóa nhanh. Với bảng bật deletion vectors, hướng dẫn Databricks yêu cầu `REORG TABLE ... APPLY (PURGE)` rồi mới `VACUUM` để loại bỏ dữ liệu trong file cũ. Cũng phải xử lý bản sao ở nguồn upstream và các bảng downstream; xóa một bảng chưa chứng minh toàn bộ yêu cầu xóa đã hoàn tất.",
     "page": null,
     "image": "img/q_44.jpg",
     "references": [
       {
-        "title": "Remove unused data files with vacuum - Databricks",
-        "url": "https://docs.databricks.com/en/sql/language-manual/delta-vacuum"
+        "title": "Prepare your data for GDPR compliance — Databricks",
+        "url": "https://docs.databricks.com/aws/en/ldp/gdpr"
+      },
+      {
+        "title": "Remove unused data files with VACUUM — Databricks",
+        "url": "https://docs.databricks.com/aws/en/delta/vacuum"
+      },
+      {
+        "title": "Deletion vectors in Databricks",
+        "url": "https://docs.databricks.com/aws/en/tables/features/deletion-vectors"
       }
     ]
   },
   {
     "id": 45,
     "topic": 1,
-    "question": "An external object storage container has been mounted to the location `/mnt/finance_eda_bucket`. The following logic was executed to create a database for the finance team:\nAfter the database was successfully created and permissions configured, a member of the finance team runs the following code:\nIf all users on the finance team are members of the `finance` group, which statement describes how the `tx_sales` table will be created?",
+    "question": "An external object-storage container is mounted at `/mnt/finance_eda_bucket`. The following commands create a database for the finance team and grant the group access:\n\n```sql\nCREATE DATABASE finance_eda_db\nLOCATION '/mnt/finance_eda_bucket';\nGRANT USAGE ON DATABASE finance_eda_db TO finance;\nGRANT CREATE ON DATABASE finance_eda_db TO finance;\n```\n\nA finance team member then runs:\n\n```sql\nCREATE TABLE finance_eda_db.tx_sales AS\nSELECT * FROM sales\nWHERE state = 'TX';\n```\n\nAssuming this is the legacy Hive metastore, how will `tx_sales` be created?",
     "options": {
       "A": "A logical table will persist the query plan to the **Hive Metastore** in the Databricks control plane.",
       "B": "An external table will be created in the storage container mounted to `/mnt/finance_eda_bucket`.",
@@ -1362,7 +1370,7 @@
       "E": "A managed table will be created in the **DBFS** root storage container."
     },
     "answer": "D",
-    "question_vi": "Container `/mnt/finance_eda_bucket` đã mount. Tạo database `finance_eda` với `LOCATION '/mnt/finance_eda_bucket'`. Người nhóm `finance` chạy `CREATE TABLE tx_sales AS SELECT ...`; bảng được tạo thế nào?",
+    "question_vi": "Một container object storage bên ngoài được mount tại `/mnt/finance_eda_bucket`. Các lệnh sau tạo database cho nhóm finance và cấp quyền cho group:\n\n```sql\nCREATE DATABASE finance_eda_db\nLOCATION '/mnt/finance_eda_bucket';\nGRANT USAGE ON DATABASE finance_eda_db TO finance;\nGRANT CREATE ON DATABASE finance_eda_db TO finance;\n```\n\nMột thành viên finance chạy tiếp:\n\n```sql\nCREATE TABLE finance_eda_db.tx_sales AS\nSELECT * FROM sales\nWHERE state = 'TX';\n```\n\nGiả sử đang dùng Hive metastore cũ, bảng `tx_sales` được tạo như thế nào?",
     "options_vi": {
       "A": "Bảng logic lưu query plan vào **Hive Metastore** control plane.",
       "B": "Bảng external tạo trong container mount `/mnt/finance_eda_bucket`.",
@@ -1370,13 +1378,17 @@
       "D": "Bảng managed tạo trong container mount `/mnt/finance_eda_bucket`.",
       "E": "Bảng managed tạo ở **DBFS** root."
     },
-    "explanation_vi": "Đáp án đúng: D. Khi một database (hoặc schema) được tạo kèm tham số `LOCATION` (hoặc `MANAGED LOCATION`), bất kỳ bảng managed nào được tạo bên trong database đó mà không khai báo vị trí cụ thể cũng sẽ lưu trữ dữ liệu tại đường dẫn đó (ở đây là `/mnt/finance_eda_bucket`). Vì câu lệnh `CREATE TABLE` không sử dụng từ khóa `EXTERNAL`, bảng được tạo là một Managed Table chứ không phải External Table.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang kiểm tra gì?** Hãy phân biệt vị trí của database/schema với loại bảng được tạo. `LOCATION` nằm trên `CREATE DATABASE`, còn câu `CREATE TABLE ... AS SELECT` không khai báo `EXTERNAL` hay `LOCATION` riêng cho bảng.\n\n**Đáp án D — managed table nằm dưới vị trí database đã chỉ định.** Với legacy Hive metastore, managed table mới được tạo trong storage location của schema/database chứa nó. Do `finance_eda_db` đã có `LOCATION '/mnt/finance_eda_bucket'`, dữ liệu của `tx_sales` được lưu trong cây thư mục đó. `CREATE TABLE ... AS SELECT` vừa tạo metadata bảng vừa ghi kết quả truy vấn thành dữ liệu bảng; người tạo được cấp `CREATE` theo giả định đề bài.\n\n**Loại trừ từng lựa chọn:**\n- **A sai:** logical table ở đây mô tả view. Một view được tạo bằng `CREATE VIEW`; `CREATE TABLE AS SELECT` tạo bảng chứa dữ liệu, không chỉ lưu query plan.\n- **B sai:** external table phải được đăng ký như external/định vị bằng `LOCATION` của bảng. Chỉ việc schema có `LOCATION` không biến mọi bảng con thành external.\n- **C sai:** tương tự A, câu lệnh không tạo view để lưu physical plan; bảng vật lý được tạo từ kết quả SELECT.\n- **D đúng:** bảng managed kế thừa storage location của database/schema trong Hive metastore.\n- **E sai:** DBFS root là vị trí mặc định khi schema không có location riêng. Ở đây đã khai báo location rõ ràng.\n\n**Phạm vi của đáp án:** Đây là quy tắc của Hive metastore cũ, phù hợp với `CREATE DATABASE`, `USAGE ON DATABASE` và mount path trong đề. Unity Catalog có khái niệm managed location và quy tắc quản trị storage khác; không nên áp dụng nguyên xi câu hỏi legacy này cho thiết kế UC mới. Cũng cần cẩn thận: xóa schema Hive metastore có thể xóa đệ quy dữ liệu trong schema location.",
     "page": null,
     "image": "img/q_45.jpg",
     "references": [
       {
-        "title": "Create schema - Databricks SQL Language Manual",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-schema"
+        "title": "Database objects in the legacy Hive metastore — Databricks",
+        "url": "https://docs.databricks.com/aws/en/database-objects/hive-metastore"
+      },
+      {
+        "title": "What are schemas in Databricks? — Databricks",
+        "url": "https://docs.databricks.com/aws/en/schemas"
       }
     ]
   },
@@ -1400,13 +1412,17 @@
       "D": "Lặp qua từng ký tự secret và in ra sẽ thấy plaintext.",
       "E": "**REST API** có thể liệt kê secret plaintext nếu PAT đủ quyền."
     },
-    "explanation_vi": "Đáp án đúng: D. Một giới hạn lớn của **Databricks Secrets** là khi giá trị của secret được tải vào biến dưới dạng chuỗi thông thường để ứng dụng sử dụng, người dùng có thể dùng vòng lặp ký tự và in từng ký tự ra màn hình (hoặc ghi vào log) để vượt qua bộ lọc che giấu tự động (redaction) của Databricks. Do đó, việc bảo mật notebook và quản lý quyền truy cập của người dùng là vô cùng quan trọng.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang hỏi gì?** Databricks Secrets giúp ứng dụng lấy credential mà tránh vô tình in nguyên giá trị ra output, nhưng cơ chế che giấu có giới hạn. Cần chọn phát biểu mô tả cách người dùng có thể làm lộ secret dù đã bật redaction.\n\n**Đáp án D.** Khi notebook gọi `dbutils.secrets.get()`, Databricks che giá trị secret nguyên vẹn nếu người dùng in trực tiếp literal đó. Nhưng secret vẫn được trả về cho chương trình dưới dạng giá trị mà chương trình có thể sử dụng. Redaction không phân tích mọi phép biến đổi tùy ý: tách chuỗi thành từng ký tự rồi in từng ký tự, mã hóa lại hoặc ghi ra log theo cách khác có thể làm lộ dữ liệu. Vì vậy redaction là lớp giảm rủi ro do vô ý, không phải ranh giới bảo mật chống mã độc có quyền chạy lệnh.\n\n**Vì sao các lựa chọn khác không phải giới hạn được hỏi?**\n- **A sai:** SHA-256 là hàm băm một chiều; không thể “đảo ngược hash” để lấy plaintext. Hơn nữa, secret phải được cung cấp cho workload được cấp quyền để workload dùng credential, chứ không phải chỉ giữ một hash mà ứng dụng không thể dùng.\n- **B sai:** không có cơ chế mặc định cho phép mọi account admin mở Accounts console và đọc plaintext của tất cả secret trong workspace. Secret scope có ACL riêng.\n- **C sai:** secrets không được cung cấp như bảng Hive Metastore mặc định để DBA truy vấn.\n- **D đúng:** biến đổi arbitrary có thể vượt qua redaction áp dụng cho literal value.\n- **E sai:** API `list` trả metadata như scope/key, không phải plaintext của các giá trị. Một API đọc giá trị khác vẫn cần quyền phù hợp; đừng đánh đồng “list” với đọc secret.\n\n**Thực hành an toàn:** chỉ cấp quyền READ cho principal cần thiết, giới hạn ai được chạy notebook/job dùng secret, không `display`/log giá trị hoặc biến thể của nó, và dùng credential/OAuth phù hợp thay vì PAT dài hạn khi có thể.",
     "page": null,
     "image": "img/q_46.jpg",
     "references": [
       {
-        "title": "Secret management - Databricks",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "Secret management — Databricks",
+        "url": "https://docs.databricks.com/aws/en/security/secrets"
+      },
+      {
+        "title": "Credential redaction — Databricks",
+        "url": "https://docs.databricks.com/aws/en/security/keys/redaction"
       }
     ]
   },
@@ -1430,13 +1446,13 @@
       "D": "Giữ 60 ngày, sau đó log được lưu trữ.",
       "E": "Giữ 90 ngày hoặc tới khi `run-id` được tái dùng qua cấu hình custom."
     },
-    "explanation_vi": "Đáp án đúng: C. **Databricks** lưu giữ lịch sử thực thi của **Jobs** trong vòng 60 ngày. Trong khoảng thời gian này, bạn có thể xem lại kết quả chạy và xuất (export) các trang chạy notebook sang định dạng **HTML** để lưu trữ lâu dài.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang hỏi gì?** Câu này hỏi thời gian Databricks giữ lịch sử các lần chạy job, đồng thời kiểm tra một cách xuất kết quả notebook run để lưu lại ngoài khoảng thời gian đó.\n\n**Đáp án C.** Databricks giữ job run history tối đa 60 ngày. Trong thời gian run còn được giữ, với notebook job bạn có thể mở chi tiết lần chạy và dùng **Export to HTML** để lưu notebook source cùng output của các cell thành một tệp tĩnh. Đây là thao tác xuất do người dùng thực hiện; HTML không tự được tạo cho mọi run.\n\n**Vì sao các lựa chọn khác sai?**\n- **A sai:** history không được giữ vô thời hạn đến khi người dùng xóa/export; nó hết hạn theo chính sách lưu giữ.\n- **B sai:** mốc 30 ngày không đúng. Việc cấu hình gửi cluster logs tới DBFS/S3 là cơ chế riêng, không biến job-run history thành 30 ngày.\n- **C đúng:** ghép đúng giới hạn 60 ngày và khả năng export notebook results sang HTML.\n- **D sai:** hết 60 ngày không đồng nghĩa Databricks tự archive history để người dùng vẫn truy cập được. Muốn giữ kết quả thì phải xuất hoặc cấu hình lưu log riêng.\n- **E sai:** không có quy tắc 90 ngày hay tái sử dụng `run-id` làm vòng đời history.\n\n**Áp dụng:** nếu cần lưu bằng chứng chạy lâu hơn 60 ngày, chủ động export notebook run ra HTML hoặc cấu hình delivery logs tới nơi lưu trữ được quản lý. HTML là bản chụp tĩnh của source/output, không phải một run tương tác có thể chạy lại.",
     "page": null,
     "image": "img/q_47.jpg",
     "references": [
       {
-        "title": "Introduction to Databricks Jobs",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "Monitor Lakeflow Jobs — Databricks",
+        "url": "https://docs.databricks.com/aws/en/jobs/monitor"
       }
     ]
   },
@@ -1460,50 +1476,62 @@
       "D": "Dùng **REST API** nên không ghi nhận identity trong audit log.",
       "E": "User A tạo job nên cả tạo và run đều mang identity của A."
     },
-    "explanation_vi": "Đáp án đúng: C. Vì mỗi cuộc gọi **REST API** được xác thực bằng Personal Access Token (PAT) riêng của từng người dùng, các hoạt động này được ghi nhận riêng biệt trong log kiểm toán (audit log) của workspace. User A thực hiện cuộc gọi tạo job nên hoạt động đó mang danh tính của User A; User B thực hiện cuộc gọi kích hoạt chạy job nên hoạt động đó mang danh tính của User B.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang hỏi gì?** Có hai API request độc lập và mỗi request được xác thực bằng PAT của một người khác nhau: A tạo job; B gọi API để trigger run. Cần xác định ai là người khởi tạo từng sự kiện trong audit log, không phải ai sở hữu pipeline hoặc job sẽ chạy với quyền nào.\n\n**Đáp án C.** PAT cá nhân dùng để gọi Databricks REST API đại diện cho principal sở hữu PAT. Vì User A gửi yêu cầu tạo job, sự kiện tạo job gắn với A; khi User B gửi yêu cầu trigger run bằng PAT của B, sự kiện request đó gắn với B. Audit log ghi identity của người khởi tạo request.\n\n**Phân biệt hai danh tính dễ nhầm:** danh tính gọi API/`run_by` trả lời “ai đã yêu cầu chạy”; `Run as` của job trả lời “job dùng quyền của ai để đọc dữ liệu và thực thi task”. Mặc định creator thường là Run as, nhưng owner có thể cấu hình một service principal khác. Điều đó không làm thay đổi ai đã gọi `run-now` trong audit event.\n\n**Vì sao các lựa chọn khác sai?**\n- **A sai:** dùng REST API không tự tạo hoặc tự chọn Service Principal; chỉ có principal của credential/API call nếu chưa cấu hình khác.\n- **B sai:** người sửa/cấu hình job sau cùng không bị gán ngược cho sự kiện tạo trước đó.\n- **C đúng:** danh tính theo từng request đã được xác thực, A cho create và B cho trigger.\n- **D sai:** audit log có trường identity của người khởi tạo request; API không làm mất dấu người gọi.\n- **E sai:** User A tạo job không có nghĩa mọi request trong tương lai đều do A gửi; B đã dùng PAT riêng để trigger.\n\n**Mẹo đọc log:** tách event `create` khỏi `runNow`, rồi đối chiếu `user_identity`/initiator với trường identity metadata của workload. Không suy ra identity từ tên người tạo job.",
     "page": null,
     "image": "img/q_48.jpg",
     "references": [
       {
-        "title": "Configure audit logs - Databricks",
-        "url": "https://docs.databricks.com/en/opensharing/audit-logs"
+        "title": "Audit log reference — Databricks",
+        "url": "https://docs.databricks.com/aws/en/admin/account-settings/audit-logs"
+      },
+      {
+        "title": "Monitor and revoke personal access tokens — Databricks",
+        "url": "https://docs.databricks.com/aws/en/admin/access-control/tokens"
+      },
+      {
+        "title": "Manage identities, permissions, and privileges for Lakeflow Jobs — Databricks",
+        "url": "https://docs.databricks.com/aws/en/jobs/privileges"
       }
     ]
   },
   {
     "id": 49,
     "topic": 1,
-    "question": "A user new to **Databricks** is trying to troubleshoot long execution times for some pipeline logic they are working on. Presently, the user is executing code cell-by-cell, using `display()` calls to confirm code is producing the logically correct results as new transformations are added to an operation. To get a measure of average time to execute, the user is running each cell multiple times interactively. Which of the following adjustments will get a more accurate measure of how code is likely to perform in production?",
+    "question": "A user new to Databricks is measuring a pipeline by executing notebook cells one by one and calling `display()` after adding transformations. They rerun the same cells several times to estimate how the pipeline will perform in production. Which statement best explains why these interactive timings may be misleading?",
     "options": {
-      "A": "**Scala** is the only language that can be accurately tested using interactive notebooks; because the best performance is achieved by using **Scala** code compiled to **JARs**, all **PySpark** and **Spark SQL** logic should be refactored.",
-      "B": "The only way to meaningfully troubleshoot code execution times in development notebooks is to use production-sized data and production-sized clusters with **Run All** execution.",
-      "C": "Production code development should only be done using an **IDE**; executing code against a local build of open source **Spark** and **Delta Lake** will provide the most accurate benchmarks for how code will perform in production.",
-      "D": "Calling `display()` forces a job to trigger, while many transformations will only add to the logical query plan; because of caching, repeated execution of the same logic does not provide meaningful results.",
-      "E": "The **Jobs UI** should be leveraged to occasionally run the notebook as a job and track execution time during incremental code development because **Photon** can only be enabled on clusters launched for scheduled jobs."
+      "A": "Scala is the only language that can be accurately tested using interactive notebooks; all PySpark and Spark SQL logic should be refactored to Scala JARs.",
+      "B": "The only meaningful way to troubleshoot execution time is to use production-sized data and production-sized clusters with Run All.",
+      "C": "Production code should only be developed in an IDE against local open-source Spark and Delta Lake because it gives the most accurate production benchmark.",
+      "D": "Calling `display()` is an action that triggers Spark execution; repeated notebook timings can also be affected by warm or persisted caches and do not by themselves predict a scheduled production run.",
+      "E": "The Jobs UI should be used because Photon can only be enabled on clusters launched for scheduled jobs."
     },
     "answer": "D",
-    "question_vi": "Người mới debug thời gian chạy bằng cách chạy từng cell với `display()` nhiều lần. Điều chỉnh nào cho kết quả gần thực tế hơn?",
+    "question_vi": "Một người mới dùng Databricks đang đo pipeline bằng cách chạy notebook từng cell và gọi `display()` sau khi thêm các phép biến đổi. Họ chạy lại các cell nhiều lần để ước lượng hiệu năng production. Phát biểu nào giải thích đúng nhất vì sao các số đo tương tác này có thể gây hiểu lầm?",
     "options_vi": {
-      "A": "Chỉ **Scala** notebook test chính xác; nên refactor toàn bộ sang **Scala**/**JAR**.",
-      "B": "Chỉ có cách dùng dữ liệu/cluster cỡ production và **Run All**.",
-      "C": "Nên phát triển trong **IDE** với **Spark** mở nguồn để benchmark chính xác nhất.",
-      "D": "Calling `display()` kích hoạt job, và cache khiến chạy lặp lại không phản ánh thực tế; do đó đo bằng cách này không ý nghĩa.",
-      "E": "Thỉnh thoảng chạy notebook như job trong **Jobs UI** để đo thời gian vì **Photon** chỉ bật trên cluster job."
+      "A": "Chỉ Scala mới đo chính xác được trong notebook tương tác; cần chuyển toàn bộ PySpark và Spark SQL sang Scala JAR.",
+      "B": "Cách duy nhất để chẩn đoán thời gian chạy có ý nghĩa là dùng dữ liệu, cluster cỡ production và Run All.",
+      "C": "Chỉ nên phát triển production bằng IDE với Spark/Delta Lake chạy local vì đó là benchmark sát production nhất.",
+      "D": "Gọi `display()` là một action kích hoạt Spark; thời gian chạy notebook lặp lại còn có thể bị ảnh hưởng bởi cache đã làm nóng hoặc đã persist, nên riêng số đo đó không dự báo chắc hiệu năng job production.",
+      "E": "Phải dùng Jobs UI vì Photon chỉ bật được trên cluster chạy theo lịch."
     },
-    "explanation_vi": "Đáp án đúng: D. Trong **Apache Spark**, các biến đổi (transformations) được đánh giá lười biếng (lazy evaluation) và chỉ được thực thi khi có một hành động (action) như `display()` hoặc `count()` được gọi. Việc gọi `display()` liên tục trong notebook để đo thời gian chạy không phản ánh đúng hiệu năng thực tế vì **Spark** sẽ kích hoạt các job độc lập cho mỗi lần gọi, đồng thời cơ chế cache dữ liệu tự động giữa các lần chạy tương tác sẽ làm sai lệch kết quả đo lường.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang hỏi gì?** Người dùng muốn lấy thời gian chạy notebook tương tác làm đại diện cho một pipeline production. Cần hiểu action/lazy evaluation và những khác biệt về trạng thái/cache giữa các lần đo.\n\n**Đáp án D.** Các phép biến đổi Spark thường chỉ xây dựng kế hoạch; action như `display()` yêu cầu Spark thực thi để tạo kết quả. Vì vậy mỗi lần `display()` có thể khởi chạy một job. Thời gian đo lại có thể khác do dữ liệu/metadata đã được đọc nóng, do người dùng đã chủ động `cache()`/`persist()` DataFrame, hoặc do trạng thái session; nó không tự chứng minh lịch job production sẽ có cùng thời gian. Cần benchmark toàn pipeline, với dữ liệu/compute và cách khởi chạy gần workload thực tế, đồng thời phân biệt lần chạy cold với warm.\n\n**Lưu ý sửa một hiểu nhầm phổ biến:** Spark không tự cache mọi DataFrame chỉ vì gọi `display()` hai lần. Cache/persist tường minh hoặc các cache khác có thể ảnh hưởng; transformations không được persist thường phải tính lại khi action tiếp theo cần chúng. Do đó D nói timing tương tác có thể sai lệch, chứ không khẳng định mọi lần chạy lặp đều vô nghĩa.\n\n**Vì sao các lựa chọn khác sai?**\n- **A sai:** PySpark và Spark SQL vẫn chạy qua Spark; không cần chuyển toàn bộ sang Scala để benchmark.\n- **B sai:** dữ liệu và compute đại diện hữu ích, nhưng nói đó là “cách duy nhất” và bắt buộc luôn dùng cỡ production/Run All là quá tuyệt đối, tốn kém và bỏ qua profiling theo từng giai đoạn.\n- **C sai:** môi trường local có driver, storage, network và compute khác Databricks production; nó không mặc nhiên là benchmark sát hơn.\n- **D đúng:** nêu đúng action và các yếu tố làm số đo interactive khác scheduled workload.\n- **E sai:** Photon không chỉ hoạt động trên job clusters; điều kiện này không giải thích sai lệch timing.",
     "page": null,
     "image": "img/q_49.jpg",
     "references": [
       {
-        "title": "What is Apache Spark in Databricks?",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "RDD Programming Guide — Apache Spark",
+        "url": "https://spark.apache.org/docs/latest/rdd-programming-guide.html"
+      },
+      {
+        "title": "View compute metrics — Databricks",
+        "url": "https://docs.databricks.com/aws/en/compute/cluster-metrics"
       }
     ]
   },
   {
     "id": 50,
     "topic": 1,
-    "question": "A production cluster has 3 executor nodes and uses the same virtual machine type for the driver and executor. When evaluating the **Ganglia Metrics** for this cluster, which indicator would signal a bottleneck caused by code executing on the driver?",
+    "question": "A production cluster has three executor nodes and one driver, all using the same VM type. During a CPU-bound Spark workload that should be distributed, which cluster-wide CPU pattern is most consistent with work bottlenecking on the driver while the executors are mostly idle?",
     "options": {
       "A": "The five-minute Load Average remains consistent/flat.",
       "B": "Bytes Received never exceeds 80 million bytes per second.",
@@ -1512,7 +1540,7 @@
       "E": "Overall cluster **CPU** utilization is around 25%."
     },
     "answer": "E",
-    "question_vi": "Cluster production có 3 executor, VM driver và executor giống nhau. Chỉ báo **Ganglia Metrics** nào cho thấy nghẽn tại driver?",
+    "question_vi": "Một cluster production có ba executor và một driver, tất cả dùng cùng loại VM. Trong workload Spark thiên về CPU và đáng lẽ có thể phân tán, mức CPU tính trung bình toàn cluster nào phù hợp nhất với tình huống driver bị nghẽn còn các executor phần lớn nhàn rỗi?",
     "options_vi": {
       "A": "Five-minute Load Average phẳng.",
       "B": "Bytes Received không vượt 80 triệu B/s.",
@@ -1520,13 +1548,17 @@
       "D": "Network I/O không tăng vọt.",
       "E": "Tổng **CPU** toàn cluster khoảng 25%."
     },
-    "explanation_vi": "Đáp án đúng: E. Trong một cụm (cluster) có 3 executors và 1 driver (tổng cộng 4 nodes có cấu hình phần cứng giống nhau), nếu tổng hiệu suất sử dụng **CPU** của toàn bộ cụm chỉ duy trì ở mức khoảng 25% (tương đương với 1/4 tài nguyên của cụm), điều đó chỉ ra rằng chỉ có duy nhất driver node đang chạy hết công suất để xử lý dữ liệu đơn luồng, trong khi 3 executor nodes còn lại hoàn toàn nhàn rỗi. Đây là dấu hiệu rõ ràng của việc nghẽn cổ chai (bottleneck) tại driver do code không được phân tán và chạy song song hiệu quả.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang hỏi gì?** Cluster có bốn VM cùng cỡ: một driver và ba executor. Đề giả định workload CPU-bound đáng lẽ phân tán được, nhưng công việc lại chủ yếu dồn ở driver. Hãy tìm dấu hiệu ở mức tổng hợp phù hợp với một node bận và ba node rảnh.\n\n**Đáp án E.** Nếu CPU của driver gần bão hòa còn ba executor gần như không dùng CPU, trung bình trên bốn node cùng cỡ xấp xỉ `100% / 4 = 25%`. Đây là lý do con số 25% là tín hiệu phù hợp với bottleneck ở driver trong tình huống đề mô tả.\n\n**Vì sao các lựa chọn khác không chỉ ra trực tiếp tình huống đó?**\n- **A:** Load Average phẳng chỉ nói tải ổn định; tải thấp hoặc cao đều có thể phẳng.\n- **B:** Một ngưỡng Bytes Received cố định không cho biết CPU đang nằm ở driver hay executor, và cũng không so với baseline/workload.\n- **C:** Dung lượng đĩa không đổi là bình thường nếu job không ghi thêm dữ liệu; không chứng minh có nghẽn.\n- **D:** Network I/O không tăng có thể xảy ra với nhiều workload, kể cả workload phân tán ít shuffle; nó không định lượng được driver CPU.\n- **E đúng:** với giả định bốn node bằng cỡ và ba executor rảnh, trung bình khoảng một phần tư cho thấy một node đang tiêu thụ phần lớn CPU.\n\n**Không kết luận chỉ từ trung bình:** CPU toàn cluster 25% tự nó chưa chứng minh driver bão hòa; workload có thể đơn giản là đang nhàn. Hãy xem metric từng node và Spark UI để xác nhận driver gần 100%, executor ít task/CPU, và workload có việc đủ song song. Đề dùng Ganglia, vốn chỉ còn trong các Databricks Runtime cũ; runtime hiện hành có Metrics UI với xem trung bình và xem theo node.",
     "page": null,
     "image": "img/q_50.jpg",
     "references": [
       {
-        "title": "View compute metrics - Databricks",
-        "url": "https://docs.databricks.com/en/integrations/compute-details"
+        "title": "View compute metrics — Databricks",
+        "url": "https://docs.databricks.com/aws/en/compute/cluster-metrics"
+      },
+      {
+        "title": "Monitor performance and view Ganglia metrics — Databricks",
+        "url": "https://docs.databricks.com/en/user-guide/clusters/sparkui.html"
       }
     ]
   },
@@ -1550,15 +1582,28 @@
       "D": "Trong Delta transaction log xem thống kê cột.",
       "E": "Trong Query Detail xem `Physical Plan`."
     },
-    "explanation_vi": "Đáp án đúng: E. Predicate push-down là một cơ chế tối ưu hóa giúp đẩy bộ lọc (filter) xuống mức lưu trữ (đọc tệp tin) để giảm thiểu lượng dữ liệu cần nạp vào bộ nhớ. Để chẩn đoán xem truy vấn của bạn có tận dụng được cơ chế này hay không, bạn cần kiểm tra Kế hoạch Vật lý (`Physical Plan`) trong màn hình Query Detail thuộc tab SQL của **Spark UI**. Trong `Physical Plan`, nếu bộ lọc được đẩy xuống, nó sẽ xuất hiện trong phần `PushedFilters` hoặc `DataFilters` của toán tử quét tệp tin (`FileScan`).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang hỏi gì?** Predicate push-down đưa điều kiện lọc tới data source/file scan để giảm lượng dữ liệu phải đọc. Muốn chẩn đoán lỗi tối ưu này trong Spark UI, cần xem kế hoạch thực thi cho query chứ không chỉ một chỉ số tổng quát.\n\n**Đáp án E — Query Detail → Physical Plan.** Trong chi tiết SQL/DataFrame execution, physical plan cho biết scan node nào đang đọc dữ liệu và điều kiện nào được đẩy xuống nguồn. Với nguồn có hỗ trợ, scan có thể hiển thị `PushedFilters`/filter liên quan; kết hợp node và metrics đọc giúp thấy filter có được thực thi gần nguồn hay Spark phải đọc nhiều rồi mới lọc.\n\n**Vì sao các lựa chọn khác kém trực tiếp hơn?**\n- **A:** grep executor log tìm đúng cụm từ không phải giao diện chẩn đoán chuẩn; log có thể không ghi một dòng “predicate push-down” rõ ràng.\n- **B:** lượng input lớn có thể là dấu hiệu đáng điều tra, nhưng một mình con số đó không chứng minh push-down thiếu: nguồn có thể vốn lớn, partition pruning khác predicate push-down, hoặc query cần đọc nhiều dữ liệu.\n- **C:** Storage Detail/RDD persistence nói về dữ liệu được cache, không cho biết filter được đẩy xuống data source hay không.\n- **D:** Delta transaction log lưu trạng thái/metadata bảng và file, không phải nơi trong Spark UI để đọc physical plan của lần chạy.\n- **E đúng:** cho thấy operator và filter mà optimizer đưa vào kế hoạch thực thi của query.\n\n**Cách kiểm tra:** mở execution tương ứng, tìm scan/file-source node, đọc các filter được push và so sánh số hàng/bytes đọc với kết quả sau lọc. Physical plan là bằng chứng trực tiếp hơn; input metrics giúp đánh giá tác động hiệu năng. Tên operator và trường hiển thị tùy connector/format nên không phải mọi nguồn đều dùng đúng chuỗi `PushedFilters`.",
     "page": null,
     "image": "img/q_51.jpg",
-    "references": []
+    "references": [
+      {
+        "title": "Monitoring and Instrumentation — Apache Spark",
+        "url": "https://spark.apache.org/docs/latest/monitoring.html"
+      },
+      {
+        "title": "DataSourceReader.pushFilters — PySpark API",
+        "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql.datasource.DataSourceReader.pushFilters.html"
+      },
+      {
+        "title": "View compute information in the Spark UI — Databricks",
+        "url": "https://docs.databricks.com/en/user-guide/clusters/sparkui.html"
+      }
+    ]
   },
   {
     "id": 52,
     "topic": 1,
-    "question": "Review the following error traceback:\nWhich statement describes the error being raised?",
+    "question": "Review this PySpark traceback:\n\n```python\ndisplay(df.select(3 * \"heartrate\"))\n```\n\nThe analyzer reports that it cannot resolve the name `heartrateheartrateheartrate`; the input table does contain a column named `heartrate`. Which statement describes the error?",
     "options": {
       "A": "The code executed was **PySpark** but was executed in a **Scala** notebook.",
       "B": "There is no column in the table named `heartrateheartrateheartrate`.",
@@ -1567,7 +1612,7 @@
       "E": "There is a syntax error because the `heartrate` column is not correctly identified as a column."
     },
     "answer": "B",
-    "question_vi": "Thông báo lỗi nhân cột `heartrateheartrateheartrate`. Lỗi gì?",
+    "question_vi": "Xem traceback PySpark sau:\n\n```python\ndisplay(df.select(3 * \"heartrate\"))\n```\n\nAnalyzer báo không thể phân giải tên `heartrateheartrateheartrate`; bảng đầu vào có cột `heartrate`. Phát biểu nào mô tả đúng lỗi này?",
     "options_vi": {
       "A": "Chạy **PySpark** trong notebook **Scala**.",
       "B": "Bảng không có cột `heartrateheartrateheartrate`.",
@@ -1575,13 +1620,17 @@
       "D": "Lỗi kiểu vì `DataFrame` không thể nhân.",
       "E": "Lỗi cú pháp vì cột `heartrate` không được nhận diện đúng."
     },
-    "explanation_vi": "Đáp án đúng: B. Lỗi xảy ra do trong **Python**, phép nhân một chuỗi (string) với một số nguyên (ví dụ: `3 * \"heartrate\"`) sẽ lặp lại chuỗi đó thành `\"heartrateheartrateheartrate\"`. Khi giá trị này được truyền vào phương thức `.select()`, **PySpark** sẽ tìm kiếm một cột có tên là `heartrateheartrateheartrate`. Vì trong bảng không có cột nào có tên như vậy, **Spark** sẽ đưa ra ngoại lệ `AnalysisException` báo lỗi không thể phân giải cột (unresolved column).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang hỏi gì?** Hãy xác định biểu thức Python đã truyền vào `df.select()` trở thành gì trước khi Spark phân tích kế hoạch, rồi đối chiếu tên đó với các cột thật của DataFrame.\n\n**Đáp án B.** Python xử lý `3 * \"heartrate\"` ngay ở phía driver và lặp chuỗi ba lần, tạo thành chuỗi `\"heartrateheartrateheartrate\"`. `DataFrame.select()` nhận chuỗi này như tên cột cần chọn; nó không hiểu đây là phép nhân giá trị của cột `heartrate`. Spark analyzer sau đó tìm một cột đúng bằng tên lặp đó, không thấy, và ném lỗi unresolved/cannot resolve column. Việc bảng có cột `heartrate` không giúp vì tên mà code yêu cầu là một tên khác.\n\n**Vì sao các lựa chọn khác sai?**\n- **A sai:** traceback đi qua `pyspark` và cú pháp gọi là Python; đây không phải PySpark chạy nhầm trong Scala notebook.\n- **B đúng:** chính xác là cột `heartrateheartrateheartrate` không tồn tại.\n- **C sai:** biểu thức không nhân một Spark `Column`; `\"heartrate\"` là Python string nên phép nhân hoàn tất trước khi gọi Spark.\n- **D sai:** cũng không có phép nhân `DataFrame`; `df` chỉ nhận lời gọi `.select(...)`.\n- **E sai:** cú pháp Python/PySpark hợp lệ. Lỗi phát sinh khi phân tích tên cột không tồn tại, không phải lỗi cú pháp.\n\n**Nếu mục tiêu là nhân giá trị cột với 3:** viết `df.select(F.col(\"heartrate\") * 3)` sau khi import `pyspark.sql.functions as F`. Cách đó truyền một biểu thức `Column` vào Spark thay vì tạo tên chuỗi lặp.",
     "page": null,
     "image": "img/q_52.jpg",
     "references": [
       {
-        "title": "pyspark.sql.DataFrame.select - PySpark API Reference",
+        "title": "DataFrame.select — PySpark API Reference",
         "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.select.html"
+      },
+      {
+        "title": "UNRESOLVED_COLUMN error condition — Databricks",
+        "url": "https://docs.databricks.com/aws/en/error-messages/unresolved-column-error-class"
       }
     ]
   },
