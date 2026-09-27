@@ -72,7 +72,7 @@
   {
     "id": 3,
     "topic": 1,
-    "question": "Which of the following describes how Databricks SQL should be used in relation to other business intelligence (BI) tools like Tableau, Power BI, and looker?",
+    "question": "Which of the following describes how Databricks SQL should be used in relation to other business intelligence (BI) tools like Tableau, Power BI, and Looker?",
     "options": {
       "A": "As an exact substitute with the same level of functionality",
       "B": "As a substitute with less functionality",
@@ -84,15 +84,15 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án E.** Câu hỏi yêu cầu phân biệt Databricks SQL với các nền tảng BI chuyên dụng như Tableau, Power BI và Looker. Databricks SQL cho phép truy vấn dữ liệu trong lakehouse, khám phá kết quả, tạo trực quan hóa/dashboard và cộng tác ngay trong workspace. Vì vậy, nó phù hợp cho các tác vụ BI nhanh tại nơi dữ liệu đang nằm.\n\n**Ví dụ:** analyst chạy truy vấn SQL trên bảng Delta, đổi kết quả thành biểu đồ doanh thu theo ngày, rồi ghim vào dashboard để nhóm trong workspace theo dõi. Nếu doanh nghiệp cần một lớp báo cáo có thương hiệu, phân phối rộng cho người dùng ngoài workspace hoặc các tính năng trình bày đặc thù, họ vẫn có thể kết nối Tableau/Power BI/Looker vào Databricks. Hai cách dùng có thể bổ trợ nhau.\n\n**Loại trừ:**\n- **A và C sai:** gọi Databricks SQL là bản thay thế hoàn toàn, có cùng hoặc nhiều hơn toàn bộ chức năng của mọi nền tảng BI là khẳng định quá rộng. Mỗi sản phẩm có phạm vi, trải nghiệm xuất bản và tích hợp riêng.\n- **B sai:** xem nó như bản thay thế “ít chức năng hơn” cũng không mô tả đúng khả năng truy vấn, trực quan hóa và dashboard có sẵn.\n- **D sai:** Databricks SQL không chỉ là công cụ làm slide hay bài thuyết trình chuyên nghiệp; trọng tâm của câu hỏi là BI nhanh, trực tiếp trên lakehouse.\n- **E đúng:** mô tả đúng trường hợp sử dụng in-platform BI mà không phủ nhận vai trò của BI tool bên ngoài.\n\n**Điểm cần nhớ:** đây là lựa chọn theo use case và đối tượng xem báo cáo, không phải cuộc so sánh rằng một công cụ luôn thay thế công cụ kia.",
+    "explanation_vi": "**Đáp án E — công cụ BI bổ trợ cho phân tích nhanh ngay trên Databricks.** Databricks SQL chạy truy vấn trên dữ liệu lakehouse và cung cấp trực quan hóa, dashboard, bộ lọc, lịch làm mới và chia sẻ snapshot. Một analyst có thể kiểm tra số liệu trên bảng Delta rồi tạo dashboard để nhóm xem mà không phải chuyển dữ liệu sang một hệ thống BI khác trước.\n\n**Ví dụ:** nhóm vận hành cần theo dõi đơn hàng trong ngày. Analyst truy vấn bảng doanh thu trong SQL Editor, tạo biểu đồ theo giờ và ghim vào dashboard trong workspace. Nếu công ty đã chuẩn hóa báo cáo trên Power BI hoặc Tableau, những công cụ đó vẫn có thể kết nối tới SQL warehouse để phục vụ người dùng và quy trình hiện có.\n\n**Loại trừ từng lựa chọn:**\n- **A sai:** “thay thế chính xác, cùng toàn bộ chức năng” khẳng định hai sản phẩm có feature parity. Databricks SQL có truy vấn và dashboard, nhưng không đồng nhất toàn bộ khả năng, tích hợp và quy trình phân phối báo cáo của từng BI platform.\n- **B sai:** mô tả Databricks SQL như một bản thay thế kém chức năng bỏ qua các khả năng BI được tích hợp sẵn như dashboard và visualization.\n- **C sai:** Databricks SQL không phải lựa chọn thay thế hoàn chỉnh cho mọi hệ thống BI trong mọi tổ chức; nhóm vẫn có thể cần công cụ bên ngoài cho mô hình báo cáo hoặc cách phân phối đang dùng.\n- **D sai:** dashboard có thể trình bày kết quả, nhưng mô tả “công cụ làm presentation chuyên nghiệp” không phải vai trò được hỏi của Databricks SQL.\n- **E đúng:** nêu đúng vai trò BI nhanh, trực tiếp trong nền tảng; nó có thể cùng tồn tại với Tableau, Power BI hoặc Looker.\n\n**Cách nhớ:** Databricks SQL giúp biến dữ liệu trong lakehouse thành truy vấn, biểu đồ và dashboard ngay trong workspace. Chọn công cụ BI theo người xem, quy trình chia sẻ và tính năng cần dùng; không mặc định một công cụ thay thế tất cả công cụ còn lại.",
     "references": [
       {
-        "title": "Databricks SQL Product Overview",
-        "url": "https://www.databricks.com/product/databricks-sql"
+        "title": "Data warehousing on Databricks",
+        "url": "https://docs.databricks.com/aws/en/sql"
       },
       {
-        "title": "Visualizations in Databricks SQL",
-        "url": "https://docs.databricks.com/en/visualizations/index.html"
+        "title": "Databricks dashboards",
+        "url": "https://docs.databricks.com/aws/en/dashboards"
       }
     ],
     "question_vi": "Phát biểu nào sau đây mô tả đúng cách sử dụng Databricks SQL trong mối tương quan với các công cụ BI (Business Intelligence) khác như Tableau, Power BI và Looker?",
@@ -336,7 +336,7 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án B — `DROP TABLE database_name.table_name;`.** Yêu cầu là bỏ hẳn một managed table khỏi schema/database và không xóa các bảng khác. `DROP TABLE` loại bỏ đối tượng bảng; với managed table, Databricks quản lý cả metadata lẫn data files nên việc drop có thể dẫn đến xóa dữ liệu vật lý sau thời hạn khôi phục được cấu hình.\n\n**Điểm quan trọng:** “drop thành công” không nhất thiết đồng nghĩa mọi byte bị xóa tức thời. Unity Catalog có thể cho phép khôi phục managed table trong thời gian retention; việc purge tệp được thực hiện bất đồng bộ sau khi hết thời hạn. Đây là khác biệt giữa xóa logic/khả năng truy cập và xóa vật lý vĩnh viễn. Với external table, `DROP TABLE` chỉ gỡ metadata; tệp bên ngoài thường được giữ lại. Đề nói managed table nên đáp án B phù hợp.\n\n**Loại trừ:**\n- **A sai:** `DROP DATABASE` tác động cả database và có thể xóa/đòi xử lý các đối tượng khác, trái yêu cầu giữ nguyên bảng còn lại.\n- **C và D sai:** `DELETE TABLE` không phải cú pháp Databricks SQL hợp lệ để xóa đối tượng bảng; lệnh `DELETE FROM` xóa *các hàng* theo điều kiện nhưng giữ nguyên bảng.\n- **E sai:** dạng `DROP TABLE ... FROM ...` không phải cú pháp `DROP TABLE` được hỗ trợ.\n- **B đúng:** định danh đầy đủ đúng bảng cần bỏ, giới hạn phạm vi vào một đối tượng.\n\n**Trước thao tác thực tế:** kiểm tra đúng môi trường, catalog/schema, loại managed/external, quyền và chính sách recovery; đây là DDL có ảnh hưởng dữ liệu.",
+    "explanation_vi": "**Đáp án B — DROP TABLE database_name.table_name.** Đây là bảng managed và yêu cầu chỉ xóa một bảng khỏi database, vì vậy phải dùng DDL DROP TABLE với định danh của đúng bảng. Lệnh này không xóa các bảng còn lại trong database. Với managed table, Databricks quản lý cả metadata và vòng đời tệp dữ liệu; trong Unity Catalog, tệp có thể được giữ trong thời hạn khôi phục mặc định trước khi bị purge bất đồng bộ.\n\n**Phân biệt hai loại thao tác:** DROP TABLE xóa đối tượng bảng; DELETE FROM xóa một số hàng nhưng vẫn để bảng tồn tại. Muốn xóa cả database và các object trong đó thì đó là một yêu cầu khác và có phạm vi lớn hơn.\n\n**Loại trừ từng lựa chọn:**\n- **A sai:** DROP DATABASE tác động tới cả database. Nó không đáp ứng yêu cầu chỉ bỏ một bảng và giữ các bảng còn lại.\n- **B đúng:** cú pháp hợp lệ để drop riêng bảng được chỉ định. Với managed table, dữ liệu do nền tảng quản lý và được dọn theo chính sách của metastore.\n- **C sai:** DELETE TABLE không phải cú pháp SQL được Databricks hỗ trợ. Cú pháp xóa hàng là DELETE FROM table WHERE condition, nhưng cách đó không xóa bảng.\n- **D sai:** DELETE TABLE table_name FROM database_name không phải cú pháp Databricks SQL; DELETE cũng không phải lệnh DDL để bỏ object.\n- **E sai:** DROP TABLE ... FROM database_name không phải dạng cú pháp DROP TABLE. Cần nêu tên bảng theo định danh hai hoặc ba phần phù hợp với catalog/schema hiện hành.\n\n**Kiểm tra trước khi chạy trong workspace thật:** xác nhận catalog/schema, loại bảng và quyền của người chạy. DROP là thao tác xóa object; việc khôi phục và thời điểm purge phụ thuộc loại metastore cùng chính sách retention.",
     "references": [
       {
         "title": "DROP TABLE",
@@ -879,11 +879,15 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án E — dùng mệnh đề `LOCATION` với đường dẫn cloud.** External table đăng ký metadata của bảng trong catalog nhưng trỏ tới tệp đang nằm tại một vị trí do tổ chức quản lý. Trong cú pháp tạo bảng, `LOCATION 's3://...'` chỉ rõ thư mục/tệp lưu trữ; `FROM` thường xuất hiện ở phần đọc dữ liệu của một câu `SELECT`, không phải nơi khai báo location cho DDL này.\n\n**Ví dụ minh họa:**\n```sql\nCREATE TABLE catalog.schema.customers\nUSING DELTA\nLOCATION 's3://company-data/customers';\n```\nĐây chỉ minh họa cú pháp; định dạng phải khớp với nội dung thực tế ở đường dẫn. Người tạo còn cần external location/storage credential và các quyền Unity Catalog phù hợp. Đăng ký external table không đồng nghĩa sao chép toàn bộ file vào managed storage.\n\n**Loại trừ:**\n- **A và B sai:** DBFS path không đáp ứng yêu cầu chỉ vị trí cloud object storage, và `FROM`/`PATH` không phải clause được hỏi.\n- **C sai:** Databricks có thể truy vấn các tệp trong cloud object storage khi cấu hình quyền và table/location phù hợp.\n- **D sai:** cloud path đúng hướng nhưng `FROM` là sai clause cho khai báo external table.\n- **E đúng:** kết hợp loại bảng external, đường dẫn cloud và `LOCATION`.\n\n**Mẹo nhớ:** `LOCATION` gắn metadata table với nơi lưu; `USING` khai báo định dạng tệp; quyền external location quyết định Databricks có được phép truy cập hay không.",
+    "explanation_vi": "**Đáp án E — tạo external table và chỉ rõ đường dẫn bằng LOCATION.** LOCATION là clause gắn định nghĩa bảng với thư mục hoặc URI lưu dữ liệu. Với cloud object storage, đường dẫn có dạng URI của nhà cung cấp như s3://bucket/path, abfss://container@account/path hoặc gs://bucket/path. External table tham chiếu đến dữ liệu tại vị trí đó; thao tác đăng ký không tự sao chép toàn bộ file sang managed storage.\n\n**Ví dụ:**\n```sql\nCREATE TABLE catalog_name.schema_name.customers\nUSING DELTA\nLOCATION 's3://company-data/customers';\n```\nVí dụ này giả định dữ liệu ở vị trí đó là Delta và workspace đã cấu hình credential/external location cùng quyền truy cập cần thiết. Định dạng thực tế phải khớp với dữ liệu đang có.\n\n**Loại trừ từng lựa chọn:**\n- **A sai:** FROM không phải clause dùng trong CREATE TABLE để chỉ vị trí lưu; DBFS path cũng không nêu URI cloud trực tiếp như đề yêu cầu.\n- **B sai:** PATH không phải clause DDL để đăng ký external table. Cần LOCATION.\n- **C sai:** Databricks có thể đọc dữ liệu trong cloud object storage thông qua bảng ngoài hoặc các giao diện đọc file, miễn quyền và cấu hình storage hợp lệ.\n- **D sai:** cloud URI là loại vị trí phù hợp, nhưng FROM vẫn là clause sai trong định nghĩa bảng.\n- **E đúng:** dùng external table và LOCATION để đăng ký đường dẫn dữ liệu hiện có.\n\n**Phân biệt:** USING DELTA khai báo định dạng bảng; LOCATION khai báo nơi đặt dữ liệu. External location/storage credential và quyền Unity Catalog quyết định Databricks được phép truy cập URI đó hay không.",
     "references": [
       {
-        "title": "CREATE TABLE - Databricks SQL Reference",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using.html"
+        "title": "CREATE TABLE [USING] - Databricks SQL",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using"
+      },
+      {
+        "title": "External locations - Databricks",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-external-locations"
       }
     ],
     "question_vi": "Nhà phân tích muốn đăng ký các tệp trong kho lưu trữ đối tượng trên đám mây thành một bảng và truy vấn trực tiếp mà không sao chép tệp vào vùng lưu trữ do Databricks quản lý. Cần chỉ định vị trí nguồn bằng cách nào?",
@@ -898,7 +902,7 @@
   {
     "id": 29,
     "topic": 1,
-    "question": "A data analyst is attempting to drop a table my_table. The analyst wants to delete all table metadata and data. They run the following command: DROP TABLE IF EXISTS my_table; While the object no longer appears when they run SHOW TABLES, the data files still exist. Which of the following describes why the data files still exist and the metadata files were deleted?",
+    "question": "In a workspace-level legacy Hive metastore, an analyst is attempting to drop a table my_table. The analyst wants to delete all table metadata and data. They run the following command: DROP TABLE IF EXISTS my_table; While the object no longer appears when they run SHOW TABLES, the data files still exist. Which of the following describes why the data files still exist and the metadata files were deleted?",
     "options": {
       "A": "The table's data was larger than 10 GB",
       "B": "The table did not have a location",
@@ -910,18 +914,22 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án C — đây là external table.** Một external table có hai phần tách biệt: metadata được đăng ký trong metastore/catalog, còn data files nằm ở đường dẫn cloud do người dùng kiểm soát. `DROP TABLE` gỡ định nghĩa bảng nên `SHOW TABLES` không còn hiển thị; nó không xóa các tệp nguồn external.\n\n**Tại sao không phải do kích thước?** Hành vi được quyết định bởi loại table và quyền quản lý storage, không phải bởi bảng lớn hay nhỏ hơn 10 GB. Nếu object là managed, Databricks chịu trách nhiệm vòng đời tệp theo cấu hình và chính sách recovery. Nếu là external, cần quản trị dữ liệu vật lý độc lập.\n\n**Loại trừ:**\n- **A và D sai:** dung lượng không giải thích việc tệp còn lại sau khi drop.\n- **B sai:** không có location không phải lý do chung làm data giữ nguyên; thông tin đề cho thấy metadata bị xóa trong khi file tồn tại.\n- **E sai:** managed table là loại Databricks quản lý dữ liệu; không phải loại lý giải việc drop chỉ gỡ metadata.\n- **C đúng:** external table để tệp tại vị trí ngoài vòng đời managed của Databricks.\n\n**Liên hệ câu external-table:** dấu hiệu nhận biết quan trọng là `Type = EXTERNAL` và `Location` trỏ tới cloud storage. Sau `DROP`, muốn xóa file phải thao tác riêng ở storage, theo đúng chính sách retention.",
+    "explanation_vi": "**Đáp án C — bảng được đăng ký là external table trong legacy Hive metastore.** Lệnh DROP TABLE gỡ metadata của external table khỏi catalog nhưng không xóa dữ liệu tại vị trí cloud/storage do người dùng quản lý. Vì vậy, bảng biến mất khỏi SHOW TABLES trong khi các file vẫn còn ở location ban đầu.\n\n**Vì sao đề nêu rõ legacy Hive metastore?** Hành vi phụ thuộc loại bảng và metastore. Câu hỏi này dùng quy tắc external/managed của Hive metastore cũ. Với Unity Catalog managed table hiện nay, dữ liệu bị drop có thể được giữ trong thời gian khôi phục rồi mới purge bất đồng bộ; không nên suy ra hành vi đó cho mọi loại bảng.\n\n**Loại trừ từng lựa chọn:**\n- **A sai:** kích thước lớn hơn 10 GB không quyết định lệnh DROP có xóa file hay không.\n- **B sai:** việc không có location không giải thích trường hợp các data files cụ thể vẫn còn sau khi metadata bị gỡ.\n- **C đúng:** external table giữ file ngoài vòng đời xóa của DROP TABLE; lệnh chỉ bỏ metadata.\n- **D sai:** kích thước nhỏ hơn 10 GB cũng không làm thay đổi quy tắc này.\n- **E sai trong bối cảnh legacy Hive đã nêu:** với managed table, metastore quản lý vị trí dữ liệu và DROP TABLE sẽ xóa cả metadata lẫn dữ liệu. Vì thế đây không phải lý do phù hợp với hiện tượng file còn nguyên trong đề.\n\n**Cách xác nhận:** kiểm tra loại bảng và trường Location trước khi drop. Nếu là external, việc dọn file phải được thực hiện riêng tại storage; nếu là managed, tìm hiểu đúng chính sách retention/recovery đang áp dụng.",
     "references": [
       {
-        "title": "DROP TABLE reference",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-drop-table.html"
+        "title": "DROP TABLE - Databricks SQL",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-table"
       },
       {
-        "title": "Managed and external tables",
-        "url": "https://docs.databricks.com/en/lakehouse/data-objects.html"
+        "title": "Database objects in the legacy Hive metastore",
+        "url": "https://docs.databricks.com/aws/en/database-objects/hive-metastore"
+      },
+      {
+        "title": "Managed tables in Unity Catalog",
+        "url": "https://docs.databricks.com/aws/en/tables/managed"
       }
     ],
-    "question_vi": "Một nhà phân tích dữ liệu đang cố gắng xóa bảng `my_table`. Nhà phân tích muốn xóa toàn bộ siêu dữ liệu (metadata) và dữ liệu của bảng. Họ chạy câu lệnh sau: `DROP TABLE IF EXISTS my_table;` Mặc dù đối tượng không còn hiển thị khi họ chạy lệnh `SHOW TABLES`, các tệp dữ liệu vẫn tồn tại. Phương án nào sau đây giải thích lý do tại sao các tệp dữ liệu vẫn tồn tại còn các tệp siêu dữ liệu lại bị xóa?",
+    "question_vi": "Trong **legacy Hive metastore** ở cấp workspace, một analyst muốn xóa metadata và dữ liệu của bảng my_table. Họ chạy `DROP TABLE IF EXISTS my_table;`. Bảng không còn xuất hiện khi chạy `SHOW TABLES`, nhưng các file dữ liệu vẫn còn. Nguyên nhân nào giải thích đúng việc metadata đã bị xóa còn các file dữ liệu thì vẫn tồn tại?",
     "options_vi": {
       "A": "Dữ liệu của bảng lớn hơn 10 GB",
       "B": "Bảng không có vị trí lưu trữ (location)",
@@ -1356,15 +1364,15 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án D — tạo rồi chia sẻ Personal Access Token.** Khách hàng không được cấp quyền vào workspace hoặc tài nguyên Databricks. PAT là thông tin xác thực có thể dùng để gọi Databricks APIs trong phạm vi quyền của principal sở hữu token; chia sẻ token cho khách hàng vì thế có thể mở quyền truy cập vượt xa việc xem một ảnh dashboard. Thời hạn 1 ngày chỉ giới hạn thời gian rủi ro, không biến việc chia sẻ credential thành phương án an toàn.\n\n**Các cách còn lại đáp ứng yêu cầu “chỉ nhận ảnh chụp”:** tải PDF/PNG hoặc ảnh màn hình rồi gửi cho khách hàng. Có thể lên lịch refresh và thêm email notification destination làm subscriber; người nhận nhận snapshot PDF theo lịch, không cần được cấp dashboard access. Cần vẫn kiểm tra dữ liệu/PII trước khi gửi snapshot ra ngoài.\n\n**Loại trừ:**\n- **A và E:** xuất PDF/PNG chỉ gửi kết quả tĩnh; không cấp phiên đăng nhập hay token.\n- **B:** nếu email đã được admin cấu hình làm external notification destination, subscription gửi ảnh chụp/PDF theo lịch; không bắt buộc khách hàng vào workspace.\n- **C:** screenshot là ảnh tĩnh, nhưng cần quy trình gửi thủ công sau mỗi lần refresh.\n- **D sai về bảo mật:** PAT là credential cho workspace/API; không nên chia sẻ cho người ngoài chỉ để xem báo cáo.\n\n**Nguyên tắc:** chia sẻ đúng artifact tối thiểu cần thiết. Snapshot phù hợp khi người ngoài chỉ cần đọc; cấp quyền dashboard chỉ khi họ thực sự cần tương tác và tổ chức cho phép.",
+    "explanation_vi": "**Đáp án D — không chia sẻ Personal Access Token (PAT) với khách hàng.** PAT là credential để xác thực các thao tác Databricks trong phạm vi quyền của principal sở hữu token. Gửi token cho người ngoài có thể cho họ quyền truy cập workspace/API vượt xa nhu cầu xem một bản snapshot. Thời hạn một ngày chỉ giới hạn thời gian dùng được; nó không làm việc chia sẻ credential trở thành an toàn.\n\n**Những cách còn lại chỉ gửi artifact tĩnh:** PDF, PNG hoặc screenshot là bản sao kết quả tại thời điểm xuất/chụp. Nếu admin đã cấu hình email khách hàng thành external notification destination, subscriber có thể nhận PDF snapshot theo lịch mà không cần đăng nhập workspace. Cần kiểm tra dữ liệu nhạy cảm trước khi gửi ra ngoài.\n\n**Loại trừ từng lựa chọn:**\n- **A sai (không phải lựa chọn cần chọn):** PDF là snapshot tĩnh, không cấp quyền workspace nên cách này đáp ứng yêu cầu của khách hàng.\n- **B sai (không phải lựa chọn cần chọn):** theo điều kiện đề bài, email đã là external notification destination. Subscriber nhận PDF snapshot sau refresh theo lịch mà không cần mở dashboard.\n- **C sai (không phải lựa chọn cần chọn):** screenshot là ảnh tĩnh, không cấp workspace access; chỉ cần gửi thủ công mỗi khi có bản cập nhật.\n- **D không đáp ứng yêu cầu:** PAT là credential truy cập hệ thống/API chứ không phải file báo cáo. Không gửi token cho khách hàng.\n- **E sai (không phải lựa chọn cần chọn):** PNG xuất ra là snapshot tĩnh nên đáp ứng yêu cầu chia sẻ mà không cấp quyền dashboard.\n\n**Nguyên tắc:** chia sẻ đúng artifact người nhận cần. Nếu chỉ cần xem kết quả, gửi snapshot; chỉ cấp quyền dashboard khi họ thật sự cần tương tác và chính sách tổ chức cho phép.",
     "references": [
       {
         "title": "Manage scheduled dashboard updates and subscriptions",
         "url": "https://docs.databricks.com/aws/en/dashboards/share/schedule-subscribe"
       },
       {
-        "title": "Personal access tokens",
-        "url": "https://docs.databricks.com/aws/en/dev-tools/auth/pat"
+        "title": "Monitor and revoke personal access tokens",
+        "url": "https://docs.databricks.com/aws/en/admin/access-control/tokens"
       }
     ],
     "question_vi": "Một nhà phân tích cần gửi ảnh chụp dashboard cho khách hàng bên ngoài, nhưng khách hàng không được cấp quyền vào workspace Databricks hay các tài nguyên khác. Quản trị viên workspace đã cấu hình email của khách hàng làm địa chỉ nhận thông báo bên ngoài.\nCách nào không đáp ứng yêu cầu bảo mật?",
@@ -1719,8 +1727,12 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án B — `dbfs:/accounting/data`.** Với schema/database trong Hive metastore cũ, mệnh đề `LOCATION` chỉ định vị trí gốc cụ thể cho schema. Vì đề đã truyền đúng đường dẫn `dbfs:/accounting/data`, đó là vị trí được dùng; Databricks không tự thêm hậu tố `.db` vào một LOCATION đã chỉ định rõ.\n\n**Phân biệt với mặc định:** nếu không chỉ định location, Hive metastore thường tạo thư mục mặc định theo tên schema trong warehouse location, chẳng hạn `accounting.db`. Nhưng khi người dùng nêu LOCATION tùy chỉnh, cần theo đường dẫn đã cung cấp thay vì áp dụng quy tắc mặc định.\n\n**Loại trừ:**\n- **A và C sai:** tự thêm `accounting` hoặc `.db` vào cuối đường dẫn đã chỉ định, không theo giá trị `LOCATION` trong câu lệnh.\n- **D sai:** là kiểu vị trí warehouse mặc định thường gặp, không áp dụng khi đã truyền một location tùy chỉnh.\n- **B đúng:** chính xác là URI khai báo cho schema.\n\n**Lưu ý:** câu hỏi nói về Hive metastore legacy và DBFS URI. Với Unity Catalog hiện đại, external locations/managed storage và quyền được cấu hình khác; không áp dụng máy móc đường dẫn legacy cho schema Unity Catalog.",
+    "explanation_vi": "**Đáp án B — dbfs:/accounting/data.** Trong câu lệnh tạo schema của legacy Hive metastore, LOCATION khai báo trực tiếp thư mục gốc của schema. Vì LOCATION đã được chỉ định là dbfs:/accounting/data, vị trí đó được dùng nguyên trạng; hệ thống không tự thêm hậu tố .db hoặc tên schema vào URI tùy chỉnh.\n\n**Phân biệt với vị trí mặc định:** nếu bỏ LOCATION, Hive metastore dùng warehouse location mặc định, thường có dạng /user/hive/warehouse/accounting.db. Quy tắc mặc định đó không áp dụng khi câu lệnh đã truyền đường dẫn tùy chỉnh.\n\n**Loại trừ từng lựa chọn:**\n- **A sai:** tự nối accounting.db vào sau URI do đề đã chỉ định.\n- **B đúng:** khớp chính xác giá trị LOCATION.\n- **C sai:** tự nối .db, không theo đường dẫn tùy chỉnh.\n- **D sai:** đây là dạng vị trí warehouse mặc định, không phải vị trí được chọn trong câu lệnh.\n\n**Lưu ý về phạm vi:** câu hỏi nói rõ legacy Hive metastore và DBFS URI. Với Unity Catalog, LOCATION không dùng để chọn managed storage cho schema; thay vào đó dùng MANAGED LOCATION và external location có cấu hình quyền. DBFS root cũng là tính năng legacy và không nên dùng cho dữ liệu mới.",
     "references": [
+      {
+        "title": "CREATE SCHEMA - Databricks SQL",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema"
+      },
       {
         "title": "Database objects in the legacy Hive metastore",
         "url": "https://docs.databricks.com/aws/en/database-objects/hive-metastore"
@@ -1778,15 +1790,15 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án D.** Muốn giữ *mọi khách hàng*, kể cả người không có đơn hàng, phải bắt đầu từ `customers` và dùng `LEFT JOIN orders`. Với khách hàng chưa có đơn, phép join vẫn tạo một hàng mở rộng bên phải bằng NULL. Vì vậy cần `COUNT(order_id)`: hàm đếm giá trị không NULL, nên trường hợp không có match cho kết quả 0.\n\n**Ví dụ cấu trúc:**\n```sql\nSELECT c.customer_id, COUNT(o.order_id) AS order_count\nFROM customers c\nLEFT JOIN orders o ON c.customer_id = o.customer_id\nGROUP BY c.customer_id;\n```\nNếu dùng `COUNT(*)`, hàng customer được giữ bởi LEFT JOIN vẫn được đếm, dẫn đến khách không có đơn bị báo là 1. Nếu mỗi customer có nhiều order, mỗi hàng order được đếm đúng một lần.\n\n**Loại trừ:**\n- **A và B — INNER JOIN sai:** inner join loại customer không có match, nên không thể trả toàn bộ customers.\n- **C sai:** dùng `COUNT(*)` sẽ đếm cả hàng null-extended; kết quả cho khách chưa mua hàng thành 1 thay vì 0.\n- **E sai:** RIGHT JOIN với thứ tự bảng như đề không đảm bảo giữ toàn bộ bảng customers; hướng join quan trọng.\n- **D đúng:** LEFT JOIN giữ phía customer và COUNT trên khóa đơn hàng không NULL cho số 0 khi không có đơn.\n\n**Mẹo nhớ:** muốn đếm hàng match sau outer join, đếm cột khóa ở phía có thể vắng mặt (`COUNT(order_id)`), không đếm `*`.",
+    "explanation_vi": "**Đáp án D.** Đề yêu cầu giữ mọi customer, kể cả người không có order, nên bảng customers phải là phía được giữ lại trong LEFT JOIN. Sau phép nối, khách chưa có đơn vẫn sinh một hàng với các cột phía orders là NULL. COUNT(o.order_id) bỏ qua giá trị NULL, nhờ đó trả 0 cho khách này và đếm các order_id thật cho những khách đã đặt hàng.\n\n**Ví dụ kiểm tra nhanh:** nếu customers có customer_id = 10 nhưng orders không có dòng nào mang customer_id = 10, LEFT JOIN vẫn trả một dòng của khách 10. COUNT(*) sẽ đếm dòng đó thành 1; COUNT(o.order_id) đếm 0.\n\n**Loại trừ từng lựa chọn:**\n- **A sai:** INNER JOIN loại bỏ khách không có bản ghi khớp; ngoài ra COUNT(*) đếm mọi dòng khớp.\n- **B sai:** COUNT(order_id) đúng cách đếm order nhưng INNER JOIN vẫn loại khách không có order.\n- **C sai:** LEFT JOIN giữ mọi khách, nhưng COUNT(*) đếm cả hàng null-extended nên báo 1 thay vì 0 cho khách không có đơn.\n- **D đúng:** LEFT JOIN bảo toàn customers; COUNT(o.order_id) đếm các order thật, trả 0 khi phía orders không khớp.\n- **E sai:** RIGHT JOIN giữ phía orders trong thứ tự bảng đã viết; khách chỉ có trong customers và chưa có đơn vẫn bị loại.\n\n**Mẹo nhớ:** sau outer join, muốn đếm số bản ghi match ở phía có thể vắng mặt, hãy COUNT một cột khóa của phía đó; COUNT(*) đếm cả hàng được outer join giữ lại.",
     "references": [
       {
-        "title": "JOIN clause",
+        "title": "JOIN clause - Databricks SQL",
         "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join"
       },
       {
-        "title": "GROUP BY clause",
-        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby"
+        "title": "count aggregate function - Databricks SQL",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/functions/count"
       }
     ],
     "question_vi": "Hai bảng customers(customer_id) và orders(order_id, customer_id) chứa toàn bộ khách hàng, kể cả người chưa đặt hàng. Truy vấn nào trả mỗi khách hàng cùng số đơn hàng?",
@@ -2288,11 +2300,15 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "**Đáp án A.** Ownership là thuộc tính của table object; để biết owner của managed table, mở chính trang của bảng trong Catalog Explorer và xem trường Owner. Owner ở cấp schema/database có thể khác owner của bảng cụ thể.\n\n**Ví dụ:** trong cây catalog → schema → table, chọn `orders`; trang bảng hiển thị owner, schema, location, loại bảng và metadata. Nếu cần xác nhận quyền sâu hơn, kiểm tra grants/privileges riêng. Người có thể nhìn thấy metadata chưa chắc có quyền đọc nội dung bảng.\n\n**Loại trừ:**\n- **B và C sai:** trang database/schema hiển thị đối tượng cha; trường owner đó không xác định owner riêng của table.\n- **D sai:** SQL Editor để soạn/chạy query; không phải trang Catalog Explorer được hỏi để xem metadata owner.\n- **A đúng:** xem Owner trên trang của đúng bảng bằng Catalog Explorer.\n\n**Mẹo nhớ:** luôn mở đúng cấp object (catalog, schema, table, view); tên owner ở cấp cha không tự suy ra owner của tài sản con.\n\n**Phân biệt thêm:** Owner là thông tin về trách nhiệm/quyền sở hữu của object, còn SELECT/USE và các grant khác quyết định ai được sử dụng nó. Do đó hãy đọc owner trên chính table và xem tab Permissions riêng khi cần biết nhóm nào có quyền truy vấn; chỉ đổi owner khi có yêu cầu quản trị và đủ quyền.",
+    "explanation_vi": "**Đáp án A.** Owner là thuộc tính của chính table object. Mở trang của đúng managed table trong Catalog Explorer rồi xem trường Owner; tên owner của schema hoặc database cha không nhất thiết trùng với owner của bảng.\n\n**Cách thao tác:** vào Catalog Explorer, duyệt catalog → schema → table, chọn bảng cần kiểm tra và xem phần thông tin/chi tiết của object. Nếu mục tiêu là biết ai có thể đọc hoặc sửa bảng, xem thêm Permissions/Grants: quyền sở hữu và các quyền SELECT, MODIFY, MANAGE là những thông tin khác nhau.\n\n**Loại trừ từng lựa chọn:**\n- **A đúng:** xem metadata của chính table trong Catalog Explorer.\n- **B sai:** trang database/schema không cho biết riêng owner của table con.\n- **C sai:** tương tự, owner ở cấp schema không xác định owner của một bảng cụ thể.\n- **D sai:** SQL Editor dùng để viết/chạy truy vấn; lựa chọn này không phải vị trí giao diện được hỏi để xem trường Owner.\n\n**Cách nhớ:** mở đúng cấp object trước khi đọc metadata: catalog, schema, table và view có owner riêng. Một người có thể xem metadata không mặc nhiên có quyền truy vấn dữ liệu.",
     "references": [
       {
-        "title": "Explore data with Catalog Explorer",
-        "url": "https://docs.databricks.com/catalog-explorer/index.html"
+        "title": "What is Catalog Explorer? - Databricks",
+        "url": "https://docs.databricks.com/aws/en/catalog-explorer"
+      },
+      {
+        "title": "Manage object ownership - Databricks",
+        "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/manage-privileges/ownership"
       }
     ],
     "question_vi": "Nơi nào có thể được sử dụng để xác định chủ sở hữu (owner) của một bảng được quản lý (managed table)?",
