@@ -96,90 +96,96 @@
   {
     "id": 4,
     "topic": 1,
-    "question": "The data engineering team has configured a **Databricks SQL** query and alert to monitor the values in a **Delta Lake** table. The `recent_sensor_recordings` table contains an identifying `sensor_id` alongside the timestamp and temperature for the most recent 5 minutes of recordings.\nThe below query is used to create the alert:\nThe query is set to refresh each minute and always completes in less than 10 seconds. The alert is set to trigger when `mean(temperature) > 120`.\nNotifications are triggered to be sent at most every 1 minute.\nIf this alert raises notifications for 3 consecutive minutes and then stops, which statement must be true?",
+    "question": "The data engineering team has configured a Databricks SQL query and alert to monitor a Delta Lake table. The recent_sensor_recordings table contains sensor_id, a timestamp, and temperature for the most recent five minutes. The query runs every minute and completes in under 10 seconds. It computes the mean temperature for each sensor, then returns whether at least one sensor's mean exceeds 120:\n\n```sql\nSELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END AS any_sensor_over_120\nFROM (\n  SELECT sensor_id, MEAN(temperature) AS mean_temperature\n  FROM recent_sensor_recordings\n  GROUP BY sensor_id\n  HAVING MEAN(temperature) > 120\n)\n```\n\nThe alert triggers when any_sensor_over_120 is greater than 0, and notifications are sent at most once per minute. If the alert sends notifications for three consecutive minutes and then stops, which statement describes the condition that triggered it?",
     "options": {
       "A": "The total average temperature across all sensors exceeded 120 on three consecutive executions of the query",
-      "B": "The `recent_sensor_recordings` table was unresponsive for three consecutive runs of the query",
+      "B": "The recent_sensor_recordings table was unresponsive for three consecutive runs of the query",
       "C": "The source query failed to update properly for three consecutive minutes and then restarted",
-      "D": "The maximum temperature recording for at least one sensor exceeded 120 on three consecutive executions of the query",
-      "E": "The average temperature recordings for at least one sensor exceeded 120 on three consecutive executions of the query"
+      "D": "The alert evaluated MAX(temperature), rather than each sensor's mean, as the configured threshold metric",
+      "E": "At least one sensor had a mean temperature above 120 on each of three consecutive query executions"
     },
     "answer": "E",
-    "question_vi": "**Alert** kiểm tra bảng **Delta** `recent_sensor_recordings` (5 phút dữ liệu gần nhất), chạy mỗi phút, trigger khi `mean(temperature) > 120` và đã gửi cảnh báo 3 phút liên tiếp rồi dừng. Điều nào chắc chắn đúng?",
+    "question_vi": "Nhóm kỹ thuật dữ liệu cấu hình một truy vấn Databricks SQL và alert để theo dõi bảng Delta Lake. Bảng recent_sensor_recordings có sensor_id, thời điểm ghi nhận và nhiệt độ trong năm phút gần nhất. Truy vấn chạy mỗi phút, hoàn tất trong dưới 10 giây, tính nhiệt độ trung bình theo từng cảm biến rồi trả về việc có cảm biến nào vượt 120 hay không:\n\n```sql\nSELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END AS any_sensor_over_120\nFROM (\n  SELECT sensor_id, MEAN(temperature) AS mean_temperature\n  FROM recent_sensor_recordings\n  GROUP BY sensor_id\n  HAVING MEAN(temperature) > 120\n)\n```\n\nAlert được kích hoạt khi any_sensor_over_120 lớn hơn 0; thông báo gửi tối đa một lần mỗi phút. Nếu alert gửi thông báo trong ba phút liên tiếp rồi dừng, phát biểu nào mô tả đúng điều kiện đã kích hoạt?",
     "options_vi": {
-      "A": "Nhiệt độ trung bình toàn bộ cảm biến > 120 trong 3 lần chạy liên tiếp",
-      "B": "Bảng `recent_sensor_recordings` không phản hồi 3 lần liên tiếp",
-      "C": "Query nguồn lỗi 3 phút liên tiếp rồi chạy lại",
-      "D": "Nhiệt độ tối đa của ít nhất một cảm biến > 120 trong 3 lần chạy",
-      "E": "Nhiệt độ trung bình của ít nhất một cảm biến > 120 trong 3 lần chạy"
+      "A": "Nhiệt độ trung bình gộp của tất cả cảm biến vượt 120 trong ba lần truy vấn liên tiếp",
+      "B": "Bảng recent_sensor_recordings không phản hồi trong ba lần truy vấn liên tiếp",
+      "C": "Truy vấn nguồn cập nhật lỗi trong ba phút liên tiếp rồi khởi động lại",
+      "D": "Alert dùng MAX(temperature), thay vì nhiệt độ trung bình của từng cảm biến, làm chỉ số so sánh với ngưỡng",
+      "E": "Có ít nhất một cảm biến có nhiệt độ trung bình vượt 120 trong mỗi lần của ba lần truy vấn liên tiếp"
     },
-    "explanation_vi": "Đáp án đúng: E. Nhiệt độ trung bình của ít nhất một cảm biến >120 trong 3 lần chạy liên tiếp.\n\nGiải thích:\n- Truy vấn nguồn thực hiện tính toán các giá trị trung bình (``MEAN``), lớn nhất (``MAX``), và nhỏ nhất (``MIN``) của nhiệt độ và nhóm kết quả theo từng cảm biến (``GROUP BY `sensor_id```).\n- Một cảnh báo (Alert) của **Databricks SQL** sẽ được kích hoạt (trigger) nếu có ít nhất một dòng trong kết quả truy vấn thỏa mãn điều kiện kiểm tra (ở đây là ``mean(temperature) > 120``).\n- Do đó, nếu cảnh báo này gửi thông báo trong 3 phút liên tiếp, điều đó có nghĩa là trong 3 lần chạy liên tiếp của truy vấn, có ít nhất một cảm biến (không nhất thiết phải là cùng một cảm biến trong cả 3 lần) có giá trị nhiệt độ trung bình vượt quá 120.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đề bài hỏi gì?** Xác định phép đo trực tiếp làm alert gửi thông báo ba phút liên tiếp.\n\n**Đáp án E — nhiệt độ trung bình của ít nhất một cảm biến vượt 120.** Truy vấn nhóm theo **sensor_id**, vì vậy **MEAN(temperature)** được tính riêng cho từng cảm biến. Điều kiện **HAVING MEAN(temperature) > 120** giữ lại cảm biến nào có mức trung bình vượt 120; truy vấn ngoài trả **1** nếu còn ít nhất một cảm biến. Cảm biến vượt ngưỡng không nhất thiết phải là cùng một cảm biến trong cả ba lần chạy.\n\nThông báo ba phút liên tiếp cho biết điều kiện được đáp ứng ở các lần đánh giá đó. Truy vấn chạy mỗi phút và hoàn tất dưới 10 giây, nên không có cơ sở kết luận bảng bị treo hoặc query thất bại.\n\n- **Trung bình gộp của mọi cảm biến:** không được tính trong SQL này; **GROUP BY sensor_id** tạo một trung bình cho mỗi nhóm.\n- **Bảng không phản hồi / query thất bại:** trái với việc query trả kết quả khiến điều kiện cảnh báo đúng; lỗi nguồn không suy ra từ các thông báo.\n- **MAX là metric được alert kiểm tra:** SQL tính MAX nhưng điều kiện alert được đặt trên MEAN. Hơn nữa, mean >120 cũng kéo theo max >120, nên phương án MAX cũ cũng là hệ quả đúng về toán học. Vì vậy câu hỏi đã sửa phương án này thành phát biểu về metric trực tiếp, để chỉ còn một đáp án phù hợp với điều alert kiểm tra.\n\nTrong Databricks, hãy cấu hình alert trên cột số **any_sensor_over_120**; giao diện alert có lựa chọn kiểm tra giá trị đầu tiên hoặc tổng hợp trên các hàng, nên tránh để ngữ nghĩa ANY mơ hồ.",
     "page": null,
-    "image": "img/q_4.jpg",
     "references": [
       {
-        "title": "Databricks SQL Alerts",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "What are legacy alerts? - Databricks",
+        "url": "https://docs.databricks.com/aws/en/sql/user/alerts/legacy"
+      },
+      {
+        "title": "mean aggregate function - Databricks SQL",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/functions/mean"
       }
     ]
   },
   {
     "id": 5,
     "topic": 1,
-    "question": "A junior developer complains that the code in their notebook isn't producing the correct results in the development environment. A shared screenshot reveals that while they're using a notebook versioned with **Databricks Repos**, they're using a personal branch that contains old logic. The desired branch named `dev-2.3.9` is not available from the branch selection dropdown.\nWhich approach will allow this developer to review the current logic for this notebook?",
+    "question": "A junior developer discovers that their Databricks Repos notebook uses a personal branch with old logic. The desired remote branch, dev-2.3.9, is not available in the branch dropdown. Which approach lets the developer review the notebook's current logic on that branch?",
     "options": {
-      "A": "Use **Repos** to make a pull request use the **Databricks REST API** to update the current branch to `dev-2.3.9`",
-      "B": "Use **Repos** to pull changes from the remote Git repository and select the `dev-2.3.9` branch.",
-      "C": "Use **Repos** to checkout the `dev-2.3.9` branch and auto-resolve conflicts with the current branch",
-      "D": "Merge all changes back to the main branch in the remote Git repository and clone the repo again",
-      "E": "Use **Repos** to merge the current branch and the `dev-2.3.9` branch, then make a pull request to sync with the remote repository"
+      "A": "Create a pull request in Repos or use the Databricks REST API to change the current branch to dev-2.3.9.",
+      "B": "Pull changes from the remote Git repository in Repos, then select the dev-2.3.9 branch.",
+      "C": "Check out dev-2.3.9 in Repos and automatically resolve conflicts with the current branch.",
+      "D": "Merge all changes into the remote main branch, then clone the repository again.",
+      "E": "Merge the current branch with dev-2.3.9 in Repos, then create a pull request to sync with the remote repository."
     },
     "answer": "B",
-    "question_vi": "Dev đang ở nhánh cá nhân cũ, cần xem logic mới ở nhánh `dev-2.3.9` nhưng không thấy trong dropdown. Cách nào để xem đúng logic?",
+    "question_vi": "Một lập trình viên mới phát hiện notebook trong Databricks Repos đang ở nhánh cá nhân chứa logic cũ. Nhánh remote cần xem là **dev-2.3.9** nhưng chưa có trong danh sách chọn nhánh. Cách nào giúp họ xem logic hiện tại của notebook trên nhánh đó?",
     "options_vi": {
-      "A": "Dùng **Repos** tạo pull request và dùng **REST API** đổi nhánh hiện tại sang `dev-2.3.9`",
-      "B": "Dùng **Repos** kéo thay đổi từ remote và chọn nhánh `dev-2.3.9`",
-      "C": "Checkout nhánh `dev-2.3.9` và tự động resolve conflict",
-      "D": "Merge mọi thay đổi về main rồi clone lại repo",
-      "E": "Merge nhánh hiện tại với `dev-2.3.9` rồi mở pull request đồng bộ"
+      "A": "Tạo pull request trong Repos hoặc dùng Databricks REST API để đổi nhánh hiện tại sang dev-2.3.9.",
+      "B": "Pull thay đổi từ Git repository từ xa trong Repos, sau đó chọn nhánh dev-2.3.9.",
+      "C": "Checkout dev-2.3.9 trong Repos và tự động giải quyết xung đột với nhánh hiện tại.",
+      "D": "Gộp mọi thay đổi vào nhánh main trên remote rồi clone lại repository.",
+      "E": "Gộp nhánh hiện tại với dev-2.3.9 trong Repos rồi tạo pull request để đồng bộ với remote."
     },
-    "explanation_vi": "Đáp án đúng: B. Dùng Repos kéo thay đổi từ remote và chọn nhánh `dev-2.3.9`.\n\nGiải thích:\n- Trong **Databricks Repos**, danh sách các nhánh khả dụng được lưu vào bộ đệm (cache) local. Nếu một nhánh mới (ví dụ ``dev-2.3.9``) vừa được tạo trên Git remote, nó sẽ không xuất hiện ngay trong dropdown lựa chọn nhánh của **Databricks Repos**.\n- Để cập nhật danh sách nhánh từ Git remote, nhà phát triển cần thực hiện thao tác **`Pull`** (hoặc `Fetch`) thay đổi từ remote. Sau đó, nhánh ``dev-2.3.9`` sẽ hiển thị trong dropdown để chọn và chuyển đổi (`checkout`) nhằm xem logic mới nhất của notebook.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đề bài hỏi gì?** Nhánh đã tồn tại ở remote nhưng chưa hiện trong danh sách của Git folder. Cần đồng bộ thông tin/mã từ remote rồi chuyển sang nhánh đích.\n\n**Đáp án B.** Trong giao diện Git folder (tên trước đây là Repos), thực hiện **Pull** để lấy nội dung từ Git repository từ xa, sau đó chọn **dev-2.3.9** trong danh sách nhánh. Tài liệu Databricks mô tả Pull là thao tác lấy nội dung remote; branch selector dùng để chuyển sang nhánh khác.\n\n- **A:** Pull request là đề xuất hợp nhất thay đổi trên Git provider; nó không cập nhật danh sách nhánh để người dùng chỉ xem nhánh. REST API không cần thiết cho thao tác này.\n- **C:** Checkout không thể chọn nhánh chưa được Git folder nhận diện, và đề không có xung đột cần tự động giải quyết.\n- **D:** Gộp vào **main** sẽ thay đổi nhánh dùng chung và có thể ảnh hưởng cộng tác viên; clone lại là bước thừa.\n- **E:** Gộp hai nhánh và tạo pull request là quy trình thay đổi/đề xuất hợp nhất mã, trong khi yêu cầu chỉ là xem logic ở nhánh remote.\n\nPull cập nhật nội dung trong Git folder; khi chuyển nhánh, hãy lưu/commit thay đổi chưa commit trước nếu cần giữ chúng. Databricks cũng cảnh báo việc chuyển nhánh có thể xóa workspace asset không tồn tại ở nhánh mới.",
     "page": null,
     "image": "img/q_5.jpg",
     "references": [
       {
-        "title": "Databricks Git folders (Repos) integration",
-        "url": "https://docs.databricks.com/en/repos/git-operations-with-repos"
+        "title": "Create and manage Git folders - Databricks",
+        "url": "https://docs.databricks.com/aws/en/repos/git-operations-with-repos"
       }
     ]
   },
   {
     "id": 6,
     "topic": 1,
-    "question": "The security team is exploring whether or not the **Databricks Secrets** module can be leveraged for connecting to an external database.\nAfter testing the code with all Python variables being defined with strings, they upload the password to the secrets module and configure the correct permissions for the currently active user. They then modify their code to the following (leaving all other variables unchanged). Which statement describes what will happen when the above code is executed?",
+    "question": "The security team is exploring whether Databricks Secrets can be used to connect to an external database. After verifying that the original code works when all Python variables are ordinary strings, the team stores the password in a secret scope and grants the active user the required permission. They replace the password assignment with the following code; all other variables and settings remain valid:\n\n```python\npassword = dbutils.secrets.get(scope=\"db_creds\", key=\"jdbc_password\")\nprint(password)\n\ndf = (spark.read\n  .format(\"jdbc\")\n  .option(\"url\", connection)\n  .option(\"dbtable\", tablename)\n  .option(\"user\", username)\n  .option(\"password\", password)\n  .load()\n)\n```\n\nWhich statement describes what happens when the code is executed?",
     "options": {
-      "A": "The connection to the external table will fail; the string \"REDACTED\" will be printed.",
-      "B": "An interactive input box will appear in the notebook; if the right password is provided, the connection will succeed and the encoded password will be saved to **DBFS**.",
+      "A": "The connection to the external table will fail; the string \"[REDACTED]\" will be printed.",
+      "B": "An interactive input box will appear in the notebook; if the right password is provided, the connection will succeed and the encoded password will be saved to DBFS.",
       "C": "An interactive input box will appear in the notebook; if the right password is provided, the connection will succeed and the password will be printed in plain text.",
       "D": "The connection to the external table will succeed; the string value of password will be printed in plain text.",
-      "E": "The connection to the external table will succeed; the string \"REDACTED\" will be printed."
+      "E": "The connection to the external table will succeed; the string \"[REDACTED]\" will be printed."
     },
     "answer": "E",
-    "question_vi": "Đội bảo mật lưu mật khẩu vào **Databricks Secrets** và đổi code để lấy bằng `dbutils.secrets.get()`. Khi chạy, điều gì xảy ra?",
+    "question_vi": "Đội bảo mật đang kiểm tra việc dùng Databricks Secrets để kết nối tới cơ sở dữ liệu bên ngoài. Họ đã xác nhận code ban đầu chạy được khi mọi biến Python là chuỗi thông thường. Sau đó, họ lưu mật khẩu vào secret scope, cấp quyền cần thiết cho người dùng hiện tại và thay phần gán mật khẩu bằng đoạn mã dưới đây; các biến/cấu hình còn lại vẫn hợp lệ:\n\n```python\npassword = dbutils.secrets.get(scope=\"db_creds\", key=\"jdbc_password\")\nprint(password)\n\ndf = (spark.read\n  .format(\"jdbc\")\n  .option(\"url\", connection)\n  .option(\"dbtable\", tablename)\n  .option(\"user\", username)\n  .option(\"password\", password)\n  .load()\n)\n```\n\nPhát biểu nào mô tả đúng điều xảy ra khi chạy đoạn mã?",
     "options_vi": {
-      "A": "Kết nối thất bại, in chuỗi 'REDACTED'",
-      "B": "Hiện ô nhập mật khẩu; nếu đúng sẽ lưu mật khẩu đã mã hóa vào **DBFS**",
-      "C": "Hiện ô nhập mật khẩu; nếu đúng sẽ in mật khẩu dạng rõ",
-      "D": "Kết nối thành công và in mật khẩu dạng rõ",
-      "E": "Kết nối thành công và in chuỗi 'REDACTED'"
+      "A": "Kết nối tới bảng bên ngoài thất bại; chương trình in chuỗi \"[REDACTED]\".",
+      "B": "Notebook hiện ô nhập mật khẩu; nếu nhập đúng thì kết nối thành công và mật khẩu đã mã hóa được lưu vào DBFS.",
+      "C": "Notebook hiện ô nhập mật khẩu; nếu nhập đúng thì kết nối thành công và mật khẩu được in dưới dạng văn bản thuần.",
+      "D": "Kết nối tới bảng bên ngoài thành công và giá trị mật khẩu được in dưới dạng văn bản thuần.",
+      "E": "Kết nối tới bảng bên ngoài thành công và chương trình in chuỗi \"[REDACTED]\"."
     },
-    "explanation_vi": "Đáp án đúng: E. Kết nối thành công và in chuỗi 'REDACTED'.\n\nGiải thích:\n- Khi sử dụng ``dbutils.secrets.get()``, Databricks sẽ lấy mật khẩu chính xác từ **secret manager** để thực hiện kết nối thành công đến cơ sở dữ liệu bên ngoài.\n- Tuy nhiên, để đảm bảo an toàn thông tin và tránh rò rỉ mật khẩu trong nhật ký (logs) hoặc kết quả hiển thị của notebook, Databricks tích hợp cơ chế tự động che giấu (redaction). Bất kỳ nỗ lực nào nhằm in (``print``) hoặc hiển thị giá trị của biến bí mật này ra màn hình notebook sẽ chỉ nhận được chuỗi đại diện là ``[REDACTED]``.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đề bài hỏi gì?** Người dùng thay chuỗi mật khẩu trong code bằng giá trị lấy từ Databricks Secrets, rồi vừa in biến đó vừa dùng nó cho kết nối JDBC. Cần phân biệt giá trị mà code nhận được với giá trị được hiển thị trong output.\n\n**Đáp án E.** Với quyền đọc secret hợp lệ, **dbutils.secrets.get()** trả mật khẩu thật cho chương trình để truyền vào cấu hình JDBC. Vì các thông tin kết nối còn lại đã được xác nhận hợp lệ và **load()** khởi tạo việc đọc JDBC, kết nối có thể dùng credential thật. Lệnh **print(password)** in trực tiếp chính giá trị secret; Databricks áp dụng redaction cho literal secret và hiển thị **[REDACTED]** thay cho mật khẩu.\n\n- **A:** Sai ở phần kết nối. Redaction chỉ thay đổi nội dung hiển thị; nó không xóa giá trị khỏi biến mà connector dùng, nên bản thân thao tác che mật khẩu không làm kết nối thất bại.\n- **B:** **dbutils.secrets.get()** đọc secret từ scope, không mở hộp thoại nhập tương tác. Code cũng không ghi password đã mã hóa vào DBFS.\n- **C:** Không có hộp thoại nhập. Khi in trực tiếp literal secret, output được redaction thay vì hiển thị plaintext.\n- **D:** Connector dùng giá trị thật nhưng output console không in trực tiếp giá trị secret nguyên dạng; Databricks che nó.\n\n**Giới hạn cần nhớ:** redaction không chặn người có quyền chạy code cố ý biến đổi secret. Ví dụ, in từng ký tự hoặc mã hóa lại giá trị có thể làm lộ nội dung vì kết quả đã biến đổi không còn trùng literal secret. Hãy giới hạn ACL và quyền chạy code; không coi redaction là kiểm soát truy cập.",
     "page": null,
-    "image": "img/q_6.jpg",
     "references": [
       {
-        "title": "Databricks Secrets - Redaction",
-        "url": "https://docs.databricks.com/en/dev-tools/databricks-apps/secrets"
+        "title": "Secret management - Databricks",
+        "url": "https://docs.databricks.com/aws/en/security/secrets"
+      },
+      {
+        "title": "Spark data sources - Databricks",
+        "url": "https://docs.databricks.com/aws/en/connect/spark-data-sources"
       }
     ]
   },
@@ -948,21 +954,25 @@
       "E": "No computation will occur until `enriched_itemized_orders_by_account` is queried; upon query materialization, results will be calculated using the current valid version of data in each of the three tables referenced in the join logic."
     },
     "answer": "B",
-    "question_vi": "Nhóm kỹ thuật dữ liệu duy trì đoạn PySpark sau. Giả sử các phép join cho kết quả logic đúng, dữ liệu nguồn đã loại trùng và được kiểm tra. Điều gì xảy ra khi chạy code này?\n\n```python\naccountDF = spark.table(\"accounts\")\norderDF = spark.table(\"orders\")\nitemDF = spark.table(\"items\")\n\norderWithItemDF = (orderDF.join(\n    itemDF,\n    orderDF.itemID == itemDF.itemID\n).select(\n    orderDF.accountID,\n    orderDF.itemID,\n    itemDF.itemName\n))\n\nfinalDF = (accountDF.join(\n    orderWithItemDF,\n    accountDF.accountID == orderWithItemDF.accountID\n).select(\n    orderWithItemDF[\"*\"],\n    accountDF.city\n))\n\n(finalDF.write\n    .mode(\"overwrite\")\n    .table(\"enriched_itemized_orders_by_account\")\n)\n```",
+    "question_vi": "Nhóm kỹ thuật dữ liệu duy trì đoạn PySpark sau. Giả sử các phép join cho kết quả đúng, dữ liệu nguồn đã loại trùng và kiểm định. Điều gì xảy ra khi chạy code này?\n\n```python\naccountDF = spark.table(\"accounts\")\norderDF = spark.table(\"orders\")\nitemDF = spark.table(\"items\")\n\norderWithItemDF = (orderDF.join(\n    itemDF,\n    orderDF.itemID == itemDF.itemID\n).select(\n    orderDF.accountID,\n    orderDF.itemID,\n    itemDF.itemName\n))\n\nfinalDF = (accountDF.join(\n    orderWithItemDF,\n    accountDF.accountID == orderWithItemDF.accountID\n).select(\n    orderWithItemDF[\"*\"],\n    accountDF.city\n))\n\n(finalDF.write\n    .mode(\"overwrite\")\n    .table(\"enriched_itemized_orders_by_account\")\n)\n```",
     "options_vi": {
-      "A": "Job batch cập nhật bảng, chỉ thay những hàng khác biệt, khoá chính `accountID`.",
-      "B": "Bảng được `overwrite` bằng phiên bản hiện tại của ba bảng nguồn trong join.",
-      "C": "Job incremental dùng `state store` tìm các hàng chưa join và ghi vào bảng đích.",
-      "D": "Job incremental phát hiện có hàng mới ở nguồn, tính lại toàn bộ và `overwrite` bảng đích.",
-      "E": "Không tính toán tới khi bảng được truy vấn; khi truy vấn sẽ tính từ dữ liệu hiện tại của nguồn."
+      "A": "Một batch job chỉ thay các hàng khác với bản hiện tại và dùng accountID làm khóa chính.",
+      "B": "Bảng enriched_itemized_orders_by_account bị ghi đè bằng dữ liệu hiện tại từ ba bảng nguồn được join.",
+      "C": "Job incremental dùng state store tìm hàng chưa join trong bảng nguồn rồi ghi vào bảng enriched_iteinized_orders_by_account.",
+      "D": "Job incremental phát hiện hàng mới trong bảng nguồn, tính lại toàn bộ kết quả và ghi đè bảng đích.",
+      "E": "Chưa tính toán cho đến khi bảng đích được truy vấn; khi đó kết quả mới được tính từ ba bảng nguồn."
     },
-    "explanation_vi": "**Đáp án B.** `spark.table(...)` đọc snapshot hiện tại của ba bảng nguồn; các phép `join` và `select` tạo một DataFrame batch. DataFrame Spark được tính lazy, và lệnh ghi ở cuối sẽ kích hoạt phép tính. `mode(\"overwrite\")` yêu cầu thay dữ liệu hiện có của bảng đích bằng toàn bộ kết quả `finalDF` vừa tạo, chứ không chỉ thay những hàng khác biệt.\n\nA sai vì code không có `MERGE`, khóa chính hay logic so sánh từng hàng để cập nhật chọn lọc. C sai vì không có streaming query hoặc state store. D sai vì không phát hiện riêng hàng mới rồi chạy tăng dần; toàn bộ join batch được thực hiện theo dữ liệu hiện có mỗi lần lệnh chạy. E sai vì bảng không phải view lazy chờ consumer truy vấn — thao tác `write` là action và thực thi việc ghi ngay.\n\nĐây là overwrite toàn bảng theo ngữ nghĩa batch. Câu hỏi không nêu cấu hình selective/partition overwrite, nên không có căn cứ hiểu là chỉ ghi đè một phần.\n\n📚 **Tham khảo:** [PySpark DataFrameWriter.mode](https://spark.apache.org/docs/3.5.9/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameWriter.mode.html)",
+    "explanation_vi": "**Đề bài hỏi gì?** Mã đọc ba bảng, thực hiện các phép join rồi ghi **finalDF** vào bảng đích bằng chế độ **overwrite**. Cần phân biệt ghi batch toàn bảng với upsert theo khóa, streaming incremental và view tính trễ.\n\n**Đáp án B.** **spark.table()** tạo các DataFrame batch đọc từ ba bảng nguồn. Các phép join/select định nghĩa **finalDF**; khi gọi **write.table(...)**, phép ghi được thực thi. **mode(\"overwrite\")** thay dữ liệu đang có ở bảng đích bằng toàn bộ kết quả tính từ các bảng nguồn trong lần chạy này. Code không có điều kiện so khớp từng hàng hay khóa chính.\n\n- **A:** Không có **MERGE** hoặc điều kiện theo **accountID** để cập nhật chọn lọc; overwrite không chỉ thay những hàng có giá trị khác.\n- **C:** Không có **readStream**, checkpoint hoặc state store. Các bảng được đọc theo kiểu batch.\n- **D:** Code không theo dõi hàng mới hay chạy incremental. Mỗi lần chạy job, phép join batch được tính lại từ dữ liệu nguồn rồi ghi đè kết quả.\n- **E:** DataFrame Spark được tính lazy trong lúc xây dựng plan, nhưng hành động ghi ở cuối kích hoạt tính toán và ghi kết quả ngay khi code chạy. Bảng đích không đợi consumer truy vấn như một view.",
     "page": null,
     "image": "img/q_32.jpg",
     "references": [
       {
-        "title": "PySpark DataFrameWriter.mode",
-        "url": "https://spark.apache.org/docs/3.5.9/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameWriter.mode.html"
+        "title": "mode (DataFrameWriter) - Databricks",
+        "url": "https://docs.databricks.com/aws/en/pyspark/reference/classes/dataframewriter/mode"
+      },
+      {
+        "title": "Tutorial: Create and manage Delta Lake tables - Databricks",
+        "url": "https://docs.databricks.com/aws/en/delta/tutorial"
       }
     ]
   },
@@ -1033,34 +1043,30 @@
   {
     "id": 35,
     "topic": 1,
-    "question": "To reduce storage and compute costs, the data engineering team has been tasked with curating a series of aggregate tables leveraged by business intelligence dashboards, customer-facing applications, production machine learning models, and ad hoc analytical queries. The data engineering team has been made aware of new requirements from a customer-facing application, which is the only downstream workload they manage entirely. As a result, an aggregate table used by numerous teams across the organization will need to have a number of fields renamed, and additional fields will also be added. Which of the solutions addresses the situation while minimally interrupting other teams in the organization without increasing the number of tables that need to be managed?",
+    "question": "To reduce storage and compute costs, the data engineering team maintains aggregate tables used by BI dashboards, customer-facing applications, production machine learning models, and ad hoc analysis. Only the customer-facing application, which this team fully manages, needs renamed fields and additional fields. The existing aggregate table is used by many other teams. Which solution minimizes disruption to those teams without increasing the number of physical tables that must be managed?",
     "options": {
-      "A": "Send all users notice that the schema for the table will be changing; include in the communication the logic necessary to revert the new table schema to match historic queries.",
-      "B": "Configure a new table with all the requisite fields and new names and use this as the source for the customer-facing application; create a `VIEW` that maintains the original data schema and table name by aliasing select fields from the new table.",
-      "C": "Create a new table with the required schema and new fields and use **Delta Lake**'s `DEEP CLONE` functionality to sync up changes committed to one table to the corresponding table.",
-      "D": "Replace the current table definition with a logical `VIEW` defined with the query logic currently writing the aggregate table; create a new table to power the customer-facing application.",
-      "E": "Add a table comment warning all users that the table schema and field names will be changing on a given date; overwrite the table in place to the specifications of the customer-facing application."
+      "A": "Thông báo cho mọi người về thay đổi schema và gửi hướng dẫn sửa các truy vấn cũ để tương thích với schema mới.",
+      "B": "Tạo bảng vật lý mới với schema mới cho ứng dụng khách hàng; thay bảng cũ bằng view giữ nguyên tên/schema cũ và ánh xạ trường từ bảng mới.",
+      "C": "Tạo bảng mới với schema cần thiết rồi dùng deep clone của Delta Lake để đồng bộ thay đổi giữa hai bảng.",
+      "D": "Thay bảng hiện tại bằng logical view chạy lại logic tổng hợp, rồi tạo bảng mới cho ứng dụng khách hàng.",
+      "E": "Thêm comment cảnh báo ngày đổi schema, sau đó ghi đè bảng hiện tại theo schema của ứng dụng khách hàng."
     },
     "answer": "B",
-    "question_vi": "Bảng tổng hợp dùng chung cho nhiều team cần đổi tên nhiều cột và thêm cột cho ứng dụng khách hàng; muốn ít gián đoạn và không tạo thêm nhiều bảng. Giải pháp?",
+    "question_vi": "Để giảm chi phí lưu trữ và tính toán, nhóm kỹ thuật dữ liệu quản lý các bảng tổng hợp được dùng bởi dashboard BI, ứng dụng khách hàng, mô hình machine learning chạy production và truy vấn phân tích ad hoc. Chỉ ứng dụng khách hàng do nhóm quản lý hoàn toàn cần đổi tên một số trường và bổ sung trường mới. Bảng tổng hợp hiện tại lại được nhiều nhóm khác sử dụng. Giải pháp nào hạn chế gián đoạn mà không làm tăng số bảng vật lý cần quản lý?",
     "options_vi": {
-      "A": "Thông báo cho tất cả người dùng về thay đổi schema và cách revert khi query cũ.",
-      "B": "Tạo bảng mới với schema mới cho ứng dụng khách; tạo `VIEW` giữ tên/schema cũ bằng cách alias từ bảng mới.",
-      "C": "Tạo bảng mới rồi dùng `DEEP CLONE` để đồng bộ hai bảng.",
-      "D": "Thay bảng bằng `VIEW` logic hiện tại và tạo bảng mới cho ứng dụng khách.",
-      "E": "Thêm comment cảnh báo và overwrite bảng hiện tại theo schema mới."
+      "A": "Thông báo schema sẽ đổi và hướng dẫn tất cả nhóm sửa truy vấn cũ.",
+      "B": "Tạo bảng vật lý mới theo schema mới cho ứng dụng khách; thay bảng cũ bằng view giữ tên/schema cũ và ánh xạ cột từ bảng mới.",
+      "C": "Tạo bảng mới rồi dùng deep clone để đồng bộ thay đổi giữa hai bảng.",
+      "D": "Thay bảng hiện tại bằng view tính lại logic aggregate, đồng thời tạo bảng mới cho ứng dụng.",
+      "E": "Thêm comment cảnh báo rồi ghi đè bảng hiện tại theo schema mới."
     },
-    "explanation_vi": "**Đáp án B — dùng bảng vật lý mới và một view tương thích ngược.** Tạo một bảng aggregate vật lý với schema mới cho ứng dụng khách hàng. Sau đó giữ hợp đồng cũ cho các nhóm khác bằng view cùng tên/schema cũ, dùng alias để ánh xạ tên cột cũ sang cột mới. Khi chuyển đổi, cần đổi tên/loại bỏ bảng vật lý cũ trước khi tạo view tại tên cũ; view không lưu thêm một bản dữ liệu vật lý. Nhờ vậy số bảng vật lý không tăng, các dashboard/model/query cũ tiếp tục chạy và ứng dụng mới nhận các trường cần thiết.\n\nA chỉ thông báo thay đổi nhưng vẫn buộc mọi consumer xử lý breaking change. C sai vì `DEEP CLONE` tạo bản sao độc lập tại thời điểm clone; nó không tự đồng bộ các commit về sau. D có thể biến output cũ thành view nhưng định nghĩa lại toàn bộ logic aggregate trên mỗi lần đọc, thay vì dùng bảng aggregate vật lý mới làm một nguồn chung; điều đó có thể tăng compute và không nêu rõ view giữ chính xác hợp đồng schema cũ. E cảnh báo không làm schema change ít gián đoạn hơn; overwrite tại chỗ vẫn phá consumer đang dựa vào tên/kiểu cột cũ.\n\n📚 **Tham khảo:** [Create and manage views in Databricks](https://docs.databricks.com/aws/en/views/create-views), [Databricks schema evolution](https://docs.databricks.com/aws/en/data-engineering/schema-evolution)",
+    "explanation_vi": "**Đề bài cần cân bằng điều gì?** Một ứng dụng cần schema mới, trong khi các consumer khác phải tiếp tục dùng tên bảng và các cột cũ. Đồng thời không muốn quản lý thêm một bản sao dữ liệu vật lý.\n\n**Đáp án B.** Tạo một bảng vật lý theo schema mới cho ứng dụng khách hàng. Thay bảng vật lý cũ bằng một view ở tên cũ; view chỉ xuất các cột thuộc hợp đồng schema cũ và dùng alias cho tên đã đổi. Consumer cũ tiếp tục đọc giao diện quen thuộc, ứng dụng mới đọc bảng vật lý trực tiếp. Databricks định nghĩa view như một bảng ảo dựa trên truy vấn, không lưu một bản dữ liệu riêng, nên chỉ có một bảng vật lý.\n\n- **A:** Buộc mọi consumer tự sửa truy vấn tạo ra breaking change và có thể làm hỏng dashboard/model chưa được cập nhật.\n- **C:** Deep clone tạo thêm một bảng vật lý; nó không tự cung cấp view tương thích cho truy vấn cũ, và đồng bộ thay đổi cần vận hành riêng.\n- **D:** Nếu view chạy lại logic aggregate/join mỗi lần consumer đọc, compute tăng và hiệu năng có thể kém hơn. Bảng mới có thể là nguồn chung cho cả view tương thích lẫn ứng dụng.\n- **E:** Comment chỉ cảnh báo; overwrite tại tên cũ vẫn đổi schema và làm truy vấn cũ lỗi.",
     "page": null,
     "image": "img/q_35.jpg",
     "references": [
       {
-        "title": "Create and manage views in Databricks",
-        "url": "https://docs.databricks.com/aws/en/views/create-views"
-      },
-      {
-        "title": "Schema evolution in Databricks",
-        "url": "https://docs.databricks.com/aws/en/data-engineering/schema-evolution"
+        "title": "CREATE VIEW - Databricks SQL",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view"
       }
     ]
   },
@@ -1408,25 +1414,25 @@
       "E": "The Databricks **REST API** can be used to list secrets in plain text if the personal access token has proper credentials."
     },
     "answer": "D",
-    "question_vi": "Giới hạn của **Databricks Secrets**?",
+    "question_vi": "Databricks Utilities Secrets giúp lưu thông tin xác thực nhạy cảm và tránh vô tình hiển thị chúng dưới dạng văn bản thuần. Tuy nhiên, người dùng vẫn cần cân nhắc credential nào được lưu và ai có quyền đọc hoặc chạy code sử dụng secret. Phát biểu nào mô tả đúng một giới hạn của Databricks Secrets?",
     "options_vi": {
-      "A": "Vì dùng băm **SHA-256** nên đảo ngược băm sẽ hiện plaintext.",
-      "B": "Quản trị account xem được toàn bộ secret plaintext trong Accounts console.",
-      "C": "Secrets lưu trong bảng **Hive Metastore** admins-only nên DBA mặc định đọc được.",
-      "D": "Lặp qua từng ký tự secret và in ra sẽ thấy plaintext.",
-      "E": "**REST API** có thể liệt kê secret plaintext nếu PAT đủ quyền."
+      "A": "Secret được che giấu bằng SHA-256, vì vậy có thể đảo ngược hash để đọc plaintext.",
+      "B": "Quản trị viên account có thể đăng nhập Databricks Accounts console để xem plaintext của mọi secret.",
+      "C": "Secret được lưu trong bảng chỉ admin mới thấy của Hive Metastore, nơi DBA mặc định có quyền truy vấn.",
+      "D": "Duyệt secret theo từng ký tự rồi in các ký tự đó có thể làm lộ nội dung secret dưới dạng plaintext.",
+      "E": "REST API có thể liệt kê giá trị plaintext của secret nếu personal access token có đủ quyền."
     },
-    "explanation_vi": "**Câu hỏi đang hỏi gì?** Databricks Secrets giúp ứng dụng lấy credential mà tránh vô tình in nguyên giá trị ra output, nhưng cơ chế che giấu có giới hạn. Cần chọn phát biểu mô tả cách người dùng có thể làm lộ secret dù đã bật redaction.\n\n**Đáp án D.** Khi notebook gọi `dbutils.secrets.get()`, Databricks che giá trị secret nguyên vẹn nếu người dùng in trực tiếp literal đó. Nhưng secret vẫn được trả về cho chương trình dưới dạng giá trị mà chương trình có thể sử dụng. Redaction không phân tích mọi phép biến đổi tùy ý: tách chuỗi thành từng ký tự rồi in từng ký tự, mã hóa lại hoặc ghi ra log theo cách khác có thể làm lộ dữ liệu. Vì vậy redaction là lớp giảm rủi ro do vô ý, không phải ranh giới bảo mật chống mã độc có quyền chạy lệnh.\n\n**Vì sao các lựa chọn khác không phải giới hạn được hỏi?**\n- **A sai:** SHA-256 là hàm băm một chiều; không thể “đảo ngược hash” để lấy plaintext. Hơn nữa, secret phải được cung cấp cho workload được cấp quyền để workload dùng credential, chứ không phải chỉ giữ một hash mà ứng dụng không thể dùng.\n- **B sai:** không có cơ chế mặc định cho phép mọi account admin mở Accounts console và đọc plaintext của tất cả secret trong workspace. Secret scope có ACL riêng.\n- **C sai:** secrets không được cung cấp như bảng Hive Metastore mặc định để DBA truy vấn.\n- **D đúng:** biến đổi arbitrary có thể vượt qua redaction áp dụng cho literal value.\n- **E sai:** API `list` trả metadata như scope/key, không phải plaintext của các giá trị. Một API đọc giá trị khác vẫn cần quyền phù hợp; đừng đánh đồng “list” với đọc secret.\n\n**Thực hành an toàn:** chỉ cấp quyền READ cho principal cần thiết, giới hạn ai được chạy notebook/job dùng secret, không `display`/log giá trị hoặc biến thể của nó, và dùng credential/OAuth phù hợp thay vì PAT dài hạn khi có thể.",
+    "explanation_vi": "**Đề bài hỏi gì?** Secrets giảm nguy cơ lộ credential do vô tình in nguyên giá trị, nhưng cơ chế che giấu có giới hạn nào?\n\n**Đáp án D.** Databricks redacts giá trị secret literal khi nhận diện được chuỗi đọc bằng **dbutils.secrets.get()**. Nếu mã cố ý biến đổi secret, chẳng hạn tách chuỗi thành từng ký tự rồi in từng ký tự, đầu ra không còn là literal ban đầu để cơ chế redaction nhận diện. Vì vậy redaction không thay thế phân quyền: cần giới hạn ai được đọc secret và ai được chạy lệnh trong notebook/job dùng chung.\n\n- **A:** Tài liệu không mô tả Secrets như một chuỗi chỉ được băm SHA-256 rồi có thể đảo ngược. Databricks lưu trữ secret an toàn và chỉ cung cấp giá trị cho workload/principal có quyền đọc.\n- **B:** Đăng nhập Accounts console với vai trò account admin không mặc nhiên cho phép xem plaintext của mọi secret trong workspace. Quyền đọc chịu sự kiểm soát của scope và ACL.\n- **C:** Secrets không được cung cấp như một bảng Hive Metastore mặc định để quản trị viên cơ sở dữ liệu truy vấn. Đây là dịch vụ quản lý secret riêng với scope/permission.\n- **E:** API liệt kê trả metadata như tên key, không trả giá trị secret. Cần phân biệt list key với thao tác đọc secret có quyền riêng. Dù người dùng được phép đọc giá trị trong notebook, họ vẫn có thể làm lộ nó bằng phép biến đổi như ở đáp án D.\n\n**Tình huống thực tế:** nếu chỉ gọi **print(password)** ngay sau **dbutils.secrets.get()**, Databricks thường hiển thị **[REDACTED]**. Nhưng biến đổi chuỗi rồi in có thể làm lộ dữ liệu; không chạy code không tin cậy trong ngữ cảnh có quyền đọc secret.",
     "page": null,
     "image": "img/q_46.jpg",
     "references": [
       {
-        "title": "Secret management — Databricks",
+        "title": "Secret management - Databricks",
         "url": "https://docs.databricks.com/aws/en/security/secrets"
       },
       {
-        "title": "Credential redaction — Databricks",
-        "url": "https://docs.databricks.com/aws/en/security/keys/redaction"
+        "title": "Secret API reference - Databricks",
+        "url": "https://docs.databricks.com/api/secrets/v1/secret"
       }
     ]
   },
@@ -5478,56 +5484,59 @@
   {
     "id": 182,
     "topic": 1,
-    "question": "The data engineering team has configured a **Databricks SQL** query and alert to monitor the values in a **Delta Lake** table. The `recent_sensor_recordings` table contains an identifying `sensor_id` alongside the timestamp and temperature for the most recent 5 minutes of recordings.\nThe below query is used to create the alert:\nThe query is set to refresh each minute and always completes in less than 10 seconds. The alert is set to trigger when `mean(temperature) > 120`.\nNotifications are triggered to be sent at most every 1 minute.\nIf this alert raises notifications for 3 consecutive minutes and then stops, which statement must be true?",
+    "question": "The data engineering team has configured a Databricks SQL query and alert to monitor a Delta Lake table. The recent_sensor_recordings table contains sensor_id, a timestamp, and temperature for the most recent five minutes. The query runs every minute and completes in under 10 seconds. It computes the mean temperature for each sensor, then returns whether at least one sensor's mean exceeds 120:\n\n```sql\nSELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END AS any_sensor_over_120\nFROM (\n  SELECT sensor_id, MEAN(temperature) AS mean_temperature\n  FROM recent_sensor_recordings\n  GROUP BY sensor_id\n  HAVING MEAN(temperature) > 120\n)\n```\n\nThe alert triggers when any_sensor_over_120 is greater than 0, and notifications are sent at most once per minute. If the alert sends notifications for three consecutive minutes and then stops, which statement describes the condition that triggered it?",
     "options": {
       "A": "The total average temperature across all sensors exceeded 120 on three consecutive executions of the query",
-      "B": "The average temperature recordings for at least one sensor exceeded 120 on three consecutive executions of the query",
+      "B": "At least one sensor had a mean temperature above 120 on each of three consecutive query executions",
       "C": "The source query failed to update properly for three consecutive minutes and then restarted",
-      "D": "The maximum temperature recording for at least one sensor exceeded 120 on three consecutive executions of the query"
+      "D": "The alert evaluated MAX(temperature), rather than each sensor's mean, as the configured threshold metric"
     },
     "answer": "B",
-    "question_vi": "Nhóm data engineer đã cấu hình một truy vấn **Databricks SQL** và cảnh báo (alert) để theo dõi các giá trị trong bảng **Delta Lake**. Bảng `recent_sensor_recordings` chứa trường `sensor_id` cùng với timestamp và nhiệt độ trong 5 phút ghi nhận gần nhất. Truy vấn bên dưới được dùng để tạo alert. Lịch chạy của truy vấn được làm mới mỗi phút một lần và hoàn thành trong dưới 10 giây. Alert được thiết lập để kích hoạt khi `mean(temperature) > 120`. Thông báo được cấu hình gửi tối đa mỗi 1 phút một lần. Nếu alert này phát thông báo trong 3 phút liên tiếp rồi dừng lại, phát biểu nào sau đây chắc chắn đúng?",
+    "question_vi": "Nhóm kỹ thuật dữ liệu cấu hình một truy vấn Databricks SQL và alert để theo dõi bảng Delta Lake. Bảng recent_sensor_recordings có sensor_id, thời điểm ghi nhận và nhiệt độ trong năm phút gần nhất. Truy vấn chạy mỗi phút, hoàn tất trong dưới 10 giây, tính nhiệt độ trung bình theo từng cảm biến rồi trả về việc có cảm biến nào vượt 120 hay không:\n\n```sql\nSELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END AS any_sensor_over_120\nFROM (\n  SELECT sensor_id, MEAN(temperature) AS mean_temperature\n  FROM recent_sensor_recordings\n  GROUP BY sensor_id\n  HAVING MEAN(temperature) > 120\n)\n```\n\nAlert được kích hoạt khi any_sensor_over_120 lớn hơn 0; thông báo gửi tối đa một lần mỗi phút. Nếu alert gửi thông báo trong ba phút liên tiếp rồi dừng, phát biểu nào mô tả đúng điều kiện đã kích hoạt?",
     "options_vi": {
-      "A": "Trung bình nhiệt độ của toàn bộ các sensor vượt quá 120 trong ba lần chạy truy vấn liên tiếp.",
-      "B": "Nhiệt độ trung bình ghi nhận của ít nhất một sensor vượt quá 120 trong ba lần chạy truy vấn liên tiếp.",
-      "C": "Truy vấn nguồn không cập nhật chính xác trong ba phút liên tiếp rồi sau đó chạy lại bình thường.",
-      "D": "Nhiệt độ tối đa ghi nhận của ít nhất một sensor vượt quá 120 trong ba lần chạy truy vấn liên tiếp."
+      "A": "Nhiệt độ trung bình gộp của tất cả cảm biến vượt 120 trong ba lần truy vấn liên tiếp",
+      "B": "Có ít nhất một cảm biến có nhiệt độ trung bình vượt 120 trong mỗi lần của ba lần truy vấn liên tiếp",
+      "C": "Truy vấn nguồn cập nhật lỗi trong ba phút liên tiếp rồi khởi động lại",
+      "D": "Alert dùng MAX(temperature), thay vì nhiệt độ trung bình của từng cảm biến, làm chỉ số so sánh với ngưỡng"
     },
-    "explanation_vi": "Alert được thiết lập trên câu lệnh **SQL** nhóm dữ liệu theo từng sensor (`sensor_id`) và tính trung bình nhiệt độ trong vòng 5 phút gần nhất. Khi alert kích hoạt và gửi thông báo liên tục trong 3 phút rồi dừng, điều này có nghĩa là trung bình nhiệt độ của ít nhất một cảm biến (`sensor`) đã vượt quá 120 độ trong 3 lần chạy liên tiếp của câu lệnh truy vấn, sau đó hạ xuống dưới ngưỡng cảnh báo nên alert dừng lại.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đề bài hỏi gì?** Xác định điều kiện per-sensor làm alert gửi thông báo ba phút liên tiếp.\n\n**Đáp án B — nhiệt độ trung bình của ít nhất một cảm biến vượt 120.** Truy vấn nhóm theo **sensor_id**, vì vậy **MEAN(temperature)** được tính riêng cho từng cảm biến. Điều kiện **HAVING MEAN(temperature) > 120** giữ lại cảm biến nào có mức trung bình vượt 120; truy vấn ngoài trả **1** nếu còn ít nhất một cảm biến. Cảm biến vượt ngưỡng không nhất thiết phải là cùng một cảm biến trong cả ba lần chạy.\n\nThông báo ba phút liên tiếp cho biết điều kiện được đáp ứng ở các lần đánh giá đó. Truy vấn chạy mỗi phút và hoàn tất dưới 10 giây, nên không có cơ sở kết luận bảng bị treo hoặc query thất bại.\n\n- **Trung bình gộp của mọi cảm biến:** không được tính trong SQL này; **GROUP BY sensor_id** tạo một trung bình cho mỗi nhóm.\n- **Bảng không phản hồi / query thất bại:** trái với việc query trả kết quả khiến điều kiện cảnh báo đúng; lỗi nguồn không suy ra từ các thông báo.\n- **MAX là metric được alert kiểm tra:** SQL tính MAX nhưng điều kiện alert được đặt trên MEAN. Hơn nữa, mean >120 cũng kéo theo max >120, nên phương án MAX cũ cũng là hệ quả đúng về toán học. Vì vậy câu hỏi đã sửa phương án này thành phát biểu về metric trực tiếp, để chỉ còn một đáp án phù hợp với điều alert kiểm tra.\n\nTrong Databricks, hãy cấu hình alert trên cột số **any_sensor_over_120**; giao diện alert có lựa chọn kiểm tra giá trị đầu tiên hoặc tổng hợp trên các hàng, nên tránh để ngữ nghĩa ANY mơ hồ.",
     "page": null,
-    "image": "img/q_182.jpg",
     "references": [
       {
-        "title": "Databricks SQL Alerts",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "What are legacy alerts? - Databricks",
+        "url": "https://docs.databricks.com/aws/en/sql/user/alerts/legacy"
+      },
+      {
+        "title": "mean aggregate function - Databricks SQL",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/functions/mean"
       }
     ]
   },
   {
     "id": 183,
     "topic": 1,
-    "question": "A junior developer complains that the code in their notebook isn't producing the correct results in the development environment. A shared screenshot reveals that while they're using a notebook versioned with **Databricks Repos**, they're using a personal branch that contains old logic. The desired branch named `dev-2.3.9` is not available from the branch selection dropdown.\nWhich approach will allow this developer to review the current logic for this notebook?",
+    "question": "A junior developer discovers that their Databricks Repos notebook uses a personal branch with old logic. The desired remote branch, dev-2.3.9, is not available in the branch dropdown. Which approach lets the developer review the notebook's current logic on that branch?",
     "options": {
-      "A": "Use Repos to make a pull request or use the **Databricks REST API** to update the current branch to `dev-2.3.9`",
-      "B": "Use Repos to pull changes from the remote Git repository and select the `dev-2.3.9` branch.",
-      "C": "Use Repos to checkout the `dev-2.3.9` branch and auto-resolve conflicts with the current branch",
-      "D": "Use Repos to merge the current branch and the `dev-2.3.9` branch, then make a pull request to sync with the remote repository"
+      "A": "Create a pull request in Repos or use the Databricks REST API to change the current branch to dev-2.3.9.",
+      "B": "Pull changes from the remote Git repository in Repos, then select the dev-2.3.9 branch.",
+      "C": "Check out dev-2.3.9 in Repos and automatically resolve conflicts with the current branch.",
+      "D": "Merge the current branch with dev-2.3.9 in Repos, then create a pull request to sync with the remote repository."
     },
     "answer": "B",
-    "question_vi": "Một nhà phát triển phàn nàn rằng code notebook của họ không ra kết quả đúng trên môi trường phát triển. Ảnh chụp màn hình cho thấy họ đang sử dụng notebook được quản lý bằng **Databricks Repos** nhưng lại ở nhánh cá nhân chứa logic cũ. Nhánh mong muốn có tên `dev-2.3.9` không hiển thị trong dropdown chọn nhánh. Cách nào giúp lập trình viên này xem được logic mới nhất?",
+    "question_vi": "Một lập trình viên mới phát hiện notebook trong Databricks Repos đang ở nhánh cá nhân chứa logic cũ. Nhánh remote cần xem là **dev-2.3.9** nhưng chưa có trong danh sách chọn nhánh. Cách nào giúp họ xem logic hiện tại của notebook trên nhánh đó?",
     "options_vi": {
-      "A": "Tạo pull request hoặc dùng **Databricks REST API** để đổi branch hiện tại sang `dev-2.3.9`.",
-      "B": "Sử dụng Repos để pull các thay đổi từ Git repository từ xa và chọn nhánh `dev-2.3.9`.",
-      "C": "Sử dụng Repos để checkout nhánh `dev-2.3.9` và tự động giải quyết các xung đột với nhánh hiện tại.",
-      "D": "Sử dụng Repos để merge nhánh hiện tại và nhánh `dev-2.3.9`, sau đó tạo pull request để đồng bộ với remote repository."
+      "A": "Tạo pull request trong Repos hoặc dùng Databricks REST API để đổi nhánh hiện tại sang dev-2.3.9.",
+      "B": "Pull thay đổi từ Git repository từ xa trong Repos, sau đó chọn nhánh dev-2.3.9.",
+      "C": "Checkout dev-2.3.9 trong Repos và tự động giải quyết xung đột với nhánh hiện tại.",
+      "D": "Gộp nhánh hiện tại với dev-2.3.9 trong Repos rồi tạo pull request để đồng bộ với remote."
     },
-    "explanation_vi": "Khi một branch mới (như `dev-2.3.9`) đã được đẩy lên remote repository nhưng chưa hiển thị trong dropdown chọn branch của **Databricks Repos**, nhà phát triển cần thực hiện thao tác Pull (hoặc Fetch) để đồng bộ danh sách branch từ Git remote về workspace local. Sau khi pull thành công, branch mới sẽ hiển thị trong danh sách để chọn checkout.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đề bài hỏi gì?** Nhánh đã tồn tại ở remote nhưng chưa hiện trong danh sách của Git folder. Cần đồng bộ thông tin/mã từ remote rồi chuyển sang nhánh đích.\n\n**Đáp án B.** Trong giao diện Git folder (tên trước đây là Repos), thực hiện **Pull** để lấy nội dung từ Git repository từ xa, sau đó chọn **dev-2.3.9** trong danh sách nhánh. Tài liệu Databricks mô tả Pull là thao tác lấy nội dung remote; branch selector dùng để chuyển sang nhánh khác.\n\n- **A:** Pull request là đề xuất hợp nhất thay đổi trên Git provider; nó không cập nhật danh sách nhánh để người dùng chỉ xem nhánh. REST API không cần thiết cho thao tác này.\n- **C:** Checkout không thể chọn nhánh chưa được Git folder nhận diện, và đề không có xung đột cần tự động giải quyết.\n- **D:** Gộp vào **main** sẽ thay đổi nhánh dùng chung và có thể ảnh hưởng cộng tác viên; clone lại là bước thừa.\n- **E:** Gộp hai nhánh và tạo pull request là quy trình thay đổi/đề xuất hợp nhất mã, trong khi yêu cầu chỉ là xem logic ở nhánh remote.\n\nPull cập nhật nội dung trong Git folder; khi chuyển nhánh, hãy lưu/commit thay đổi chưa commit trước nếu cần giữ chúng. Databricks cũng cảnh báo việc chuyển nhánh có thể xóa workspace asset không tồn tại ở nhánh mới.",
     "page": null,
     "image": "img/q_183.jpg",
     "references": [
       {
-        "title": "Git integration with Databricks Repos",
-        "url": "https://docs.databricks.com/en/repos/git-operations-with-repos"
+        "title": "Create and manage Git folders - Databricks",
+        "url": "https://docs.databricks.com/aws/en/repos/git-operations-with-repos"
       }
     ]
   },
@@ -6176,28 +6185,28 @@
   {
     "id": 207,
     "topic": 1,
-    "question": "To reduce storage and compute costs, the data engineering team has been tasked with curating a series of aggregate tables leveraged by business intelligence dashboards, customer-facing applications, production machine learning models, and ad hoc analytical queries. The data engineering team has been made aware of new requirements from a customer-facing application, which is the only downstream workload they manage entirely. As a result, an aggregate table used by numerous teams across the organization will need to have a number of fields renamed, and additional fields will also be added. Which of the solutions addresses the situation while minimally interrupting other teams in the organization without increasing the number of tables that need to be managed?",
+    "question": "To reduce storage and compute costs, the data engineering team maintains aggregate tables used by BI dashboards, customer-facing applications, production machine learning models, and ad hoc analysis. Only the customer-facing application, which this team fully manages, needs renamed fields and additional fields. The existing aggregate table is used by many other teams. Which solution minimizes disruption to those teams without increasing the number of physical tables that must be managed?",
     "options": {
-      "A": "Send all `users` notice that the schema for the table will be changing; include in the communication the logic necessary to revert the new table schema to match historic queries.",
-      "B": "Configure a new table with all the requisite fields and new names and use this as the source for the customer-facing application; create a view that maintains the original data schema and table name by aliasing select fields from the new table.",
-      "C": "Create a new table with the required schema and new fields and use **Delta Lake**'s deep clone functionality to sync up changes committed to one table to the corresponding table.",
-      "D": "Replace the current table definition with a logical view defined with the query logic currently writing the aggregate table; create a new table to power the customer-facing application."
+      "A": "Thông báo cho mọi người về thay đổi schema và gửi hướng dẫn sửa các truy vấn cũ để tương thích với schema mới.",
+      "B": "Tạo bảng vật lý mới với schema mới cho ứng dụng khách hàng; thay bảng cũ bằng view giữ nguyên tên/schema cũ và ánh xạ trường từ bảng mới.",
+      "C": "Tạo bảng mới với schema cần thiết rồi dùng deep clone của Delta Lake để đồng bộ thay đổi giữa hai bảng.",
+      "D": "Thay bảng hiện tại bằng logical view chạy lại logic tổng hợp, rồi tạo bảng mới cho ứng dụng khách hàng."
     },
     "answer": "B",
-    "question_vi": "Một bảng aggregate dùng cho nhiều team cần đổi tên một số cột và thêm cột cho ứng dụng khách hàng, muốn ít gián đoạn và không tăng số bảng phải quản. Giải pháp?",
+    "question_vi": "Để giảm chi phí lưu trữ và tính toán, nhóm kỹ thuật dữ liệu quản lý các bảng tổng hợp được dùng bởi dashboard BI, ứng dụng khách hàng, mô hình machine learning chạy production và truy vấn phân tích ad hoc. Chỉ ứng dụng khách hàng do nhóm quản lý hoàn toàn cần đổi tên một số trường và bổ sung trường mới. Bảng tổng hợp hiện tại lại được nhiều nhóm khác sử dụng. Giải pháp nào hạn chế gián đoạn mà không làm tăng số bảng vật lý cần quản lý?",
     "options_vi": {
-      "A": "Thông báo cho tất cả người dùng schema sẽ đổi; gửi logic để họ tự chuyển đổi.",
-      "B": "Tạo bảng mới với schema mới cho ứng dụng, đồng thời tạo view giữ tên/schema cũ bằng cách alias từ bảng mới.",
-      "C": "Tạo bảng mới với schema mới và dùng deep clone để đồng bộ hai bảng.",
-      "D": "Thay bảng hiện tại bằng view, và tạo bảng mới cho ứng dụng khách hàng."
+      "A": "Thông báo schema sẽ đổi và hướng dẫn tất cả nhóm sửa truy vấn cũ.",
+      "B": "Tạo bảng vật lý mới theo schema mới cho ứng dụng khách; thay bảng cũ bằng view giữ tên/schema cũ và ánh xạ cột từ bảng mới.",
+      "C": "Tạo bảng mới rồi dùng deep clone để đồng bộ thay đổi giữa hai bảng.",
+      "D": "Thay bảng hiện tại bằng view tính lại logic aggregate, đồng thời tạo bảng mới cho ứng dụng."
     },
-    "explanation_vi": "Để đổi tên các trường và thêm trường mới nhằm đáp ứng yêu cầu của ứng dụng khách hàng mà không làm gián đoạn các team khác đang sử dụng bảng aggregate cũ, giải pháp tối ưu và ít ảnh hưởng nhất là: tạo một bảng aggregate mới chứa đầy đủ các trường mới cùng tên cột mới để phục vụ ứng dụng khách hàng; đồng thời tạo một view logic giữ nguyên tên bảng và cấu trúc schema cũ bằng cách alias (đặt bí danh) lại các trường tương ứng từ bảng mới này. Cách này giúp tránh việc phải nhân bản dữ liệu hay duy trì song song nhiều bảng aggregate thực tế. Lựa chọn B đúng.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đề bài cần cân bằng điều gì?** Một ứng dụng cần schema mới, trong khi các consumer khác phải tiếp tục dùng tên bảng và các cột cũ. Đồng thời không muốn quản lý thêm một bản sao dữ liệu vật lý.\n\n**Đáp án B.** Tạo một bảng vật lý theo schema mới cho ứng dụng khách hàng. Thay bảng vật lý cũ bằng một view ở tên cũ; view chỉ xuất các cột thuộc hợp đồng schema cũ và dùng alias cho tên đã đổi. Consumer cũ tiếp tục đọc giao diện quen thuộc, ứng dụng mới đọc bảng vật lý trực tiếp. Databricks định nghĩa view như một bảng ảo dựa trên truy vấn, không lưu một bản dữ liệu riêng, nên chỉ có một bảng vật lý.\n\n- **A:** Buộc mọi consumer tự sửa truy vấn tạo ra breaking change và có thể làm hỏng dashboard/model chưa được cập nhật.\n- **C:** Deep clone tạo thêm một bảng vật lý; nó không tự cung cấp view tương thích cho truy vấn cũ, và đồng bộ thay đổi cần vận hành riêng.\n- **D:** Nếu view chạy lại logic aggregate/join mỗi lần consumer đọc, compute tăng và hiệu năng có thể kém hơn. Bảng mới có thể là nguồn chung cho cả view tương thích lẫn ứng dụng.\n",
     "page": null,
     "image": "img/q_207.jpg",
     "references": [
       {
-        "title": "Views in Databricks",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-view"
+        "title": "CREATE VIEW - Databricks SQL",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view"
       }
     ]
   },
