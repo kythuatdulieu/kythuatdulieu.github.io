@@ -967,28 +967,32 @@
     "topic": 1,
     "question": "The data engineering team is migrating an enterprise system with thousands of tables and views into the Lakehouse. They plan to implement the target architecture using a series of **bronze**, **silver**, and **gold** tables. Bronze tables will almost exclusively be used by production data engineering workloads, while silver tables will be used to support both data engineering and machine learning workloads. Gold tables will largely serve business intelligence and reporting purposes. While personal identifying information (PII) exists in all tiers of data, pseudonymization and anonymization rules are in place for all data at the silver and gold levels.\nThe organization is interested in reducing security concerns while maximizing the ability to collaborate across diverse teams.\nWhich statement exemplifies best practices for implementing this system?",
     "options": {
-      "A": "Isolating tables in separate databases based on data quality tiers allows for easy permissions management through database **ACLs** and allows physical separation of default storage locations for managed tables.",
-      "B": "Because databases on Databricks are merely a logical construct, choices around database organization do not impact security or discoverability in the Lakehouse.",
-      "C": "Storing all production tables in a single database provides a unified view of all data assets available throughout the Lakehouse, simplifying discoverability by granting all users view privileges on this database.",
-      "D": "Working in the default Databricks database provides the greatest security when working with managed tables, as these will be created in the **DBFS root**.",
-      "E": "Because all tables must live in the same storage containers used for the database they're created in, organizations should be prepared to create between dozens and thousands of databases depending on their data isolation requirements."
+      "A": "Organizing tables in separate Unity Catalog schemas by data quality tier allows teams to manage access with grants; managed locations can also be configured per schema when physical isolation is required.",
+      "B": "Because databases in Databricks are merely logical constructs, database organization does not affect security or discoverability in the Lakehouse.",
+      "C": "Storing all production tables in one database provides a unified view and makes it simplest to grant all users view privileges on the database.",
+      "D": "Using the default Databricks database provides the greatest security because managed tables are created in the DBFS root.",
+      "E": "Because every table must live in the storage container used by its database, organizations need dozens or thousands of databases to isolate data."
     },
     "answer": "A",
     "question_vi": "Di trú hàng nghìn bảng/view sang Lakehouse với tier **bronze**/**silver**/**gold**; PII được ẩn danh ở silver/gold. Cần bảo mật mà vẫn hợp tác tốt. Thực hành tốt nhất?",
     "options_vi": {
-      "A": "Tách database theo tier chất lượng giúp cấp quyền theo DB và tách vị trí lưu trữ managed.",
-      "B": "Database chỉ là logic nên tổ chức không ảnh hưởng bảo mật hay discoverability.",
-      "C": "Đặt tất cả bảng sản xuất vào một DB để người dùng xem chung dễ tìm kiếm.",
-      "D": "Làm việc trong default database bảo mật nhất vì managed table nằm ở **DBFS root**.",
-      "E": "Vì bảng phải nằm trong container của DB, cần tạo rất nhiều DB tuỳ nhu cầu cách ly."
+      "A": "Tổ chức bảng trong các schema Unity Catalog riêng theo tầng chất lượng giúp quản lý quyền bằng grants; có thể cấu hình managed location riêng cho từng schema nếu cần cách ly vật lý.",
+      "B": "Vì database trên Databricks chỉ là cấu trúc logic nên cách tổ chức database không ảnh hưởng bảo mật hay khả năng khám phá dữ liệu.",
+      "C": "Để mọi bảng production trong một database tạo một góc nhìn thống nhất và dễ nhất là cấp quyền xem cho tất cả người dùng.",
+      "D": "Dùng database mặc định Databricks an toàn nhất vì managed table được tạo trong DBFS root.",
+      "E": "Mỗi bảng bắt buộc nằm trong container lưu trữ của database nên tổ chức phải tạo hàng chục đến hàng nghìn database để cách ly dữ liệu."
     },
-    "explanation_vi": "Việc phân tách các bảng vào các database/schema riêng biệt dựa trên các tầng chất lượng dữ liệu (**Bronze**, **Silver**, **Gold**) giúp quản lý quyền truy cập dễ dàng bằng các **ACL** cấp database, đồng thời cho phép phân tách vật lý các vị trí lưu trữ mặc định của các bảng managed.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** Tách schema theo tầng dữ liệu (Bronze, Silver, Gold) tạo ranh giới quản trị dễ hiểu: nhóm ingestion có thể ghi vào Bronze, nhóm xử lý có quyền cần thiết ở Silver, còn nhóm BI chỉ được đọc các đối tượng đã curate ở Gold. Trong Unity Catalog, schema là cấp chứa table/view và hỗ trợ quản lý grants, khám phá dữ liệu; quyền được cấp theo nhóm giúp cộng tác mà không phải cấp rộng cho mọi người.\n\nNếu cần cách ly vật lý managed table, có thể đặt managed storage location riêng ở schema/catalog. Chỉ tạo schema riêng không tự động tạo vùng lưu trữ riêng; nếu bỏ trống managed location thì dữ liệu dùng vị trí managed của catalog hoặc metastore. External table còn phụ thuộc cách quản trị cloud storage.\n\nB sai vì schema vẫn ảnh hưởng quyền và khả năng khám phá. C cấp quyền xem quá rộng, không phải mô hình least privilege. D sai vì DBFS root không phải ranh giới bảo mật mạnh; đặt dữ liệu ở đó không thay thế Unity Catalog. E sai vì không cần một database cho mỗi bảng hay mỗi yêu cầu lưu trữ.\n\n📚 **Tham khảo:** [What are schemas in Databricks?](https://docs.databricks.com/aws/en/schemas), [Unity Catalog best practices](https://docs.databricks.com/aws/en/data-governance/unity-catalog/best-practices)",
     "page": null,
     "image": "img/q_33.jpg",
     "references": [
       {
-        "title": "Data governance with Unity Catalog - Databricks",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "What are schemas in Databricks?",
+        "url": "https://docs.databricks.com/aws/en/schemas"
+      },
+      {
+        "title": "Unity Catalog best practices",
+        "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/best-practices"
       }
     ]
   },
@@ -1004,7 +1008,7 @@
       "E": "When the workspace is being configured, make sure that external cloud object storage has been mounted."
     },
     "answer": "C",
-    "question_vi": "Kiến trúc sư yêu cầu mọi bảng là external **Delta Lake**. Cách đảm bảo?",
+    "question_vi": "Kiến trúc sư yêu cầu mọi bảng phải là **external Delta table**. Cách nào bảo đảm loại bảng được tạo là external?",
     "options_vi": {
       "A": "Khi tạo database luôn dùng từ khoá `LOCATION`.",
       "B": "Cấu hình external warehouse rồi dùng **Databricks** cho toàn bộ **ELT**.",
@@ -1012,13 +1016,13 @@
       "D": "Khi tạo bảng dùng từ khoá `EXTERNAL` trong `CREATE TABLE`.",
       "E": "Khi cấu hình workspace hãy mount storage ngoài."
     },
-    "explanation_vi": "Để tạo một bảng external (unmanaged) trong **Delta Lake**, bắt buộc phải chỉ định từ khóa `LOCATION` trong câu lệnh `CREATE TABLE`. Điều này cho phép lưu trữ dữ liệu thực tế tại đường dẫn chỉ định trên cloud storage, và khi bảng bị xóa (`DROP TABLE`), chỉ có metadata trong metastore bị xóa còn tệp dữ liệu vật lý vẫn được bảo toàn.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C — chỉ định `LOCATION` khi tạo từng bảng.** Với `CREATE TABLE ... USING DELTA LOCATION '...'`, Databricks đăng ký bảng trỏ tới dữ liệu ở đường dẫn cloud được nêu; một bảng có `LOCATION` là external. Khi `DROP TABLE`, metadata đăng ký bị xóa nhưng file tại location không bị Databricks xóa cùng bảng.\n\nA chỉ đặt location cho database/schema, không biến mọi bảng con thành external. B nói về kho dữ liệu/ETL nhưng không kiểm soát table type. D dùng từ khóa `EXTERNAL` nhưng câu trả lời không bảo đảm dữ liệu có location được chỉ định; theo cú pháp hiện hành khi khai báo external table cũng phải cung cấp `LOCATION`. E mount storage chỉ làm cho đường dẫn có thể truy cập, không tự đăng ký mỗi bảng là external Delta.\n\n📚 **Tham khảo:** [Databricks SQL: CREATE TABLE USING](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using)",
     "page": null,
     "image": "img/q_34.jpg",
     "references": [
       {
-        "title": "Create a Delta Lake table - Databricks",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "Databricks SQL: CREATE TABLE USING",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using"
       }
     ]
   },
@@ -1042,20 +1046,24 @@
       "D": "Thay bảng bằng `VIEW` logic hiện tại và tạo bảng mới cho ứng dụng khách.",
       "E": "Thêm comment cảnh báo và overwrite bảng hiện tại theo schema mới."
     },
-    "explanation_vi": "Giải pháp tối ưu là tạo bảng mới với schema mới (đổi tên và thêm cột) cho ứng dụng khách hàng, sau đó tạo một `VIEW` logic có tên và schema giống hệt bảng cũ bằng cách sử dụng bí danh (alias) các cột tương ứng từ bảng mới. Cách này giúp tránh làm ảnh hưởng tới các nhóm đang sử dụng schema cũ và không làm tăng số lượng bảng vật lý cần quản lý.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B — dùng bảng vật lý mới và một view tương thích ngược.** Tạo một bảng aggregate vật lý với schema mới cho ứng dụng khách hàng. Sau đó giữ hợp đồng cũ cho các nhóm khác bằng view cùng tên/schema cũ, dùng alias để ánh xạ tên cột cũ sang cột mới. Khi chuyển đổi, cần đổi tên/loại bỏ bảng vật lý cũ trước khi tạo view tại tên cũ; view không lưu thêm một bản dữ liệu vật lý. Nhờ vậy số bảng vật lý không tăng, các dashboard/model/query cũ tiếp tục chạy và ứng dụng mới nhận các trường cần thiết.\n\nA chỉ thông báo thay đổi nhưng vẫn buộc mọi consumer xử lý breaking change. C sai vì `DEEP CLONE` tạo bản sao độc lập tại thời điểm clone; nó không tự đồng bộ các commit về sau. D có thể biến output cũ thành view nhưng định nghĩa lại toàn bộ logic aggregate trên mỗi lần đọc, thay vì dùng bảng aggregate vật lý mới làm một nguồn chung; điều đó có thể tăng compute và không nêu rõ view giữ chính xác hợp đồng schema cũ. E cảnh báo không làm schema change ít gián đoạn hơn; overwrite tại chỗ vẫn phá consumer đang dựa vào tên/kiểu cột cũ.\n\n📚 **Tham khảo:** [Create and manage views in Databricks](https://docs.databricks.com/aws/en/views/create-views), [Databricks schema evolution](https://docs.databricks.com/aws/en/data-engineering/schema-evolution)",
     "page": null,
     "image": "img/q_35.jpg",
     "references": [
       {
-        "title": "Views - Databricks",
-        "url": "https://docs.databricks.com/en/sql/language-manual/information-schema/views"
+        "title": "Create and manage views in Databricks",
+        "url": "https://docs.databricks.com/aws/en/views/create-views"
+      },
+      {
+        "title": "Schema evolution in Databricks",
+        "url": "https://docs.databricks.com/aws/en/data-engineering/schema-evolution"
       }
     ]
   },
   {
     "id": 36,
     "topic": 1,
-    "question": "A **Delta Lake** table representing metadata about content posts from users has the following schema: `user_id` LONG, `post_text` STRING, `post_id` STRING, `longitude` FLOAT, `latitude` FLOAT, `post_time` TIMESTAMP, `date` DATE. This table is partitioned by the `date` column. A query is run with the following filter: `longitude < 20 & longitude > -20`. Which statement describes how data will be filtered?",
+    "question": "A Delta Lake table containing post metadata has this schema: `user_id` LONG, `post_text` STRING, `post_id` STRING, `longitude` FLOAT, `latitude` FLOAT, `post_time` TIMESTAMP, `date` DATE. The table is partitioned by `date`. A query filters on `longitude < 20 AND longitude > -20`. Which statement describes how data can be skipped?",
     "options": {
       "A": "Statistics in the **Delta Log** will be used to identify partitions that might include files in the filtered range.",
       "B": "No file skipping will occur because the query optimizer does not know the relationship between the partition column and the `longitude`.",
@@ -1064,7 +1072,7 @@
       "E": "The **Delta Engine** will scan the Parquet file footers to identify each row that meets the filter criteria."
     },
     "answer": "D",
-    "question_vi": "Bảng **Delta Lake** chứa metadata bài viết, partition theo cột `date`; query lọc `longitude < 20 & longitude > -20`. Dữ liệu lọc thế nào?",
+    "question_vi": "Bảng **Delta Lake** chứa metadata bài đăng có các cột `longitude` và `latitude`, đồng thời được partition theo `date`. Truy vấn lọc `longitude < 20 AND longitude > -20`. Cơ chế data skipping áp dụng thế nào?",
     "options_vi": {
       "A": "Thống kê trong **Delta Log** dùng để xác định partition có thể chứa phạm vi lọc.",
       "B": "Không skip file vì optimizer không biết quan hệ giữa cột partition và `longitude`.",
@@ -1072,13 +1080,13 @@
       "D": "Thống kê trong **Delta Log** dùng để xác định file dữ liệu có thể chứa bản ghi thoả filter.",
       "E": "**Delta Engine** quét footer Parquet để tìm từng dòng thoả filter."
     },
-    "explanation_vi": "**Delta Lake** tự động ghi nhận thống kê min/max cho 32 cột đầu tiên của mỗi tệp dữ liệu vào transaction log (**Delta Log**). Khi chạy truy vấn với bộ lọc (ví dụ: `longitude < 20 & longitude > -20`), trình tối ưu hóa truy vấn sẽ đối chiếu với **Delta Log** để lọc bỏ (data skipping) các tệp dữ liệu chắc chắn không chứa dữ liệu thỏa mãn điều kiện trước khi đọc tệp vật lý từ bộ lưu trữ.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** Delta Lake lưu thống kê theo từng data file (ví dụ `min`, `max`, số null và số bản ghi) trong transaction log. Với điều kiện `-20 < longitude < 20`, optimizer dùng khoảng min/max của từng file để bỏ qua file nếu chắc chắn mọi longitude trong đó đều nằm ngoài khoảng truy vấn. File có khoảng giá trị giao với điều kiện vẫn phải được đọc và lọc bản ghi; data skipping không bảo đảm loại được mọi file.\n\nA nhầm việc kiểm tra từng data file với loại bỏ partition theo cột `date`. Vì bộ lọc không có điều kiện trên `date`, không thể partition-prune chỉ dựa vào ngày. B sai vì file-level statistics vẫn có thể giúp bỏ qua file ngay cả khi cột lọc không phải partition column. C nói row-level statistics; thống kê trong transaction log được dùng ở đây là thống kê cấp file. E sai vì không quét footer từng hàng để quyết định; Spark đọc thống kê file trước rồi mới mở các file còn có khả năng khớp.\n\n📚 **Tham khảo:** [Databricks: Data skipping](https://docs.databricks.com/aws/en/tables/data-skipping)",
     "page": null,
     "image": "img/q_36.jpg",
     "references": [
       {
-        "title": "Data skipping for Delta Lake - Databricks",
-        "url": "https://docs.databricks.com/en/tables/data-skipping"
+        "title": "Databricks: Data skipping",
+        "url": "https://docs.databricks.com/aws/en/tables/data-skipping"
       }
     ]
   },
@@ -1094,7 +1102,7 @@
       "E": "Databricks notebooks send all executable code from the user’s browser to virtual machines over the open internet; whenever possible, choosing a workspace region near the end users is the most secure."
     },
     "answer": "C",
-    "question_vi": "Công ty Mỹ thuê tư vấn Ấn Độ dựng pipeline AI; dữ liệu lưu ở cloud region Mỹ. Workspace nên đặt ở đâu (bỏ qua quản trị dữ liệu)?",
+    "question_vi": "Một công ty ở Mỹ thuê đơn vị tư vấn tại Ấn Độ xây pipeline AI; dữ liệu nằm trong cloud storage ở Mỹ. Nếu các yêu cầu quản trị dữ liệu đã được xử lý, nên đặt Databricks workspace/compute ở đâu?",
     "options_vi": {
       "A": "Databricks chạy HDFS trên cloud storage nên VM phải cùng region dữ liệu.",
       "B": "Workspace không phụ thuộc region; chọn gì cũng được.",
@@ -1102,20 +1110,24 @@
       "D": "Notebook dùng máy người dùng làm driver nên workspace nên gần người dùng.",
       "E": "Notebook gửi code qua internet nên nên chọn region gần người dùng cho an toàn."
     },
-    "explanation_vi": "Việc đọc và ghi dữ liệu khác vùng (cross-region) sẽ phát sinh chi phí truyền tải dữ liệu (data egress costs) rất lớn và tăng độ trễ mạng đáng kể. Do đó, bất kể nhà thầu/kỹ sư đang ở đâu về mặt địa lý, tài nguyên tính toán (workspace compute) nên được triển khai cùng một vùng (region) nơi lưu trữ dữ liệu thô.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** Vị trí địa lý của kỹ sư tư vấn không quyết định vị trí xử lý dữ liệu. Nếu dữ liệu nguồn ở một cloud region tại Mỹ, đặt workspace và compute cùng region (khi khả thi) thường tránh đường truyền chéo region, giảm độ trễ và chi phí truyền dữ liệu. Nhà thầu ở Ấn Độ vẫn có thể truy cập workspace từ xa theo chính sách mạng và quyền truy cập của công ty.\n\nA sai vì Databricks không đơn giản là HDFS chạy trên cloud volume như mô tả. B sai vì workspace và hạ tầng cloud có vùng triển khai cụ thể. D nhầm vị trí máy của người dùng với vị trí compute cần đọc dữ liệu. E sai vì không thể kết luận notebook gửi toàn bộ code qua “open internet”; kết nối được điều khiển bởi kiến trúc mạng và chính sách bảo mật. Đề đã loại trừ governance, nên quyết định ở đây tập trung vào locality, độ trễ và egress.\n\n📚 **Tham khảo:** [Unity Catalog best practices — Cross-region sharing](https://docs.databricks.com/aws/en/data-governance/unity-catalog/best-practices), [Serverless compute plane networking](https://docs.databricks.com/aws/en/security/network/serverless-network-security/)",
     "page": null,
     "image": "img/q_37.jpg",
     "references": [
       {
-        "title": "Best practices for AWS region selection - Databricks",
-        "url": "https://docs.databricks.com/en/resources/supported-regions"
+        "title": "Unity Catalog best practices — Cross-region sharing",
+        "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/best-practices"
+      },
+      {
+        "title": "Serverless compute plane networking",
+        "url": "https://docs.databricks.com/aws/en/security/network/serverless-network-security/"
       }
     ]
   },
   {
     "id": 38,
     "topic": 1,
-    "question": "The downstream consumers of a **Delta Lake** table have been complaining about data quality issues impacting performance in their applications. Specifically, they have complained that invalid latitude and longitude values in the `activity_details` table have been breaking their ability to use other geolocation processes. A junior engineer has written the following code to add `CHECK` constraints to the **Delta Lake** table:\nA senior engineer has confirmed the above logic is correct and the valid ranges for latitude and longitude are provided, but the code fails when executed. Which statement explains the cause of this failure?",
+    "question": "Downstream users report that invalid latitude and longitude values in the Delta table `activity_details` break their geolocation workflows. A junior engineer adds this constraint:\n\n```sql\nALTER TABLE activity_details\nADD CONSTRAINT valid_coordinates\nCHECK (\n    latitude >= -90 AND latitude <= 90 AND\n    longitude >= -180 AND longitude <= 180\n)\n```\n\nA senior engineer confirms the logic and valid coordinate ranges are correct, but the command fails. What explains the failure?",
     "options": {
       "A": "Because another team uses this table to support a frequently running application, two-phase locking is preventing the operation from committing.",
       "B": "The `activity_details` table already exists; `CHECK` constraints can only be added during initial table creation.",
@@ -1124,7 +1136,7 @@
       "E": "The current table schema does not contain the field `valid_coordinates`; schema evolution will need to be enabled before altering the table to add a constraint."
     },
     "answer": "C",
-    "question_vi": "Bảng `activity_details` có toạ độ sai; muốn thêm `CHECK` constraint cho latitude/longitude nhưng lệnh `ALTER` thất bại dù logic đúng. Vì sao?",
+    "question_vi": "Người dùng downstream báo các giá trị latitude/longitude không hợp lệ trong bảng Delta `activity_details` làm hỏng xử lý địa lý. Kỹ sư thêm constraint:\n\n```sql\nALTER TABLE activity_details\nADD CONSTRAINT valid_coordinates\nCHECK (\n    latitude >= -90 AND latitude <= 90 AND\n    longitude >= -180 AND longitude <= 180\n)\n```\n\nMột senior xác nhận logic và khoảng giá trị hợp lệ đều đúng, nhưng lệnh vẫn lỗi. Nguyên nhân là gì?",
     "options_vi": {
       "A": "Workload khác dùng bảng nên two-phase locking chặn commit.",
       "B": "Bảng đã tồn tại; `CHECK` chỉ thêm khi tạo bảng mới.",
@@ -1132,13 +1144,17 @@
       "D": "Bảng có dữ liệu; `CHECK` chỉ thêm trước khi insert.",
       "E": "Schema thiếu cột `valid_coordinates`; cần bật schema evolution trước khi thêm constraint."
     },
-    "explanation_vi": "Khi thêm một ràng buộc (`CHECK` constraint) vào bảng **Delta Lake** đang tồn tại, **Spark** sẽ kiểm tra toàn bộ dữ liệu hiện có trong bảng xem có thỏa mãn ràng buộc hay không. Nếu có bất kỳ bản ghi nào vi phạm (ví dụ: vĩ độ/kinh độ nằm ngoài khoảng hợp lệ), lệnh `ALTER TABLE` sẽ thất bại. Do đó, bảng phải không chứa bất kỳ bản ghi vi phạm nào trước khi áp dụng ràng buộc.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** `CHECK` constraint của Delta Lake được kiểm tra với cả dữ liệu đã có và các hàng được ghi về sau. Khi thêm constraint vào `activity_details`, Databricks rà các hàng hiện hữu; chỉ cần một giá trị latitude/longitude nằm ngoài khoảng là thao tác `ALTER TABLE` thất bại. Trước khi thêm constraint, cần làm sạch/sửa/quarantine các hàng vi phạm rồi chạy lại.\n\nA không có dấu hiệu cho thấy khóa hai pha hay xung đột ghi là nguyên nhân. B sai vì `CHECK` constraint có thể được thêm vào bảng Delta đã tồn tại bằng `ALTER TABLE ... ADD CONSTRAINT`. D sai vì constraint không bắt buộc phải khai báo trước lần insert đầu tiên; chỉ cần dữ liệu hiện có hợp lệ. E nhầm constraint với thêm cột: `valid_coordinates` là tên constraint, không phải cột cần có trong schema.\n\n📚 **Tham khảo:** [Databricks SQL: ADD CONSTRAINT](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table-add-constraint), [Constraints on Databricks](https://docs.databricks.com/aws/en/tables/constraints)",
     "page": null,
     "image": "img/q_38.jpg",
     "references": [
       {
-        "title": "Constraints on Databricks - Databricks",
-        "url": "https://docs.databricks.com/en/tables/constraints"
+        "title": "Databricks SQL: ADD CONSTRAINT",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table-add-constraint"
+      },
+      {
+        "title": "Constraints on Databricks",
+        "url": "https://docs.databricks.com/aws/en/tables/constraints"
       }
     ]
   },
@@ -1147,35 +1163,39 @@
     "topic": 1,
     "question": "Which of the following is true of **Delta Lake** and the **Lakehouse**?",
     "options": {
-      "A": "Because Parquet compresses data row by row, strings will only be compressed when a character is repeated multiple times.",
-      "B": "Delta Lake automatically collects statistics on the first 32 columns of each table which are leveraged in data skipping based on query filters.",
-      "C": "Views in the **Lakehouse** maintain a valid cache of the most recent versions of source tables at all times.",
-      "D": "Primary and foreign key constraints can be leveraged to ensure duplicate values are never entered into a dimension table.",
-      "E": "`Z-order` can only be applied to numeric values stored in **Delta Lake** tables."
+      "A": "Because Parquet compresses data row by row, strings are compressed only when characters repeat multiple times.",
+      "B": "Delta Lake on Databricks collects per-file column statistics, such as minimum and maximum values, and uses them to skip files that cannot match query filters.",
+      "C": "Views in the Lakehouse always maintain a cache containing the most recent versions of their source tables.",
+      "D": "Primary and foreign key constraints are enforced to prevent duplicate values in a dimension table.",
+      "E": "Z-ordering can be applied only to numeric values stored in Delta Lake tables."
     },
     "answer": "B",
     "question_vi": "Phát biểu nào đúng về **Delta Lake** và **Lakehouse**?",
     "options_vi": {
-      "A": "Parquet nén theo hàng nên chuỗi chỉ nén khi ký tự lặp.",
-      "B": "**Delta Lake** tự thu thập thống kê cho 32 cột đầu và dùng data skipping theo bộ lọc.",
-      "C": "View luôn duy trì cache hợp lệ bản mới nhất của bảng nguồn.",
-      "D": "Ràng buộc khoá chính/phụ bảo đảm không có bản ghi trùng trong dimension table.",
-      "E": "`Z-order` chỉ áp dụng cho giá trị số trong **Delta Lake**."
+      "A": "Parquet nén dữ liệu theo hàng nên chỉ nén chuỗi khi có ký tự được lặp lại nhiều lần.",
+      "B": "Delta Lake trên Databricks thu thập thống kê cột theo từng file, như min/max, rồi bỏ qua file chắc chắn không khớp bộ lọc truy vấn.",
+      "C": "View trong Lakehouse luôn giữ cache chứa phiên bản mới nhất của các bảng nguồn.",
+      "D": "Ràng buộc primary key và foreign key được thực thi để ngăn giá trị trùng trong bảng dimension.",
+      "E": "Chỉ có thể áp dụng Z-order cho giá trị số trong bảng Delta Lake."
     },
-    "explanation_vi": "Theo mặc định, **Delta Lake** tự động thu thập và lưu trữ các thống kê (như min, max, null count) cho 32 cột đầu tiên của mỗi bảng Delta. Các thống kê này được trình tối ưu hóa sử dụng để thực hiện cơ chế bỏ qua dữ liệu (data skipping) khi truy vấn có bộ lọc tương ứng.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** Data skipping dùng thống kê cấp file — chẳng hạn giá trị nhỏ nhất/lớn nhất, số null và tổng số hàng — để loại khỏi kế hoạch đọc những file chắc chắn không thể thỏa predicate. Nếu `max(event_time)` của file nhỏ hơn mốc truy vấn, file đó có thể bị bỏ qua. Thống kê được thu thập khi ghi dữ liệu; những cột nào có thống kê phụ thuộc loại bảng và cấu hình. Vì vậy, phát biểu chung về file-level statistics là đúng, còn khẳng định cứng “32 cột đầu cho mọi bảng” đã không còn đúng cho mọi loại managed table.\n\nA sai vì Parquet dùng mã hóa/nén theo loại dữ liệu và encoding; chuỗi không chỉ được nén khi ký tự lặp. C sai vì view logic không tự bảo đảm cache luôn mới nhất. D sai vì primary/foreign key trong Unity Catalog là informational, không tự thực thi tính duy nhất. E sai vì Z-ordering không chỉ dành cho cột số; cần chọn các cột thường dùng trong bộ lọc và có statistics phù hợp.\n\n📚 **Tham khảo:** [Databricks: Data skipping](https://docs.databricks.com/aws/en/tables/data-skipping), [Unity Catalog constraints](https://docs.databricks.com/aws/en/tables/constraints)",
     "page": null,
     "image": "img/q_39.jpg",
     "references": [
       {
-        "title": "Data skipping for Delta Lake - Databricks",
-        "url": "https://docs.databricks.com/en/tables/data-skipping"
+        "title": "Databricks: Data skipping",
+        "url": "https://docs.databricks.com/aws/en/tables/data-skipping"
+      },
+      {
+        "title": "Constraints on Databricks",
+        "url": "https://docs.databricks.com/aws/en/tables/constraints"
       }
     ]
   },
   {
     "id": 40,
     "topic": 1,
-    "question": "The view `updates` represents an incremental batch of all newly ingested data to be inserted or updated in the `customers` table. The following logic is used to process these records. Which statement describes this implementation?",
+    "question": "The view `updates` contains an incremental batch of customer rows to insert or update. The following logic processes it:\n\n```sql\nMERGE INTO customers\nUSING (\n  SELECT updates.customer_id AS merge_key, updates.*\n  FROM updates\n\n  UNION ALL\n\n  SELECT NULL AS merge_key, updates.*\n  FROM updates\n  JOIN customers\n    ON updates.customer_id = customers.customer_id\n  WHERE customers.current = true\n    AND updates.address <> customers.address\n) staged_updates\nON customers.customer_id = staged_updates.merge_key\nWHEN MATCHED\n  AND customers.current = true\n  AND customers.address <> staged_updates.address\nTHEN UPDATE SET\n  current = false,\n  end_date = staged_updates.effective_date\nWHEN NOT MATCHED THEN\n  INSERT (customer_id, address, current, effective_date, end_date)\n  VALUES (staged_updates.customer_id, staged_updates.address, true,\n          staged_updates.effective_date, NULL)\n```\n\nWhich statement describes this implementation?",
     "options": {
       "A": "The `customers` table is implemented as a Type 3 table; old values are maintained as a new column alongside the current value.",
       "B": "The `customers` table is implemented as a Type 2 table; old values are maintained but marked as no longer current and new values are inserted.",
@@ -1184,7 +1204,7 @@
       "E": "The `customers` table is implemented as a Type 2 table; old values are overwritten and new customers are appended."
     },
     "answer": "B",
-    "question_vi": "View `updates` chứa batch increment mới để chèn/cập nhật vào bảng `customers`. Logic `MERGE` nào được mô tả?",
+    "question_vi": "View `updates` chứa batch tăng dần các hàng khách hàng cần insert hoặc update. Logic sau xử lý batch đó:\n\n```sql\nMERGE INTO customers\nUSING (\n  SELECT updates.customer_id AS merge_key, updates.*\n  FROM updates\n\n  UNION ALL\n\n  SELECT NULL AS merge_key, updates.*\n  FROM updates\n  JOIN customers\n    ON updates.customer_id = customers.customer_id\n  WHERE customers.current = true\n    AND updates.address <> customers.address\n) staged_updates\nON customers.customer_id = staged_updates.merge_key\nWHEN MATCHED\n  AND customers.current = true\n  AND customers.address <> staged_updates.address\nTHEN UPDATE SET\n  current = false,\n  end_date = staged_updates.effective_date\nWHEN NOT MATCHED THEN\n  INSERT (customer_id, address, current, effective_date, end_date)\n  VALUES (staged_updates.customer_id, staged_updates.address, true,\n          staged_updates.effective_date, NULL)\n```\n\nMô tả nào đúng về cách triển khai?",
     "options_vi": {
       "A": "Type 3: giá trị cũ giữ ở cột mới cạnh giá trị hiện tại.",
       "B": "Type 2: giữ giá trị cũ, đánh dấu không còn hiện tại và chèn bản ghi mới.",
@@ -1192,13 +1212,13 @@
       "D": "Type 1: giá trị cũ bị overwrite, không giữ lịch sử.",
       "E": "Type 2: overwrite giá trị cũ và append khách hàng mới."
     },
-    "explanation_vi": "Bảng `customers` được triển khai dưới dạng bảng SCD Type 2. Đoạn mã sử dụng câu lệnh `MERGE INTO` với nguồn dữ liệu là kết quả `UNION ALL` giúp cập nhật trạng thái của bản ghi cũ thành hết hiệu lực (ví dụ: `current = false` hoặc set `end_date`) và chèn đồng thời bản ghi mới với dữ liệu cập nhật (`current = true`).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B — SCD Type 2.** Với thay đổi địa chỉ, subquery tạo hai dòng staging: dòng có `merge_key = customer_id` khớp phiên bản hiện tại và đóng nó bằng `current = false`, `end_date = effective_date`; dòng thứ hai có `merge_key = NULL` không thể match, nên đi vào nhánh `WHEN NOT MATCHED` và được insert thành phiên bản mới với `current = true`, `end_date = NULL`. Cả giá trị cũ lẫn mới đều được giữ thành các hàng riêng để tra lịch sử theo thời gian.\n\nA mô tả Type 3, vốn thường giữ giá trị cũ trong cột khác. C là append-only, nhưng code có cập nhật hàng cũ. D là Type 1 vì ghi đè giá trị cũ và không lưu lịch sử. E sai vì Type 2 không overwrite hàng lịch sử; nó đánh dấu hàng cũ hết hiệu lực rồi insert phiên bản mới. Nếu địa chỉ không đổi, điều kiện `WHEN MATCHED` không đúng và nhánh bổ sung chỉ được tạo cho các địa chỉ đã đổi.\n\n📚 **Tham khảo:** [Databricks: MERGE and SCD/CDC patterns](https://docs.databricks.com/aws/en/delta/merge#slowly-changing-data-scd-and-change-data-capture-cdc-with-delta-lake)",
     "page": null,
     "image": "img/q_40.jpg",
     "references": [
       {
-        "title": "Table updates - Slowly Changing Dimensions (SCD) Type 2 - Databricks",
-        "url": "https://docs.databricks.com/en/ldp/cdc"
+        "title": "Upsert into a Delta Lake table using MERGE — SCD/CDC",
+        "url": "https://docs.databricks.com/aws/en/delta/merge#slowly-changing-data-scd-and-change-data-capture-cdc-with-delta-lake"
       }
     ]
   },
@@ -1222,20 +1242,24 @@
       "D": "`Can Read`",
       "E": "`Can Run`"
     },
-    "explanation_vi": "Quyền `Can Read` là mức quyền cao nhất cho phép người dùng xem mã nguồn và kết quả của notebook mà không thể thực thi (chạy) notebook (tránh vô tình ghi/thay đổi dữ liệu sản xuất) hoặc chỉnh sửa (edit) logic của notebook.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D — `Can Read`.** Quyền này cho người mới xem mã và kết quả notebook, đồng thời không cho attach/run notebook hay sửa nội dung. Đây là mức quyền tối đa phù hợp với yêu cầu “chỉ review logic, không thể vô tình thực thi logic production hoặc thay đổi code”.\n\n`Can Run` cho phép chạy các command trong notebook và có thể dùng compute đang attach; code production có thể ghi/xóa dữ liệu nên quyền này vượt quá yêu cầu. `Can Edit` cho phép thay đổi code, còn `Can Manage` bao gồm quyền quản trị notebook và quyền truy cập. `No permissions` không đáp ứng nhu cầu review.\n\n📚 **Tham khảo:** [Databricks access control lists — Notebook permissions](https://docs.databricks.com/aws/en/security/auth/access-control/), [Notebook compute permissions](https://docs.databricks.com/aws/en/notebooks/notebook-compute)",
     "page": null,
     "image": "img/q_41.jpg",
     "references": [
       {
-        "title": "Notebook permissions - Databricks",
-        "url": "https://docs.databricks.com/en/notebooks/notebook-cells"
+        "title": "Access control lists — Notebook permissions",
+        "url": "https://docs.databricks.com/aws/en/security/auth/access-control/"
+      },
+      {
+        "title": "Notebook compute permissions",
+        "url": "https://docs.databricks.com/aws/en/notebooks/notebook-compute"
       }
     ]
   },
   {
     "id": 42,
     "topic": 1,
-    "question": "A table named `user_ltv` is being used to create a view that will be used by data analysts on various teams. Users in the workspace are configured into groups, which are used for setting up data access using ACLs. The `user_ltv` table has the following schema:\n`email` STRING, `age` INT, `ltv` INT\nThe following view definition is executed:\nAn analyst who is not a member of the marketing group executes the following query:\n`SELECT * FROM email_ltv`\nWhich statement describes the results returned by this query?",
+    "question": "A table named `user_ltv` has this schema: `email` STRING, `age` INT, `ltv` INT. The following view is created:\n\n```sql\nCREATE VIEW email_ltv AS\nSELECT\n  CASE WHEN is_member('marketing') THEN email\n       ELSE 'REDACTED'\n  END AS email,\n  ltv\nFROM user_ltv\n```\n\nAn analyst who is not a member of the `marketing` group runs:\n\n```sql\nSELECT * FROM email_ltv\n```\n\nWhich statement describes the returned result?",
     "options": {
       "A": "Three columns will be returned, but one column will be named \"REDACTED\" and contain only null values.",
       "B": "Only the `email` and `ltv` columns will be returned; the `email` column will contain all null values.",
@@ -1244,7 +1268,7 @@
       "E": "Only the `email` and `ltv` columns will be returned; the `email` column will contain the string \"REDACTED\" in each row."
     },
     "answer": "E",
-    "question_vi": "Bảng `user_ltv` dùng tạo view `email_ltv`; người không thuộc nhóm marketing query `SELECT * FROM email_ltv`. Bảng có `email`, `age`, `ltv` với policy che `email` cho nhóm không được phép. Kết quả thế nào?",
+    "question_vi": "Bảng `user_ltv` có schema `email` STRING, `age` INT, `ltv` INT. View sau được tạo:\n\n```sql\nCREATE VIEW email_ltv AS\nSELECT\n  CASE WHEN is_member('marketing') THEN email\n       ELSE 'REDACTED'\n  END AS email,\n  ltv\nFROM user_ltv\n```\n\nMột analyst không thuộc nhóm `marketing` chạy:\n\n```sql\nSELECT * FROM email_ltv\n```\n\nKết quả nào được trả về?",
     "options_vi": {
       "A": "Trả 3 cột nhưng một cột tên REDACTED và toàn null.",
       "B": "Chỉ trả `email` và `ltv`; `email` toàn null.",
@@ -1252,13 +1276,17 @@
       "D": "Trả `email`, `age`, và `ltv` với giá trị gốc.",
       "E": "Chỉ trả `email` and `ltv`; `email` là chuỗi \"REDACTED\" từng dòng."
     },
-    "explanation_vi": "Theo định nghĩa của view, câu lệnh sử dụng hàm kiểm tra quyền nhóm `is_member('marketing')`. Vì nhà phân tích không thuộc nhóm 'marketing', biểu thức `CASE` sẽ trả về chuỗi `'REDACTED'` cho tất cả các hàng trong cột `email`. Ngoài ra, view chỉ chọn hai cột là `email` và `ltv`, do đó kết quả truy vấn chỉ có hai cột này.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án E.** View chỉ chọn hai biểu thức: một `CASE` được đặt alias là `email`, và cột `ltv`; vì thế schema kết quả chỉ có `email` và `ltv`, không có `age`. `is_member('marketing')` trả `false` cho analyst này, nên nhánh `ELSE` trả về chuỗi literal `REDACTED` ở mỗi hàng. Cột `ltv` vẫn lấy giá trị từ `user_ltv`.\n\nA và D sai vì `age` không được chọn trong view; chữ `REDACTED` là giá trị của cột `email`, không phải tên cột mới. B sai vì biểu thức trả chuỗi, không trả `NULL` (trừ khi dữ liệu khác gây null, điều đề không nêu). C sai vì người dùng không thuộc nhóm được phép xem email nên không nhận email gốc.\n\n📚 **Tham khảo:** [Databricks SQL: `is_member`](https://docs.databricks.com/aws/en/sql/language-manual/functions/is_member), [Create and manage views](https://docs.databricks.com/aws/en/views/create-views)",
     "page": null,
     "image": "img/q_42.jpg",
     "references": [
       {
-        "title": "Dynamic view templates - Databricks",
-        "url": "https://docs.databricks.com/en/views/create-views#dynamic-views"
+        "title": "Databricks SQL: is_member",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/functions/is_member"
+      },
+      {
+        "title": "Create and manage views",
+        "url": "https://docs.databricks.com/aws/en/views/create-views"
       }
     ]
   },
