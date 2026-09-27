@@ -528,6 +528,65 @@ button {
   display: none;
 }
 
+.answer-area-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.85fr);
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--bg-glass);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.answer-area-label {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.answer-area-select {
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 36px 8px 12px;
+  color: var(--text-primary);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  font: inherit;
+}
+
+.answer-area-select:disabled {
+  opacity: 1;
+  cursor: default;
+}
+
+.answer-area-row.correct-answer {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+}
+
+.answer-area-row.wrong-answer {
+  border-color: var(--incorrect);
+  background: var(--incorrect-bg);
+}
+
+.answer-area-correct-hint {
+  grid-column: 1 / -1;
+  color: var(--correct);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .answer-area-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 12px;
+  }
+}
+
 /* Selected state */
 .option-item.selected {
   border-color: var(--accent);

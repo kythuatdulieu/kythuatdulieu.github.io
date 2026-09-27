@@ -98,7 +98,7 @@
       "E": "Snowflake mandates the use of Cortex Guard in the Cortex COMPLETE function to filter unsafe responses from a model."
     },
     "answer": "AB",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Snowflake cam kết bảo vệ dữ liệu khách hàng và tuân thủ các chính sách bảo mật nghiêm ngặt khi cung cấp Cortex AI.\n\n*   **Tại sao A đúng**: Snowflake cam kết dữ liệu của khách hàng (bao gồm dữ liệu đầu vào và đầu ra từ LLM) luôn được cô lập và không bao giờ được sử dụng để huấn luyện lại các mô hình cơ sở của bên thứ ba hoặc chia sẻ cho bất kỳ khách hàng nào khác.\n*   **Tại sao B đúng**: Mọi tính năng trong Snowflake Cortex đều tích hợp chặt chẽ với hệ thống phân quyền Role-Based Access Control (RBAC) mặc định của Snowflake. Ví dụ, quản trị viên có thể quyết định vai trò nào được phép gọi hàm `COMPLETE` hoặc sử dụng các mô hình cụ thể.\n*   **Tại sao các phương án khác sai**:\n    *   **C**: Tinh chỉnh mô hình (fine-tuning) trong Snowflake được bảo mật trong phạm vi tài khoản của khách hàng đó và không được thiết kế để tự do chia sẻ ra ngoài cho các khách hàng khác như một tính năng quản trị.\n    *   **D**: Snowflake Model Registry dùng để quản lý các mô hình ML (như PyTorch, TensorFlow, LLM tùy chỉnh), chứ không phải là cơ chế duy nhất hoặc bắt buộc đối với tất cả các mô hình bên thứ ba truy cập tài khoản.\n    *   **E**: Cortex Guard là một tính năng tùy chọn để lọc nội dung không an toàn, không phải là bắt buộc (mandated) trong mọi lượt gọi hàm `COMPLETE`.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -129,7 +129,7 @@
       "E": "REVOKE IMPORTED PRIVILEGES ON DATABASE SNOWFLAKE FROM ROLE PUBLIC;"
     },
     "answer": "CE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Mặc định, quyền truy cập vào các hàm Cortex AI được cấp cho vai trò `PUBLIC` thông qua vai trò cơ sở dữ liệu (database role) `SNOWFLAKE.CORTEX_USER` của cơ sở dữ liệu hệ thống `SNOWFLAKE`.\n\n*   **Tại sao C đúng**: Lệnh `REVOKE DATABASE ROLE SNOWFLAKE.CORTEX_USER FROM ROLE PUBLIC;` sẽ thu hồi quyền sử dụng mặc định của tất cả người dùng (vai trò PUBLIC), buộc quản trị viên phải cấp quyền này cho từng vai trò cụ thể.\n*   **Tại sao E đúng**: Cơ sở dữ liệu `SNOWFLAKE` là một cơ sở dữ liệu chia sẻ (shared database). Thu hồi quyền `IMPORTED PRIVILEGES` trên cơ sở dữ liệu `SNOWFLAKE` từ vai trò `PUBLIC` cũng là một bước cần thiết để chặn quyền truy cập mặc định vào các đối tượng hệ thống được chia sẻ từ Snowflake.\n*   **Tại sao các phương án khác sai**:\n    *   **A, B**: Các vai trò này là vai trò cơ sở dữ liệu (database role), không phải vai trò thông thường (account role), nên cú pháp không chỉ rõ từ khóa `DATABASE ROLE` là không chính xác.\n    *   **D**: Các hàm Cortex không nằm trong một schema thông thường có tên `SNOWFLAKE.CORTEX` để có thể thu hồi quyền sử dụng schema trực tiếp như vậy.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -218,7 +218,7 @@
       "E": "EMBED_TEXT_TOKENS"
     },
     "answer": "AD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Dịch vụ Tìm kiếm Cortex (Cortex Search) quản lý và tính phí tự động dựa trên hai thành phần tài nguyên chính:\n\n*   **Tại sao A đúng**: **Serving compute** đại diện cho tài nguyên tính toán được sử dụng để duy trì chỉ mục (index) và thực hiện các truy vấn tìm kiếm thời gian thực.\n*   **Tại sao D đúng**: **TOKEN_CREDITS** là chi phí phát sinh từ việc sử dụng các mô hình nhúng vector (embedding models) tự động đi kèm khi lập chỉ mục văn bản trong Cortex Search.\n*   **Tại sao các phương án khác sai**:\n    *   **B, C**: Cortex Search là một dịch vụ không máy chủ (serverless), nên chi phí tính toán của nó không được tính vào Virtual Warehouse thông thường của người dùng mà được quản lý riêng.\n    *   **E**: Phí token được quy đổi ra tín dụng tín toán (`TOKEN_CREDITS`) chứ không theo dõi trực tiếp dưới dạng một cột riêng biệt mang tên `EMBED_TEXT_TOKENS` trong bảng lịch sử sử dụng.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -365,7 +365,7 @@
       "E": "top_p"
     },
     "answer": "DE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Trong hàm `SNOWFLAKE.CORTEX.COMPLETE`, các siêu tham số (hyperparameters) được sử dụng để điều khiển tính sáng tạo của mô hình.\n\n*   **Tại sao D đúng**: **temperature** điều chỉnh mức độ ngẫu nhiên của các từ được sinh ra. Giá trị cao hơn (gần 1.0) làm cho phản hồi sáng tạo và đa dạng hơn, trong khi giá trị thấp hơn làm phản hồi mang tính xác định và tập trung hơn.\n*   **Tại sao E đúng**: **top_p** (nucleus sampling) kiểm soát tính đa dạng bằng cách chỉ chọn từ tập hợp các token có tổng xác suất tích lũy đạt ngưỡng `top_p`.\n*   **Tại sao các phương án khác sai**:\n    *   **A (guardrails)**: Kích hoạt bộ lọc nội dung an toàn (Cortex Guard).\n    *   **B (max_tokens)**: Giới hạn độ dài tối đa của phản hồi được sinh ra.\n    *   **C (response_format)**: Quy định cấu trúc của dữ liệu trả về (ví dụ: định dạng JSON).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -425,7 +425,7 @@
       "E": "Use an LLM that has fewer parameters than the current LLM being used."
     },
     "answer": "BE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Chi phí gọi hàm `Cortex COMPLETE` được tính dựa trên số lượng token được xử lý (gồm cả token đầu vào và token đầu ra) nhân với đơn giá token của mô hình được chọn.\n\n*   **Tại sao B đúng**: Tham số `max_tokens` giới hạn độ dài của phản hồi được tạo ra bởi mô hình, do đó kiểm soát trực tiếp số lượng token đầu ra, giúp tiết kiệm chi phí.\n*   **Tại sao E đúng**: Các mô hình nhỏ hơn (ít tham số hơn, ví dụ: `llama3-8b` so với `llama3-70b`) có chi phí trên mỗi token rẻ hơn rất nhiều, giúp giảm thiểu đáng kể chi phí khi thực hiện cùng một khối lượng công việc.\n*   **Tại sao các phương án khác sai**:\n    *   **A**: Tham số `max_tokens` chỉ giới hạn số lượng token đầu ra được sinh ra, không giới hạn số lượng token đầu vào được gửi đi.\n    *   **C**: Hàm Cortex COMPLETE chạy trên hạ tầng tính toán không máy chủ (serverless) được quản lý bởi Snowflake, nên kích thước của virtual warehouse của người dùng không ảnh hưởng trực tiếp đến chi phí gọi hàm này.\n    *   **D**: Sử dụng mô hình lớn hơn (nhiều tham số hơn) sẽ làm tăng chi phí.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -456,7 +456,7 @@
       "E": "The Model Registry supports versioning so that multiple versions of a model can be tracked."
     },
     "answer": "CE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để quản lý mô hình hiệu quả với Snowflake Model Registry:\n* **C đúng**: Các mô hình sau khi đăng ký có thể được gọi và suy luận trực tiếp thông qua câu lệnh SQL nhờ các hàm UDF được tạo tự động.\n* **E đúng**: Model Registry hỗ trợ quản lý phiên bản (versioning) giúp nhà phát triển theo dõi, cập nhật và thay thế các phiên bản mô hình khác nhau một cách kiểm soát.\n\n*Giải thích các phương án sai:*\n* **A sai** vì mô hình hoàn toàn có thể xóa hoặc cập nhật phiên bản mới sau khi đăng ký.\n* **B sai** vì mô hình được lưu trữ trực tiếp và an toàn bên trong các schema object của Snowflake.\n* **D sai** vì mô hình có thể được gọi từ cả SQL hoặc các môi trường khác được Snowflake hỗ trợ, không giới hạn chỉ ở Snowpark Python.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -491,7 +491,7 @@
       "E": "Cortex Analyst prioritizes queries in the Verified Query Repository (VQR) as suggestions based on the queries that reference the most-frequently used logical columns."
     },
     "answer": "CD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Cơ chế gợi ý câu hỏi trong Snowflake Cortex Analyst hoạt động như sau:\n* **C đúng**: Nếu không cấu hình VQR, hệ thống sẽ sử dụng mô hình LLM nền tảng để tự động tạo ra tối đa 3 câu hỏi gợi ý để giúp người dùng bắt đầu.\n* **D đúng**: Khi có cấu hình Verified Query Repository (VQR), hệ thống sẽ so sánh độ tương đồng ngữ nghĩa giữa câu hỏi người dùng nhập và các câu hỏi trong VQR để đưa ra tối đa 5 câu hỏi gợi ý có liên quan nhất.\n\n*Giải thích các phương án sai:*\n* **A, B, E sai** vì không phản ánh đúng cơ chế hoạt động kỹ thuật của hệ thống gợi ý trong Cortex Analyst.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -609,7 +609,7 @@
       "E": "Call the SNOWFLAKE.CORTEX.EXTRACT_ANSWER function in a SELECT statement once for each of the three new columns."
     },
     "answer": "AD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để tối ưu hiệu năng và chi phí khi tạo 3 cột mới từ 1 cột văn bản tự do:\n* **A đúng**: Bằng cách cấu hình `RESPONSE_FORMAT` thành JSON trong đối số `options` của hàm `COMPLETE`, mô hình sẽ trả về kết quả dạng JSON. Chúng ta chỉ cần gọi hàm một lần và dùng cú pháp chấm (`column:field`) để trích xuất dữ liệu ra 3 cột mới.\n* **D đúng**: Tương tự, hàm `EXTRACT_ANSWER` trích xuất thông tin dưới dạng cấu trúc và trả về định dạng VARIANT (JSON), cho phép sử dụng cú pháp chấm để trích xuất dữ liệu vào 3 cột mà không cần gọi hàm 3 lần.\n\n*Giải thích các phương án sai:*\n* **B sai** vì TOP_P chỉ điều chỉnh tính ngẫu nhiên của câu trả lời, không ép định dạng trả về dạng cấu trúc JSON.\n* **C, E sai** vì việc gọi hàm riêng biệt 3 lần cho 3 cột mới sẽ nhân ba chi phí tính toán (credits) và làm chậm hiệu năng truy vấn một cách không cần thiết.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -673,7 +673,7 @@
       "E": "prompt_or_history"
     },
     "answer": "AE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Cú pháp bắt buộc của hàm `SNOWFLAKE.CORTEX.COMPLETE`:\n* **A, E đúng**: Hàm `COMPLETE` yêu cầu hai đối số bắt buộc đầu tiên là tên mô hình cần gọi (`model` - A) và nội dung yêu cầu hoặc lịch sử cuộc trò chuyện (`prompt_or_history` - E).\n* **B, C, D sai** vì đây là các tham số tùy chọn được truyền bên trong đối số thứ ba `options` và không bắt buộc phải có cho một truy vấn hợp lệ.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -762,7 +762,7 @@
       "E": "Create a Snowflake Cortex Agent in Snowsight, extract data from the database, and ask questions by fine-tuning an LLM with the extracted data."
     },
     "answer": "CD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để truy vấn dữ liệu có cấu trúc bằng ngôn ngữ tự nhiên không qua SQL:\n* **C, D đúng**: Snowflake Cortex Analyst cho phép người dùng cuối đặt câu hỏi bằng ngôn ngữ tự nhiên để truy vấn dữ liệu có cấu trúc. Quy trình thiết lập yêu cầu định nghĩa một mô hình ngữ nghĩa (semantic model) bằng YAML, tải nó lên stage, sau đó sử dụng thông qua giao diện Cortex Analyst trên Snowsight (C) hoặc gọi qua Cortex Analyst REST API từ ứng dụng tùy chỉnh (D).\n\n*Giải thích các phương án sai:*\n* **A sai** vì Document AI dùng để trích xuất thông tin từ tài liệu phi cấu trúc (PDF, ảnh), không phải để truy vấn dữ liệu có cấu trúc.\n* **B, E sai** vì không phản ánh đúng kiến trúc và cách thức hoạt động của các dịch vụ truy vấn ngôn ngữ tự nhiên trong Snowflake.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -822,7 +822,7 @@
       "E": "Precision"
     },
     "answer": "BC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Các chỉ số đánh giá LLM của Snowflake AI Observability:\n* **B, C đúng**: `Coherence` (Độ mạch lạc) đánh giá tính nhất quán logic của văn bản đầu ra. `Correctness` (Độ đúng đắn - được viết là 'Corectness' trong câu hỏi gốc) đánh giá độ chính xác của phản hồi so với câu trả lời chuẩn (ground truth).\n\n*Giải thích các phương án sai:*\n* **A, D, E sai** vì đây là các phép đo chất lượng mô hình Machine Learning truyền thống (phân loại/hồi quy), không phải là các chỉ số đặc thù để đánh giá chất lượng văn bản sinh bởi LLM trong công cụ đánh giá của Cortex.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -853,7 +853,7 @@
       "E": "SENTIMENT"
     },
     "answer": "AC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để thực hiện phân tích tự động hóa định kỳ trong Snowflake:\n* **A, C đúng**: `ANOMALY_DETECTION` (Phát hiện bất thường) và `FORECAST` (Dự báo) là hai hàm thuộc nhóm Cortex ML Functions được thiết kế để tự động hóa các công việc phân tích chuỗi thời gian định kỳ mà không yêu cầu viết mã học máy phức tạp.\n\n*Giải thích các phương án sai:*\n* **B, E sai** vì đây là các hàm Cortex AI xử lý ngôn ngữ tự nhiên.\n* **D sai** vì không phải là hàm tự động hóa phân tích chuỗi thời gian.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -884,7 +884,7 @@
       "E": "The availability region where the model resides"
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Tối ưu hóa hiệu năng/chi phí trong Snowflake Cortex:\n* **B đúng**: Độ phức tạp của các truy vấn và prompt (số lượng tokens đầu vào/đầu ra, độ sâu của suy luận) quyết định trực tiếp khối lượng tính toán cần thiết của LLM.\n* **D đúng**: Cấu hình tài nguyên tính toán (kích thước Virtual Warehouse, bộ nhớ đệm) quyết định khả năng xử lý song song và lượng credits tiêu thụ tương ứng để hoàn thành tác vụ.\n\n*Giải thích các phương án sai:*\n* **A, C, E sai** vì không phải là yếu tố thiết kế ảnh hưởng lớn nhất đến tỷ lệ hiệu năng/credit của từng lượt chạy mô hình Cortex cụ thể.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -916,7 +916,7 @@
       "F": "CLASSIFY_TEXT"
     },
     "answer": "ACF",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để xác định các hàm Snowflake Cortex LLM tính toán chi phí dựa trên cả token đầu vào và token đầu ra, chúng ta cần phân biệt giữa các hàm sinh văn bản (generative functions) và các hàm phân tích/trợ giúp (analysis/helper functions):\n\n*   **SUMMARIZE** (Tóm tắt), **TRANSLATE** (Dịch thuật), và **CLASSIFY_TEXT** (Phân loại văn bản): Đây là các hàm sinh hoặc biến đổi văn bản, do đó Snowflake tính phí dựa trên cả số lượng token đầu vào (prompt/văn bản nguồn) và token đầu ra (văn bản được sinh ra/kết quả phân loại).\n*   **SENTIMENT** (Phân tích cảm xúc): Chỉ tính phí dựa trên token đầu vào vì nó chỉ trả về điểm số cảm xúc (số thực từ -1 đến 1).\n*   **EMBED_TEXT_768** và **EMBED_TEXT_1024** (Tạo vector nhúng): Chỉ tính phí dựa trên số lượng token đầu vào được xử lý để tạo ra các vector nhúng cố định.\n\nDo đó, các phương án đúng là **A**, **C**, và **F**.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -977,7 +977,7 @@
       "E": "CREATE MODEL of OWNERSHIP on the schema where the fine-tuned model will be saved"
     },
     "answer": "BE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để khởi chạy thành công một tác vụ tinh chỉnh (fine-tuning) mô hình LLM trong Snowflake Cortex, người dùng cần có các quyền tối thiểu sau:\n\n*   **USAGE trên database** (và schema tương ứng) chứa dữ liệu huấn luyện và dữ liệu kiểm thử (validation data) để tiến trình có thể truy cập dữ liệu đầu vào (Đáp án **B**).\n*   **CREATE MODEL** hoặc **OWNERSHIP** trên schema đích nơi mô hình sau khi tinh chỉnh sẽ được lưu trữ (Đáp án **E**). Điều này cho phép tiến trình lưu đối tượng mô hình mới vào Snowflake Model Registry.\n*   Các quyền khác như READ/WRITE trên stage của mô hình gốc là không đúng vì mô hình gốc được quản lý trực tiếp bởi Snowflake Cortex.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1036,7 +1036,7 @@
       "D": "SHOW CORTEX MODELS"
     },
     "answer": "BC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để kiểm tra các mô hình máy học và LLM khả dụng trong Snowflake, bạn sử dụng hai câu lệnh:\n\n*   **SHOW CORTEX BASE MODELS** (Đáp án **B**): Liệt kê tất cả các mô hình nền tảng Cortex (Cortex Base Models) được Snowflake quản lý và cung cấp sẵn cho các hàm Cortex AI (như Llama, Mistral, Gemma...).\n*   **SHOW MODELS** (Đáp án **C**): Liệt kê tất cả các đối tượng mô hình trong Model Registry (bao gồm cả các mô hình do người dùng tự đăng ký, mô hình tinh chỉnh hoặc mô hình cài đặt cục bộ).\n*   Các câu lệnh còn lại như `SHOW BASE MODELS` hay `SHOW CORTEX MODELS` không tồn tại trong cú pháp SQL của Snowflake.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1099,7 +1099,7 @@
       "E": "A service specification that defines the container behavior"
     },
     "answer": "AE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để chạy các container Docker/OCI trong **Snowpark Container Services (SPCS)**, bạn bắt buộc phải có hai thành phần cơ bản:\n\n*   **Compute Pool** (Đáp án **A**): Cung cấp tài nguyên tính toán phần cứng cần thiết (CPU, GPU, RAM) để chạy các tiến trình bên trong container.\n*   **Service Specification** (Đáp án **E**): File cấu hình dạng YAML định nghĩa cách container khởi tạo và hoạt động (ví dụ: hình ảnh Docker sử dụng, ánh xạ cổng mạng, mount thư mục lưu trữ, biến môi trường).\n*   Các tùy chọn như external stage (B), scheduled task (C), hay file format (D) không phải là các điều kiện bắt buộc trực tiếp để khởi tạo và chạy một container dịch vụ trong SPCS.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1159,7 +1159,7 @@
       "E": "python_version"
     },
     "answer": "AB",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Khi sử dụng phương thức `log_model` của Snowflake Model Registry để lưu trữ một mô hình máy học:\n\n*   **model** (Đáp án **A**): Là đối tượng mô hình thực tế (như mô hình Scikit-Learn, XGBoost, PyTorch, v.v.) cần được đăng ký.\n*   **model_name** (Đáp án **B**): Là chuỗi văn bản (string) đặt tên định danh cho mô hình đó trong registry.\n*   Các tham số khác như `version_name`, `code_paths`, hay `python_version` là không bắt buộc (optional) vì hệ thống sẽ tự động tạo giá trị mặc định hoặc suy luận nếu người dùng không chỉ định.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1191,7 +1191,7 @@
       "F": "Dynamic tables using incremental refreshes"
     },
     "answer": "BCE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để xây dựng một đường ống tự động tích hợp Gen AI bằng stored procedure đáp ứng đầy đủ các yêu cầu trên:\n\n*   **External access integration** (Đáp án **C**): Cần thiết để cho phép các tiến trình trong Snowflake (stored procedure) gọi API/kết nối ra internet để tải các tệp PDF từ website bên ngoài.\n*   **Streams and tasks** (Đáp án **B**): Dùng để tự động hóa việc lập lịch thực thi stored procedure mỗi giờ một lần.\n*   **Cortex TRY_COMPLETE** (Đáp án **E**): Dùng để gọi mô hình ngôn ngữ lớn (LLM) để sinh văn bản (opinion) theo persona định sẵn. Việc dùng `TRY_COMPLETE` thay vì `COMPLETE` giúp đường ống chạy mượt mà, không bị sập (fail) toàn bộ tiến trình nếu có một dòng dữ liệu hoặc một tệp PDF bị lỗi phân tích.\n*   Các thành phần khác như Snowpipe (A), Cortex SENTIMENT (D), hay Dynamic Tables (F) không đáp ứng trực tiếp các yêu cầu của kịch bản này.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1260,7 +1260,7 @@
       "E": "Multi-Factor Authentication (MFA)"
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Khi tích hợp và truy cập Snowflake Cortex LLM REST API từ bên ngoài:\n\n*   **OAuth 2.0** (Đáp án **B**): Cho phép xác thực ủy quyền bảo mật thông qua token mà không cần chia sẻ thông tin đăng nhập trực tiếp.\n*   **Key-pair authentication** (Đáp án **D**): Xác thực cặp khóa (sử dụng JWT) là giải pháp tiêu chuẩn được Snowflake khuyến nghị cho các dịch vụ tự động kết nối API (headless/service accounts).\n*   Các phương thức khác như SAML 2.0, SSO, hay MFA là các cơ chế xác thực tương tác dành cho người dùng đăng nhập vào hệ thống, không phù hợp cho việc gọi REST API tự động.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1436,7 +1436,7 @@
       "E": "Use the names of the logical tables and columns that are defined in the semantic model in the SQL queries."
     },
     "answer": "AE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để hiển thị các câu hỏi gợi ý khi người dùng bắt đầu (onboarding), ta cần đặt cờ `use_as_onboarding_question` thành `true` cho từng câu hỏi mong muốn trong tệp VQR.\n\nĐồng thời, các truy vấn SQL trong VQR phải tham chiếu đến các bảng logic và cột logic được định nghĩa trong mô hình ngữ nghĩa (semantic model) chứ không phải tên bảng vật lý thực tế dưới cơ sở dữ liệu. Điều này giúp Cortex Analyst ánh xạ chính xác câu hỏi ngữ nghĩa sang truy vấn SQL logic.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1525,7 +1525,7 @@
       "E": "Replacing extracted objects from images"
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Hàm `SNOWFLAKE.CORTEX.COMPLETE` hỗ trợ các mô hình đa phương thức (multimodal LLM), cho phép người dùng truyền cả hình ảnh và văn bản để thực hiện các tác vụ suy luận văn bản dựa trên hình ảnh.\n\nCác tác vụ được hỗ trợ bao gồm:\n* **B. Gán nhãn cho các tệp hình ảnh (Labeling image files)**: Mô hình có thể mô tả hình ảnh hoặc gán nhãn văn bản.\n* **D. Phân loại địa danh trong ảnh (Classifying landmarks in images)**: Mô hình có thể nhận diện các địa danh cụ thể có trong ảnh.\n\nCác tác vụ chỉnh sửa ảnh ở mức độ điểm ảnh (A, C, E) không được hỗ trợ bởi hàm này vì nó chỉ sinh ra đầu ra là văn bản.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1585,7 +1585,7 @@
       "E": "SNOWFLAKE.CORTEX.SENTIMENT (SURVEY_TEXT)"
     },
     "answer": "CE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Snowflake Cortex cung cấp các hàm chuyên dụng để phân tích cảm xúc:\n* **`SNOWFLAKE.CORTEX.SENTIMENT`**: Trả về điểm số cảm xúc tổng thể (từ -1 đến 1) cho toàn bộ văn bản đầu vào.\n* **`SNOWFLAKE.CORTEX.ENTITY_SENTIMENT`**: Cho phép phân tích cảm xúc cụ thể đối với các thực thể (entities) hoặc khía cạnh được đề cập trong văn bản.\n\nCác hàm khác như CLASSIFY_TEXT dùng để phân loại văn bản theo danh mục, COMPLETE là hàm tạo văn bản tổng quát, và FINETUNE dùng để tinh chỉnh mô hình, không phải là các hàm được thiết kế chuyên biệt cho phân tích cảm xúc.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1715,7 +1715,7 @@
       "E": "TRAINING"
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Khi thực hiện tinh chỉnh (fine-tuning) một mô hình nền tảng bằng hàm `SNOWFLAKE.CORTEX.FINETUNE`, dữ liệu đầu vào của bạn bắt buộc phải có cấu trúc gồm đúng hai cột:\n* **`prompt`**: chứa câu lệnh/yêu cầu đầu vào.\n* **`completion`**: chứa câu trả lời/kết quả mong đợi tương ứng.\n\nNếu bảng hoặc view dữ liệu của bạn sử dụng tên cột khác, bạn cần dùng bí danh cột (alias) trong câu lệnh SQL (ví dụ: `SELECT my_input AS prompt, my_output AS completion`) để đảm bảo đúng định dạng bắt buộc này.\n\n*(Đáp án được gợi ý bởi AI)*",

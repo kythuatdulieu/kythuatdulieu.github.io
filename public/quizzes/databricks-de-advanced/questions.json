@@ -576,7 +576,7 @@
   {
     "id": 20,
     "topic": 1,
-    "question": "A data architect has designed a system in which two **Structured Streaming** jobs will concurrently write to a single bronze **Delta** table. Each job is\nsubscribing to a different topic from an Apache Kafka source, but they will write data with the same schema. To keep the directory structure\nsimple, a data engineer has decided to nest a checkpoint directory to be shared by both streams.\nThe proposed directory structure is displayed below:\nWhich statement describes whether this checkpoint directory structure is valid for the given scenario and why?",
+    "question": "A data architect designed two Structured Streaming jobs that read different Apache Kafka topics and write to the same bronze Delta table. To keep the directory layout simple, the engineer configured both queries to use the single checkpoint path shown in the diagram: `/bronze/checkpoint`, alongside the table transaction log and partition folders. Is this checkpoint arrangement valid, and why?",
     "options": {
       "A": "Yes, because the jobs write to the same Delta table.",
       "B": "Yes, because the jobs process data with the same schema.",
@@ -584,8 +584,8 @@
       "D": "No, because Delta tables do not support concurrent writes from multiple streaming jobs.",
       "E": "Yes, because the checkpoint directory is configured with a nested structure."
     },
-    "answer": "E",
-    "question_vi": "Hai job **Structured Streaming** cùng ghi vào một bảng **Delta** bronze, mỗi job đọc topic **Kafka** khác nhau cùng `schema`. Kỹ sư định dùng chung một thư mục `checkpoint` lồng nhau. Cấu trúc `checkpoint` này có hợp lệ không?",
+    "answer": "C",
+    "question_vi": "Kiến trúc sư thiết kế hai job Structured Streaming đọc hai topic Apache Kafka khác nhau và cùng ghi vào một bảng Delta bronze. Để cấu trúc thư mục gọn hơn, kỹ sư cấu hình cả hai truy vấn dùng chung đường dẫn checkpoint duy nhất trong sơ đồ: `/bronze/checkpoint`, nằm cạnh transaction log và các thư mục partition của bảng. Cách đặt checkpoint này có hợp lệ không, và vì sao?",
     "options_vi": {
       "A": "Có, vì các job ghi vào cùng một bảng Delta.",
       "B": "Có, vì các job xử lý dữ liệu có cùng schema.",
@@ -593,13 +593,17 @@
       "D": "Không, vì bảng Delta không hỗ trợ ghi đồng thời từ nhiều job streaming.",
       "E": "Có, vì thư mục checkpoint được cấu hình cấu trúc lồng nhau."
     },
-    "explanation_vi": "Đáp án đúng: E. Không; mỗi stream cần phải có một thư mục `checkpoint` riêng.\n\nGiải thích:\n- Thư mục `checkpoint` (``checkpoint`Location`) được **Structured Streaming** sử dụng để ghi lại vết (metadata) tiến trình xử lý, bao gồm các offset của nguồn dữ liệu và trạng thái của các phép toán gom nhóm (stateful operations).\n- Mặc dù Delta Lake hỗ trợ nhiều tiến trình ghi đồng thời (concurrent writers) thông qua cơ chế Kiểm soát giao dịch đồng thời lạc quan (Optimistic Concurrency Control - OCC), nhưng các stream tuyệt đối **không được phép dùng chung** một thư mục `checkpoint`.\n- Nếu dùng chung `checkpoint`, các stream sẽ liên tục ghi đè các file offset và metadata của nhau, gây ra lỗi xung đột trạng thái dữ liệu (state corruption), dẫn đến dừng job hoặc mất mát/sai lệch dữ liệu nghiêm trọng.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi kiểm tra hai cơ chế độc lập:** nhiều streaming query có thể cùng ghi vào một bảng Delta, nhưng mỗi query phải giữ tiến độ khôi phục riêng. Sơ đồ chỉ có một đường dẫn `/bronze/checkpoint` và đề bài nói cả hai job dùng chung đường dẫn đó.\n\n**Đáp án C đúng.** Mỗi truy vấn Structured Streaming cần một checkpoint location riêng. Checkpoint lưu offset đã đọc từ Kafka, batch đã commit, state của phép tính có trạng thái và metadata nhận diện query. Hai job đọc topic khác nhau có tiến độ và trạng thái khác nhau; dùng chung checkpoint sẽ khiến chúng tranh chấp cùng bộ metadata/offset và không thể khôi phục độc lập một cách đúng đắn.\n\n**Đừng nhầm checkpoint với transaction log của Delta.** `_delta_log` theo dõi các phiên bản và giao dịch của bảng đích. Checkpoint của Spark theo dõi tiến trình của từng truy vấn. Đặt một thư mục tên `checkpoint` cạnh `_delta_log` không biến nó thành checkpoint riêng cho từng stream, và Delta không tự quản lý checkpoint thay Spark.\n\n**Loại trừ từng phương án:**\n\n- **A sai:** ghi vào cùng bảng đích không cho phép chia sẻ checkpoint; sink chung và trạng thái khôi phục của từng query là hai vấn đề riêng.\n\n- **B sai:** cùng schema cũng không làm hai topic có cùng offset hay cùng trạng thái. Mỗi nguồn cần tiến độ độc lập.\n\n- **C đúng:** cấp một checkpoint location khác nhau cho mỗi query, chẳng hạn `/checkpoints/topic-a` và `/checkpoints/topic-b`.\n\n- **D sai:** Delta Lake hỗ trợ các writer đồng thời theo giao dịch; xung đột có thể xảy ra tùy thao tác nhưng điều đó không đồng nghĩa chỉ một streaming job được ghi vào bảng.\n\n- **E sai:** cấu trúc thư mục lồng nhau không tạo ra hai checkpoint nếu cả hai job vẫn trỏ tới cùng một thư mục. Sơ đồ thể hiện một checkpoint dùng chung.\n\n**Cách bố trí nên dùng:** giữ cùng một bảng Delta làm sink, nhưng cấu hình một đường dẫn checkpoint duy nhất và ổn định cho từng query. Không dùng lại checkpoint của query này cho query khác.",
     "page": null,
     "image": "img/q_20.jpg",
     "references": [
       {
-        "title": "Structured Streaming - Checkpointing",
-        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#recovering-from-failures-with-checkpointing"
+        "title": "Structured Streaming checkpoints - Databricks",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/checkpoints"
+      },
+      {
+        "title": "What are ACID guarantees on Databricks?",
+        "url": "https://docs.databricks.com/aws/en/lakehouse/acid"
       }
     ]
   },
@@ -5875,13 +5879,17 @@
       "C": "Không; chỉ có duy nhất một stream được phép ghi vào một bảng **Delta Lake**.",
       "D": "Không; mỗi stream bắt buộc phải có thư mục checkpoint riêng của nó."
     },
-    "explanation_vi": "Mỗi truy vấn **Structured Streaming** bắt buộc phải sử dụng một thư mục checkpoint độc lập và duy nhất để lưu trữ trạng thái (offsets) và siêu dữ liệu (metadata) của luồng đó. Nếu hai stream dùng chung một thư mục checkpoint (hoặc lồng nhau không hợp lệ), các tác vụ ghi sẽ xung đột, ghi đè offsets của nhau và dẫn đến lỗi hỏng trạng thái stream.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi hỏi liệu hai truy vấn Kafka có thể ghi cùng bảng Delta khi dùng chung checkpoint hay không.** Trong hình, `checkpoint` là một thư mục duy nhất dưới `/bronze`, còn `_delta_log` là transaction log của bảng. Cả hai job được mô tả là dùng chung thư mục checkpoint đó.\n\n**Đáp án D đúng:** mỗi streaming query phải có checkpoint location riêng. Checkpoint giữ offset nguồn, batch đã commit, metadata query và state khi có phép toán stateful. Hai query đọc hai Kafka topic khác nhau nên phải có hai bộ tiến độ khôi phục tách biệt. Dùng chung một location không đáp ứng ranh giới trạng thái đó.\n\n**Phân biệt hai loại log:** `_delta_log` ghi nhận phiên bản giao dịch của bảng Delta; checkpoint ghi nhận trạng thái xử lý của một query Structured Streaming. Delta hỗ trợ nhiều writer đồng thời trong các điều kiện được hỗ trợ, nên không đúng khi nói chỉ một stream được ghi vào bảng. Nhưng khả năng ghi đồng thời không làm cho checkpoint dùng chung trở nên hợp lệ.\n\n**Loại trừ các phương án:**\n\n- **A sai:** checkpoint không được Delta lưu thay thế trong transaction log. Query cần checkpoint riêng để khôi phục offset và state.\n\n- **B sai:** hai stream không thể dùng chung một checkpoint chỉ vì cùng schema hoặc cùng sink; nguồn Kafka khác nhau có offset riêng.\n\n- **C sai:** Delta table không bị giới hạn chỉ một streaming writer; điều kiện cần sửa ở đây là checkpoint location dùng chung.\n\n- **D đúng:** mỗi stream cần đường dẫn checkpoint riêng và ổn định, ví dụ `/checkpoints/orders` và `/checkpoints/payments`.\n\n**Ghi nhớ:** nhiều query có thể cùng ghi một bảng Delta; mỗi query vẫn phải có checkpoint riêng.",
     "page": null,
     "image": "img/q_196.jpg",
     "references": [
       {
-        "title": "Structured Streaming programming guide - Checkpointing - Databricks",
-        "url": "https://docs.databricks.com/en/structured-streaming/production#recover-from-query-failures"
+        "title": "Structured Streaming checkpoints - Databricks",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/checkpoints"
+      },
+      {
+        "title": "What are ACID guarantees on Databricks?",
+        "url": "https://docs.databricks.com/aws/en/lakehouse/acid"
       }
     ]
   },
@@ -8448,7 +8456,8 @@
         "title": "What are deletion vectors?",
         "url": "https://docs.databricks.com/en/tables/features/deletion-vectors"
       }
-    ]
+    ],
+    "isMulti": true
   },
   {
     "id": 289,
@@ -8566,7 +8575,8 @@
         "title": "Use cluster-scoped init scripts",
         "url": "https://docs.databricks.com/en/init-scripts/cluster-scoped"
       }
-    ]
+    ],
+    "isMulti": true
   },
   {
     "id": 293,
@@ -8736,7 +8746,8 @@
         "title": "Auto Loader binary file support",
         "url": "https://docs.databricks.com/en/data-governance/unity-catalog/access-control/table-acls/any-file"
       }
-    ]
+    ],
+    "isMulti": true
   },
   {
     "id": 299,

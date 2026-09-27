@@ -5,6 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { quizMeta, quizProviders, quizHidden } from '../config/quizzes.js';
+import { hasCompleteVietnamese, questionArray } from '../config/quiz-utils.js';
 
 const quizRoot = path.resolve('./public/quizzes');
 const ids = fs
@@ -12,13 +13,13 @@ const ids = fs
   .filter((d) => d.isDirectory() && d.name !== 'shared' && !quizHidden.includes(d.name))
   .map((d) => d.name);
 
-function countQuestions(id) {
+function loadQuiz(id) {
   try {
     const j = JSON.parse(fs.readFileSync(path.join(quizRoot, id, 'questions.json'), 'utf8'));
-    const arr = Array.isArray(j) ? j : j.questions || [];
-    return arr.length;
+    const questions = questionArray(j);
+    return { count: questions.length, vi: hasCompleteVietnamese(questions) };
   } catch {
-    return null;
+    return { count: null, vi: false };
   }
 }
 
@@ -26,7 +27,8 @@ const groups = quizProviders.map((provider) => ({ provider, items: [] }));
 for (const id of ids) {
   const meta = quizMeta[id] || { name: id, provider: 'Khác' };
   const group = groups.find((g) => g.provider === meta.provider) || groups[groups.length - 1];
-  group.items.push({ id, name: meta.name, vi: !!meta.vi, count: countQuestions(id) });
+  const quiz = loadQuiz(id);
+  group.items.push({ id, name: meta.name, vi: quiz.vi, count: quiz.count });
 }
 for (const g of groups) {
   g.items.sort((a, b) => {

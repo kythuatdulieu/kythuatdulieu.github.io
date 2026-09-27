@@ -986,15 +986,15 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Song song hóa quy trình tinh chỉnh siêu tham số trên Spark:\n\n* **Tại sao D đúng:** **Hyperopt** là một thư viện tối ưu hóa siêu tham số phổ biến trong Python. Khi chạy trên Databricks/Spark, Hyperopt cung cấp lớp `SparkTrials` cho phép phân phối việc huấn luyện nhiều cấu hình siêu tham số song song trên các worker của cụm Spark. Điều này cực kỳ phù hợp để tăng tốc độ tinh chỉnh siêu tham số cho các mô hình chạy trên một nút duy nhất (như các mô hình scikit-learn).\n* **Tại sao các phương án khác sai:**\n  * **A:** MLflow Experiment Tracking dùng để ghi nhận (log) các tham số, chỉ số và mô hình, không dùng để thực thi song song hóa.\n  * **B:** Spark ML dùng để xây dựng các mô hình phân tán bản xứ trên Spark, không phải là công cụ chuyên để song song hóa các mô hình đơn nút scikit-learn.\n  * **C:** Cụm tự động co giãn là tính năng của hạ tầng đám mây để điều chỉnh số lượng máy ảo, không phải công cụ lập trình hay thuật toán để song song hóa.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đề hỏi gì?** Câu hỏi muốn tìm công cụ chạy nhiều lần thử siêu tham số đồng thời cho mô hình đơn nút (ví dụ scikit-learn) trên cụm Spark.\n\n**Đáp án theo bộ đề: D — Hyperopt.** Trong môi trường Databricks cũ mà câu hỏi mô tả, Hyperopt kết hợp với SparkTrials để phân phối các lần thử cấu hình trên các worker. Mỗi lần thử vẫn huấn luyện một mô hình đơn nút; phần được song song hóa là các lần thử khác nhau, không phải phép tính bên trong một mô hình scikit-learn.\n\n**Loại trừ các lựa chọn:**\n- **A — MLflow Experiment Tracking:** ghi nhận tham số, metric và artifact của các lần chạy; tracking giúp so sánh thí nghiệm nhưng tự nó không lập lịch chạy song song.\n- **B — Spark ML:** cung cấp thuật toán ML phân tán chạy trên Spark. Nó không phải bộ điều phối nhiều lần thử của một estimator scikit-learn đơn nút.\n- **C — Autoscaling clusters:** tự điều chỉnh số lượng tài nguyên của cụm theo nhu cầu; đây là hành vi hạ tầng, không tạo hoặc điều phối các cấu hình siêu tham số.\n- **D — Hyperopt:** là lựa chọn phù hợp nhất trong bộ đáp án theo ngữ cảnh/runtime cũ của đề, đặc biệt khi dùng SparkTrials.\n- **E — Delta Lake:** định dạng/bảng lưu trữ dữ liệu có giao dịch; không phải thư viện tối ưu siêu tham số.\n\n**Lưu ý theo tài liệu Databricks hiện hành:** Hyperopt không còn được duy trì và không được tích hợp trong Databricks Runtime ML sau 16.4 LTS ML. Databricks hiện khuyến nghị Optuna cho tối ưu mô hình đơn nút; vì vậy D là đáp án lịch sử của câu thi, không phải khuyến nghị cho dự án mới.",
     "references": [
       {
-        "title": "Hyperparameter tuning with Hyperopt - Databricks",
-        "url": "https://docs.databricks.com/en/machine-learning/automl-hyperparam-tuning/index.html"
+        "title": "Use distributed training algorithms with Hyperopt (legacy support and migration guidance) — Databricks",
+        "url": "https://docs.databricks.com/aws/en/machine-learning/automl-hyperparam-tuning/hyperopt-distributed-ml"
       },
       {
-        "title": "Databricks SparkTrials for Hyperopt",
-        "url": "https://docs.databricks.com/en/machine-learning/automl-hyperparam-tuning/hyperopt-concepts.html"
+        "title": "Hyperparameter tuning with Optuna — Databricks",
+        "url": "https://docs.databricks.com/aws/en/machine-learning/automl-hyperparam-tuning/optuna"
       }
     ],
     "question_vi": "Công cụ nào dưới đây có thể được sử dụng để song song hóa quy trình tinh chỉnh siêu tham số cho các mô hình học máy đơn nút (single-node) bằng cách sử dụng một cụm Spark?",
@@ -1002,7 +1002,8 @@
       "A": "MLflow Experiment Tracking",
       "B": "Spark ML",
       "C": "Cụm tự động co giãn (Autoscaling clusters)",
-      "D": "Hyperopt"
+      "D": "Hyperopt",
+      "E": "Delta Lake"
     }
   },
   {

@@ -2526,7 +2526,51 @@
     ],
     "question_vi": "Bạn có workspace Fabric tên Workspace1_DEV chứa các item sau:\n- 10 báo cáo (reports)\n- 4 notebook\n- 3 lakehouse\n- 2 data pipeline\n- 2 Dataflow Gen1\n- 3 Dataflow Gen2\n- 5 semantic model, mỗi model có lịch refresh.\n\nBạn tạo deployment pipeline Pipeline1 để triển khai các item từ Workspace1_DEV sang workspace mới Workspace1_TEST, rồi triển khai tất cả item.\n\nĐánh giá các phát biểu sau bằng Có (Yes) hoặc Không (No):\n1. Dữ liệu từ các semantic model sẽ được triển khai sang giai đoạn đích.\n2. Các Dataflow Gen1 sẽ được triển khai sang giai đoạn đích.\n3. Các lịch refresh đã lên lịch của semantic model sẽ được triển khai sang giai đoạn đích.\n\nLƯU Ý: Mỗi lựa chọn đúng được tính một điểm.\n//IMG//",
     "options_vi": {},
-    "answer_image": "images/image6.png"
+    "answer_image": "images/image6.png",
+    "answer_area": {
+      "type": "select_rows",
+      "rows": [
+        {
+          "label": "Data from the semantic models will be deployed to the target stage.",
+          "label_vi": "Dữ liệu bên trong semantic model sẽ được triển khai sang stage đích.",
+          "choices": {
+            "A": "Yes",
+            "B": "No"
+          },
+          "choices_vi": {
+            "A": "Có",
+            "B": "Không"
+          },
+          "answer": "B"
+        },
+        {
+          "label": "The Dataflow Gen1 dataflows will be deployed to the target stage.",
+          "label_vi": "Các dataflow Gen1 sẽ được triển khai sang stage đích.",
+          "choices": {
+            "A": "Yes",
+            "B": "No"
+          },
+          "choices_vi": {
+            "A": "Có",
+            "B": "Không"
+          },
+          "answer": "A"
+        },
+        {
+          "label": "The scheduled refresh policies will be deployed to the target stage.",
+          "label_vi": "Các lịch refresh sẽ được triển khai sang stage đích.",
+          "choices": {
+            "A": "Yes",
+            "B": "No"
+          },
+          "choices_vi": {
+            "A": "Có",
+            "B": "Không"
+          },
+          "answer": "B"
+        }
+      ]
+    }
   },
   {
     "id": 81,
@@ -2655,7 +2699,72 @@
     ],
     "question_vi": "Bạn có workspace Fabric tên Workspace1 chứa các item trong bảng.\n//IMG//\n\nĐối với Model1, tùy chọn “Keep your Direct Lake data up to date” đang tắt. Bạn cần điều phối các item để đáp ứng yêu cầu:\n- Notebook1 chạy vào 08:00 mỗi ngày trong tuần (thứ Hai đến thứ Sáu).\n- Notebook2 chạy khi có tệp được lưu vào container Azure Blob Storage.\n- Model1 được làm mới sau khi Notebook1 chạy thành công.\n\nNên cấu hình từng item như thế nào? Chọn phương án trong vùng trả lời.\n\nBản dịch các phương án trong vùng trả lời:\n- **Notebook1:** thêm vào định nghĩa Apache Spark job; thêm vào Pipeline1; hoặc cấu hình chạy từ Real-Time hub.\n- **Notebook2:** thêm vào định nghĩa Apache Spark job; thêm vào Pipeline1; hoặc cấu hình chạy từ Real-Time hub.\n- **Pipeline1:** thêm vào Apache Spark job; lên lịch chạy; hoặc cấu hình chạy từ Real-Time hub.\n- **Model1:** thêm vào Pipeline1; cấu hình refresh từ Real-Time hub; hoặc bật tùy chọn “Keep your Direct Lake data up to date”.\n\n//IMG//",
     "options_vi": {},
-    "answer_image": "images/image12.png"
+    "answer_image": "images/image12.png",
+    "answer_area": {
+      "type": "select_rows",
+      "rows": [
+        {
+          "label": "Notebook1",
+          "label_vi": "Notebook1",
+          "choices": {
+            "A": "Add the notebook to an Apache Spark job definition.",
+            "B": "Add the notebook to Pipeline1.",
+            "C": "Configure notebook execution from Real-Time hub."
+          },
+          "choices_vi": {
+            "A": "Thêm notebook vào Apache Spark job definition.",
+            "B": "Thêm notebook vào Pipeline1.",
+            "C": "Cấu hình chạy notebook từ Real-Time hub."
+          },
+          "answer": "B"
+        },
+        {
+          "label": "Notebook2",
+          "label_vi": "Notebook2",
+          "choices": {
+            "A": "Add the notebook to an Apache Spark job definition.",
+            "B": "Add the notebook to Pipeline1.",
+            "C": "Configure notebook execution from Real-Time hub."
+          },
+          "choices_vi": {
+            "A": "Thêm notebook vào Apache Spark job definition.",
+            "B": "Thêm notebook vào Pipeline1.",
+            "C": "Cấu hình chạy notebook từ Real-Time hub."
+          },
+          "answer": "C"
+        },
+        {
+          "label": "Pipeline1",
+          "label_vi": "Pipeline1",
+          "choices": {
+            "A": "Add Pipeline1 to an Apache Spark job definition.",
+            "B": "Configure a schedule for Pipeline1.",
+            "C": "Configure Pipeline1 execution from Real-Time hub."
+          },
+          "choices_vi": {
+            "A": "Thêm Pipeline1 vào Apache Spark job definition.",
+            "B": "Đặt lịch cho Pipeline1.",
+            "C": "Cấu hình chạy Pipeline1 từ Real-Time hub."
+          },
+          "answer": "B"
+        },
+        {
+          "label": "Model1",
+          "label_vi": "Model1",
+          "choices": {
+            "A": "Add Model1 to Pipeline1.",
+            "B": "Configure Model1 refresh from Real-Time hub.",
+            "C": "Turn on Keep your Direct Lake data up to date."
+          },
+          "choices_vi": {
+            "A": "Thêm Model1 vào Pipeline1.",
+            "B": "Cấu hình refresh Model1 từ Real-Time hub.",
+            "C": "Bật Keep your Direct Lake data up to date."
+          },
+          "answer": "A"
+        }
+      ]
+    }
   },
   {
     "id": 85,
@@ -2679,7 +2788,80 @@
     ],
     "question_vi": "Bạn triển khai các thực thể dữ liệu sau trong Fabric:\n- **Entity1:** lakehouse chứa dữ liệu cốt lõi của tổ chức, tức nguồn dữ liệu chủ/chính thức.\n- **Entity2:** semantic model chứa dữ liệu đã đáp ứng tiêu chuẩn chất lượng của tổ chức.\n- **Entity3:** Power BI report chứa dữ liệu sẵn sàng để chia sẻ và tái sử dụng.\n- **Entity4:** Power BI dashboard chứa dữ liệu đã được phê duyệt cho quyết định cấp điều hành.\n\nCông ty yêu cầu quy trình quản trị cụ thể cho dữ liệu. Bạn cần gán huy hiệu endorsement phù hợp với mục đích của từng thực thể. Huy hiệu trong hình gồm Certified, Master data, Promoted và Cannot be endorsed. Kéo huy hiệu phù hợp vào từng thực thể; mỗi huy hiệu có thể dùng một lần, nhiều lần hoặc không dùng.\n\n//IMG//",
     "options_vi": {},
-    "answer_image": "images/image14.png"
+    "answer_image": "images/image14.png",
+    "answer_area": {
+      "type": "select_rows",
+      "rows": [
+        {
+          "label": "Entity1 — lakehouse core organization data",
+          "label_vi": "Entity1 — dữ liệu cốt lõi của tổ chức trong lakehouse",
+          "choices": {
+            "A": "Certified",
+            "B": "Master data",
+            "C": "Promoted",
+            "D": "Cannot be endorsed"
+          },
+          "choices_vi": {
+            "A": "Certified (được chứng nhận)",
+            "B": "Master data (dữ liệu chủ)",
+            "C": "Promoted (được đề xuất)",
+            "D": "Không thể gắn huy hiệu"
+          },
+          "answer": "B"
+        },
+        {
+          "label": "Entity2 — semantic model meeting organizational standards",
+          "label_vi": "Entity2 — semantic model đáp ứng tiêu chuẩn tổ chức",
+          "choices": {
+            "A": "Certified",
+            "B": "Master data",
+            "C": "Promoted",
+            "D": "Cannot be endorsed"
+          },
+          "choices_vi": {
+            "A": "Certified (được chứng nhận)",
+            "B": "Master data (dữ liệu chủ)",
+            "C": "Promoted (được đề xuất)",
+            "D": "Không thể gắn huy hiệu"
+          },
+          "answer": "A"
+        },
+        {
+          "label": "Entity3 — report ready to share and reuse",
+          "label_vi": "Entity3 — report sẵn sàng chia sẻ và tái sử dụng",
+          "choices": {
+            "A": "Certified",
+            "B": "Master data",
+            "C": "Promoted",
+            "D": "Cannot be endorsed"
+          },
+          "choices_vi": {
+            "A": "Certified (được chứng nhận)",
+            "B": "Master data (dữ liệu chủ)",
+            "C": "Promoted (được đề xuất)",
+            "D": "Không thể gắn huy hiệu"
+          },
+          "answer": "C"
+        },
+        {
+          "label": "Entity4 — executive Power BI dashboard",
+          "label_vi": "Entity4 — dashboard Power BI dành cho lãnh đạo",
+          "choices": {
+            "A": "Certified",
+            "B": "Master data",
+            "C": "Promoted",
+            "D": "Cannot be endorsed"
+          },
+          "choices_vi": {
+            "A": "Certified (được chứng nhận)",
+            "B": "Master data (dữ liệu chủ)",
+            "C": "Promoted (được đề xuất)",
+            "D": "Không thể gắn huy hiệu"
+          },
+          "answer": "D"
+        }
+      ]
+    }
   },
   {
     "id": 86,
@@ -2703,7 +2885,51 @@
     ],
     "question_vi": "Bạn có ba người dùng User1, User2 và User3. Bảng thứ nhất cho biết Workspace1 do User1 quản trị và Workspace2 do User2 quản trị.\n//IMG//\n\nGroup1 là nhóm bảo mật gồm User1 và User3. Bảng thứ hai cho biết Domain1 do User1 quản trị và Domain2 do User2 quản trị.\n//IMG//\n\nUser1 tạo Workspace3. Bạn thêm Group1 vào danh sách người dùng/nhóm của default domain Domain1. Hãy đánh giá các phát biểu:\n1. User3 có quyền Viewer trong Workspace3.\n2. User3 có vai trò Domain contributor đối với Domain1.\n3. User2 có quyền Contributor trong Workspace3.\n\nChọn Có (Yes) nếu phát biểu đúng, nếu không chọn Không (No).\n//IMG//",
     "options_vi": {},
-    "answer_image": "images/image18.png"
+    "answer_image": "images/image18.png",
+    "answer_area": {
+      "type": "select_rows",
+      "rows": [
+        {
+          "label": "User3 has Viewer role access to Workspace3.",
+          "label_vi": "User3 có quyền Viewer trong Workspace3.",
+          "choices": {
+            "A": "Yes",
+            "B": "No"
+          },
+          "choices_vi": {
+            "A": "Có",
+            "B": "Không"
+          },
+          "answer": "B"
+        },
+        {
+          "label": "User3 has Domain contributor access to Domain1.",
+          "label_vi": "User3 có quyền Domain contributor trong Domain1.",
+          "choices": {
+            "A": "Yes",
+            "B": "No"
+          },
+          "choices_vi": {
+            "A": "Có",
+            "B": "Không"
+          },
+          "answer": "A"
+        },
+        {
+          "label": "User2 has Contributor role access to Workspace3.",
+          "label_vi": "User2 có quyền Contributor trong Workspace3.",
+          "choices": {
+            "A": "Yes",
+            "B": "No"
+          },
+          "choices_vi": {
+            "A": "Có",
+            "B": "Không"
+          },
+          "answer": "B"
+        }
+      ]
+    }
   },
   {
     "id": 87,
@@ -2753,7 +2979,69 @@
       }
     ],
     "question_vi": "KÉO THẢ — Nhóm phát triển trong công ty tạo các thư viện Python có thể tái sử dụng để biến đổi dữ liệu. Bạn tạo workspace Fabric Workspace1 để xây dựng các giải pháp ETL bằng notebook. Bạn cần các thư viện này có sẵn mặc định trong những notebook mới của Workspace1.\n\nCác thao tác có sẵn: Thay đổi phiên bản runtime; Cài đặt thư viện; Tạo pool; Tạo environment; Đặt environment mặc định.\n\nBạn nên thực hiện ba thao tác nào và theo thứ tự nào?",
-    "options_vi": {}
+    "options_vi": {},
+    "answer_area": {
+      "type": "select_rows",
+      "rows": [
+        {
+          "label": "Step 1",
+          "label_vi": "Bước 1",
+          "choices": {
+            "A": "Change the runtime version",
+            "B": "Install the libraries",
+            "C": "Create a pool",
+            "D": "Create an environment",
+            "E": "Set the default environment"
+          },
+          "choices_vi": {
+            "A": "Đổi phiên bản runtime",
+            "B": "Cài đặt các thư viện",
+            "C": "Tạo pool",
+            "D": "Tạo environment",
+            "E": "Đặt environment làm mặc định"
+          },
+          "answer": "D"
+        },
+        {
+          "label": "Step 2",
+          "label_vi": "Bước 2",
+          "choices": {
+            "A": "Change the runtime version",
+            "B": "Install the libraries",
+            "C": "Create a pool",
+            "D": "Create an environment",
+            "E": "Set the default environment"
+          },
+          "choices_vi": {
+            "A": "Đổi phiên bản runtime",
+            "B": "Cài đặt các thư viện",
+            "C": "Tạo pool",
+            "D": "Tạo environment",
+            "E": "Đặt environment làm mặc định"
+          },
+          "answer": "B"
+        },
+        {
+          "label": "Step 3",
+          "label_vi": "Bước 3",
+          "choices": {
+            "A": "Change the runtime version",
+            "B": "Install the libraries",
+            "C": "Create a pool",
+            "D": "Create an environment",
+            "E": "Set the default environment"
+          },
+          "choices_vi": {
+            "A": "Đổi phiên bản runtime",
+            "B": "Cài đặt các thư viện",
+            "C": "Tạo pool",
+            "D": "Tạo environment",
+            "E": "Đặt environment làm mặc định"
+          },
+          "answer": "E"
+        }
+      ]
+    }
   },
   {
     "id": 89,
@@ -2771,7 +3059,75 @@
       }
     ],
     "question_vi": "KÉO THẢ — Một workspace Fabric có warehouse tên Warehouse1. Trong Warehouse1, bạn tạo bảng sau:\n\nCREATE TABLE dbo.DimCustomer (\n  CustomerKey VARCHAR(255) NOT NULL,\n  Name VARCHAR(255) NOT NULL,\n  Email VARCHAR(255) NOT NULL\n);\nBạn cần đặt CustomerKey làm khóa chính của DimCustomer. Các đoạn mã có sẵn:\n\n- `DROP CONSTRAINT PK_DimCustomer`\n- `ADD CONSTRAINT PK_DimCustomer PRIMARY KEY NONCLUSTERED (CustomerKey)`\n- `NOT ENFORCED`\n- `ALTER TABLE dbo.DimCustomer`\n- `ADD CONSTRAINT PK_DimCustomer PRIMARY KEY CLUSTERED (CustomerKey)`\n- `ENFORCED`\n\nBạn nên chọn ba đoạn mã nào và sắp xếp theo thứ tự nào?",
-    "options_vi": {}
+    "options_vi": {},
+    "answer_area": {
+      "type": "select_rows",
+      "rows": [
+        {
+          "label": "Code segment 1",
+          "label_vi": "Đoạn mã 1",
+          "choices": {
+            "A": "DROP CONSTRAINT PK_DimCustomer",
+            "B": "ADD CONSTRAINT PK_DimCustomer PRIMARY KEY NONCLUSTERED (CustomerKey)",
+            "C": "NOT ENFORCED",
+            "D": "ALTER TABLE dbo.DimCustomer",
+            "E": "ADD CONSTRAINT PK_DimCustomer PRIMARY KEY CLUSTERED (CustomerKey)",
+            "F": "ENFORCED"
+          },
+          "choices_vi": {
+            "A": "DROP CONSTRAINT PK_DimCustomer (xóa constraint)",
+            "B": "ADD CONSTRAINT PK_DimCustomer PRIMARY KEY NONCLUSTERED (CustomerKey)",
+            "C": "NOT ENFORCED (không cưỡng chế)",
+            "D": "ALTER TABLE dbo.DimCustomer",
+            "E": "ADD CONSTRAINT PK_DimCustomer PRIMARY KEY CLUSTERED (CustomerKey)",
+            "F": "ENFORCED (cưỡng chế)"
+          },
+          "answer": "D"
+        },
+        {
+          "label": "Code segment 2",
+          "label_vi": "Đoạn mã 2",
+          "choices": {
+            "A": "DROP CONSTRAINT PK_DimCustomer",
+            "B": "ADD CONSTRAINT PK_DimCustomer PRIMARY KEY NONCLUSTERED (CustomerKey)",
+            "C": "NOT ENFORCED",
+            "D": "ALTER TABLE dbo.DimCustomer",
+            "E": "ADD CONSTRAINT PK_DimCustomer PRIMARY KEY CLUSTERED (CustomerKey)",
+            "F": "ENFORCED"
+          },
+          "choices_vi": {
+            "A": "DROP CONSTRAINT PK_DimCustomer (xóa constraint)",
+            "B": "ADD CONSTRAINT PK_DimCustomer PRIMARY KEY NONCLUSTERED (CustomerKey)",
+            "C": "NOT ENFORCED (không cưỡng chế)",
+            "D": "ALTER TABLE dbo.DimCustomer",
+            "E": "ADD CONSTRAINT PK_DimCustomer PRIMARY KEY CLUSTERED (CustomerKey)",
+            "F": "ENFORCED (cưỡng chế)"
+          },
+          "answer": "B"
+        },
+        {
+          "label": "Code segment 3",
+          "label_vi": "Đoạn mã 3",
+          "choices": {
+            "A": "DROP CONSTRAINT PK_DimCustomer",
+            "B": "ADD CONSTRAINT PK_DimCustomer PRIMARY KEY NONCLUSTERED (CustomerKey)",
+            "C": "NOT ENFORCED",
+            "D": "ALTER TABLE dbo.DimCustomer",
+            "E": "ADD CONSTRAINT PK_DimCustomer PRIMARY KEY CLUSTERED (CustomerKey)",
+            "F": "ENFORCED"
+          },
+          "choices_vi": {
+            "A": "DROP CONSTRAINT PK_DimCustomer (xóa constraint)",
+            "B": "ADD CONSTRAINT PK_DimCustomer PRIMARY KEY NONCLUSTERED (CustomerKey)",
+            "C": "NOT ENFORCED (không cưỡng chế)",
+            "D": "ALTER TABLE dbo.DimCustomer",
+            "E": "ADD CONSTRAINT PK_DimCustomer PRIMARY KEY CLUSTERED (CustomerKey)",
+            "F": "ENFORCED (cưỡng chế)"
+          },
+          "answer": "C"
+        }
+      ]
+    }
   },
   {
     "id": 90,
@@ -2905,7 +3261,87 @@
       }
     ],
     "question_vi": "TÌNH HUỐNG NGHIÊN CỨU — Litware lưu doanh số của từng tác giả trong bảng Warehouse tên AuthorSales. Bảng có cột AuthorEmail; các tác giả đăng nhập vào Fabric tenant dưới dạng guest bằng địa chỉ email của họ. Bạn cần mỗi tác giả chỉ xem được các dòng có AuthorEmail khớp với danh tính đang đăng nhập.\n\nHoàn thành định nghĩa bảo mật cấp dòng (row-level security) bằng cách chọn một giá trị cho mỗi chỗ trống.\n\nCREATE FUNCTION Security.tvf_rlspredicate(@Author AS varchar(50))\nRETURNS TABLE\nWITH ___\nAS RETURN SELECT 1 AS tvf_rlspredicate_result\nWHERE @Author = ___;\nGO\n\nCREATE SECURITY POLICY RLSFilter\nADD FILTER PREDICATE Security.tvf_rlspredicate(AuthorEmail)\nON ___\nWITH (STATE = ON);\n\nCác giá trị có sẵn: AuthorSales, AuthorEmail, AuthorSales.AuthorEmail, BLOCK, FILTER, INLINE, SCHEMABINDING, USER_NAME().",
-    "options_vi": {}
+    "options_vi": {},
+    "answer_area": {
+      "type": "select_rows",
+      "rows": [
+        {
+          "label": "Value after WITH",
+          "label_vi": "Giá trị sau WITH",
+          "choices": {
+            "A": "AuthorSales",
+            "B": "AuthorEmail",
+            "C": "AuthorSales.AuthorEmail",
+            "D": "BLOCK",
+            "E": "FILTER",
+            "F": "INLINE",
+            "G": "SCHEMABINDING",
+            "H": "USER_NAME()"
+          },
+          "choices_vi": {
+            "A": "AuthorSales (bảng)",
+            "B": "AuthorEmail (cột)",
+            "C": "AuthorSales.AuthorEmail",
+            "D": "BLOCK",
+            "E": "FILTER",
+            "F": "INLINE",
+            "G": "SCHEMABINDING",
+            "H": "USER_NAME()"
+          },
+          "answer": "G"
+        },
+        {
+          "label": "Right side of the predicate comparison",
+          "label_vi": "Vế phải của phép so sánh trong predicate",
+          "choices": {
+            "A": "AuthorSales",
+            "B": "AuthorEmail",
+            "C": "AuthorSales.AuthorEmail",
+            "D": "BLOCK",
+            "E": "FILTER",
+            "F": "INLINE",
+            "G": "SCHEMABINDING",
+            "H": "USER_NAME()"
+          },
+          "choices_vi": {
+            "A": "AuthorSales (bảng)",
+            "B": "AuthorEmail (cột)",
+            "C": "AuthorSales.AuthorEmail",
+            "D": "BLOCK",
+            "E": "FILTER",
+            "F": "INLINE",
+            "G": "SCHEMABINDING",
+            "H": "USER_NAME()"
+          },
+          "answer": "H"
+        },
+        {
+          "label": "Table to attach the security policy to",
+          "label_vi": "Bảng cần gắn security policy",
+          "choices": {
+            "A": "AuthorSales",
+            "B": "AuthorEmail",
+            "C": "AuthorSales.AuthorEmail",
+            "D": "BLOCK",
+            "E": "FILTER",
+            "F": "INLINE",
+            "G": "SCHEMABINDING",
+            "H": "USER_NAME()"
+          },
+          "choices_vi": {
+            "A": "AuthorSales (bảng)",
+            "B": "AuthorEmail (cột)",
+            "C": "AuthorSales.AuthorEmail",
+            "D": "BLOCK",
+            "E": "FILTER",
+            "F": "INLINE",
+            "G": "SCHEMABINDING",
+            "H": "USER_NAME()"
+          },
+          "answer": "A"
+        }
+      ]
+    }
   },
   {
     "id": 95,
@@ -2948,7 +3384,75 @@
       }
     ],
     "question_vi": "KÉO THẢ — Một notebook Fabric cần chạy hai notebook con. Load_Orders chỉ được bắt đầu sau khi Load_Salesperson chạy thành công. Hoàn thành DAG và lời gọi bằng cách chọn các giá trị trong danh sách: activities, broadcast, dependencies, execute, notebooks, runMultiple.\n\nDAG = {\n  \"___\": [\n    {\"name\": \"Load_Salesperson\", \"path\": \"Load_Salesperson\", \"timeoutPerCellInSeconds\": 300},\n    {\"name\": \"Load_Orders\", \"path\": \"Load_Orders\", \"timeoutPerCellInSeconds\": 600,\n     \"___\": [\"Load_Salesperson\"]}\n  ],\n  \"timeoutInSeconds\": 43200\n}\n\nmssparkutils.notebook.___(DAG)",
-    "options_vi": {}
+    "options_vi": {},
+    "answer_area": {
+      "type": "select_rows",
+      "rows": [
+        {
+          "label": "DAG property",
+          "label_vi": "Thuộc tính DAG",
+          "choices": {
+            "A": "activities",
+            "B": "broadcast",
+            "C": "dependencies",
+            "D": "execute",
+            "E": "notebooks",
+            "F": "runMultiple"
+          },
+          "choices_vi": {
+            "A": "activities (danh sách activity)",
+            "B": "broadcast",
+            "C": "dependencies (phụ thuộc)",
+            "D": "execute",
+            "E": "notebooks",
+            "F": "runMultiple"
+          },
+          "answer": "A"
+        },
+        {
+          "label": "Property on Load_Orders",
+          "label_vi": "Thuộc tính trên Load_Orders",
+          "choices": {
+            "A": "activities",
+            "B": "broadcast",
+            "C": "dependencies",
+            "D": "execute",
+            "E": "notebooks",
+            "F": "runMultiple"
+          },
+          "choices_vi": {
+            "A": "activities (danh sách activity)",
+            "B": "broadcast",
+            "C": "dependencies (phụ thuộc)",
+            "D": "execute",
+            "E": "notebooks",
+            "F": "runMultiple"
+          },
+          "answer": "C"
+        },
+        {
+          "label": "mssparkutils.notebook method",
+          "label_vi": "Phương thức mssparkutils.notebook",
+          "choices": {
+            "A": "activities",
+            "B": "broadcast",
+            "C": "dependencies",
+            "D": "execute",
+            "E": "notebooks",
+            "F": "runMultiple"
+          },
+          "choices_vi": {
+            "A": "activities (danh sách activity)",
+            "B": "broadcast",
+            "C": "dependencies (phụ thuộc)",
+            "D": "execute",
+            "E": "notebooks",
+            "F": "runMultiple"
+          },
+          "answer": "F"
+        }
+      ]
+    }
   },
   {
     "id": 97,
@@ -2970,7 +3474,62 @@
       }
     ],
     "question_vi": "ĐIỂM NÓNG — Một workspace Fabric có Warehouse2. Bảng dbo.CreditCard có các cột CreditCard varchar(20) NOT NULL và CreditCardType varchar(10) NOT NULL. Nhóm phân tích có quyền Viewer trong workspace. Bạn cần cấu hình mặt nạ cho CreditCard để hiện hai ký tự đầu và bốn ký tự cuối.\n\nHoàn thành câu lệnh:\n\nALTER TABLE dbo.CreditCard\n___ COLUMN [CreditCard]\nADD MASKED WITH (FUNCTION = '___(2,\"XXXXXXXXXX\",4)')\n\nChọn ALTER, CREATE, DEFAULT, DROP, EMAIL, PARTIAL, REPLACE hoặc UPDATE cho mỗi chỗ trống.",
-    "options_vi": {}
+    "options_vi": {},
+    "answer_area": {
+      "type": "select_rows",
+      "rows": [
+        {
+          "label": "Statement keyword before COLUMN",
+          "label_vi": "Từ khóa trước COLUMN",
+          "choices": {
+            "A": "ALTER",
+            "B": "CREATE",
+            "C": "DEFAULT",
+            "D": "DROP",
+            "E": "EMAIL",
+            "F": "PARTIAL",
+            "G": "REPLACE",
+            "H": "UPDATE"
+          },
+          "choices_vi": {
+            "A": "ALTER",
+            "B": "CREATE",
+            "C": "DEFAULT",
+            "D": "DROP",
+            "E": "EMAIL",
+            "F": "PARTIAL",
+            "G": "REPLACE",
+            "H": "UPDATE"
+          },
+          "answer": "A"
+        },
+        {
+          "label": "Mask function",
+          "label_vi": "Hàm masking",
+          "choices": {
+            "A": "ALTER",
+            "B": "CREATE",
+            "C": "DEFAULT",
+            "D": "DROP",
+            "E": "EMAIL",
+            "F": "PARTIAL",
+            "G": "REPLACE",
+            "H": "UPDATE"
+          },
+          "choices_vi": {
+            "A": "ALTER",
+            "B": "CREATE",
+            "C": "DEFAULT",
+            "D": "DROP",
+            "E": "EMAIL",
+            "F": "PARTIAL",
+            "G": "REPLACE",
+            "H": "UPDATE"
+          },
+          "answer": "F"
+        }
+      ]
+    }
   },
   {
     "id": 98,
@@ -2994,7 +3553,46 @@
     ],
     "question_vi": "HOTSPOT\n-\n\nBạn đang xây dựng một mẫu thiết kế điều phối dữ liệu bằng cách sử dụng một Fabric data pipeline có tên là Dynamic Data Copy như được hiển thị trong triển lãm. (Nhấp vào tab Triển lãm.)\n\n//IMG//\n\nDynamic Data Copy KHÔNG sử dụng tham số hóa (parametrization).\n\nBạn cần cấu hình hoạt động ForEach để nhận danh sách các bảng cần sao chép.\n\nBạn nên hoàn thành biểu thức pipeline như thế nào? Để trả lời, chọn các tùy chọn thích hợp trong khu vực trả lời.\n\nLƯU Ý: Mỗi lựa chọn đúng trị giá một điểm.\n\n//IMG//\n\nTên activity Lookup có sẵn: Batch Object Copy, Dynamic Data Copy, Extraction Loop và Lookup Schema and Table. Các thuộc tính output có sẵn: output, output.count, output.pipelineReturnValue và output.value.",
     "options_vi": {},
-    "answer_image": "images/image73.png"
+    "answer_image": "images/image73.png",
+    "answer_area": {
+      "type": "select_rows",
+      "rows": [
+        {
+          "label": "Lookup activity name",
+          "label_vi": "Tên Lookup activity",
+          "choices": {
+            "A": "Batch Object Copy",
+            "B": "Dynamic Data Copy",
+            "C": "Extraction Loop",
+            "D": "Lookup Schema and Table"
+          },
+          "choices_vi": {
+            "A": "Batch Object Copy",
+            "B": "Dynamic Data Copy",
+            "C": "Extraction Loop",
+            "D": "Lookup Schema and Table"
+          },
+          "answer": "D"
+        },
+        {
+          "label": "ForEach input property",
+          "label_vi": "Thuộc tính đầu ra làm đầu vào cho ForEach",
+          "choices": {
+            "A": "output",
+            "B": "output.count",
+            "C": "output.pipelineReturnValue",
+            "D": "output.value"
+          },
+          "choices_vi": {
+            "A": "output",
+            "B": "output.count",
+            "C": "output.pipelineReturnValue",
+            "D": "output.value"
+          },
+          "answer": "D"
+        }
+      ]
+    }
   },
   {
     "id": 99,
@@ -3012,7 +3610,44 @@
       }
     ],
     "question_vi": "ĐIỂM NÓNG — Warehouse1 có bảng DimCustomers với các cột CustomerName, CustomerID, BirthDate (kiểu date) và EmailAddress. Hãy cấu hình dynamic data masking để BirthDate hiển thị 1900-01-01, còn EmailAddress chỉ để lộ ký tự đầu tiên và năm ký tự cuối cùng.\n\nChọn một mặt nạ cho mỗi cột:\n- BirthDate: default(), partial(1900-01-01) hoặc random(1900-01-01, 1900-01-01).\n- EmailAddress: default(), email(), partial(1,\"@\",5) hoặc random(1,\"@\",5).",
-    "options_vi": {}
+    "options_vi": {},
+    "answer_area": {
+      "type": "select_rows",
+      "rows": [
+        {
+          "label": "Mask for BirthDate",
+          "label_vi": "Mask cho BirthDate",
+          "choices": {
+            "A": "default()",
+            "B": "partial(1900-01-01)",
+            "C": "random(1900-01-01, 1900-01-01)"
+          },
+          "choices_vi": {
+            "A": "default()",
+            "B": "partial(1900-01-01)",
+            "C": "random(1900-01-01, 1900-01-01)"
+          },
+          "answer": "A"
+        },
+        {
+          "label": "Mask for EmailAddress",
+          "label_vi": "Mask cho EmailAddress",
+          "choices": {
+            "A": "default()",
+            "B": "email()",
+            "C": "partial(1,\"@\",5)",
+            "D": "random(1,\"@\",5)"
+          },
+          "choices_vi": {
+            "A": "default()",
+            "B": "email()",
+            "C": "partial(1,\"@\",5)",
+            "D": "random(1,\"@\",5)"
+          },
+          "answer": "C"
+        }
+      ]
+    }
   },
   {
     "id": 100,

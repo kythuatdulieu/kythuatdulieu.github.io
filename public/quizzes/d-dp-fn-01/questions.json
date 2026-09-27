@@ -188,7 +188,7 @@
       "D": "Calculate the mean time to report incident"
     },
     "answer": "AB",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Tính khả dụng (Availability) của dữ liệu được xác định bởi khoảng thời gian mà dữ liệu và hệ thống luôn ở trạng thái sẵn sàng để người dùng truy cập.\n\n* **Giám sát thời gian hoạt động (uptime) (A):** Theo dõi khoảng thời gian hệ thống vận hành trơn tru và đáp ứng được các yêu cầu truy cập dữ liệu.\n* **Tính toán tổng thời gian ngừng hoạt động (downtime) (B):** Ghi lại tổng thời gian hệ thống không thể hoạt động do lỗi phần cứng, phần mềm, bảo trì ngoài dự kiến.\n* Công thức tính tính khả dụng: $\\text{Availability} = \\frac{\\text{Uptime}}{\\text{Uptime} + \\text{Downtime}} \\times 100\\%$.\n* Loại trừ thời gian khôi phục (C) là sai vì lúc này người dùng vẫn chưa thể truy xuất dữ liệu. Thời gian báo cáo sự cố (D) không ảnh hưởng trực tiếp đến tỷ lệ thời gian sẵn sàng của dữ liệu.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2123,7 +2123,7 @@
       "E": "Triển khai các quy trình quản trị, rủi ro và tuân thủ (GRC)"
     },
     "answer": "CE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để đảm bảo tổ chức vừa đạt được các mục tiêu kinh doanh một cách bền vững vừa đảm bảo tính công bằng và tuân thủ pháp luật, tổ chức cần tập trung vào:\n\n* **Xây dựng khung quản lý rủi ro (Risk Management Framework - C):** Xác định, đánh giá và giảm thiểu các rủi ro có thể cản trở mục tiêu kinh doanh.\n* **Triển khai các quy trình GRC (Governance, Risk, and Compliance - E):** Tích hợp quản trị (Governance), quản lý rủi ro (Risk) và tuân thủ pháp lý (Compliance) để dẫn dắt hành vi và văn hóa công bằng trong doanh nghiệp.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3328,7 +3328,7 @@
       "E": "Minimize reliance on on-site storage"
     },
     "answer": "CD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để bảo vệ tính toàn vẹn và khả dụng của dữ liệu trước thiên tai (lũ lụt, động chất, hỏa hoạn tại trung tâm dữ liệu chính):\n\n*   **Chọn C (Triển khai kế hoạch khôi phục sau thảm họa - DR Plan)** để có quy trình và kịch bản rõ ràng nhằm khôi phục hệ thống công nghệ thông tin một cách nhanh nhất.\n*   **Chọn D (Thiết lập bản sao lưu phân tán địa lý)** đảm bảo rằng ngay cả khi trung tâm dữ liệu chính bị phá hủy hoàn toàn bởi thiên tai, dữ liệu sao lưu ở vùng địa lý khác vẫn an toàn và sẵn sàng để khôi phục.\n*   **Lựa chọn A** thiên về cứu hộ con người và hạ tầng vật lý xã hội sau thảm họa.\n*   **Lựa chọn B (Mã hóa dữ liệu)** bảo vệ tính bảo mật (confidentiality) chống rò rỉ dữ liệu, chứ không giúp ích cho việc chống mất mát dữ liệu do thiên tai.\n*   **Lựa chọn E** là một phương châm chung nhưng không cụ thể bằng việc thiết lập DR và sao lưu phân tán.\n\n*(Đáp án được gợi ý bởi AI)*",

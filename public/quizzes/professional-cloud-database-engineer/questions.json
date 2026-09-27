@@ -110,7 +110,7 @@
       "E": "Schedule automated backups."
     },
     "answer": "DE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để cấu hình Tính sẵn sàng cao (High Availability - HA) cho thực thể Cloud SQL theo khuyến nghị của Google Cloud, việc quản lý sao lưu và phục hồi dữ liệu là vô cùng quan trọng để đảm bảo khả năng tự động khôi phục và bảo vệ dữ liệu.\n\n*   **D là đúng**: Kích hoạt **Point-in-time recovery (PITR)** (sử dụng write-ahead log/binary log) là bắt buộc đối với cấu hình HA của Cloud SQL. Nó cho phép bạn khôi phục dữ liệu về một thời điểm cụ thể và đồng bộ hóa trạng thái giữa thực thể chính và thực thể dự phòng (standby).\n*   **E là đúng**: **Lên lịch sao lưu tự động (automated backups)** là điều kiện tiên quyết để kích hoạt PITR và duy trì các bản sao lưu nhất quán mà không cần can thiệp thủ công.\n*   **A là sai**: Sao lưu thủ công không tự động hóa và không đủ để hỗ trợ quy trình failover và khôi phục nhanh của HA.\n*   **B là sai**: Sử dụng cơ sở dữ liệu on-premises làm HA cho Cloud SQL không phải là mô hình HA được quản lý tự động của Google Cloud.\n*   **C là sai**: Cấu hình HA của Cloud SQL yêu cầu hoạt động đa vùng (multi-zone/regional) chứ không phải vùng đơn lẻ (single zone) để có thể failover sang vùng khác khi một vùng gặp sự cố.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -310,7 +310,7 @@
       "E": "Use bit-reverse sequential value as the primary key."
     },
     "answer": "DE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Cloud Spanner phân chia dữ liệu theo các dải khóa chính (key ranges) và lưu trữ trên nhiều node. Nếu khóa chính được thiết kế có tính chất tuần tự (ví dụ: ngày giờ hoặc số tự động tăng), tất cả các lượt ghi mới sẽ bị ghi vào cùng một dải khóa, tạo ra hiện tượng **hotspot** làm nghẽn hiệu năng của một node duy nhất.\n\n*   **D là đúng**: Trong khóa chính tổ hợp (multi-attribute primary keys), việc đưa thuộc tính có độ đa dạng cao (**high-cardinality** - ví dụ: `Product_ID` thay vì `Status`) lên đầu giúp phân tán các hàng dữ liệu đều hơn trên các phân vùng (splits) của Spanner.\n*   **E là đúng**: Sử dụng kỹ thuật đảo ngược bit của các giá trị tuần tự (**bit-reverse sequential values**) hoặc sử dụng UUID dạng ngẫu nhiên (v4) làm khóa chính giúp triệt tiêu tính tuần tự của khóa, đảm bảo các bản ghi mới được ghi phân tán đều trên toàn bộ các node.\n*   **A là sai**: Giá trị tự động tăng sẽ tạo ra hotspot nghiêm trọng trong Spanner vì các lượt ghi mới luôn có khóa lớn hơn khóa cũ và bị ghi vào cùng một node ở cuối dải khóa.\n*   **B là sai**: Chuẩn hóa dữ liệu là nguyên tắc thiết kế RDBMS thông thường nhưng không trực tiếp giải quyết vấn đề phân tán tải vật lý (hotspotting) của cơ sở dữ liệu phân tán như Spanner.\n*   **C là sai**: Đưa thuộc tính có độ đa dạng thấp lên trước sẽ gom cụm dữ liệu lại và vẫn gây ra hotspot.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -543,7 +543,7 @@
       "E": "Move your analytics workloads to BigQuery, and set up a streaming pipeline to move data and update BigQuery."
     },
     "answer": "BC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để khắc phục tình trạng trễ sao chép (replication lag) và hiệu suất báo cáo chậm trên Cloud SQL cho MySQL, các biện pháp sau cần được áp dụng:\n\n*   **Lựa chọn B (Tạo thêm read replica và phân vùng người dùng):** Việc có nhiều người dùng chạy các báo cáo phân tích nặng cùng lúc trên một replica duy nhất sẽ gây quá tải tài nguyên (CPU/IOPS) của replica đó, dẫn đến việc áp dụng các thay đổi từ database chính bị chậm lại (gây trễ replication lag). Phân chia người dùng ra nhiều replica giúp giảm tải cho từng replica đơn lẻ.\n*   **Lựa chọn C (Cấu hình sao chép song song - Parallel Replication):** Mặc định, quá trình sao chép trong các phiên bản cũ của MySQL là đơn luồng (single-threaded). Bằng cách tắt replication, cấu hình cờ `replica_parallel_workers` (hoặc `slave_parallel_workers`) trên replica để cho phép sử dụng nhiều luồng ghi dữ liệu song song từ primary, sau đó bật lại replication, tốc độ áp dụng các giao dịch (transactions) trên replica sẽ tăng đáng kể, từ đó giảm thiểu replication lag.\n*   **Lưu ý về cấu hình:** Cờ sao chép song song phải được cấu hình trên **replica**, chứ không phải trên instance chính (loại trừ D). Không thể chuyển sang BigQuery (loại trừ E) vì đề bài yêu cầu không thay đổi các báo cáo hiện tại.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1007,7 +1007,7 @@
       "E": "Ensure that pglogical is installed on the source PostgreSQL database."
     },
     "answer": "CE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để di chuyển cơ sở dữ liệu PostgreSQL lên Cloud SQL thông qua DMS, bạn phải đảm bảo hai điều kiện tiên quyết:\n* **C. Đảm bảo tất cả các bảng đều có khóa chính:** DMS yêu cầu mỗi bảng được di chuyển phải có khóa chính để cho phép đồng bộ hóa dữ liệu liên tục thông qua cơ chế replication.\n* **E. Cài đặt pglogical trên nguồn:** DMS sử dụng tiện ích mở rộng `pglogical` để thực hiện replication logic (sao chép logic) từ cơ sở dữ liệu PostgreSQL nguồn sang Cloud SQL.\n\nCác lựa chọn khác như tắt database (D), xóa người dùng (A) hoặc vô hiệu hóa khóa ngoại (B) không phải là các điều kiện tiên quyết bắt buộc của quy trình.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1067,7 +1067,7 @@
       "E": "If the corruption is insignificant, perform a stale read and specify a recovery timestamp. Write the results back."
     },
     "answer": "AE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Khi làm việc với môi trường Cloud Spanner hỗ trợ Point-in-Time Recovery (PITR):\n* **A. Đối với hư hại nghiêm trọng (significant):** Cách an toàn nhất là khôi phục toàn bộ cơ sở dữ liệu về thời điểm trước khi lỗi xảy ra bằng cách sử dụng tính năng sao lưu và khôi phục (backup and restore) kèm theo mốc thời gian khôi phục mong muốn.\n* **E. Đối với hư hại không đáng kể (insignificant):** Thay vì phải khôi phục lại toàn bộ database 50 TB rất tốn kém tài nguyên và thời gian, bạn có thể thực hiện đọc dữ liệu cũ (stale read) tại thời điểm trước khi xảy ra sự cố và chỉ cập nhật/ghi đè lại các bản ghi bị ảnh hưởng.\n\nCác lựa chọn khác không hợp lý hoặc sử dụng sai phương pháp tương ứng với mức độ nghiêm trọng của sự cố dữ liệu.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2594,7 +2594,7 @@
       "E": "Increase the network bandwidth to 10 Gbps, and then perform an offline data migration."
     },
     "answer": "AE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Lựa chọn **A** và **E** là các phương án chính xác:\n\n* Với dung lượng dữ liệu khổng lồ lên tới 100 TB, việc truyền tải dữ liệu qua băng thông mạng 1 Gbps (C) ở trạng thái ngoại tuyến (offline) sẽ mất tối thiểu khoảng 9-10 ngày, vượt xa thời gian downtime 48 giờ cho phép. Ngay cả khi tăng lên 2 Gbps (D), thời gian vẫn mất khoảng 5 ngày.\n* Việc tăng băng thông mạng lên **10 Gbps (E)** giúp giảm thời gian truyền tải lý thuyết xuống còn khoảng 22-24 giờ, nằm trong khung downtime 48 giờ để thực hiện di chuyển ngoại tuyến.\n* Đồng thời, sử dụng chiến lược **Change Data Capture (CDC) (A)** cho phép bạn đồng bộ hóa dữ liệu ban đầu và liên tục cập nhật các thay đổi trong khi cơ sở dữ liệu gốc vẫn đang hoạt động bình thường trực tuyến. Điều này giúp giảm thiểu tối đa thời gian downtime thực tế của hệ thống xuống chỉ còn vài phút đến vài giờ khi thực hiện chuyển giao ứng dụng (cutover).\n\nCác phương án khác không phù hợp:\n* **B** (Di chuyển máy chủ vật lý) không thực tế và tốn nhiều thời gian vận chuyển vật lý, làm tăng nguy cơ lỗi phần cứng và kéo dài downtime vượt xa 48 giờ.\n* **C và D** có băng thông quá thấp không thể hoàn thành việc truyền dữ liệu 100 TB trong vòng 48 giờ.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2964,7 +2964,7 @@
       "E": "Identify whether the source database uses customer-managed encryption keys (CMEK)."
     },
     "answer": "BE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Khi sử dụng Database Migration Service (DMS) để di chuyển PostgreSQL, có một số giới hạn quan trọng cần lưu ý:\n\n* **B đúng (Giới hạn về khóa chính)**: DMS yêu cầu các bảng trong cơ sở dữ liệu PostgreSQL nguồn phải có khóa chính (primary key) để thực hiện đồng bộ dữ liệu liên tục (CDC) thành công. Những bảng không có khóa chính sẽ không được di chuyển hoặc đồng bộ được.\n* **E đúng (Giới hạn về CMEK)**: Cloud SQL hiện tại có những hạn chế hoặc yêu cầu cấu hình đặc biệt liên quan đến Customer-Managed Encryption Keys (CMEK) khi thực hiện quá trình di chuyển qua DMS.\n* **A, C, D sai**: DMS không giới hạn số lượng bảng ở mức 512, không yêu cầu bảng phải có khóa ngoại, và không cấm sử dụng phần mở rộng `pgcrypto` trong cơ sở dữ liệu nguồn.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4342,7 +4342,7 @@
       "E": "Leverage Storage Transfer Service with client-side encryption."
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để bảo mật dữ liệu nhạy cảm trong quá trình di chuyển từ on-premises sang Cloud SQL:\n\n* **Private Service Connect (B)**: Thiết lập kết nối Private Service Connect giúp truyền tải dữ liệu an toàn qua mạng nội bộ của Google Cloud mà không cần tiếp xúc với Internet công cộng, bảo vệ dữ liệu nhạy cảm khỏi các nguy cơ tấn công mạng.\n* **Hạn chế truy cập bằng IP nội bộ và IAM (D)**: Cấu hình Cloud SQL sử dụng địa chỉ IP nội bộ (internal IP) kết hợp với phân quyền IAM (IAM database authentication) đảm bảo chỉ những người dùng hoặc dịch vụ được ủy quyền cụ thể trong tổ chức mới có thể kết nối đến cơ sở dữ liệu.\n\n**Giải thích các tùy chọn khác:**\n* **A sai**: Binary logging là khái niệm của MySQL, không áp dụng cho PostgreSQL (PostgreSQL sử dụng Write-Ahead Logging - WAL).\n* **C sai**: Việc sử dụng địa chỉ IP bên ngoài (external IP) công cộng sẽ làm tăng bề mặt tấn công (attack surface) cho cơ sở dữ liệu chứa thông tin nhạy cảm.\n* **E sai**: Storage Transfer Service dùng để chuyển các file dữ liệu lớn từ lưu trữ này sang lưu trữ khác (như giữa các Cloud Storage buckets hoặc từ các cloud provider khác), không phải là công cụ trực tiếp dùng để cấu hình kết nối mạng an toàn cho quá trình di chuyển cơ sở dữ liệu quan hệ Cloud SQL.\n\n*(Đáp án được gợi ý bởi AI)*",

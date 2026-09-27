@@ -673,7 +673,7 @@
       "E": "Investigate and reduce the sources of model bias."
     },
     "answer": "AB",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "* **A là đúng**: Dừng sớm (Early stopping) theo dõi hàm mất mát/độ chính xác trên tập validation trong quá trình huấn luyện. Khi hiệu suất trên tập validation ngừng cải thiện và bắt đầu đi xuống (dấu hiệu của overfitting), thuật toán sẽ dừng huấn luyện trước khi mô hình học quá sâu vào nhiễu của tập train.\n* **B là đúng**: Dropout là kỹ thuật chính quy hóa (regularization) phổ biến trong mạng nơ-ron. Bằng cách vô hiệu hóa ngẫu nhiên một tỷ lệ nơ-ron trong mỗi bước huấn luyện, dropout giúp giảm sự phụ thuộc đồng thời giữa các nơ-ron, buộc mạng nơ-ron học các đặc trưng tổng quát hơn, từ đó giảm thiểu overfitting.\n* **C, D là sai**: Tăng số lượng lớp hoặc số lượng nơ-ron làm tăng dung lượng (complexity) của mô hình, khiến mô hình có xu hướng dễ học thuộc lòng dữ liệu huấn luyện hơn và làm trầm trọng thêm vấn đề overfitting.\n* **E là sai**: Giảm model bias thường nhằm giải quyết bài toán underfitting (mô hình quá đơn giản). Ở đây mô hình ban đầu học tốt nhưng sau đó giảm hiệu suất trên tập xác thực là biểu hiện của overfitting (high variance).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1122,7 +1122,7 @@
       "E": "Use PyTorch or TensorFlow with the distributed training option."
     },
     "answer": "AD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "### Phân tích các lựa chọn:\n\n* **Lựa chọn A đúng**: **Amazon SageMaker Debugger** giúp giám sát các tham số mô hình trong suốt quá trình huấn luyện và có thể áp dụng các quy tắc để tự động dừng các công việc không hội tụ sớm. Điều này giúp ngăn chặn việc tiêu thụ năng lượng vô ích cho một mô hình bị hỏng.\n* **Lựa chọn D đúng**: **AWS Trainium** là chip chuyên dụng do AWS thiết kế để huấn luyện mô hình học sâu lớn, mang lại hiệu năng cao nhất trên mỗi watt điện, trực tiếp giảm đáng kể lượng điện tiêu thụ so với các dòng GPU truyền thống.\n* **Lựa chọn B sai**: SageMaker Ground Truth dùng để dán nhãn dữ liệu trước khi huấn luyện, không ảnh hưởng đến tài nguyên tính toán của quá trình huấn luyện mô hình.\n* **Lựa chọn C sai**: Việc triển khai mô hình bằng Lambda là cho giai đoạn suy luận (inference), không liên quan đến công việc huấn luyện (training jobs).\n* **Lựa chọn E sai**: Huấn luyện phân tán giúp đẩy nhanh tốc độ huấn luyện mô hình nhưng thường làm tăng tổng lượng điện tiêu thụ và tài nguyên tính toán do có thêm overhead giao tiếp giữa các node.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2510,7 +2510,7 @@
       "E": "Perplexity"
     },
     "answer": "AC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "### Phân tích chi tiết:\n\n* **A và C là các đáp án đúng** vì bài toán xác định sản phẩm là \"Passed\" hay \"Failed\" là bài toán phân loại nhị phân (binary classification). Các chỉ số đánh giá tiêu chuẩn cho bài toán phân loại bao gồm Accuracy, F1 score, Precision và Recall.\n* **B sai** vì RMSE và MAPE là các chỉ số dùng để đánh giá các mô hình hồi quy (regression) dự đoán giá trị liên tục, không phải mô hình phân loại.\n* **D sai** vì BLEU score là chỉ số dùng để đánh giá chất lượng dịch thuật máy trong xử lý ngôn ngữ tự nhiên (NLP).\n* **E sai** vì Perplexity là chỉ số dùng để đánh giá các mô hình ngôn ngữ (language models).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3098,7 +3098,7 @@
       "E": "Average weighted quantile loss (wQL)"
     },
     "answer": "CE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Đánh giá chất lượng của mô hình dự báo chuỗi thời gian (time-series forecasting) đòi hỏi các chỉ số đo lường mức độ sai lệch giữa giá trị liên tục được dự báo và thực tế.\n\n* **Chính xác (C và E):** \n  * **Root Mean Square Error (RMSE) (C)** đo lường độ lệch tuyệt đối bình phương trung bình, giúp đánh giá mức độ chính xác tổng thể của dự báo.\n  * **Average weighted quantile loss (wQL) (E)** đo lường mức độ sai lệch tại các phân vị xác định (như P10, P50, P90), rất quan trọng trong dự báo chuỗi thời gian để cân bằng giữa rủi ro thiếu hụt hàng hóa và dư thừa tồn kho.\n* **Không chính xác (A và B):** Recall (Độ triệu hồi) và LogLoss (Hao phí Log) là các chỉ số đánh giá dành cho bài toán phân loại (classification), không áp dụng cho bài toán dự báo chuỗi thời gian.\n* **Không chính xác (D):** InferenceLatency là chỉ số đo lường hiệu năng kỹ thuật của hệ thống (mất bao lâu để trả về kết quả dự đoán), không dùng để đánh giá chất lượng hay độ chính xác của các giá trị dự báo từ mô hình.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -3588,7 +3588,7 @@
       "E": "Use Amazon Lex to create a UI to handle the user interaction."
     },
     "answer": "AE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "### Phân tích chi tiết:\n\n* **Lựa chọn A là đúng**: Amazon SageMaker JumpStart cung cấp giải pháp triển khai mô hình nền tảng (Foundation Models/LLM) mã nguồn mở một cách nhanh chóng dưới dạng dịch vụ được quản lý (managed endpoint) mà không cần tự cấu hình hạ tầng container, driver GPU hay cơ chế tự động mở rộng (autoscaling).\n* **Lựa chọn E là đúng**: Amazon Lex cung cấp giao diện trò chuyện được quản lý hoàn toàn (fully managed chatbot service) với các tính năng xử lý phiên và tích hợp sẵn UI. Việc sử dụng Lex giúp giảm đáng kể chi phí thiết kế, xây dựng và quản trị hạ tầng giao diện người dùng.\n* **Lựa chọn B là sai**: Tải mô hình thủ công và cấu hình trên EC2 GPU đòi hỏi rất nhiều công sức vận hành hạ tầng, cập nhật driver và quản lý tài nguyên.\n* **Lựa chọn C là sai**: Tạo frontend HTML tùy chỉnh với API Gateway WebSocket và Lambda đòi hỏi xây dựng nhiều code tùy chỉnh để quản lý kết nối và trạng thái, làm tăng đáng kể chi phí phát triển và vận hành.\n* **Lựa chọn D là sai**: Amazon QuickSight là công cụ trực quan hóa dữ liệu (BI tool), không phù hợp để làm giao diện hội thoại thời gian thực cho ứng dụng Generative AI.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -7171,7 +7171,7 @@
       "E": "In the import job, provide the complete Amazon S3 URI that points to the Hugging Face model files. Ensure that the S3 URI is in the same AWS account as the Amazon Bedrock import job."
     },
     "answer": "BE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để nhập mô hình tùy chỉnh vào Bedrock, ta cần lượng tử hóa mô hình và đặt nó vào một S3 bucket trong cùng tài khoản AWS.\n\n- **Lựa chọn B và E là đúng:** Để nhập một mô hình tùy chỉnh (Custom Model) vào Amazon Bedrock: (1) Đầu tiên, mô hình phải được chuẩn bị dưới dạng định dạng được hỗ trợ. Bedrock yêu cầu các mô hình nhập vào phải được lượng tử hóa (quantized) ở các định dạng cụ thể (chẳng hạn như sử dụng thư viện thích hợp của Bedrock). (2) Các file mô hình cần phải được tải lên một Amazon S3 bucket trong cùng tài khoản AWS với import job của Bedrock, và bạn cung cấp S3 URI này khi thực hiện import job.\n- **Lựa chọn A sai:** Các mô hình tự nhập (Imported Models) không hỗ trợ chế độ On-Demand thông thường của Bedrock trực tiếp mà được chạy dưới dạng Provisioned Throughput.\n- **Lựa chọn C sai:** Yêu cầu là sử dụng mô hình thông qua Amazon Bedrock API, không phải chạy trực tiếp qua SageMaker AI SDK trong ứng dụng.\n- **Lựa chọn D sai:** Cấu hình auto-scaling policy cho suy luận không phải là bước cấu hình bắt buộc trong quá trình import mô hình.\n\n*(Đáp án được gợi ý bởi AI)*",

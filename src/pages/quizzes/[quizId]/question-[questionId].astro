@@ -42,6 +42,7 @@ export async function getStaticPaths() {
 
 const { quizId, questionId } = Astro.params;
 const { quizName, question, questionIndex, prevId, nextId, totalQuestions } = Astro.props;
+const answerAreaRows = Array.isArray(question.answer_area?.rows) ? question.answer_area.rows : [];
 const questionTitle = `Câu hỏi ${questionId} - ${quizName}`;
 const questionDescription = `Câu hỏi số ${questionId} trong bộ đề luyện thi ${quizName}. Xem câu hỏi song ngữ, đáp án và giải thích chi tiết.`;
 const canonicalUrl = toAbsoluteUrl(`/quizzes/${quizId}/question-${questionId}/`);
@@ -56,16 +57,31 @@ if (question.image) {
   }
 }
 
-// Normalize images to local paths relative to the quiz folder
-questionImages = questionImages.map(img => {
-  const filename = img.split('/').pop();
-  return `images/${filename}`;
-});
+// Resolve asset paths relative to the quiz folder. Some question banks store
+// images under `img/`, while others use `images/`; flattening every path into
+// `images/` makes all of the former fail on direct question pages.
+const quizPublicDir = path.resolve(`./public/quizzes/${quizId}`);
+function normalizeQuizAsset(asset) {
+  let relative = String(asset).trim().replace(/\\/g, '/');
+  const quizPrefix = `/quizzes/${quizId}/`;
+  const prefixIndex = relative.indexOf(quizPrefix);
+  if (prefixIndex >= 0) relative = relative.slice(prefixIndex + quizPrefix.length);
+  relative = relative.replace(/^\/+/, '').replace(/^public\/quizzes\/[^/]+\//, '').replace(/^\.\//, '');
+
+  const resolved = path.resolve(quizPublicDir, relative);
+  if (resolved.startsWith(`${quizPublicDir}${path.sep}`) && fs.existsSync(resolved)) return relative;
+
+  // Older banks sometimes store only a filename while keeping the asset in
+  // the conventional `images/` directory.
+  const fallback = `images/${path.basename(relative)}`;
+  if (fs.existsSync(path.resolve(quizPublicDir, fallback))) return fallback;
+  return relative;
+}
+questionImages = questionImages.map(normalizeQuizAsset);
 
 let answerImage = null;
 if (question.answer_image) {
-  const filename = question.answer_image.split('/').pop();
-  answerImage = `images/${filename}`;
+  answerImage = normalizeQuizAsset(question.answer_image);
 }
 
 // Split question text by //IMG// placeholder
@@ -360,7 +376,20 @@ function parseMarkdown(markdownText) {
 
       <!-- Options -->
       <div class="options-list" id="optionsList" style="margin-top: 1.5rem;">
-        {Object.entries(question.options).map(([letter, text]) => (
+        {answerAreaRows.length ? answerAreaRows.map((row, rowIndex) => (
+          <div class="answer-area-row" data-answer-area-row={rowIndex} data-correct-answer={row.answer}>
+            <div class="answer-area-label">
+              <span class="answer-area-label-en">{row.label}</span>
+              {row.label_vi && <span class="answer-area-label-vi" style="display: none;">{row.label_vi}</span>}
+            </div>
+            <select class="answer-area-select" aria-label={row.label}>
+              <option value="" class="answer-area-placeholder">Select an answer…</option>
+              {Object.entries(row.choices || {}).map(([key, choice]) => (
+                <option value={key} data-label-en={choice} data-label-vi={row.choices_vi?.[key] || choice}>{choice}</option>
+              ))}
+            </select>
+          </div>
+        )) : Object.entries(question.options).map(([letter, text]) => (
           <div class="option-item" data-letter={letter} style="cursor: pointer;">
             <div class="option-letter">{letter}</div>
             <div class="option-content">
@@ -378,7 +407,13 @@ function parseMarkdown(markdownText) {
         </button>
       )}
 
-      {Object.keys(question.options).length === 0 && (
+      {answerAreaRows.length > 0 && (
+        <button class="multi-submit-btn answer-area-submit-btn" id="btnSubmitAnswerArea" type="button" disabled>
+          Xác nhận (0/{answerAreaRows.length})
+        </button>
+      )}
+
+      {Object.keys(question.options).length === 0 && answerAreaRows.length === 0 && (
         <div class="no-options-container" style="margin-top: 1.5rem; text-align: center;">
           <button class="btn-show-answer" id="btnShowAnswer">
             Xem đáp án
@@ -478,7 +513,7 @@ function parseMarkdown(markdownText) {
   </section>
 
   <!-- Interactive JavaScript -->
-  <script is:inline define:vars={{ quizId, questionId, questionIndex, correctAnswer: question.answer, isMulti: !!question.isMulti }}>
+  <script is:inline define:vars={{ quizId, questionId, questionIndex, correctAnswer: question.answer, isMulti: !!question.isMulti, answerAreaData: question.answer_area || null }}>
     (function() {
       'use strict';
 
@@ -498,6 +533,10 @@ function parseMarkdown(markdownText) {
       const explanationBox = document.getElementById('explanationBox');
       const btnPdf = document.getElementById('btnPdf');
       const btnSubmitMulti = document.getElementById('btnSubmitMulti');
+      const btnSubmitAnswerArea = document.getElementById('btnSubmitAnswerArea');
+      const answerAreaRows = Array.isArray(answerAreaData?.rows) ? answerAreaData.rows : [];
+      const answerAreaItems = document.querySelectorAll('.answer-area-row');
+      const answerAreaSelects = document.querySelectorAll('.answer-area-select');
       const correctAnswers = normalizeAnswers(correctAnswer);
       const requiredAnswers = correctAnswers.length || 1;
       const selectedAnswers = new Set();
@@ -522,6 +561,28 @@ function parseMarkdown(markdownText) {
       updateViVisibility(state.showVietnamese);
       
       let savedAnswer = state.userAnswers[questionId];
+      if (answerAreaRows.length && savedAnswer === 'VIEWED') {
+        delete state.userAnswers[questionId];
+        savedAnswer = undefined;
+        saveState();
+      }
+      if (answerAreaRows.length && savedAnswer !== undefined && savedAnswer !== 'VIEWED') {
+        try {
+          const savedRows = JSON.parse(savedAnswer);
+          if (!Array.isArray(savedRows) || savedRows.length !== answerAreaRows.length ||
+              savedRows.some((key, index) => !Object.hasOwn(answerAreaRows[index].choices || {}, key))) {
+            throw new Error('Saved answer does not match answer-area rows');
+          }
+        } catch (e) {
+          delete state.userAnswers[questionId];
+          savedAnswer = undefined;
+          saveState();
+        }
+      }
+      if (answerAreaRows.length && savedAnswer !== undefined) {
+        const savedRows = JSON.parse(savedAnswer);
+        answerAreaSelects.forEach((select, index) => { select.value = savedRows[index]; });
+      }
       if (isMulti && savedAnswer !== undefined && savedAnswer !== 'VIEWED' &&
           normalizeAnswers(savedAnswer).length !== requiredAnswers) {
         // Older direct-question pages saved only the first click for multi-answer questions.
@@ -548,6 +609,24 @@ function parseMarkdown(markdownText) {
           saveState();
           showResults(submitted);
         });
+      }
+
+      if (answerAreaRows.length) {
+        answerAreaSelects.forEach(select => {
+          select.addEventListener('change', updateAnswerAreaSubmit);
+        });
+        if (btnSubmitAnswerArea) {
+          btnSubmitAnswerArea.addEventListener('click', function() {
+            const answers = Array.from(answerAreaSelects, select => select.value);
+            if (answers.length !== answerAreaRows.length || answers.some(answer => !answer)) return;
+            const submitted = JSON.stringify(answers);
+            state.userAnswers[questionId] = submitted;
+            state.currentIndex = questionIndex;
+            saveState();
+            showResults(submitted);
+          });
+        }
+        updateAnswerAreaSubmit();
       }
 
       const btnShowAnswer = document.getElementById('btnShowAnswer');
@@ -598,6 +677,28 @@ function parseMarkdown(markdownText) {
 
       // Show Correct/Wrong colors and explanation
       function showResults(selectedAnswer) {
+        if (answerAreaRows.length) {
+          let selectedRows = [];
+          try { selectedRows = selectedAnswer === 'VIEWED' ? [] : JSON.parse(selectedAnswer); } catch (e) {}
+          answerAreaItems.forEach((rowElement, index) => {
+            const select = rowElement.querySelector('.answer-area-select');
+            const correctKey = rowElement.getAttribute('data-correct-answer');
+            const selectedKey = selectedRows[index] || '';
+            rowElement.classList.add(selectedKey === correctKey ? 'correct-answer' : 'wrong-answer');
+            if (select) select.disabled = true;
+            if (selectedKey !== correctKey) {
+              const hint = document.createElement('div');
+              hint.className = 'answer-area-correct-hint';
+              const correctChoice = answerAreaRows[index]?.choices_vi?.[correctKey] || answerAreaRows[index]?.choices?.[correctKey] || correctKey;
+              hint.textContent = `Đáp án đúng: ${correctChoice}`;
+              rowElement.appendChild(hint);
+            }
+          });
+          if (btnSubmitAnswerArea) btnSubmitAnswerArea.style.display = 'none';
+          if (explanationBox) explanationBox.style.display = 'block';
+          return;
+        }
+
         const selected = selectedAnswer === 'VIEWED' ? [] : normalizeAnswers(selectedAnswer);
         optionItems.forEach(item => {
           item.classList.add('disabled');
@@ -639,6 +740,13 @@ function parseMarkdown(markdownText) {
         btnSubmitMulti.disabled = selectedAnswers.size !== requiredAnswers;
       }
 
+      function updateAnswerAreaSubmit() {
+        if (!btnSubmitAnswerArea || !answerAreaRows.length) return;
+        const selectedCount = Array.from(answerAreaSelects).filter(select => select.value).length;
+        btnSubmitAnswerArea.textContent = 'Xác nhận (' + selectedCount + '/' + answerAreaRows.length + ')';
+        btnSubmitAnswerArea.disabled = selectedCount !== answerAreaRows.length;
+      }
+
       function saveState() {
         try {
           localStorage.setItem(STATE_KEY, JSON.stringify(state));
@@ -671,6 +779,19 @@ function parseMarkdown(markdownText) {
         
         optionViTexts.forEach(el => {
           el.style.display = showVi ? 'block' : 'none';
+        });
+
+        document.querySelectorAll('.answer-area-label').forEach(label => {
+          const english = label.querySelector('.answer-area-label-en');
+          const vietnamese = label.querySelector('.answer-area-label-vi');
+          if (english) english.style.display = showVi && vietnamese ? 'none' : 'inline';
+          if (vietnamese) vietnamese.style.display = showVi ? 'inline' : 'none';
+        });
+        document.querySelectorAll('.answer-area-select option[data-label-en]').forEach(option => {
+          option.textContent = showVi ? option.getAttribute('data-label-vi') : option.getAttribute('data-label-en');
+        });
+        document.querySelectorAll('.answer-area-placeholder').forEach(option => {
+          option.textContent = showVi ? 'Chọn đáp án…' : 'Select an answer…';
         });
       }
     })();

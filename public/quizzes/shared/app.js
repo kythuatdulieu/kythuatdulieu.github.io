@@ -529,6 +529,115 @@
             window.currentSelectionQId = q.id;
         }
 
+        const answerAreaRows = Array.isArray(q.answer_area?.rows) ? q.answer_area.rows : [];
+        if (answerAreaRows.length) {
+            let selectedRows = [];
+            if (answered) {
+                try {
+                    const savedRows = JSON.parse(userAns);
+                    selectedRows = Array.isArray(savedRows) ? savedRows : [];
+                } catch {}
+            } else {
+                selectedRows = window.answerAreaSelections?.[q.id] || [];
+            }
+
+            answerAreaRows.forEach((row, rowIndex) => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'answer-area-row';
+
+                const label = document.createElement('div');
+                label.className = 'answer-area-label';
+                label.textContent = showVietnamese && row.label_vi ? row.label_vi : row.label;
+                rowDiv.appendChild(label);
+
+                const select = document.createElement('select');
+                select.className = 'answer-area-select';
+                select.setAttribute('aria-label', label.textContent);
+
+                const placeholder = document.createElement('option');
+                placeholder.value = '';
+                placeholder.textContent = showVietnamese ? 'Chọn đáp án…' : 'Select an answer…';
+                placeholder.disabled = true;
+                select.appendChild(placeholder);
+
+                const choices = row.choices && typeof row.choices === 'object' ? row.choices : {};
+                Object.keys(choices).sort().forEach(key => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = showVietnamese && row.choices_vi?.[key]
+                        ? row.choices_vi[key]
+                        : choices[key];
+                    select.appendChild(option);
+                });
+
+                const selectedKey = selectedRows[rowIndex] || '';
+                select.value = selectedKey;
+                if (!selectedKey) select.selectedIndex = 0;
+                select.disabled = answered;
+
+                if (answered) {
+                    const isCorrect = selectedKey === row.answer;
+                    rowDiv.classList.add(isCorrect ? 'correct-answer' : 'wrong-answer');
+                    if (!isCorrect) {
+                        const correctHint = document.createElement('div');
+                        correctHint.className = 'answer-area-correct-hint';
+                        const correctLabel = showVietnamese && row.choices_vi?.[row.answer]
+                            ? row.choices_vi[row.answer]
+                            : row.choices?.[row.answer] || row.answer;
+                        correctHint.textContent = `Đáp án đúng: ${correctLabel}`;
+                        rowDiv.appendChild(correctHint);
+                    }
+                } else {
+                    select.addEventListener('change', () => {
+                        window.answerAreaSelections = window.answerAreaSelections || {};
+                        const current = window.answerAreaSelections[q.id] || Array(answerAreaRows.length).fill('');
+                        current[rowIndex] = select.value;
+                        window.answerAreaSelections[q.id] = current;
+
+                        const submitBtn = els.optionsList.querySelector('.answer-area-submit-btn');
+                        if (submitBtn) {
+                            const selectedCount = current.filter(Boolean).length;
+                            submitBtn.disabled = selectedCount !== answerAreaRows.length;
+                            submitBtn.textContent = `Xác nhận (${selectedCount}/${answerAreaRows.length})`;
+                        }
+                    });
+                }
+
+                rowDiv.appendChild(select);
+                els.optionsList.appendChild(rowDiv);
+            });
+
+            if (!answered) {
+                const current = window.answerAreaSelections?.[q.id] || [];
+                const selectedCount = current.filter(Boolean).length;
+                const submitBtn = document.createElement('button');
+                submitBtn.className = 'multi-submit-btn answer-area-submit-btn';
+                submitBtn.textContent = `Xác nhận (${selectedCount}/${answerAreaRows.length})`;
+                submitBtn.disabled = selectedCount !== answerAreaRows.length;
+                submitBtn.addEventListener('click', () => {
+                    const selectedForSubmit = window.answerAreaSelections?.[q.id] || [];
+                    const answers = answerAreaRows.map((_, index) => selectedForSubmit[index] || '');
+                    if (answers.some(answer => !answer)) return;
+                    const answerString = JSON.stringify(answers);
+                    userAnswers[q.id] = answerString;
+                    delete window.answerAreaSelections?.[q.id];
+
+                    if (typeof window.gtag === 'function') {
+                        window.gtag('event', 'quiz_answer', {
+                            quiz_id: quizId,
+                            question_id: q.id,
+                            is_correct: answerString === q.answer,
+                            question_type: 'answer_area'
+                        });
+                    }
+
+                    updateScores();
+                    saveState();
+                    renderQuestion();
+                });
+                els.optionsList.appendChild(submitBtn);
+            }
+        } else {
         optionLetters.forEach(letter => {
             const div = document.createElement('div');
             div.className = 'option-item';
@@ -667,6 +776,7 @@
             }
             noOptDiv.appendChild(showBtn);
             els.optionsList.appendChild(noOptDiv);
+        }
         }
 
         // Explanation — shown after answering
@@ -1244,6 +1354,10 @@
     async function init() {
         try {
             const normalizeQ = q => {
+                const answerRows = Array.isArray(q.answer_area?.rows) ? q.answer_area.rows : [];
+                if (answerRows.length) {
+                    return { ...q, answer: JSON.stringify(answerRows.map(row => row.answer)), isMulti: false };
+                }
                 let ans = q.answer || '';
                 let isMulti = q.isMulti;
                 if (ans.length > 1 && !ans.includes(',')) {
@@ -1272,6 +1386,14 @@
         questionOrder = questions.map((_, i) => i);
         
         loadState();
+
+        // Older versions treated hotspot questions without ordinary options as "viewed".
+        // Let users answer these after the answer-area controls are added.
+        questions.forEach(q => {
+            if (q.answer_area?.rows?.length && userAnswers[q.id] === 'VIEWED') {
+                delete userAnswers[q.id];
+            }
+        });
 
         // Kiểm tra xem bộ đề này có dữ liệu tiếng Việt hay không
         const hasVi = questions.some(q => q.question_vi || (q.options_vi && Object.keys(q.options_vi).length > 0) || q.explanation_vi);

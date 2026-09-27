@@ -820,7 +820,7 @@
       "D": "geo-redundant storage (GRS)"
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để sao chép dữ liệu ra ngoài vùng Azure hiện tại một cách tự động, bạn cần sử dụng các tùy chọn sao chép địa lý:\n- **Geo-redundant storage (GRS)**: Sao chép đồng bộ 3 bản sao ở vùng chính (sử dụng LRS) và sau đó sao chép không đồng bộ sang một vùng địa lý phụ cách xa vùng chính.\n- **Read-access geo-redundant storage (RA-GRS)**: Cung cấp tính năng tương tự GRS nhưng cho phép thêm quyền truy cập đọc dữ liệu ở vùng phụ trong trường hợp vùng chính xảy ra sự cố.\n\nCác lựa chọn khác:\n- **LRS**: Chỉ sao chép dữ liệu trong một trung tâm dữ liệu duy nhất của vùng chính.\n- **ZRS**: Chỉ sao chép dữ liệu qua các Availability Zones khác nhau trong cùng một vùng chính.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -907,7 +907,7 @@
       "D": "Data is processed as it is created"
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Xử lý dữ liệu thời gian thực (real-time data processing) liên quan đến việc xử lý các luồng dữ liệu liên tục ngay khi chúng phát sinh.\n\n**Các đặc điểm chính:**\n* **Dữ liệu được xử lý ngay khi nó được tạo ra (D):** Trực tiếp xử lý luồng sự kiện (streaming) ngay lập tức thay vì tích lũy.\n* **Độ trễ thấp (low latency) được kỳ vọng (B):** Thời gian phản hồi thường được tính bằng mili giây hoặc giây, đòi hỏi hệ thống phản ứng rất nhanh để đưa ra thông tin kịp thời.\n\n**Tại sao các đáp án khác sai:**\n* **A**: Đây là đặc điểm của xử lý theo lô (batch processing), nơi dữ liệu được gom lại và xử lý định kỳ theo chu kỳ (ví dụ: hàng giờ, hàng ngày).\n* **C**: Độ trễ cao là đặc trưng chấp nhận được của xử lý theo lô, không phù hợp cho hệ thống thời gian thực.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1023,7 +1023,7 @@
       "D": "reduced administrative effort for managing the server infrastructure"
     },
     "answer": "AD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Các mô hình PaaS (Platform as a Service) như Azure SQL Database mang lại các lợi ích vượt trội:\n* **Quyền truy cập vào các tính năng mới nhất (A):** Nhờ cơ chế cơ sở dữ liệu không bao giờ lỗi thời (evergreen database), Microsoft tự động cập nhật hệ thống, giúp người dùng luôn được tiếp cận các tính năng và bản vá mới nhất mà không cần nâng cấp thủ công.\n* **Giảm công sức quản trị hạ tầng (D):** Các công việc như bảo trì phần cứng, cập nhật hệ điều hành, cấu hình mạng và quản lý lưu trữ được Azure tự động hóa hoàn toàn.\n\n**Tại sao các đáp án khác sai:**\n* **B**: Azure SQL Database tự động hóa phần lớn quá trình sao lưu và khôi phục (Point-in-Time Restore). Bạn không có \"quyền kiểm soát hoàn toàn\" ở mức tệp tin vật lý hoặc can thiệp sâu như trên IaaS (SQL Server trên VM) hoặc On-Premises.\n* **C**: Đây không phải là lợi ích cốt lõi hoặc mặc định của mọi dịch vụ PaaS Relational Database nói chung.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1466,7 +1466,7 @@
       "D": "Enforce business logic across reports"
     },
     "answer": "AC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Lựa chọn **A** và **C** là chính xác.\n\n* **Biểu diễn các xu hướng và quy luật theo thời gian (A)**: Trực quan hóa dữ liệu giúp người xem dễ dàng nhận biết sự phát triển, xu hướng tăng giảm hoặc tính chu kỳ của dữ liệu.\n* **Truyền đạt ý nghĩa của dữ liệu (C)**: Việc chuyển đổi số liệu thô thành hình ảnh đồ họa giúp truyền tải thông tin và thông điệp cốt lõi một cách trực quan, nhanh chóng và dễ tiếp thu hơn.\n* **Lựa chọn B** liên quan đến Học máy (Machine Learning).\n* **Lựa chọn D** liên quan đến việc định cấu hình logic kinh doanh và mô hình hóa dữ liệu (Data Modeling).\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1611,7 +1611,7 @@
       "D": "Azure Log Analytics"
     },
     "answer": "BC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Lựa chọn **B (Azure HDInsight)** và **C (Azure Databricks)** là chính xác.\n\n* **Azure HDInsight** là dịch vụ đám mây mã nguồn mở được quản lý toàn phần giúp dễ dàng chạy các cụm công nghệ phân tích như Spark, Hadoop, Kafka, v.v.\n* **Azure Databricks** cung cấp nền tảng phân tích dựa trên Apache Spark tối ưu hóa cho môi trường Azure.\n* **Azure Time Series Insights (A)**: Được dùng để trực quan hóa dữ liệu chuỗi thời gian IoT.\n* **Azure Log Analytics (D)**: Dùng để thu thập và phân tích dữ liệu nhật ký hệ thống.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1760,7 +1760,7 @@
       "D": "the API"
     },
     "answer": "AC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Lựa chọn **A** và **C** là chính xác.\n\nTrong Azure Cosmos DB, ở cấp độ vùng chứa (container), bạn có thể định cấu hình các thiết lập sau:\n* **Thông lượng (Throughput)**: Bạn có thể phân bổ thông lượng (đo bằng Request Units mỗi giây - RU/s) chuyên dụng cho từng container riêng lẻ hoặc chia sẻ từ cơ sở dữ liệu.\n* **Khóa phân vùng (Partition key)**: Được xác định khi tạo container để xác định cách dữ liệu được phân phối giữa các phân vùng vật lý.\n\nCác tùy chọn còn lại không chính xác:\n* **Vùng đọc (Read region)** (B) và **API** (D) là các cấu hình được thực hiện ở cấp độ tài khoản (account level), không phải ở cấp độ container.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1794,7 +1794,7 @@
       "E": "Your IP address must be allowed to connect to the database."
     },
     "answer": "BCE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Lựa chọn **B**, **C** và **E** là chính xác.\n\nĐể có thể kết nối và truy vấn một bảng trong cơ sở dữ liệu Azure SQL từ môi trường internet:\n* **Địa chỉ IP của bạn phải được cho phép kết nối (E)**: Tường lửa của Azure SQL Database (IP firewall) phải được định cấu hình để cho phép địa chỉ IP công cộng của client truy cập.\n* **Bạn phải có một người dùng trong cơ sở dữ liệu (C)**: Bạn cần một tài khoản đăng nhập (database user) hợp lệ để xác thực kết nối.\n* **Bạn phải có quyền SELECT đối với bảng (B)**: Người dùng của bạn phải được cấp quyền đọc dữ liệu (`SELECT`) trên bảng `Products` cụ thể đó.\n\nCác tùy chọn còn lại không chính xác:\n* Các vai trò Azure RBAC (như **Reader** (A) hay **Contributor** (D)) ở cấp độ nhóm tài nguyên (resource group) chỉ quản lý các tài nguyên của Azure chứ không cấp quyền truy cập dữ liệu trực tiếp bên trong cơ sở dữ liệu Azure SQL.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1857,7 +1857,7 @@
       "D": "partition"
     },
     "answer": "AC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Lựa chọn **A** và **C** là chính xác.\n\nAzure Cosmos DB cho phép bạn định cấu hình thông lượng (được đo bằng đơn vị yêu cầu mỗi giây - RU/s) ở hai cấp độ:\n* **Cấp độ cơ sở dữ liệu (Database level)** (A): Thông lượng được chia sẻ giữa tất cả các container thuộc cơ sở dữ liệu đó.\n* **Cấp độ vùng chứa (Container level)** (C): Thông lượng được cấp phát chuyên dụng riêng cho container đó.\n\nCác tùy chọn còn lại không chính xác:\n* **Mục (Item)** (B) và **Phân vùng (Partition)** (D) là các cấp độ lưu trữ dữ liệu nhỏ hơn và không hỗ trợ việc cấu hình thông lượng trực tiếp.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1917,7 +1917,7 @@
       "F": "normalized data"
     },
     "answer": "BDF",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Lựa chọn **B**, **D** và **F** là chính xác.\n\nHệ thống xử lý giao dịch trực tuyến (OLTP) tập trung vào việc quản lý các giao dịch dữ liệu diễn ra liên tục hàng ngày với các đặc điểm:\n* **Ghi nhiều và đọc vừa phải (Heavy writes and moderate reads)** (B): Hệ thống xử lý rất nhiều giao dịch insert, update, delete từ người dùng.\n* **Lược đồ khi ghi (Schema on write)** (D): Cấu trúc dữ liệu (schema) phải được xác định rõ ràng và kiểm tra nghiêm ngặt trước khi ghi vào cơ sở dữ liệu để đảm bảo tính toàn vẹn.\n* **Dữ liệu được chuẩn hóa (Normalized data)** (F): Các bảng dữ liệu được thiết kế chuẩn hóa (thường là 3NF) nhằm giảm thiểu dư thừa dữ liệu và tăng tốc độ ghi.\n\nCác tùy chọn còn lại là đặc điểm của hệ thống OLAP (phân tích dữ liệu):\n* **Denormalized data** (A) và **Light writes and heavy reads** (C) là đặc trưng của kho dữ liệu OLAP nhằm tối ưu hóa hiệu năng đọc báo cáo.\n* **Schema on read** (E) là đặc trưng của các hệ thống Big Data/Data Lake, nơi dữ liệu thô được lưu trữ trước và cấu trúc chỉ được áp dụng khi tiến hành đọc.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -1948,7 +1948,7 @@
       "D": "data acquisition and preparation"
     },
     "answer": "AB",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Lựa chọn **A** và **B** là chính xác.\n\nTrên giao diện web của **Power BI Service**, người dùng có thể thực hiện hoàn toàn các tác vụ sau:\n* **Tạo báo cáo và dashboard (Report and dashboard creation)** (A): Bạn có thể tạo báo cáo mới trực tiếp trên web dựa trên các dataset đã xuất bản, cũng như tạo các Dashboard bằng cách ghim các biểu đồ.\n* **Chia sẻ và phân phối báo cáo (Report sharing and distribution)** (B): Power BI Service cung cấp các tính năng chia sẻ, phân phối báo cáo cho đồng nghiệp và quản lý workspace.\n\nCác tùy chọn còn lại không chính xác:\n* **Mô hình hóa dữ liệu (Data modeling)** (C) như thiết lập quan hệ phức tạp giữa các bảng và **Thu thập/Chuẩn bị dữ liệu** (D) thông qua Power Query cần được thực hiện trên công cụ Power BI Desktop.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2011,7 +2011,7 @@
       "E": "a text box"
     },
     "answer": "ACE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Lựa chọn **A**, **C** và **E** là chính xác.\n\nTrên Power BI Dashboard, bạn có thể ghim (pin) hoặc thêm các đối tượng sau (được gọi là các tiles):\n* **Một trang báo cáo (A report page)** (A): Bạn có thể ghim toàn bộ một trang báo cáo lên dashboard (live page tile).\n* **Một biểu đồ trực quan từ báo cáo (C)**: Ghim một visual cụ thể từ một trang báo cáo hiện có.\n* **Một hộp văn bản (E)**: Thêm trực tiếp một hộp văn bản (text box), hình ảnh, mã nhúng HTML hoặc video lên dashboard.\n\nCác tùy chọn còn lại không chính xác:\n* **Microsoft PowerPoint slide** (B) và **Dataflow** (D) không phải là các đối tượng được hỗ trợ để thêm hoặc ghim trực tiếp lên một Power BI dashboard.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -2283,7 +2283,7 @@
       "D": "a timestamp"
     },
     "answer": "AC",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "- **A. a partition key** và **C. a row key**: Đúng. Trong Azure Table storage, khóa chính của một thực thể (dòng) được tạo thành bởi sự kết hợp giữa PartitionKey (khóa phân vùng, dùng để nhóm các thực thể lại với nhau và phục vụ phân tải) và RowKey (khóa hàng, định danh duy nhất cho thực thể trong phân vùng đó).\n- **B. a range**: Sai. Đây không phải là thuộc tính định danh của hàng trong Azure Table.\n- **D. a timestamp**: Sai. Mặc dù mỗi thực thể trong Azure Table storage đều có một thuộc tính Timestamp do hệ thống tự động quản lý để theo dõi thời gian cập nhật gần nhất, nhưng nó không dùng để định danh duy nhất cho hàng.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4020,7 +4020,7 @@
       "E": "support for streaming data"
     },
     "answer": "BD",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "**Delta Lake** là một lớp lưu trữ mã nguồn mở mang lại các giao dịch ACID và quản lý siêu dữ liệu trên các hồ dữ liệu. Hai tính năng chính phân biệt Delta Lake với Azure Data Lake Storage (ADLS) truyền thống là:\n* **B. Áp đặt lược đồ (schema enforcement)**: Delta Lake ngăn chặn việc ghi dữ liệu không đúng cấu trúc đã định nghĩa vào bảng, giúp bảo vệ tính toàn vẹn và độ tin cậy của dữ liệu.\n* **D. Tính nhất quán của giao dịch (transactional consistency)**: Delta Lake hỗ trợ các giao dịch tuân thủ ACID thông qua nhật ký giao dịch (transaction log/Delta Log). Điều này đảm bảo rằng các thao tác đọc/ghi đồng thời diễn ra một cách nhất quán mà không làm hỏng dữ liệu.\n\n**Phân tích các phương án khác:**\n* **A (batch data)** và **E (streaming data)**: Cả Delta Lake và ADLS đều hỗ trợ đầy đủ cả dữ liệu dạng lô và dạng luồng.\n* **C (Apache Spark runtime)**: Cả hai đều có thể tương tác tốt với Apache Spark (Synapse, Databricks), đây không phải là tính năng cốt lõi phân biệt riêng của Delta Lake.\n\n*(Đáp án được gợi ý bởi AI)*",
@@ -4055,7 +4055,7 @@
       "E": "SELECT"
     },
     "answer": "CE",
-    "isMulti": false,
+    "isMulti": true,
     "page": null,
     "image": null,
     "explanation_vi": "Để tạo một truy vấn trả về các đơn hàng được đặt bởi mỗi khách hàng từ hai bảng `customers` và `orders`, bạn cần sử dụng:\n* **SELECT (E)**: Lệnh SQL cơ bản và bắt buộc dùng để chỉ định các cột dữ liệu cần truy xuất và hiển thị.\n* **JOIN (C)**: Được sử dụng để kết hợp các bản ghi từ hai bảng khác nhau dựa trên một trường chung (ví dụ: `CustomerID`).\n\n**Phân tích các phương án khác:**\n* **INDEX (A)**: Dùng để tăng tốc độ truy vấn, không dùng trực tiếp trong mệnh đề truy xuất dữ liệu.\n* **EXISTS (B)**: Thường sử dụng trong mệnh đề `WHERE` để kiểm tra sự tồn tại của bản ghi trong truy vấn con, không giúp kết hợp trực tiếp thông tin đơn hàng và khách hàng để trả về danh sách.\n* **ORDER BY (D)**: Dùng để sắp xếp kết quả, không bắt buộc phải có để tạo ra liên kết truy vấn cơ bản giữa khách hàng và đơn hàng.\n\n*(Đáp án được gợi ý bởi AI)*",
