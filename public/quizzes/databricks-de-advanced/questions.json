@@ -2178,17 +2178,17 @@
       "D": "`libraries`",
       "E": "`workspace`"
     },
-    "explanation_vi": "Nhóm lệnh `fs` (File System) của **Databricks CLI** cung cấp các công cụ thao tác với hệ thống tệp `DBFS` (**Databricks File System**), bao gồm lệnh sao chép (`cp`) để tải tệp từ máy cá nhân lên cloud storage gắn kết với `DBFS`. Ví dụ: `databricks fs cp my_wheel.whl dbfs:/FileStore/jars/`.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B — `fs`.** Trong Databricks CLI, `fs` là nhóm lệnh thao tác tệp; lệnh con `cp` sao chép tệp giữa máy local và đường dẫn DBFS. Ví dụ, nếu workspace vẫn cho phép dùng DBFS path: `databricks fs cp ./my_wheel.whl dbfs:/FileStore/wheels/my_wheel.whl`. Lệnh này chỉ đưa artifact lên nơi lưu trữ; nó **không** tự cài thư viện vào job. Sau đó, cần khai báo wheel như dependency/library trong cấu hình task/job và bảo đảm danh tính chạy job có quyền đọc tệp.\n\nVới workload mới, nên cân nhắc Unity Catalog Volume thay cho DBFS root hoặc DBFS mounts: DBFS root/mounts là cơ chế cũ và có thể bị vô hiệu hóa ở workspace. CLI `fs` hiện vẫn thao tác được với DBFS path và Volume path; cú pháp Volume bắt đầu bằng `dbfs:/Volumes/...`.\n\n- **A `configure`**: không phải nhóm upload tệp; cấu hình xác thực của CLI thuộc luồng cấu hình/authentication.\n- **C `jobs`**: quản lý job và lần chạy, không sao chép artifact lên storage.\n- **D `libraries`**: quản lý trạng thái cài/gỡ thư viện trên compute; đây không phải lệnh upload wheel.\n- **E `workspace`**: thao tác workspace files/notebooks, khác với DBFS/Volume file system.\n\nCâu hỏi kiểm tra **nhóm lệnh**; `fs cp` là thao tác upload cụ thể.",
     "page": null,
     "image": "img/q_68.jpg",
     "references": [
       {
-        "title": "Databricks CLI DBFS commands",
-        "url": "https://docs.databricks.com/en/archive/dev-tools/cli/dbfs-cli"
+        "title": "Databricks CLI commands",
+        "url": "https://docs.databricks.com/aws/en/dev-tools/cli/commands"
       },
       {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q68",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82672-question-68-topic-1/"
+        "title": "Databricks CLI fs command group",
+        "url": "https://docs.databricks.com/aws/en/dev-tools/cli/reference/fs-commands"
       }
     ]
   },
@@ -2297,34 +2297,37 @@
   {
     "id": 72,
     "topic": 1,
-    "question": "A data team's **Structured Streaming** job is configured to calculate running aggregates for item sales to update a downstream marketing dashboard. The marketing team has introduced a new promotion, and they would like to add a new field to track the number of times this promotion code is used for each item. A junior data engineer suggests updating the existing query as follows. Note that proposed changes are in bold.\nOriginal query:\nProposed query:\nProposed query:\n`.start(\"/item_agg\")`\nWhich step must also be completed to put the proposed query into production?",
+    "question": "A data team's **Structured Streaming** job calculates running sales aggregates for a marketing dashboard. The original query groups sales by item and writes in complete mode. The marketing team now wants one additional aggregate: the number of rows whose `promo_code` is `NEW MEMBER`. A junior engineer proposes adding that aggregate and `mergeSchema`, while keeping the existing checkpoint and output path:\n\nOriginal query:\n```python\n(df.groupBy(\"item\")\n   .agg(count(\"item\").alias(\"total_count\"),\n        mean(\"sale_price\").alias(\"avg_price\"))\n   .writeStream\n   .format(\"delta\")\n   .outputMode(\"complete\")\n   .option(\"checkpointLocation\", \"/item_agg/__checkpoint\")\n   .start(\"/item_agg\"))\n```\n\nProposed query (the conditional count is written explicitly to remove ambiguity):\n```python\n(df.groupBy(\"item\")\n   .agg(count(\"item\").alias(\"total_count\"),\n        mean(\"sale_price\").alias(\"avg_price\"),\n        sum(when(col(\"promo_code\") == \"NEW MEMBER\", 1).otherwise(0))\n          .alias(\"new_member_promo\"))\n   .writeStream\n   .format(\"delta\")\n   .outputMode(\"complete\")\n   .option(\"mergeSchema\", \"true\")\n   .option(\"checkpointLocation\", \"/item_agg/__checkpoint\")\n   .start(\"/item_agg\"))\n```\nWhich additional step is required before running the changed query?",
     "options": {
-      "A": "Specify a new `checkpointLocation`",
-      "B": "Increase the shuffle partitions to account for additional aggregates",
-      "C": "Run `REFRESH TABLE delta.'/item_agg'`",
-      "D": "Register the data in the `\"/item_agg\"` directory to the `Hive metastore`",
-      "E": "Remove `.option('mergeSchema', 'true')` from the streaming write"
+      "A": "Specify a new `checkpointLocation` for the changed stateful query.",
+      "B": "Increase the shuffle partition count; this is required whenever an aggregate column is added.",
+      "C": "Run `REFRESH TABLE item_agg` to reset the streaming state.",
+      "D": "Register `/item_agg` in the Hive metastore before a streaming path can be used.",
+      "E": "Remove `mergeSchema`; schema evolution alone makes the old state checkpoint compatible."
     },
     "answer": "A",
-    "question_vi": "Streaming job đang duy trì aggregates; thêm cột mới theo khuyến mại. Ngoài việc cập nhật truy vấn, bước nào cần làm để đưa vào production?",
+    "question_vi": "Job **Structured Streaming** đang tổng hợp doanh số theo mặt hàng để cập nhật dashboard. Đội marketing muốn thêm số lần mã `NEW MEMBER` được dùng. Đề xuất giữ nguyên checkpoint và đường dẫn đầu ra, đồng thời thêm aggregate mới cùng `mergeSchema`:\n\nTruy vấn ban đầu:\n```python\n(df.groupBy(\"item\")\n   .agg(count(\"item\").alias(\"total_count\"),\n        mean(\"sale_price\").alias(\"avg_price\"))\n   .writeStream\n   .format(\"delta\")\n   .outputMode(\"complete\")\n   .option(\"checkpointLocation\", \"/item_agg/__checkpoint\")\n   .start(\"/item_agg\"))\n```\n\nTruy vấn sau khi sửa:\n```python\n(df.groupBy(\"item\")\n   .agg(count(\"item\").alias(\"total_count\"),\n        mean(\"sale_price\").alias(\"avg_price\"),\n        sum(when(col(\"promo_code\") == \"NEW MEMBER\", 1).otherwise(0))\n          .alias(\"new_member_promo\"))\n   .writeStream\n   .format(\"delta\")\n   .outputMode(\"complete\")\n   .option(\"mergeSchema\", \"true\")\n   .option(\"checkpointLocation\", \"/item_agg/__checkpoint\")\n   .start(\"/item_agg\"))\n```\nCần làm thêm bước nào trước khi chạy truy vấn đã thay đổi?",
     "options_vi": {
-      "A": "Chỉ định `checkpointLocation` mới.",
-      "B": "Tăng shuffle partitions cho thêm aggregates.",
-      "C": "Chạy `REFRESH TABLE delta.'/item_agg'`.",
-      "D": "Đăng ký dữ liệu trong thư mục `\"/item_agg\"` vào `Hive metastore`.",
-      "E": "Gỡ tùy chọn `mergeSchema` từ streaming write."
+      "A": "Chỉ định `checkpointLocation` mới cho truy vấn có trạng thái đã thay đổi.",
+      "B": "Tăng số shuffle partition; đây là yêu cầu bắt buộc mỗi khi thêm cột aggregate.",
+      "C": "Chạy `REFRESH TABLE item_agg` để đặt lại trạng thái streaming.",
+      "D": "Đăng ký `/item_agg` trong Hive metastore vì streaming bắt buộc phải ghi qua bảng đã đăng ký.",
+      "E": "Gỡ `mergeSchema`; schema evolution tự làm checkpoint trạng thái cũ tương thích."
     },
-    "explanation_vi": "Khi bạn thay đổi cấu trúc của truy vấn streaming (ví dụ: thêm cột tổng hợp mới), trạng thái lưu trữ trong thư mục `checkpoint` cũ sẽ không còn tương thích với mã nguồn mới. Để đưa truy vấn mới này vào production, bạn bắt buộc phải chỉ định một thư mục checkpoint mới (`checkpointLocation`) để khởi động lại luồng ghi và ghi nhận trạng thái từ đầu.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** Checkpoint lưu tiến độ nguồn và trạng thái đã tích lũy của phép `groupBy`. Khi thêm `new_member_promo`, schema trạng thái thay đổi; checkpoint cũ được tạo cho trạng thái khác nên không thể khôi phục an toàn vào truy vấn mới. Hãy chạy truy vấn mới với một `checkpointLocation` riêng. Lưu ý checkpoint mới bắt đầu tiến độ mới: cần lên kế hoạch replay dữ liệu nguồn và cập nhật/đối soát bảng đích.\n\n`mergeSchema` xử lý việc thêm cột vào schema **bảng Delta đầu ra**, không chuyển đổi state trong checkpoint. Vì vậy E không giải quyết lỗi tương thích. Tăng shuffle partitions (B) là tinh chỉnh hiệu năng, không phải yêu cầu để sửa state. `REFRESH TABLE` (C) chỉ làm mới metadata của bảng đã đăng ký, không migrate trạng thái streaming. Ghi vào path bằng `start(path)` (D) không đòi hỏi đăng ký Hive table.\n\nCách đếm điều kiện trong ví dụ được viết rõ bằng `sum(when(condition, 1).otherwise(0))`. Biểu thức bị sao chép từ câu hỏi cũ `count(\"promo_code = ...\")` có thể bị hiểu là tên cột, không phải boolean condition để đếm.",
     "page": null,
-    "image": "img/q_72.jpg",
     "references": [
       {
-        "title": "Delta Lake Streaming Checkpoints",
-        "url": "https://docs.databricks.com/en/structured-streaming/delta-lake"
+        "title": "Structured Streaming checkpoints: changes that require a new checkpoint",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/checkpoints"
       },
       {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q72",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82798-question-72-topic-1/"
+        "title": "Delta Lake streaming reads and writes — checkpoints and schema changes",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/delta-lake"
+      },
+      {
+        "title": "Update table schemas with schema evolution",
+        "url": "https://docs.databricks.com/aws/en/tables/update-schema"
       }
     ]
   },
@@ -2374,7 +2377,7 @@
       "E": "It caches a copy of the indicated table on all nodes in the cluster for use in all future queries during the cluster lifetime."
     },
     "answer": "D",
-    "question_vi": "Phát biểu nào mô tả đúng cách dùng `pyspark.sql.functions.broadcast`?",
+    "question_vi": "Phát biểu nào mô tả chính xác cách dùng `pyspark.sql.functions.broadcast` trong một phép join?",
     "options_vi": {
       "A": "Đánh dấu cột có độ đa dạng thấp để ánh xạ partition, cho phép broadcast join.",
       "B": "Đánh dấu cột đủ nhỏ để lưu bộ nhớ trên tất cả executor, cho phép broadcast join.",
@@ -2382,17 +2385,17 @@
       "D": "Đánh dấu `DataFrame` đủ nhỏ để lưu bộ nhớ trên tất cả executor, cho phép broadcast join.",
       "E": "Cache bản sao bảng trên mọi node của cluster cho mọi truy vấn sau đó trong vòng đời cluster."
     },
-    "explanation_vi": "Hàm `broadcast` của PySpark nhận vào một `DataFrame` và đánh dấu `DataFrame` này đủ nhỏ để tải toàn bộ vào bộ nhớ RAM của tất cả các máy executor trong cụm. Điều này cho phép Spark thực hiện phép nối **broadcast** (**broadcast join**) thay vì shuffle join thông thường, giúp loại bỏ hoàn toàn chi phí trao đổi dữ liệu qua mạng (shuffle) và tăng tốc truy vấn.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** `broadcast(df)` trả về DataFrame được gắn broadcast hint để Spark cân nhắc gửi bản sao tới các executor làm phía build của join. Phía còn lại có thể được nối mà không shuffle toàn bộ dữ liệu của cả hai phía như sort-merge join thường cần. Đây là hint chiến lược join, không phải lệnh cache lâu dài và cũng không bảo đảm DataFrame thực sự đủ nhỏ: ép broadcast bảng lớn vẫn tiêu tốn mạng/bộ nhớ và có thể gây OOM.\n\nA và B sai vì API nhận **DataFrame**, không đánh dấu một cột có cardinality hay kích thước nhỏ. C sai vì broadcast hint không ghi bản sao lên storage dùng chung cho mọi cluster trong workspace. E mô tả caching để tái sử dụng ở truy vấn sau; đó không phải tác dụng của `broadcast`.",
     "page": null,
     "image": "img/q_74.jpg",
     "references": [
       {
-        "title": "PySpark broadcast function API",
+        "title": "PySpark `broadcast` function API",
         "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.broadcast.html"
       },
       {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q74",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82761-question-74-topic-1/"
+        "title": "Spark SQL join hints",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html#join-strategy-hints-for-sql-queries"
       }
     ]
   },
@@ -2535,34 +2538,29 @@
   {
     "id": 79,
     "topic": 1,
-    "question": "The data architect has mandated that all tables in the Lakehouse should be configured as external (also known as \"unmanaged\") **Delta Lake** tables.\nWhich approach will ensure that this requirement is met?",
+    "question": "A data architect requires every Lakehouse table to be an external (unmanaged) **Delta Lake** table. Which table-creation approach explicitly registers each table as external and identifies its storage location?",
     "options": {
-      "A": "When a database is being created, make sure that the `LOCATION` keyword is used.",
-      "B": "When configuring an external data warehouse for all table storage, leverage Databricks for all ELT.",
-      "C": "When data is saved to a table, make sure that a full file path is specified alongside the Delta format.",
-      "D": "When tables are created, make sure that the `EXTERNAL` keyword is used in the `CREATE TABLE` statement.",
-      "E": "When the workspace is being configured, make sure that external cloud object storage has been mounted."
+      "A": "Set a `LOCATION` only when creating the database/schema; that automatically makes every table external.",
+      "B": "Configure an external data warehouse and use Databricks for all ELT.",
+      "C": "Write files in Delta format to a path; this alone registers every output as a named external table.",
+      "D": "Create each table with `CREATE EXTERNAL TABLE ... USING DELTA LOCATION <path>`.",
+      "E": "Mount external cloud storage in the workspace; every table created afterward is automatically external."
     },
     "answer": "D",
-    "question_vi": "Kiến trúc sư yêu cầu mọi bảng trong Lakehouse đều là **Delta Lake** external (unmanaged). Cách nào đảm bảo yêu cầu này?",
+    "question_vi": "Kiến trúc sư yêu cầu mọi bảng trong Lakehouse là bảng **Delta Lake** external (unmanaged). Khi tạo từng bảng, cách nào đăng ký rõ loại bảng và vị trí lưu trữ?",
     "options_vi": {
-      "A": "Khi tạo database, dùng từ khóa `LOCATION`.",
-      "B": "Khi cấu hình data warehouse ngoài cho lưu bảng, dùng Databricks cho toàn bộ ELT.",
-      "C": "Khi lưu dữ liệu vào bảng, chỉ định đường dẫn đầy đủ cùng định dạng Delta.",
-      "D": "Khi tạo bảng, dùng từ khóa `EXTERNAL` trong câu lệnh `CREATE TABLE`.",
-      "E": "Khi cấu hình workspace, mount object storage ngoài."
+      "A": "Chỉ đặt `LOCATION` khi tạo database/schema; thao tác đó tự biến mọi bảng thành external.",
+      "B": "Cấu hình data warehouse ngoài và dùng Databricks cho toàn bộ ELT.",
+      "C": "Ghi file Delta vào một path; chỉ thao tác đó đã đăng ký đầu ra thành bảng external có tên.",
+      "D": "Tạo từng bảng bằng `CREATE EXTERNAL TABLE ... USING DELTA LOCATION <path>`.",
+      "E": "Mount object storage vào workspace; mọi bảng tạo sau đó tự động là external."
     },
-    "explanation_vi": "Để định nghĩa một **Delta** table là `external` (unmanaged table), ta sử dụng câu lệnh ``CREATE `EXTERNAL` TABLE`` với từ khóa ``EXTERNAL`` và chỉ định thư mục lưu trữ ngoài thông qua mệnh đề ``LOCATION``. Bảng unmanaged chỉ lưu thông tin đăng ký schema trong Metastore của Databricks, khi thực hiện xóa bảng (``DROP TABLE``), các tệp dữ liệu thực tế lưu trên Cloud Storage vẫn được bảo toàn.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** Câu lệnh tạo bảng cần đăng ký bảng với vị trí dữ liệu bên ngoài vùng lưu trữ managed, chẳng hạn `CREATE EXTERNAL TABLE ... USING DELTA LOCATION 's3://...'` (điều chỉnh path theo cloud và external location đã cấp quyền). Với bảng external, `DROP TABLE` xóa metadata đăng ký nhưng không tự xóa các data file tại path ngoài.\n\nA chỉ đặt vị trí mặc định cho schema/database; nó không bảo đảm từng bảng là external. C ghi dữ liệu ra path nhưng chưa nhất thiết đăng ký tên bảng để truy vấn. E nói về mount storage, không quyết định loại bảng của từng lệnh `CREATE TABLE`; B không phải cú pháp đăng ký bảng.\n\nTrong Unity Catalog hiện nay, điểm cốt lõi vẫn là tạo bảng với `LOCATION` trỏ đến external location người dùng được cấp quyền. Cần phân biệt vị trí dữ liệu với metadata đăng ký bảng.",
     "page": null,
-    "image": "img/q_79.jpg",
     "references": [
       {
-        "title": "Databricks CREATE TABLE USING syntax",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using"
-      },
-      {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q79",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82766-question-79-topic-1/"
+        "title": "Databricks SQL `CREATE TABLE` syntax",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using"
       }
     ]
   },
@@ -2654,17 +2652,13 @@
       "D": "Chỉ chuyển quyền cho nhóm nếu người chuyển là thành viên nhóm đó.",
       "E": "Chỉ admin workspace mới có thể cấp Owner cho nhóm."
     },
-    "explanation_vi": "Trong cơ chế phân quyền (ACLs) cho **Databricks Jobs**, một job phải thuộc sở hữu của duy nhất một người dùng cá nhân (`Owner`). Quyền hạn sở hữu (`Owner` privileges) này không thể được gán cho một nhóm người dùng (group) như nhóm DevOps, do đó thao tác chuyển nhượng quyền sở hữu cho group bị chặn.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** Trong mô hình quyền job mà câu hỏi đang kiểm tra, `IS OWNER` là quyền sở hữu job và chỉ có thể có một owner; một group không được gán trực tiếp quyền `IS OWNER`. Vì vậy, việc cố chuyển quyền owner sang `DevOps` bị từ chối. Quyền owner khác với quyền quản lý thông thường: có thể cấp `CAN MANAGE` cho group để các thành viên chỉnh cấu hình, task và permission mà không biến cả group thành owner.\n\nCần tách **job owner** khỏi **Run as**. Owner quản trị job; Run as là danh tính mà các task dùng khi truy cập dữ liệu/tài nguyên. Theo tài liệu hiện tại, khả năng chọn group làm Run as có trạng thái Preview và có quy tắc riêng; nó không làm cho `CAN MANAGE` đồng nghĩa với `IS OWNER`.\n\n- **B sai** vì người tạo được đặt làm owner mặc định, nhưng owner có thể được workspace admin thay đổi; người tạo không giữ quyền bất biến.\n- **C sai** vì job ACL có thể cấp quyền cho user, group hoặc service principal; không chỉ admin mới có thể cấp `CAN MANAGE`.\n- **D sai** vì tư cách thành viên group không phải điều kiện biến group thành chủ sở hữu. Quy tắc gán `Run as` cho group, nếu dùng tính năng Preview, là khái niệm khác.\n- **E sai** vì admin có thể đổi owner, nhưng giới hạn nêu trong câu là loại principal được gán `IS OWNER`, không đơn thuần là ai có quyền bấm nút.\n\nKhi vận hành production, cách phổ biến là giao quyền quản lý cho group và chọn service principal ổn định làm danh tính `Run as`.",
     "page": null,
     "image": "img/q_82.jpg",
     "references": [
       {
-        "title": "Databricks Jobs Access Control",
-        "url": "https://docs.databricks.com/en/archive/dev-tools/cli/jobs-cli"
-      },
-      {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q82",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82820-question-82-topic-1/"
+        "title": "Manage identities, permissions, and privileges for Lakeflow Jobs",
+        "url": "https://docs.databricks.com/aws/en/jobs/privileges"
       }
     ]
   },
@@ -2914,7 +2908,7 @@
       "E": "When the same Spark configuration property is set for an interactive cluster and a notebook attached to that cluster, the notebook setting will always be ignored."
     },
     "answer": "D",
-    "question_vi": "Phát biểu nào đúng về cấu hình Spark trên Databricks?",
+    "question_vi": "Phát biểu nào đúng về phạm vi tác động của cấu hình Spark trên Databricks?",
     "options_vi": {
       "A": "REST API có thể đổi cấu hình Spark của cluster mà không gián đoạn job",
       "B": "Cấu hình Spark đặt trong notebook ảnh hưởng mọi SparkSession gắn cùng cluster",
@@ -2922,13 +2916,13 @@
       "D": "Cấu hình đặt trong giao diện **Clusters UI** áp dụng cho mọi notebook gắn vào cluster đó",
       "E": "Nếu cùng đặt cấu hình ở cluster và notebook thì notebook luôn bị bỏ qua"
     },
-    "explanation_vi": "Cấu hình Spark được thiết lập thông qua giao diện điều khiển Clusters (**Clusters UI**) sẽ áp dụng trên toàn bộ cluster và do đó ảnh hưởng đến tất cả các notebook đang kết nối tới cluster đó. Ngược lại, cấu hình được đặt trực tiếp trong một notebook chỉ ảnh hưởng đến `SparkSession` của riêng notebook đó chứ không ảnh hưởng đến các notebook khác.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** Spark properties khai báo trong cấu hình interactive cluster qua Clusters UI là cấu hình cấp compute. Vì vậy chúng áp dụng cho các notebook/workload chạy trên cluster đó, không chỉ một notebook riêng lẻ.\n\nA sai vì thay đổi cấu hình compute thường cần áp dụng/restart compute; không thể coi đó là thay đổi tức thời không gián đoạn mọi job đang chạy. B sai vì cấu hình ở phạm vi notebook/SparkSession không lan sang mọi SparkSession khác trên cluster. C sai vì init script không phải cách duy nhất: cấu hình có thể đặt ở compute hoặc notebook tùy property. E sai vì cấu hình notebook không phải lúc nào cũng bị bỏ qua; một số Spark properties hỗ trợ phạm vi session/notebook, nhưng quyền ghi đè phụ thuộc property, access mode và runtime. Hãy kiểm tra danh sách property được hỗ trợ thay vì giả định mọi khóa đều ghi đè được.",
     "page": null,
     "image": "img/q_90.jpg",
     "references": [
       {
-        "title": "Spark Configuration on Databricks Clusters",
-        "url": "https://docs.databricks.com/en/integrations/jdbc/configure#spark-configuration"
+        "title": "Set Spark configuration properties on Databricks",
+        "url": "https://docs.databricks.com/aws/en/spark/conf"
       }
     ]
   },
@@ -2995,30 +2989,29 @@
   {
     "id": 93,
     "topic": 1,
-    "question": "You are performing a join operation to combine values from a static `userLookup` table with a streaming DataFrame `streamingDF`.\nWhich code block attempts to perform an invalid stream-static join?",
+    "question": "Assume both `userLookup` and `streamingDF` contain a column named `user_id`. `userLookup` is static and `streamingDF` is streaming. Which code block attempts a stream-static join type that Spark Structured Streaming does not support?",
     "options": {
-      "A": "userLookup.join(streamingDF, [\"userid\"], how=\"inner\")",
-      "B": "streamingDF.join(userLookup, [\"user_id\"], how=\"outer\")",
-      "C": "streamingDF.join(userLookup, [\"user_id\"], how=\"left\")",
-      "D": "streamingDF.join(userLookup, [\"userid\"], how=\"inner\")",
-      "E": "userLookup.join(streamingDF, [\"user_id\"], how=\"right\")"
+      "A": "`userLookup.join(streamingDF, [\"user_id\"], how=\"inner\")`",
+      "B": "`streamingDF.join(userLookup, [\"user_id\"], how=\"outer\")`",
+      "C": "`streamingDF.join(userLookup, [\"user_id\"], how=\"left\")`",
+      "D": "`streamingDF.join(userLookup, [\"user_id\"], how=\"inner\")`",
+      "E": "`userLookup.join(streamingDF, [\"user_id\"], how=\"right\")`"
     },
     "answer": "B",
-    "question_vi": "Ghép nối `userLookup` (tĩnh) với `streamingDF` (dòng). Đoạn mã nào là stream-static join không hợp lệ?",
+    "question_vi": "Giả sử cả `userLookup` và `streamingDF` đều có cột `user_id`; `userLookup` là DataFrame tĩnh, còn `streamingDF` là streaming. Đoạn mã nào dùng loại stream-static join không được Structured Streaming hỗ trợ?",
     "options_vi": {
-      "A": "userLookup.join(streamingDF, [\"userid\"], how=\"inner\")",
-      "B": "streamingDF.join(userLookup, [\"user_id\"], how=\"outer\")",
-      "C": "streamingDF.join(userLookup, [\"user_id\"], how=\"left\")",
-      "D": "streamingDF.join(userLookup, [\"userid\"], how=\"inner\")",
-      "E": "userLookup.join(streamingDF, [\"user_id\"], how=\"right\")"
+      "A": "`userLookup.join(streamingDF, [\"user_id\"], how=\"inner\")`",
+      "B": "`streamingDF.join(userLookup, [\"user_id\"], how=\"outer\")`",
+      "C": "`streamingDF.join(userLookup, [\"user_id\"], how=\"left\")`",
+      "D": "`streamingDF.join(userLookup, [\"user_id\"], how=\"inner\")`",
+      "E": "`userLookup.join(streamingDF, [\"user_id\"], how=\"right\")`"
     },
-    "explanation_vi": "Trong Spark Structured Streaming, liên kết `stream-static` (streaming `DataFrame` ghép với static `DataFrame`) có các ràng buộc về loại join. Cụ thể: Full Outer join (`how=\"outer\"`) hoàn toàn không được hỗ trợ cho liên kết `stream-static`. Các phép join khác như inner, left outer (khi stream ở bên trái) và right outer (khi stream ở bên phải) đều được hỗ trợ hợp lệ.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** Với stream bên trái và bảng tĩnh bên phải, Spark hỗ trợ inner join và left outer join nhưng không hỗ trợ full outer join; `how=\"outer\"` là bí danh của full outer. Dòng streaming liên tục cập nhật nên engine không thể xác định một cách hữu hạn rằng đã tìm được mọi dòng chưa khớp ở cả hai phía như full outer cần.\n\nC là left outer với stream ở trái nên hợp lệ. A và D là inner join, hợp lệ ở cả thứ tự stream-static và static-stream. E đặt bảng tĩnh bên trái, stream bên phải và dùng right outer; chiều join này được hỗ trợ. Đề đã xác nhận hai DataFrame đều có `user_id`, do đó các distractor không thất bại vì sai tên cột.",
     "page": null,
-    "image": "img/q_93.jpg",
     "references": [
       {
-        "title": "Structured Streaming Join Support Matrix",
-        "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#support-matrix-for-joins-in-streaming-queries"
+        "title": "Spark Structured Streaming join support matrix",
+        "url": "https://spark.apache.org/docs/3.5.6/structured-streaming-programming-guide.html#support-matrix-for-joins-in-streaming-queries"
       }
     ]
   },
@@ -3331,7 +3324,7 @@
       "E": "The globally unique ID of the newly triggered run."
     },
     "answer": "E",
-    "question_vi": "Khi sử dụng **Databricks CLI** để trigger một lượt chạy của job hiện có bằng cách truyền tham số `job_id`, phản hồi trả về cho biết yêu cầu chạy job đã được gửi thành công bao gồm trường `run_id`. Số đi kèm trường này đại diện cho thông tin gì?",
+    "question_vi": "Lệnh Databricks CLI kích hoạt job bằng `job_id` trả về trường `run_id`. Giá trị này đại diện cho điều gì?",
     "options_vi": {
       "A": "`job_id` kết hợp với số lần job đã chạy",
       "B": "Tổng số job đã chạy trong workspace",
@@ -3339,13 +3332,17 @@
       "D": "Chính là giá trị `job_id`",
       "E": "Mã định danh duy nhất toàn cục (globally unique ID) của lượt chạy mới được kích hoạt"
     },
-    "explanation_vi": "Khi kích hoạt (trigger) một **Databricks Job** thông qua **Databricks CLI** bằng cách truyền tham số `job_id`, hệ thống sẽ trả về một định danh duy nhất toàn cục cho lần chạy đó, được gọi là `run_id`. Định danh này được sử dụng để theo dõi, quản lý trạng thái, hoặc truy xuất log của đúng phiên thực thi (run) cụ thể vừa được khởi tạo.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án E.** `job_id` xác định định nghĩa job; `run_id` xác định một lần chạy cụ thể được tạo khi job được kích hoạt. API `run-now` trả `run_id` để client tra cứu trạng thái/chi tiết đúng lượt chạy đó. Đây không phải bộ đếm số lần chạy và không thay thế `job_id`.\n\nA sai vì hai ID không được ghép thành chuỗi. B và C sai vì `run_id` không phải tổng số job hay số lượt chạy tích lũy. D sai vì `job_id` nằm trong yêu cầu, còn `run_id` là định danh riêng trả về cho lượt chạy mới. Nhận được `run_id` chỉ cho biết yêu cầu tạo run đã được chấp nhận; muốn biết thành công hay thất bại vẫn phải đọc trạng thái/result state của run.",
     "page": null,
     "image": "img/q_104.jpg",
     "references": [
       {
-        "title": "Databricks Jobs CLI Reference",
-        "url": "https://docs.databricks.com/en/archive/dev-tools/cli/jobs-cli"
+        "title": "Databricks Jobs API: run now",
+        "url": "https://docs.databricks.com/api/workspace/jobs/runNow"
+      },
+      {
+        "title": "Databricks CLI jobs command reference",
+        "url": "https://docs.databricks.com/aws/en/dev-tools/cli/reference/jobs-commands"
       }
     ]
   },
@@ -4058,13 +4055,17 @@
       "C": "`workspace`",
       "D": "`libraries`"
     },
-    "explanation_vi": "Để thực hiện các thao tác quản lý tệp tin và thư mục trên `DBFS` (**Databricks** File System) bằng **Databricks CLI**, bao gồm việc sao chép/tải lên (upload) một tệp tin **Python** Wheel từ máy cục bộ lên `DBFS`, chúng ta sử dụng nhóm lệnh (command group) '`fs`'. Cụ thể là câu lệnh: `databricks fs cp <path-to-wheel> dbfs:/<dest-path>`\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B — `fs`.** Dùng nhóm `fs` để thao tác tệp trên DBFS; thao tác sao chép cụ thể là `databricks fs cp <nguồn-local> <đích>`. Ví dụ: `databricks fs cp ./custom.whl dbfs:/FileStore/wheels/custom.whl`. CLI không tự cài wheel vào job: sau khi upload, hãy thêm artifact làm dependency cho task/job và cấp quyền đọc cho identity chạy job.\n\nLưu ý về bối cảnh production: câu hỏi dùng cách gọi object storage “mount bằng DBFS”, tức mô hình DBFS mounts cũ. DBFS root và mounts có thể bị tắt và không nên chọn cho thiết kế mới; một Unity Catalog Volume thường phù hợp hơn cho artifact cần quản trị truy cập. Nhóm `fs` cũng hỗ trợ Volume, với đích dạng `dbfs:/Volumes/<catalog>/<schema>/<volume>/...`.\n\n- **A `configure`** cấu hình xác thực CLI, không tải tệp.\n- **C `workspace`** quản lý workspace files/notebooks, không phải đường dẫn DBFS.\n- **D `libraries`** cài/gỡ hoặc xem trạng thái library trên compute; nó không copy tệp từ laptop lên storage.\n\nVì vậy, trong các lựa chọn, chọn tên command group `fs`; không nhầm nó với bước gắn library vào job.",
     "page": null,
     "image": "img/q_129.jpg",
     "references": [
       {
-        "title": "Databricks Documentation - Databricks CLI fs commands",
-        "url": "https://docs.databricks.com/en/dev-tools/cli/reference/fs-commands"
+        "title": "Databricks CLI commands",
+        "url": "https://docs.databricks.com/aws/en/dev-tools/cli/commands"
+      },
+      {
+        "title": "Databricks CLI fs command group",
+        "url": "https://docs.databricks.com/aws/en/dev-tools/cli/reference/fs-commands"
       }
     ]
   },
@@ -4290,7 +4291,7 @@
   {
     "id": 138,
     "topic": 1,
-    "question": "A junior data engineer has been asked to develop a streaming data pipeline with a grouped aggregation using DataFrame df. The pipeline needs to calculate the average humidity and average temperature for each non-overlapping five-minute interval. Events are recorded once per minute per device.\nStreaming DataFrame df has the following schema:\n\"`device_id INT, event_time TIMESTAMP, temp FLOAT, humidity FLOAT`\"\nCode block:\nWhich line of code correctly fills in the blank within the code block to complete this task?",
+    "question": "A streaming pipeline must calculate average humidity and temperature for each non-overlapping five-minute interval and device. Events arrive once per minute per device. DataFrame `df` has schema `device_id INT, event_time TIMESTAMP, temp FLOAT, humidity FLOAT`.\n\nWhich expression fills the blank in this code?\n```python\ndf.withWatermark(\"event_time\", \"10 minutes\") \\\n  .groupBy(\n      [BLANK],\n      \"device_id\"\n  ) \\\n  .agg(\n      avg(\"temp\").alias(\"avg_temp\"),\n      avg(\"humidity\").alias(\"avg_humidity\")\n  ) \\\n  .writeStream.format(\"delta\").saveAsTable(\"sensor_avg\")\n```",
     "options": {
       "A": "to_interval(\"event_time\", \"5 minutes\").alias(\"time\")",
       "B": "window(\"event_time\", \"5 minutes\").alias(\"time\")",
@@ -4298,20 +4299,24 @@
       "D": "lag(\"event_time\", \"10 minutes\").alias(\"time\")"
     },
     "answer": "B",
-    "question_vi": "Pipeline streaming cần tính trung bình nhiệt độ/độ ẩm cho mỗi cửa sổ 5 phút không chồng lắp từ DataFrame df (device_id, event_time,...). Dòng code nào điền vào chỗ trống?",
+    "question_vi": "Pipeline streaming cần tính nhiệt độ và độ ẩm trung bình cho từng thiết bị trong các khoảng 5 phút **không chồng lắp**. Mỗi thiết bị phát sự kiện một lần mỗi phút; `df` có schema `device_id INT, event_time TIMESTAMP, temp FLOAT, humidity FLOAT`.\n\nBiểu thức nào điền vào chỗ trống?\n```python\ndf.withWatermark(\"event_time\", \"10 minutes\") \\\n  .groupBy(\n      [BLANK],\n      \"device_id\"\n  ) \\\n  .agg(\n      avg(\"temp\").alias(\"avg_temp\"),\n      avg(\"humidity\").alias(\"avg_humidity\")\n  ) \\\n  .writeStream.format(\"delta\").saveAsTable(\"sensor_avg\")\n```",
     "options_vi": {
       "A": "to_interval(\"event_time\", \"5 minutes\").alias(\"time\")",
       "B": "window(\"event_time\", \"5 minutes\").alias(\"time\")",
       "C": "\"event_time\"",
       "D": "lag(\"event_time\", \"10 minutes\").alias(\"time\")"
     },
-    "explanation_vi": "Để thực hiện gom nhóm và tính toán các số liệu trung bình (nhiệt độ, độ ẩm) cho các khoảng thời gian 5 phút không chồng chéo (tumbling windows) từ một streaming DataFrame trong Spark, ta sử dụng hàm `window(\"event_time\", \"5 minutes\")`. Hàm này sẽ tạo ra một cột chứa thông tin cửa sổ thời gian để làm khóa gom nhóm trong câu lệnh groupBy.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B: `window(\"event_time\", \"5 minutes\").alias(\"time\")`.** Hàm `window` tạo giá trị cửa sổ có biên bắt đầu/kết thúc để dùng làm khóa nhóm thời gian. Khi không truyền slide duration, slide bằng window duration: 5 phút; vì vậy các cửa sổ không chồng lắp. Kết hợp với `device_id`, mỗi nhóm tương ứng một thiết bị và một khoảng thời gian.\n\n`withWatermark(\"event_time\", \"10 minutes\")` làm việc khác: nó xác định độ trễ hệ thống sẵn sàng chấp nhận và giúp giới hạn state của aggregation; nó không tự chia thời gian thành cửa sổ. A `to_interval` không phải API PySpark để group streaming theo event-time window. C chỉ nhóm theo từng timestamp chính xác, không gom thành khoảng 5 phút. D `lag` là hàm phân tích trên các dòng đã sắp xếp, không tạo nhóm cửa sổ thời gian cho aggregation streaming.",
     "page": null,
     "image": "img/q_138.jpg",
     "references": [
       {
-        "title": "Structured Streaming - Window Operations on Databricks",
-        "url": "https://docs.databricks.com/en/oltp/projects/operations"
+        "title": "PySpark `window` function API",
+        "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.window.html"
+      },
+      {
+        "title": "Structured Streaming programming guide: window operations",
+        "url": "https://spark.apache.org/docs/3.5.6/structured-streaming-programming-guide.html#window-operations-on-event-time"
       }
     ]
   },
@@ -4384,13 +4389,13 @@
       "C": "**Structured Streaming** dựa vào mạng các node phân tán giữ trạng thái tăng dần cho các stage được cache.",
       "D": "**Structured Streaming** mô hình hóa dữ liệu mới của luồng như các dòng mới được chèn vào một bảng vô hạn."
     },
-    "explanation_vi": "Mô hình lập trình của Spark **Structured Streaming** coi luồng dữ liệu đầu vào như một bảng không giới hạn (an unbounded table). Khi có dữ liệu mới đến từ luồng stream, nó được xem như các dòng mới được nối thêm (appended) vào bảng vô hạn này, và câu hỏi truy vấn của chúng ta sẽ liên tục cập nhật kết quả dựa trên bảng đó.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** Structured Streaming biểu diễn luồng dữ liệu như một bảng không giới hạn (unbounded table): mỗi sự kiện mới được xem là dòng mới thêm vào bảng đầu vào. Truy vấn streaming được đánh giá tăng dần trên dữ liệu mới để cập nhật kết quả. Người viết có thể dùng nhiều phép toán DataFrame/SQL quen thuộc, còn engine quản lý việc chạy theo micro-batch hoặc continuous mode tùy nguồn và cấu hình.\n\nA sai vì GPU không định nghĩa mô hình Structured Streaming. B nhầm engine xử lý với message bus; Kafka có thể là nguồn/đích nhưng không phải cách Structured Streaming được triển khai. C mô tả cache/distributed state không đúng khái niệm cốt lõi. Một số phép toán stateful có trạng thái phân tán, nhưng mô hình lập trình vẫn là incremental query trên bảng không giới hạn.",
     "page": null,
     "image": "img/q_141.jpg",
     "references": [
       {
-        "title": "Structured Streaming Programming Model",
-        "url": "https://docs.databricks.com/en/generative-ai/pretrained-models"
+        "title": "Spark Structured Streaming Programming Guide: Basic concepts",
+        "url": "https://spark.apache.org/docs/3.5.6/structured-streaming-programming-guide.html#basic-concepts"
       }
     ]
   },
@@ -4412,10 +4417,15 @@
       "C": "`spark.sql.adaptive.advisoryPartitionSizeInBytes`",
       "D": "`spark.sql.adaptive.coalescePartitions.minPartitionNum`"
     },
-    "explanation_vi": "Khi nạp dữ liệu từ các định dạng file (như Parquet, JSON, CSV, ORC) vào Spark, kích thước phân vùng (partition size) ban đầu được quyết định bởi cấu hình `spark.sql.files.maxPartitionBytes` (mặc định là 128 MB). Cấu hình này xác định dung lượng tối đa mà Spark đóng gói vào một phân vùng khi đọc các file nguồn.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A — `spark.sql.files.maxPartitionBytes`.** Đây là giới hạn số byte Spark cố gắng đóng gói vào một input partition khi đọc nguồn dựa trên tệp như Parquet, JSON hoặc ORC. Giá trị mặc định trong Spark hiện hành là 128 MiB, nhưng đây là mặc định có thể cấu hình, không phải kích thước bảo đảm cho mọi partition: tính chia được của file, open cost, kích thước file và các cấu hình khác cũng ảnh hưởng.\n\nPhân biệt input partition với shuffle partition:\n\n- **B `spark.sql.autoBroadcastJoinThreshold`** quyết định ngưỡng kích thước bảng để cân nhắc broadcast join; nó không điều khiển partition lúc đọc tệp.\n- **C `spark.sql.adaptive.advisoryPartitionSizeInBytes`** là kích thước mục tiêu cho shuffle partition trong một số tối ưu hóa Adaptive Query Execution (AQE), chẳng hạn coalesce/split sau shuffle.\n- **D `spark.sql.adaptive.coalescePartitions.minPartitionNum`** (tên cấu hình cũ) điều khiển số lượng shuffle partition tối thiểu khi AQE coalesce; nó không điều khiển kích thước input partition lúc đọc file. Ở Spark mới, cấu hình thay thế liên quan là `spark.sql.adaptive.coalescePartitions.minPartitionSize`.\n\nMẹo phân loại: cấu hình bắt đầu bằng `spark.sql.files` thường liên quan đọc file; cấu hình `adaptive` ở đây liên quan kế hoạch sau shuffle. Vì thế A là đáp án trực tiếp cho “khi nạp dữ liệu từ file”.",
     "page": null,
     "image": "img/q_142.jpg",
-    "references": []
+    "references": [
+      {
+        "title": "Apache Spark SQL performance tuning",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html"
+      }
+    ]
   },
   {
     "id": 143,
@@ -4611,7 +4621,7 @@
   {
     "id": 150,
     "topic": 1,
-    "question": "A nightly job ingests data into a **Delta Lake** table using the following code:\nThe next step in the pipeline requires a function that returns an object that can be used to manipulate new records that have not yet been processed to the next table in the pipeline.\nWhich code snippet completes this function definition?\n`def new_records():`",
+    "question": "A nightly job loads a daily Parquet partition into the Delta table `bronze`:\n```python\ndef ingest_daily_batch(time_col: Column, year: int, month: int, day: int):\n    (spark.read.format(\"parquet\")\n        .load(f\"/mnt/daily_batch/{year}/{month}/{day}\")\n        .select(\"*\",\n                time_col.alias(\"ingest_time\"),\n                input_file_name().alias(\"source_file\"))\n        .write.mode(\"append\")\n        .saveAsTable(\"bronze\"))\n```\nA downstream step should read the initial rows and then process only rows appended later, without reprocessing rows already committed by that streaming query. Assume `bronze` is append-only, Change Data Feed is not enabled, and the query uses a stable checkpoint. Required Spark imports and an active Spark session are available. What should `new_records()` return?\n\n```python\ndef new_records():\n    [BLANK]\n```",
     "options": {
       "A": "return `spark.readStream`.table(\"bronze\")",
       "B": "return `spark.read`.option(\"readChangeFeed\", \"true\").table (\"bronze\")",
@@ -4619,20 +4629,23 @@
       "D": "return `spark.readStream`.option(\"readChangeFeed\", \"true\").table(\"bronze\")"
     },
     "answer": "A",
-    "question_vi": "Job đêm nạp dữ liệu vào bảng Delta bronze. Bước tiếp cần hàm trả về đối tượng chứa các bản ghi mới chưa xử lý tiếp. Đoạn code nào hoàn thiện hàm new_records()?",
+    "question_vi": "Job chạy hằng đêm nạp partition Parquet trong ngày vào bảng Delta `bronze`:\n```python\ndef ingest_daily_batch(time_col: Column, year: int, month: int, day: int):\n    (spark.read.format(\"parquet\")\n        .load(f\"/mnt/daily_batch/{year}/{month}/{day}\")\n        .select(\"*\",\n                time_col.alias(\"ingest_time\"),\n                input_file_name().alias(\"source_file\"))\n        .write.mode(\"append\")\n        .saveAsTable(\"bronze\"))\n```\nBước downstream cần đọc các dòng ban đầu, sau đó chỉ xử lý các dòng được append về sau và không xử lý lại dòng đã được query streaming này commit. Giả sử `bronze` chỉ append, chưa bật Change Data Feed và query giữ checkpoint ổn định. Các import Spark cần thiết và Spark session đã có sẵn. `new_records()` nên trả về gì?\n\n```python\ndef new_records():\n    [BLANK]\n```",
     "options_vi": {
       "A": "return `spark.readStream`.table(\"bronze\")",
       "B": "return `spark.read`.option(\"readChangeFeed\", \"true\").table (\"bronze\")",
       "C": "return `spark.read`.table(\"bronze\")",
       "D": "return `spark.readStream`.option(\"readChangeFeed\", \"true\").table(\"bronze\")"
     },
-    "explanation_vi": "Để thu thập và xử lý các bản ghi mới chưa được chuyển xuống bảng tiếp theo trong pipeline, **Structured Streaming** sử dụng phương thức `spark.readStream.table(\"bronze\")`. Cơ chế này tự động theo dõi offset của bảng nguồn `bronze` thông qua checkpoint, đảm bảo chỉ xử lý các dòng dữ liệu mới xuất hiện kể từ lần chạy trước.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A — `spark.readStream.table(\"bronze\")`**, với giả định bảng `bronze` chỉ append như đoạn ingest đã cho và query phía sau được chạy với checkpoint ổn định. `readStream` tạo một streaming DataFrame từ bảng Delta. Khi query được khởi chạy, Spark đọc snapshot ban đầu rồi theo dõi các version mới của bảng; checkpoint lưu offset đã xử lý để lần chạy sau tiếp tục từ điểm đó. Chỉ tạo DataFrame chưa làm dữ liệu được xử lý: phải gọi một sink bằng `writeStream.start()`/`toTable(...)` và dùng checkpoint phù hợp.\n\nVì nguồn chỉ append, không cần bật Change Data Feed (CDF) để phát hiện dữ liệu mới:\n\n- **B** là batch read (`spark.read`) bật `readChangeFeed`; ngoài việc cần CDF được bật trên bảng, nó không tạo một streaming query có offset/checkpoint liên tục.\n- **C** là batch snapshot thông thường, nên mỗi lần đọc có thể quét lại dữ liệu đang có thay vì theo dõi version mới.\n- **D** dùng streaming CDF. CDF phù hợp khi cần change records như update/delete/merge và xử lý `change_type`; nó là lựa chọn dư thừa cho nguồn append-only trong câu hỏi và đòi hỏi CDF được cấu hình.\n\nNếu pipeline cần truyền các sửa/xóa từ nguồn thì phải thiết kế theo CDF/AUTO CDC thay vì coi `readStream.table` mặc định là bộ phát mọi loại thay đổi.",
     "page": null,
-    "image": "img/q_150.jpg",
     "references": [
       {
-        "title": "Structured Streaming - Streaming Table Reader",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "Delta Lake table streaming reads and writes",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/delta-lake"
+      },
+      {
+        "title": "Change data feed",
+        "url": "https://docs.databricks.com/aws/en/tables/features/change-data-feed"
       }
     ]
   },
@@ -4682,13 +4695,17 @@
       "C": "Không tính toán gì đến khi bảng được query; khi query mới tính theo phiên bản dữ liệu hiện tại của 3 bảng.",
       "D": "Job incremental dò bản ghi mới ở nguồn; nếu có sẽ tính lại toàn bộ và overwrite bảng đích."
     },
-    "explanation_vi": "Câu lệnh `CREATE OR REPLACE TABLE table_name AS SELECT ...` (hoặc logic ghi đè tương đương) khi được thực thi sẽ tính toán phép join từ 3 bảng nguồn đã được khử trùng và xác thực. Sau đó, nó ghi đè (overwrite) toàn bộ bảng đích `enriched_itemized_orders_by_account` bằng phiên bản dữ liệu mới nhất này, thay thế hoàn toàn dữ liệu cũ.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** Đoạn mã tạo ba DataFrame từ `accounts`, `orders`, `items`, join theo `itemID` rồi theo `accountID`, sau đó gọi `.write.mode(\"overwrite\").table(\"enriched_itemized_orders_by_account\")`. Lệnh ghi buộc Spark thực thi phép tính và thay nội dung hiện có của bảng đích bằng kết quả của lần chạy này. Vì đọc bảng nguồn theo dạng batch thông thường, mỗi lần chạy lại sẽ tính từ dữ liệu hiện có trong các nguồn; đoạn code không thiết lập theo dõi thay đổi/incremental processing.\n\n- **A sai** vì không có `MERGE`, `replaceWhere` hay logic so sánh khóa để chỉ cập nhật hàng thay đổi; `accountID` cũng chưa được khai báo là primary key trong code.\n- **C sai** vì Spark DataFrame có lazy evaluation cho đến action, nhưng `.write...table(...)` chính là action ghi, nên không chờ người dùng truy vấn bảng đích.\n- **D sai** vì không có Structured Streaming, checkpoint, CDF hay cơ chế phát hiện hàng mới. `.mode(\"overwrite\")` không tự biến batch thành incremental job.\n\n`overwrite` thay dữ liệu trong target; nó không nhất thiết có nghĩa xóa rồi tạo lại toàn bộ metadata bảng. Cần phân biệt overwrite nội dung với `CREATE OR REPLACE TABLE`, vốn có semantics về lịch sử/permission riêng.",
     "page": null,
     "image": "img/q_152.jpg",
     "references": [
       {
-        "title": "CREATE TABLE AS SELECT (CTAS) in Databricks SQL",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using"
+        "title": "PySpark DataFrameWriter.table",
+        "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameWriter.table.html"
+      },
+      {
+        "title": "PySpark DataFrameWriter.mode",
+        "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameWriter.mode.html"
       }
     ]
   },
@@ -4759,20 +4776,24 @@
       "D": "Add a parallel table write to the current production pipeline, updating a new sales table that varies as required from the marketing table."
     },
     "answer": "A",
-    "question_vi": "Marketing muốn chia sẻ bảng tổng hợp cho Sales nhưng tên cột khác nhau và có cột riêng chưa được phê duyệt. Giải pháp đơn giản nhất?",
+    "question_vi": "Marketing cần chia sẻ bảng tổng hợp với Sales, chuẩn hóa tên cột và ẩn các cột chưa được duyệt. Cách đơn giản nhất?",
     "options_vi": {
       "A": "Tạo view trên bảng marketing, chỉ chọn cột được phép và alias tên theo quy ước Sales.",
       "B": "Tạo bảng mới đúng schema và dùng `DEEP CLONE` đồng bộ thay đổi giữa hai bảng.",
       "C": "Dùng `CTAS` tạo bảng dẫn xuất rồi lên lịch job propagate thay đổi.",
       "D": "Thêm nhánh ghi song song trong pipeline để cập nhật bảng sales với schema khác."
     },
-    "explanation_vi": "View chọn subset cột và alias tên đáp ứng nhu cầu chia sẻ dữ liệu mà không cần bản sao dữ liệu mới; đây là giải pháp đơn giản nhất.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang hỏi gì?** Nhóm Marketing có bảng tổng hợp nhưng Sales dùng quy ước tên cột khác và không được xem một số trường nội bộ. Cần một cách trình bày dữ liệu phù hợp cho người nhận, ít tạo thêm bản sao và ít công việc vận hành.\n\n**Đáp án A — tạo view chỉ chọn các cột được duyệt và đặt alias theo tên Sales.** View lưu định nghĩa truy vấn thay vì tạo thêm bản sao dữ liệu. Ví dụ, view có thể chọn `campaign_id`, `region` và `revenue`, đồng thời đổi `market_region` thành `sales_region`. Sales nhận schema quen thuộc nhưng không thấy những cột đã loại khỏi câu SELECT.\n\n**Vì sao các lựa chọn còn lại không phù hợp?**\n- **B sai:** `DEEP CLONE` tạo một bản sao độc lập tại thời điểm clone; nó không tự đồng bộ thay đổi về sau. Muốn cập nhật bản sao còn cần quy trình đồng bộ.\n- **C sai:** `CTAS` vật hóa kết quả thành bảng mới. Để bảng không lỗi thời phải thêm job/pipeline, phát sinh lưu trữ và bảo trì.\n- **D sai:** ghi song song vào bảng Sales đòi hỏi sửa pipeline production và duy trì thêm một đích dữ liệu, nên phức tạp hơn một view.\n\n**Lưu ý quản trị:** View chỉ giới hạn các trường mà truy vấn của view trả ra. Hãy cấp quyền cho Sales trên view và kiểm soát quyền truy cập trực tiếp vào bảng gốc theo chính sách Unity Catalog; nếu Sales vẫn đọc được bảng gốc thì view không thể che các cột ở đó.",
     "page": null,
     "image": "img/q_155.jpg",
     "references": [
       {
-        "title": "Databricks Documentation: Create View",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-view"
+        "title": "Create and manage views in Unity Catalog",
+        "url": "https://docs.databricks.com/aws/en/views/create-views"
+      },
+      {
+        "title": "What is a view?",
+        "url": "https://docs.databricks.com/aws/en/views"
       }
     ]
   },
@@ -4807,7 +4828,7 @@
   {
     "id": 157,
     "topic": 1,
-    "question": "A small company based in the United States has recently contracted a consulting firm in India to implement several new data engineering pipelines to power artificial intelligence applications. All the company's data is stored in regional cloud storage in the United States.\nThe workspace administrator at the company is uncertain about where the **Databricks** workspace used by the contractors should be deployed.\nAssuming that all data governance considerations are accounted for, which statement accurately informs this decision?",
+    "question": "A small company based in the United States has contracted a consulting firm in India to build data pipelines. All company data is stored in cloud storage in a U.S. region, and the administrator must choose a Databricks workspace region for classic compute.\nAssuming governance and data-residency requirements are satisfied, which statement is the best guidance?",
     "options": {
       "A": "**Databricks** runs HDFS on cloud volume storage; as such, cloud virtual machines must be deployed in the region where the data is stored.",
       "B": "**Databricks** workspaces do not rely on any regional infrastructure; as such, the decision should be made based upon what is most convenient for the workspace administrator.",
@@ -4815,20 +4836,24 @@
       "D": "**Databricks** notebooks send all executable code from the user’s browser to virtual machines over the open internet; whenever possible, choosing a workspace region near the end users is the most secure."
     },
     "answer": "C",
-    "question_vi": "Công ty ở Mỹ thuê team Ấn Độ, dữ liệu lưu ở cloud Mỹ. Workspace **Databricks** nên đặt ở đâu?",
+    "question_vi": "Công ty ở Mỹ thuê đội tư vấn tại Ấn Độ xây pipeline; dữ liệu nằm trong cloud storage ở một region của Mỹ. Khi chọn region cho Databricks workspace và classic compute, nên ưu tiên điều gì nếu yêu cầu quản trị và lưu trú dữ liệu đã được đáp ứng?",
     "options_vi": {
       "A": "**Databricks** chạy HDFS trên storage cloud nên VM phải cùng vùng dữ liệu.",
       "B": "**Databricks** không phụ thuộc vùng; chọn gì cũng được theo tiện quản trị.",
       "C": "Đọc/ghi khác vùng tốn phí và độ trễ; nên đặt compute cùng vùng với dữ liệu.",
       "D": "Notebook gửi code qua internet, nên chọn vùng gần người dùng cho an toàn."
     },
-    "explanation_vi": "Việc đọc/ghi dữ liệu xuyên vùng (cross-region) sẽ phát sinh chi phí truyền dữ liệu lớn và tăng độ trễ mạng đáng kể. Do đó, khuyến nghị tốt nhất là đặt các tài nguyên tính toán (compute/cluster) trong cùng một vùng (region) nơi lưu trữ dữ liệu.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang hỏi gì?** Bài toán là chọn region cho workspace/compute khi dữ liệu ở Mỹ còn nhóm triển khai làm việc từ Ấn Độ. Điều kiện đề bài đã giả định yêu cầu quản trị và data residency được đáp ứng.\n\n**Đáp án C.** Với classic compute, compute plane chạy trong region gắn với workspace. Đặt compute gần storage thường giảm độ trễ đọc/ghi và tránh lưu lượng liên vùng có thể phát sinh egress cost. Vì vậy, khi governance cho phép, nên ưu tiên region cùng nơi dữ liệu được xử lý; không nên chọn chỉ theo vị trí địa lý của nhà thầu.\n\n**Vì sao các lựa chọn khác sai?**\n- **A sai:** Databricks không bắt buộc chạy HDFS trên “cloud volume storage” để truy cập dữ liệu; storage và compute plane là các thành phần riêng, kết nối qua cloud.\n- **B sai:** workspace/compute có hạ tầng theo region; quyết định region không thể chỉ dựa vào sự thuận tiện của admin.\n- **D sai:** câu trả lời gán sai luồng thực thi notebook cho “open internet” rồi kết luận region gần người dùng an toàn hơn. Bảo mật phụ thuộc cấu hình mạng, danh tính, quyền và chính sách; vị trí của nhà thầu không thay thế các kiểm soát đó.\n\nNếu team ở xa region dữ liệu, họ vẫn có thể truy cập giao diện workspace; điều cần tối ưu là vị trí xử lý dữ liệu và tuân thủ yêu cầu của tổ chức, không phải chuyển compute chỉ để đặt gần người viết notebook.",
     "page": null,
     "image": "img/q_157.jpg",
     "references": [
       {
-        "title": "Databricks Documentation: Region selection",
-        "url": "https://docs.databricks.com/en/resources/supported-regions"
+        "title": "High-level architecture for Databricks",
+        "url": "https://docs.databricks.com/aws/en/getting-started/high-level-architecture"
+      },
+      {
+        "title": "Design storage architecture: multi-region storage",
+        "url": "https://docs.databricks.com/aws/en/lakehouse-architecture/deployment-guide/storage"
       }
     ]
   },
@@ -4850,41 +4875,52 @@
       "C": "Ghi chèn tất cả trừ bản vi phạm; bản vi phạm ghi vào bảng cách ly.",
       "D": "Tất cả bản ghi được chèn; vi phạm được đánh dấu ở cột `valid_coordinates`."
     },
-    "explanation_vi": "Trong **Delta Lake**, các ràng buộc `CHECK` constraint được áp dụng tại thời điểm ghi dữ liệu và có tính chất nguyên tố (atomic). Nếu bất kỳ bản ghi nào trong batch ghi vi phạm ràng buộc (ví dụ: longitude vượt quá ranh giới cho phép), toàn bộ giao dịch ghi sẽ thất bại và không có bản ghi nào được ghi vào bảng.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** Constraint trong ảnh yêu cầu `latitude >= -90 AND latitude < 90` và `longitude >= -180 AND longitude <= 180`. Bản ghi có longitude `212.67` vi phạm điều kiện longitude; vì `CHECK` là constraint được thực thi khi ghi, giao dịch ghi vào bảng thất bại với lỗi thay vì tự lọc bỏ riêng bản ghi đó. Delta commit theo giao dịch: batch này không được ghi một phần vào target.\n\n- **A sai** vì CHECK constraint không bật chế độ “bỏ dòng lỗi rồi cảnh báo”.\n- **C sai** vì constraint không tự tạo quarantine table; muốn cách ly bản ghi phải viết logic riêng (ví dụ validate/filter và ghi dòng lỗi sang bảng khác) trước khi ghi target.\n- **D sai** vì `ADD CONSTRAINT` không sinh thêm cột boolean `valid_coordinates`; đó là tên của constraint, không phải column.\n\nNếu batch có nhiều bản ghi hợp lệ cùng với dòng vi phạm, dòng hợp lệ cũng không được commit trong cùng thao tác ghi bị lỗi. Hãy validate dữ liệu trước hoặc route lỗi rõ ràng nếu yêu cầu nghiệp vụ là giữ các dòng tốt.",
     "page": null,
     "image": "img/q_158.jpg",
     "references": [
       {
-        "title": "Databricks Documentation: Constraints on Databricks",
-        "url": "https://docs.databricks.com/en/tables/constraints"
+        "title": "Constraints on Databricks",
+        "url": "https://docs.databricks.com/aws/en/tables/constraints"
       }
     ]
   },
   {
     "id": 159,
     "topic": 1,
-    "question": "A junior data engineer is migrating a workload from a relational database system to the **Databricks** **Lakehouse**. The source system uses a star schema, leveraging foreign key constraints and multi-table inserts to validate records on write.\nWhich consideration will impact the decisions made by the engineer while migrating this workload?",
+    "question": "A data engineer is migrating a star-schema workload from a relational database to the Databricks Lakehouse. The source uses foreign-key constraints and multi-table inserts to validate records on write. Assume the target uses traditional Delta commits and has **not** enabled catalog-managed commits for multi-table transactions. Which consideration should shape the migration design?",
     "options": {
-      "A": "**Databricks** only allows foreign key constraints on hashed identifiers, which avoid collisions in highly-parallel writes.",
-      "B": "Foreign keys must reference a primary key field; multi-table inserts must leverage **Delta Lake**’s upsert functionality.",
-      "C": "Committing to multiple tables simultaneously requires taking out multiple table locks and can lead to a state of deadlock.",
-      "D": "All **Delta Lake** transactions are ACID compliant against a single table, and **Databricks** does not enforce foreign key constraints."
+      "A": "Databricks allows foreign keys only on hashed identifiers to avoid collisions in parallel writes.",
+      "B": "Foreign keys must reference a primary key; multi-table inserts must always use Delta upserts.",
+      "C": "Delta obtains locks on all participating tables, so multi-table inserts can deadlock.",
+      "D": "Traditional Delta transactions commit atomically per table, and Unity Catalog foreign-key constraints are informational rather than enforced."
     },
     "answer": "D",
-    "question_vi": "Di chuyển workload star schema từ RDBMS sang **Lakehouse**; RDBMS dùng foreign key và multi-table insert. Yếu tố nào ảnh hưởng quyết định khi migrate?",
+    "question_vi": "Một kỹ sư đang chuyển workload star schema từ RDBMS sang Databricks Lakehouse. Hệ thống nguồn dùng foreign key và multi-table insert để kiểm tra dữ liệu khi ghi. Giả sử đích dùng cơ chế commit Delta truyền thống và **chưa** bật catalog-managed commits cho giao dịch nhiều bảng. Cần lưu ý điều gì khi thiết kế migration?",
     "options_vi": {
-      "A": "**Databricks** chỉ cho khóa ngoại trên mã băm để tránh collision khi ghi song song.",
-      "B": "Khóa ngoại phải tham chiếu khóa chính; multi-table insert phải dùng upsert Delta.",
-      "C": "Commit nhiều bảng cùng lúc cần nhiều khóa bảng và có thể deadlock.",
-      "D": "Giao dịch Delta ACID chỉ áp dụng trong phạm vi một bảng và **Databricks** không enforce khóa ngoại."
+      "A": "Databricks chỉ cho phép khóa ngoại trên mã băm để tránh collision khi ghi song song.",
+      "B": "Foreign key phải tham chiếu primary key; multi-table insert luôn phải dùng Delta upsert.",
+      "C": "Delta khóa tất cả bảng tham gia nên multi-table insert có thể deadlock.",
+      "D": "Giao dịch Delta truyền thống commit nguyên tử theo từng bảng; foreign key của Unity Catalog chỉ mang tính thông tin, không được thực thi."
     },
-    "explanation_vi": "**Delta Lake** chỉ đảm bảo giao dịch ACID trên phạm vi một bảng đơn lẻ tại một thời điểm, và **Databricks** không thực thi (enforce) các ràng buộc khóa ngoại (foreign key constraints) khi ghi dữ liệu. Do đó, các logic kiểm tra ràng buộc khóa ngoại và multi-table inserts từ hệ thống RDBMS nguồn cần phải được thiết kế lại khi di chuyển sang **Lakehouse**.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D, với điều kiện đã nêu trong đề.** Delta Lake bảo đảm tính nguyên tử cho commit của từng bảng. Nếu workflow ghi nhiều bảng bằng các giao dịch riêng, lỗi giữa chừng có thể để lại một phần bảng đã cập nhật và phần còn lại chưa cập nhật; ứng dụng phải thiết kế kiểm tra/đối soát hoặc dùng cơ chế multi-table transaction phù hợp. Ngoài ra, các khai báo primary key/foreign key trong Unity Catalog là metadata mang tính thông tin, không tự từ chối bản ghi vi phạm khi ghi. Logic toàn vẹn tham chiếu cần được kiểm tra trong pipeline hoặc bằng cơ chế phù hợp của hệ thống.\n\nĐây không phải giới hạn tuyệt đối của Databricks hiện nay: catalog-managed commits hỗ trợ multi-table transactions trong phạm vi tính năng hiện hành, nhưng cần đáp ứng điều kiện và được bật rõ ràng; đề giả định chưa bật tính năng này. A và B bịa ra quy tắc về hashed ID/upsert. C mô tả khóa bảng và deadlock, không phải đặc tính commit Delta được hỏi. Khi migrate, hãy phân biệt ACID trên một bảng, giao dịch nhiều bảng đã opt-in, và việc constraint chỉ khai báo thông tin.",
     "page": null,
-    "image": "img/q_159.jpg",
     "references": [
       {
-        "title": "Databricks Documentation: Constraints on Databricks",
-        "url": "https://docs.databricks.com/en/tables/constraints"
+        "title": "Constraints on Databricks",
+        "url": "https://docs.databricks.com/aws/en/tables/constraints"
+      },
+      {
+        "title": "Coordinate transactions across tables with catalog-managed commits",
+        "url": "https://docs.databricks.com/aws/en/transactions/tutorial"
+      },
+      {
+        "title": "Catalog-managed commits",
+        "url": "https://docs.databricks.com/aws/en/delta/catalog-managed-commits"
+      },
+      {
+        "title": "Catalog commits and multi-table transactions",
+        "url": "https://docs.databricks.com/aws/en/tables/features/catalog-commits"
       }
     ]
   },
@@ -4962,13 +4998,13 @@
       "C": "Chỉ admin workspace mới gán Owner cho group.",
       "D": "Chỉ chuyển được khi user cũng là thành viên của group đó."
     },
-    "explanation_vi": "Trong **Databricks**, mỗi job bắt buộc phải có duy nhất một Owner (là một tài khoản người dùng cụ thể). Quyền sở hữu (Owner) không thể gán trực tiếp cho một nhóm người dùng (group) như nhóm DevOps, mặc dù có thể cấp các quyền quản lý khác (CAN_MANAGE) cho nhóm đó.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** Trong mô hình quyền job mà câu hỏi đang kiểm tra, `IS OWNER` là quyền sở hữu job và chỉ có thể có một owner; một group không được gán trực tiếp quyền `IS OWNER`. Vì vậy, việc cố chuyển quyền owner sang `DevOps` bị từ chối. Quyền owner khác với quyền quản lý thông thường: có thể cấp `CAN MANAGE` cho group để các thành viên chỉnh cấu hình, task và permission mà không biến cả group thành owner.\n\nCần tách **job owner** khỏi **Run as**. Owner quản trị job; Run as là danh tính mà các task dùng khi truy cập dữ liệu/tài nguyên. Theo tài liệu hiện tại, khả năng chọn group làm Run as có trạng thái Preview và có quy tắc riêng; nó không làm cho `CAN MANAGE` đồng nghĩa với `IS OWNER`.\n\n- **B sai** vì người tạo được đặt làm owner mặc định, nhưng owner có thể được workspace admin thay đổi; người tạo không giữ quyền bất biến.\n- **C sai** vì job ACL có thể cấp quyền cho user, group hoặc service principal; không chỉ admin mới có thể cấp `CAN MANAGE`.\n- **D sai** vì tư cách thành viên group không phải điều kiện biến group thành chủ sở hữu. Quy tắc gán `Run as` cho group, nếu dùng tính năng Preview, là khái niệm khác.\n- **E sai** vì admin có thể đổi owner, nhưng giới hạn nêu trong câu là loại principal được gán `IS OWNER`, không đơn thuần là ai có quyền bấm nút.\n\nKhi vận hành production, cách phổ biến là giao quyền quản lý cho group và chọn service principal ổn định làm danh tính `Run as`.",
     "page": null,
     "image": "img/q_162.jpg",
     "references": [
       {
-        "title": "Databricks Documentation: Jobs access control",
-        "url": "https://docs.databricks.com/en/archive/dev-tools/cli/jobs-cli"
+        "title": "Manage identities, permissions, and privileges for Lakeflow Jobs",
+        "url": "https://docs.databricks.com/aws/en/jobs/privileges"
       }
     ]
   },
@@ -5130,10 +5166,15 @@
       "C": "Lưu trong 60 ngày; trong thời gian đó có thể export kết quả chạy notebook ra định dạng `HTML`.",
       "D": "Lưu trong 60 ngày, sau đó log sẽ được lưu trữ."
     },
-    "explanation_vi": "Databricks lưu trữ lịch sử chạy job (**job run history**) trong vòng 60 ngày. Trong khoảng thời gian này, người dùng có thể xem chi tiết kết quả chạy và xuất (export) kết quả thực thi `notebook` ra định dạng `HTML` để lưu trữ hoặc chia sẻ.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang hỏi gì?** Hỏi thời gian Databricks giữ metadata/lịch sử các lần chạy job để người dùng xem lại trong workspace.\n\n**Đáp án C — 60 ngày; trong thời gian đó có thể xuất kết quả notebook run sang HTML.** Run history trong Jobs UI được giữ 60 ngày. Với notebook task, người dùng có thể mở chi tiết một run trong danh sách Completed Runs rồi chọn Export to HTML. File HTML là bản chụp tĩnh của source và cell outputs, hữu ích để lưu hoặc chia sẻ kết quả.\n\n**Vì sao các phương án khác sai?**\n- **A sai:** lịch sử không được giữ vô thời hạn cho tới khi người dùng tự xóa hoặc export; thời hạn mặc định là 60 ngày.\n- **B sai:** 30 ngày không phải thời hạn run history trong câu hỏi. Việc gửi job logs đến DBFS/S3 là cấu hình lưu log riêng, không đổi thời hạn hiển thị run history.\n- **D sai:** sau 60 ngày, runs không tự động được “archive” trong Jobs UI; muốn giữ lâu hơn phải chủ động export/lưu kết quả hoặc logs trước khi hết hạn.\n\n**Phân biệt:** kết quả export HTML áp dụng cho notebook runs; không phải mọi loại task đều xuất notebook HTML được. Hãy thiết lập nơi lưu log và quy trình lưu kết quả dài hạn nếu cần audit sau 60 ngày.",
     "page": null,
     "image": "img/q_168.jpg",
-    "references": []
+    "references": [
+      {
+        "title": "Monitor Lakeflow Jobs and export run results",
+        "url": "https://docs.databricks.com/aws/en/jobs/monitor"
+      }
+    ]
   },
   {
     "id": 169,
@@ -5181,15 +5222,20 @@
       "C": "Ganglia",
       "D": "**Cluster Event Log**"
     },
-    "explanation_vi": "**Cluster Event Log** là nơi ghi nhận đầy đủ tất cả các sự kiện thay đổi trạng thái của cluster theo dòng thời gian, bao gồm cả các sự kiện thay đổi kích thước cluster (upscaling/downscaling do tính năng **autoscaling**). Người quản trị có thể dựa vào đây để phân tích hành vi co giãn của cluster.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D — Cluster Event Log (Compute event log).** Nhật ký sự kiện của compute hiển thị các sự kiện vòng đời theo thời gian, gồm những thay đổi do người dùng thực hiện và sự kiện do Databricks tự phát sinh. Khi autoscaling thêm/bớt worker, các event resize là nơi phù hợp để xem mốc thời gian và trạng thái thay đổi.\n\nEvent log trả lời **khi nào** cluster đổi kích thước và loại sự kiện nào được ghi nhận; riêng nó không luôn đủ để kết luận nguyên nhân là nhiều người dùng đồng thời hay một truy vấn nặng. Muốn quy nguyên nhân, hãy đối chiếu thời điểm resize với Spark UI/Query Profile, workload, mức sử dụng tài nguyên và số người dùng.\n\n- **A Workspace audit logs** ghi nhận hoạt động quản trị/audit ở workspace; đó không phải timeline chuyên dụng của từng lần cluster autoscale.\n- **B Driver log** chứa stdout/stderr/log4j và thông tin chẩn đoán tiến trình driver; không phải bảng tổng hợp lifecycle event.\n- **C Ganglia** là công cụ/metric giám sát cũ hoặc phụ thuộc runtime; biểu đồ tài nguyên có thể giúp điều tra tải nhưng không phải nhật ký sự kiện resize chuẩn.\n\nVì câu hỏi hỏi đúng “timeline các sự kiện resize”, event log là lựa chọn trực tiếp nhất.",
     "page": null,
     "image": "img/q_170.jpg",
-    "references": []
+    "references": [
+      {
+        "title": "Manage classic compute: view compute events",
+        "url": "https://docs.databricks.com/aws/en/compute/clusters-manage"
+      }
+    ]
   },
   {
     "id": 171,
     "topic": 1,
-    "question": "When evaluating the **Ganglia Metrics** for a given cluster with 3 executor nodes, which indicator would signal proper utilization of the VM's resources?",
+    "question": "On an older Databricks Runtime where Ganglia is available, which option is the best exam indicator of a cluster doing useful work without appearing idle or saturated?",
     "options": {
       "A": "The five Minute Load Average remains consistent/flat",
       "B": "CPU Utilization is around 75%",
@@ -5197,17 +5243,26 @@
       "D": "Total Disk Space remains constant"
     },
     "answer": "B",
-    "question_vi": "Xem **Ganglia** cho cluster 3 executor, chỉ số nào cho thấy tài nguyên được dùng hợp lý?",
+    "question_vi": "Trên Databricks Runtime cũ còn hỗ trợ Ganglia, phương án nào là chỉ báo gần đúng nhất trong câu hỏi cho thấy cluster đang làm việc nhưng chưa quá nhàn rỗi hay bão hòa?",
     "options_vi": {
       "A": "Five Minute Load Average phẳng",
       "B": "`CPU Utilization` khoảng 75%",
       "C": "Network I/O không bao giờ spike",
       "D": "Tổng dung lượng đĩa giữ nguyên"
     },
-    "explanation_vi": "Trong hệ thống giám sát **Ganglia Metrics**, chỉ số `CPU Utilization` duy trì ổn định xung quanh mức 75% cho thấy cluster đang được tận dụng tốt tài nguyên tính toán để xử lý công việc mà không bị quá tải hay lãng phí dung lượng nhàn rỗi.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang hỏi gì?** Trong các lựa chọn, cần chọn chỉ số trực tiếp nhất để nhận biết CPU của cluster đang được sử dụng thay vì chỉ nhìn một biểu đồ phụ như dung lượng đĩa.\n\n**Đáp án B — CPU utilization khoảng 75%.** Trong bối cảnh câu hỏi trắc nghiệm, mức CPU đáng kể nhưng chưa sát 100% là dấu hiệu hợp lý nhất cho thấy máy đang làm việc mà chưa bị bão hòa liên tục. Đây chỉ là lựa chọn tốt nhất trong bốn phương án, **không phải ngưỡng tối ưu phổ quát**: workload I/O-bound có thể dùng CPU thấp vẫn chạy bình thường; workload CPU-bound có thể cần mức cao hơn. Khi chẩn đoán thật, hãy xem xu hướng CPU cùng với hàng đợi task, thời gian stage, spill, memory pressure và throughput.\n\n**Vì sao các lựa chọn khác kém hơn?**\n- **A sai:** Load Average phẳng chỉ cho biết xu hướng ổn định; nó có thể phẳng ở mức quá thấp hoặc quá cao, nên không tự chứng minh mức sử dụng phù hợp.\n- **C sai:** Network I/O không spike có thể nghĩa là ít dữ liệu truyền hoặc workload không hoạt động; spike đôi khi hoàn toàn bình thường.\n- **D sai:** Tổng dung lượng đĩa không đổi không đo mức sử dụng CPU hay khả năng xử lý của executor.\n\n**Lưu ý phiên bản:** Ganglia chỉ có trên Databricks Runtime 12.2 trở xuống. Với runtime mới hơn, xem tab Metrics trong trang compute; đừng dùng con số 75% như SLO hay mục tiêu tự động scale.",
     "page": null,
     "image": "img/q_171.jpg",
-    "references": []
+    "references": [
+      {
+        "title": "Monitor performance with Ganglia and compute metrics",
+        "url": "https://docs.databricks.com/en/user-guide/clusters/sparkui.html"
+      },
+      {
+        "title": "View compute metrics",
+        "url": "https://docs.databricks.com/aws/en/compute/cluster-metrics"
+      }
+    ]
   },
   {
     "id": 172,
@@ -5240,7 +5295,7 @@
   {
     "id": 173,
     "topic": 1,
-    "question": "Review the following error traceback:\nWhich statement describes the error being raised?",
+    "question": "Review the following code and error traceback:\n\n`display(df.select(3 * \"heartrate\"))`\n\nThe traceback ends with an `AnalysisException` saying Spark cannot resolve `heartrateheartrateheartrate` from the input columns. Which statement describes the error?",
     "options": {
       "A": "There is a syntax error because the heartrate column is not correctly identified as a column.",
       "B": "There is no column in the table named `heartrateheartrateheartrate`",
@@ -5248,27 +5303,31 @@
       "D": "There is a type error because a DataFrame object cannot be multiplied."
     },
     "answer": "B",
-    "question_vi": "Thông báo lỗi (traceback) xuất hiện. Lỗi là gì?",
+    "question_vi": "Xem đoạn code và traceback sau:\n\n`display(df.select(3 * \"heartrate\"))`\n\nTraceback kết thúc bằng `AnalysisException`: Spark không tìm thấy cột `heartrateheartrateheartrate` trong các cột đầu vào. Mô tả nào đúng về lỗi này?",
     "options_vi": {
       "A": "Lỗi cú pháp vì cột heartrate không nhận diện đúng",
       "B": "Không có cột tên `heartrateheartrateheartrate`",
       "C": "Lỗi kiểu vì object Column không nhân được",
       "D": "Lỗi kiểu vì DataFrame không nhân được"
     },
-    "explanation_vi": "Trong **Python**, phép nhân một chuỗi với một số nguyên (ví dụ: `\"heartrate\" * 3`) sẽ tạo ra chuỗi lặp lại `\"heartrateheartrateheartrate\"`. Khi truyền biểu thức này vào Spark `select()`, Spark sẽ hiểu đây là tên của cột cần truy vấn. Do trong bảng không tồn tại cột nào có tên như vậy, Spark sẽ báo lỗi không tìm thấy cột.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** Trong Python, `3 * \"heartrate\"` là phép lặp chuỗi hợp lệ và tạo ra chuỗi `\"heartrateheartrateheartrate\"`. Vì vậy `df.select(3 * \"heartrate\")` tương đương với việc yêu cầu Spark chọn một cột có tên dài như vậy. Traceback kết thúc bằng `AnalysisException: cannot resolve ... given input columns ...`, tức Spark không tìm thấy cột đó trong schema DataFrame.\n\n- **A sai**: đây không phải lỗi cú pháp Python. Biểu thức nhân chuỗi hợp lệ; lỗi phát sinh khi Spark phân tích tên cột không tồn tại.\n- **C sai**: phép nhân diễn ra giữa số nguyên Python và chuỗi Python, trước khi Spark nhận biểu thức; không có phép nhân `Column`.\n- **D sai**: DataFrame không bị nhân. Phần tử được truyền vào `select` là chuỗi tên cột đã bị lặp.\n\nNếu ý định là nhân giá trị của cột `heartrate` với 3, có thể viết `df.select(3 * F.col(\"heartrate\"))` hoặc dùng `selectExpr(\"3 * heartrate\")`. Dùng `col(\"heartrate\")` giúp Spark hiểu đây là tham chiếu cột thay vì chuỗi Python.",
     "page": null,
     "image": "img/q_173.jpg",
     "references": [
       {
-        "title": "Python Documentation: String operations",
-        "url": "https://docs.python.org/3/library/stdtypes.html#string-methods"
+        "title": "Python common sequence operations",
+        "url": "https://docs.python.org/3/library/stdtypes.html#common-sequence-operations"
+      },
+      {
+        "title": "PySpark DataFrame.select",
+        "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.select.html"
       }
     ]
   },
   {
     "id": 174,
     "topic": 1,
-    "question": "What is a method of installing a Python package scoped at the notebook level to all nodes in the currently active cluster?",
+    "question": "Which method does Databricks recommend for installing a Python package scoped to a notebook session on the currently attached cluster?",
     "options": {
       "A": "Run `source env/bin/activate` in a notebook setup script",
       "B": "Install libraries from PyPI using the cluster UI",
@@ -5276,20 +5335,24 @@
       "D": "Use `%sh pip install` in a notebook cell"
     },
     "answer": "C",
-    "question_vi": "Cách cài gói Python phạm vi notebook cho tất cả node trong cluster đang chạy?",
+    "question_vi": "Databricks khuyến nghị cách nào để cài một package Python trong phạm vi session của notebook đang kết nối với cluster?",
     "options_vi": {
       "A": "Chạy `source env/bin/activate` trong setup script",
       "B": "Cài từ PyPI qua UI cluster",
       "C": "Dùng `%pip install` trong cell notebook",
       "D": "Dùng `%sh pip install` trong cell"
     },
-    "explanation_vi": "Lệnh magic `%pip install` thực hiện cài đặt các thư viện Python ở cấp độ notebook (notebook-scoped libraries) và tự động đồng bộ hóa gói cài đặt đó tới tất cả các worker nodes trong cluster đang hoạt động. Thư viện này chỉ khả dụng trong phiên làm việc của notebook đó và sẽ tự động được giải phóng khi đóng notebook.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C — `%pip install` là phương thức Databricks khuyến nghị cho thư viện Python notebook-scoped.** Lệnh cài thư viện vào môi trường của notebook hiện tại; notebook khác trên cùng compute không tự nhận thư viện này. Môi trường được đồng bộ cho các executor cần thiết, không phải cài package toàn workspace. Nó không tồn tại qua session mới, nên cần cài lại hoặc khai báo trong cấu hình môi trường của job/notebook.\n\n- **A `source env/bin/activate`** chỉ kích hoạt virtual environment trong process shell cụ thể; nó không cấu hình môi trường Python notebook và các executor.\n- **B cài từ PyPI bằng compute UI** là library phạm vi compute, dùng chung cho notebooks/jobs trên compute thay vì chỉ notebook này.\n- **D `%sh pip install`** chạy shell command. Trên Databricks Runtime 11.3 LTS trở lên, cách này cũng có thể cài library notebook-scoped; vì vậy nếu stem chỉ hỏi “một cách” thì C và D có thể đều đúng. Câu đã được làm rõ thành hỏi phương thức **được khuyến nghị**: dùng `%pip`.\n\nSau khi cài package, một số runtime cần restart Python process để import phiên bản mới.",
     "page": null,
     "image": "img/q_174.jpg",
     "references": [
       {
-        "title": "Databricks Documentation: Notebook-scoped Python libraries",
-        "url": "https://docs.databricks.com/en/libraries/notebooks-r-libraries"
+        "title": "Install libraries on Databricks",
+        "url": "https://docs.databricks.com/aws/en/libraries"
+      },
+      {
+        "title": "Notebook-scoped Python libraries",
+        "url": "https://docs.databricks.com/gcp/en/libraries/notebooks-python-libraries"
       }
     ]
   },
@@ -5311,13 +5374,17 @@
       "C": "`# Databricks notebook source`",
       "D": "`-- Databricks notebook source`"
     },
-    "explanation_vi": "Khi một notebook Python của Databricks được xuất (export) hoặc lưu trữ dưới dạng file mã nguồn text thông thường, dòng đầu tiên luôn được Databricks tự động đánh dấu bằng comment đặc trưng `# Databricks notebook source` để hệ thống nhận biết định dạng file khi import trở lại.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C — `# Databricks notebook source`.** Khi notebook Python được lưu/xuất ở source format dưới dạng `.py`, Databricks đặt marker comment này ở đầu file để nhận diện đây là notebook source thay vì một script Python thông thường. Đây là comment Python hợp lệ nên trình thông dịch bỏ qua; Databricks dùng nó để hiểu định dạng và cách phân tách cell nếu có marker cell.\n\nMarker phụ thuộc ngôn ngữ:\n\n- Python và R dùng `# Databricks notebook source`.\n- Scala dùng `// Databricks notebook source`.\n- SQL dùng `-- Databricks notebook source`.\n\nDo đề chỉ hỏi notebook **Python**, chọn cú pháp comment `#`.\n\n- **A `%python`** là magic command có thể dùng trong notebook để chọn ngôn ngữ một cell, không phải marker đầu file source-format.\n- **B `// ...`** là comment kiểu Scala/Java, không phải comment Python.\n- **D `-- ...`** là comment kiểu SQL, không hợp lệ như comment Python.\n\nLưu ý: notebook định dạng IPYNB không cần marker source này; câu hỏi đang nói rõ khi xem/lưu ở dạng text/source.",
     "page": null,
     "image": "img/q_175.jpg",
     "references": [
       {
-        "title": "Databricks Documentation: Export and import Databricks notebooks",
-        "url": "https://docs.databricks.com/en/notebooks/notebooks-code"
+        "title": "Manage Databricks notebook format",
+        "url": "https://docs.databricks.com/aws/en/notebooks/notebook-format"
+      },
+      {
+        "title": "Supported asset types in Git folders",
+        "url": "https://docs.databricks.com/aws/en/repos/supported-artifact-types"
       }
     ]
   },
@@ -5390,13 +5457,17 @@
       "C": "Số lần job đã chạy trong workspace",
       "D": "`job_id` được trả về trong trường này"
     },
-    "explanation_vi": "Khi kích hoạt chạy một job (sử dụng lệnh như `databricks jobs run-now`), hệ thống sẽ trả về `run_id`. Giá trị này là một định danh duy nhất toàn cầu (globally unique ID) cho lần chạy vừa được kích hoạt, dùng để theo dõi trạng thái và logs của lần chạy cụ thể đó.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** `run_id` là ID định danh lần chạy cụ thể vừa được tạo; nó khác với `job_id`, vốn định danh cấu hình job. Một job có thể được chạy nhiều lần nên mỗi lần trigger có một `run_id` để xem trạng thái, task, output và lịch sử riêng của run đó.\n\nVí dụ, gọi `databricks jobs run-now <job-id>` sẽ gửi yêu cầu chạy job. Khi API nhận yêu cầu, phản hồi có `run_id`; đây là ID để theo dõi run, không nhất thiết có nghĩa job đã hoàn tất thành công. Cần truy vấn trạng thái hoặc mở run details bằng ID này.\n\n- **A sai**: hai số không được nối thành một chuỗi mã hóa số lần chạy.\n- **C sai**: số lần job từng chạy là thống kê/đếm, không phải ý nghĩa của trường ID.\n- **D sai**: `job_id` và `run_id` là hai loại định danh khác nhau; trường này không trả lại job ID.\n\nTài liệu Jobs API mô tả thao tác run-now trả `run_id` của lần chạy được trigger.",
     "page": null,
     "image": "img/q_178.jpg",
     "references": [
       {
-        "title": "Databricks CLI - Jobs CLI run-now reference",
-        "url": "https://docs.databricks.com/en/archive/dev-tools/cli/jobs-cli"
+        "title": "Jobs API: run-now",
+        "url": "https://docs.databricks.com/api/workspace/jobs/runnow"
+      },
+      {
+        "title": "Databricks CLI commands",
+        "url": "https://docs.databricks.com/aws/en/dev-tools/cli/commands"
       }
     ]
   },
@@ -5474,13 +5545,13 @@
       "C": "Việc đổi tên được ghi lại vào Delta transaction log.",
       "D": "Tạo một transaction log mới cho bảng mới được đổi tên."
     },
-    "explanation_vi": "Khi đổi tên một bảng Delta bằng câu lệnh `ALTER TABLE ... RENAME TO`, hệ thống chỉ cập nhật tham chiếu (metadata) tên bảng trong metastore (ví dụ **Hive Metastore** hoặc **Unity Catalog**). Dữ liệu vật lý (các file Parquet trong storage) và transaction log của **Delta Lake** vẫn giữ nguyên vị trí và không bị di chuyển hay tạo mới.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** Bảng được tạo ở một location cụ thể (`/mnt/prod/sales_by_store`). `ALTER TABLE ... RENAME TO ...` đổi tên/định danh logic của bảng trong catalog/metastore. Nó không copy hoặc tái tạo các file Parquet và `_delta_log` tại location đó; bảng sau rename vẫn tham chiếu dữ liệu vật lý cũ.\n\n- **B sai** vì rename không drop rồi dựng lại toàn bộ file/metadata trong một transaction thay nội dung.\n- **C sai** vì thao tác đổi tên catalog không phải một thay đổi dữ liệu được ghi như một commit mới của Delta transaction log tại table location.\n- **D sai** vì không tạo `_delta_log` thứ hai cho tên mới. Transaction log tiếp tục ở thư mục dữ liệu hiện hữu.\n\nĐề nói rõ location và hỏi metadata, nên phân biệt **tên bảng trong catalog** với **đường dẫn lưu dữ liệu**. Lưu ý điều kiện theo catalog: AWS Glue Data Catalog hiện không hỗ trợ `RENAME`; quy tắc cú pháp cũng khác giữa Unity Catalog và các metastore khác. Trong bối cảnh bảng/metastore hỗ trợ lệnh này, kết quả cần nhớ là cập nhật table reference, không di chuyển file.",
     "page": null,
     "image": "img/q_181.jpg",
     "references": [
       {
-        "title": "ALTER TABLE - Databricks SQL Reference",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-alter-table"
+        "title": "ALTER TABLE reference: RENAME TO",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table"
       }
     ]
   },
@@ -5589,13 +5660,17 @@
       "C": "`date = dbutils.notebooks.getParam(\"date\")`",
       "D": "```python\ndbutils.widgets.text(\"date\", \"null\")\ndate = dbutils.widgets.get(\"date\")\n```"
     },
-    "explanation_vi": "Khi truyền tham số (parameters) từ **Databricks Jobs API** vào một `notebook`, các tham số này được tiếp nhận thông qua cơ chế Widgets. Để truy xuất giá trị của tham số trong code Python, trước tiên ta cần khai báo widget bằng `dbutils.widgets.text(\"date\", \"defaultValue\")` và sau đó lấy giá trị bằng `dbutils.widgets.get(\"date\")`.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D — khai báo widget rồi đọc bằng `dbutils.widgets.get`.** Với notebook task, các parameter key/value được Jobs API truyền vào theo tên widget. `dbutils.widgets.get(\"date\")` trả về chuỗi của tham số `date`; sau đó biến này có thể dùng trong đường dẫn `/mnt/source/{date}`. Dòng `dbutils.widgets.text(\"date\", \"null\")` tạo widget/default khi notebook cần chạy độc lập để thử. Khi job truyền giá trị cùng tên, job parameter là giá trị đầu vào; đừng xem chuỗi `\"null\"` là ngày mặc định hợp lệ cho production.\n\n- **A `spark.conf.get(\"date\")`** đọc Spark configuration, không đọc notebook task parameter trừ khi ai đó chủ động chuyển tham số vào Spark conf.\n- **B `sys.argv[1]`** dùng cho script nhận đối số dòng lệnh; notebook task nhận giá trị qua widgets, không phải argv.\n- **C `dbutils.notebooks.getParam`** không phải API widget/notebook parameter hợp lệ.\n- **D** phù hợp vì khai báo tên widget và lấy đúng giá trị bằng API dành cho notebook.\n\nTrong code production có thể để job định nghĩa parameter `date` và chỉ gọi `dbutils.widgets.get(\"date\")`; tạo widget default hữu ích cho chạy thủ công nhưng cần chọn default an toàn và kiểm tra định dạng ngày trước khi tạo path.",
     "page": null,
     "image": "img/q_185.jpg",
     "references": [
       {
-        "title": "Notebook widgets - Databricks",
-        "url": "https://docs.databricks.com/en/notebooks/widgets"
+        "title": "Access parameter values from a task",
+        "url": "https://docs.databricks.com/aws/en/jobs/parameter-use"
+      },
+      {
+        "title": "Databricks widgets",
+        "url": "https://docs.databricks.com/aws/en/notebooks/widgets"
       }
     ]
   },
@@ -5792,28 +5867,27 @@
   {
     "id": 193,
     "topic": 1,
-    "question": "A view is registered with the following code:\nBoth `users` and `orders` are **Delta Lake** tables.\nWhich statement describes the results of querying `recent_orders`?",
+    "question": "A view is registered with this SQL:\n```sql\nCREATE VIEW recent_orders AS\nSELECT a.user_id, a.email, b.order_id, b.order_date\nFROM (SELECT user_id, email FROM users) a\nJOIN (\n  SELECT user_id, order_id, order_date\n  FROM orders\n  WHERE order_date >= (current_date() - 7)\n) b\nON a.user_id = b.user_id\n```\nBoth `users` and `orders` are **Delta Lake** tables. Which statement describes querying `recent_orders`?",
     "options": {
-      "A": "The versions of each source table will be stored in the table transaction log; query results will be saved to `DBFS` with each query.",
-      "B": "All logic will execute when the table is defined and store the result of joining tables to the `DBFS`; this stored data will be returned when the table is queried.",
-      "C": "All logic will execute at query time and return the result of joining the valid versions of the source tables at the time the query finishes.",
-      "D": "All logic will execute at query time and return the result of joining the valid versions of the source tables at the time the query began."
+      "A": "The view stores each source-table version in its log and saves the joined result to DBFS after every query.",
+      "B": "The join executes when the view is created and stores its result in DBFS for future queries.",
+      "C": "The view stores the query definition; its SELECT logic executes when queried and returns the result for that execution without materializing the view result.",
+      "D": "The join executes once when the view is created; later queries return that saved snapshot."
     },
     "answer": "C",
-    "question_vi": "Một view được đăng ký bằng đoạn code sau. Cả `users` và `orders` đều là các bảng **Delta Lake**. Phát biểu nào sau đây mô tả kết quả khi truy vấn `recent_orders`?",
+    "question_vi": "View được tạo bằng SQL sau:\n```sql\nCREATE VIEW recent_orders AS\nSELECT a.user_id, a.email, b.order_id, b.order_date\nFROM (SELECT user_id, email FROM users) a\nJOIN (\n  SELECT user_id, order_id, order_date\n  FROM orders\n  WHERE order_date >= (current_date() - 7)\n) b\nON a.user_id = b.user_id\n```\nCả `users` và `orders` đều là bảng **Delta Lake**. Phát biểu nào mô tả đúng khi truy vấn `recent_orders`?",
     "options_vi": {
-      "A": "Phiên bản của từng bảng nguồn sẽ được lưu trữ trong transaction log của bảng; kết quả truy vấn sẽ được lưu vào `DBFS` sau mỗi lần truy vấn.",
-      "B": "Tất cả logic sẽ thực thi khi bảng (view) được định nghĩa và lưu trữ kết quả join vào `DBFS`; dữ liệu lưu trữ này sẽ được trả về khi bảng được truy vấn.",
-      "C": "Tất cả logic sẽ thực thi tại thời điểm truy vấn và trả về kết quả join của các phiên bản hợp lệ của các bảng nguồn tại thời điểm truy vấn hoàn thành.",
-      "D": "Tất cả logic sẽ thực thi tại thời điểm truy vấn và trả về kết quả join của các phiên bản hợp lệ của các bảng nguồn tại thời điểm truy vấn bắt đầu."
+      "A": "View lưu phiên bản từng bảng nguồn trong log và sau mỗi truy vấn ghi kết quả join vào DBFS.",
+      "B": "Join được chạy khi tạo view và lưu kết quả vào DBFS để truy vấn sau dùng lại.",
+      "C": "View lưu định nghĩa truy vấn; SELECT chạy mỗi lần được truy vấn và trả kết quả của lần thực thi đó, không materialize kết quả view.",
+      "D": "Join chỉ chạy một lần khi tạo view; các lần truy vấn sau đọc snapshot đã lưu."
     },
-    "explanation_vi": "Một view (khung nhìn) không lưu trữ dữ liệu thực tế mà chỉ lưu trữ định nghĩa truy vấn. Khi bạn truy vấn view, Spark sẽ phân giải và thực thi toàn bộ logic của view tại thời điểm truy vấn. Nó sẽ đọc và join phiên bản hợp lệ mới nhất của các bảng **Delta Lake** nguồn tại thời điểm câu truy vấn hoàn thành.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** View thông thường lưu định nghĩa SQL trong metastore, không chạy truy vấn lúc tạo view và cũng không lưu trước các dòng kết quả. Mỗi lần người dùng truy vấn `recent_orders`, engine phân tích rồi thực thi câu SELECT/join với dữ liệu nguồn theo semantics của lần chạy đó. Điều kiện `current_date() - 7` vì thế được đánh giá trong lần truy vấn, không đóng băng thành ngày lúc `CREATE VIEW`.\n\nA sai vì view không ghi phiên bản bảng nguồn hay kết quả vào DBFS sau mỗi lần chạy. B sai vì mô tả materialized view, không phải view thông thường. D cũng nhầm view với snapshot/materialization: tạo view chỉ đăng ký logic, không chạy join để tạo bản sao kết quả. Nếu cần lưu kết quả đã tính để tái sử dụng, hãy cân nhắc materialized view hoặc ghi ra bảng; các đối tượng đó khác với view thường. Đề không gán chính xác một thời điểm bắt đầu/kết thúc cho snapshot của từng nguồn vì điều đó phụ thuộc semantics thực thi, không phải điều cần phân biệt ở đây.",
     "page": null,
-    "image": "img/q_193.jpg",
     "references": [
       {
-        "title": "Views - Databricks",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-variables"
+        "title": "What is a view? — Databricks",
+        "url": "https://docs.databricks.com/aws/en/views"
       }
     ]
   },
@@ -6119,13 +6193,17 @@
       "C": "Bảng gold bị overwrite bởi tổng từ silver (batch).",
       "D": "Job incremental phát hiện hàng mới rồi tính lại toàn bộ aggregate và overwrite gold."
     },
-    "explanation_vi": "Đoạn mã sử dụng chế độ ghi đè `mode(\"overwrite\")` và lưu vào bảng `gold_customer_lifetime_sales_summary`. Khi chạy dưới dạng một job batch, lệnh này sẽ tính toán các giá trị tổng hợp từ bảng nguồn `silver_customer_sales` và ghi đè hoàn toàn bảng đích `gold_customer_lifetime_sales_summary`, thay thế mọi dữ liệu hiện có trong bảng này. Lựa chọn C mô tả chính xác hành vi này.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** Code đọc toàn bộ `silver_customer_sales`, nhóm theo `customer_id`, rồi tính ngày giao dịch đầu/cuối, trung bình `sale_total`, số `order_id` phân biệt và tổng `sale_total`. Cuối pipeline, `.write.mode(\"overwrite\").table(\"gold_customer_lifetime_sales_summary\")` ghi kết quả aggregate vào bảng gold và thay toàn bộ nội dung target. Đây là phép tính batch theo dữ liệu nguồn hiện tại mỗi lần chạy.\n\n- **A sai** vì chiều dữ liệu bị đảo: code đọc từ silver, không đọc bảng gold và cũng không ghi đè silver.\n- **B sai** vì không có `MERGE` hoặc upsert dựa trên `customer_id`; groupBy không khiến Spark suy ra đây là khóa chính hay chỉ cập nhật những dòng đổi.\n- **D sai** vì code không có stream, checkpoint hay phát hiện row mới; `overwrite` cũng không tự cập nhật incremental.\n\nNếu bảng lớn và cần incremental, phải thiết kế riêng cách phát hiện change (ví dụ CDF hoặc watermark/version phù hợp), xử lý cập nhật/xóa và đảm bảo idempotency; đoạn code đang có không làm các việc đó.",
     "page": null,
     "image": "img/q_204.jpg",
     "references": [
       {
-        "title": "Delta Table Overwrite Mode",
-        "url": "https://docs.databricks.com/en/tables/update-schema"
+        "title": "PySpark DataFrameWriter.table",
+        "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameWriter.table.html"
+      },
+      {
+        "title": "PySpark DataFrameWriter.mode",
+        "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameWriter.mode.html"
       }
     ]
   },
@@ -6588,20 +6666,20 @@
       "D": "Use the clone command to create a copy of an existing pipeline; use the get JSON command to get the pipeline definition; save this to git"
     },
     "answer": "C",
-    "question_vi": "Cần lấy config của một pipeline hiện có bằng Databricks CLI rồi tạo pipeline mới version hoá. Lệnh nào dùng?",
+    "question_vi": "Một kỹ sư cần lấy cấu hình từ một pipeline đang có, lưu phiên bản JSON trong Git rồi dùng cấu hình đó tạo pipeline mới. Nên dùng chuỗi thao tác Databricks CLI nào?",
     "options_vi": {
       "A": "list pipelines rồi lấy spec từ kết quả và tạo pipeline",
       "B": "stop pipeline hiện có rồi reset từ setting",
       "C": "dùng lệnh get để lấy setting, bỏ pipeline_id, đổi tên rồi dùng lệnh create",
       "D": "clone pipeline rồi get JSON, lưu vào git"
     },
-    "explanation_vi": "Databricks CLI hỗ trợ lệnh 'databricks pipelines get' để lấy cấu hình JSON của một pipeline hiện có. Để tạo pipeline mới từ cấu hình này, ta cần loại bỏ trường 'pipeline_id' (vì nó được sinh tự động và duy nhất cho mỗi pipeline) và thay đổi tên pipeline trong JSON để tránh trùng lặp, sau đó sử dụng tệp này với lệnh 'databricks pipelines create'.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** Dùng `databricks pipelines get <pipeline-id>` để lấy cấu hình của pipeline hiện có. Tạo bản JSON được quản lý trong Git: bỏ `pipeline_id` (ID do dịch vụ sinh cho pipeline đã tồn tại), đổi tên và chỉnh các path/target nếu pipeline mới không được dùng chung tài nguyên. Cuối cùng truyền JSON đã sửa vào `databricks pipelines create --json @file.json` (cú pháp cụ thể tùy phiên bản CLI).\n\nA không đáng tin cậy vì list chủ yếu liệt kê pipeline/ID, không phải cách lấy một bản cấu hình đầy đủ cho pipeline mới. B nói về stop/reset; reset làm mới dữ liệu/state của pipeline hiện tại chứ không tạo pipeline mới. D dùng `clone`, vốn không cần thiết cho quy trình tạo file JSON có thể version-control; “get JSON” không phải một lệnh con độc lập như mô tả. Hãy kiểm tra CLI đang cài bằng `databricks pipelines --help` vì cú pháp và field cấu hình có thể thay đổi theo phiên bản.",
     "page": null,
     "image": "img/q_221.jpg",
     "references": [
       {
-        "title": "Databricks CLI Pipelines Command Reference",
-        "url": "https://docs.databricks.com/en/ldp/concepts/pipelines"
+        "title": "Databricks CLI pipelines command reference",
+        "url": "https://docs.databricks.com/aws/en/dev-tools/cli/reference/pipelines-commands"
       }
     ]
   },
@@ -6616,19 +6694,19 @@
       "D": "`pypi.path`"
     },
     "answer": "B",
-    "question_vi": "Biến Python nào chứa danh sách thư mục được tìm khi import module?",
+    "question_vi": "Trong Python, biến nào chứa danh sách đường dẫn được dùng khi tìm các module cần import?",
     "options_vi": {
       "A": "`importlib.resource_path`",
       "B": "`sys.path`",
       "C": "`os.path`",
       "D": "`pypi.path`"
     },
-    "explanation_vi": "Biến '`sys.path`' trong thư viện 'sys' của Python là một danh sách các chuỗi chứa đường dẫn đến các thư mục mà trình thông dịch Python sẽ tìm kiếm khi thực hiện import các module hoặc gói (packages).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang hỏi gì?** Khi viết `import package.module`, Python cần biết những thư mục nào sẽ được dò để tìm module. Câu hỏi hỏi tên biến chuẩn của trình thông dịch chứa danh sách đường dẫn đó.\n\n**Đáp án B — `sys.path`.** Đây là danh sách các chuỗi đường dẫn mà cơ chế import của Python dùng để tìm module, bao gồm vị trí khởi chạy, các thư mục từ `PYTHONPATH` và các thư mục thư viện chuẩn/site-packages tùy môi trường. Có thể xem nội dung bằng:\n```python\nimport sys\nprint(sys.path)\n```\nThay đổi danh sách này ảnh hưởng tới nơi Python tìm module trong tiến trình hiện tại; trong dự án lớn, thường nên cài package vào môi trường ảo hoặc cấu hình package đúng cách thay vì chèn đường dẫn tùy tiện.\n\n**Vì sao các phương án khác sai?**\n- **A — `importlib.resource_path`:** không phải biến chuẩn lưu đường dẫn tìm module. `importlib.resources` cung cấp API truy cập tài nguyên đi kèm package.\n- **C — `os.path`:** là module tiện ích để xử lý đường dẫn tệp, chẳng hạn nối hoặc chuẩn hóa path; nó không phải danh sách import path.\n- **D — `pypi.path`:** không phải biến trong thư viện chuẩn Python. PyPI là chỉ mục phân phối package, không phải cơ chế tìm module khi chạy chương trình.",
     "page": null,
     "image": "img/q_222.jpg",
     "references": [
       {
-        "title": "Python sys.path Documentation",
+        "title": "Python documentation: sys.path",
         "url": "https://docs.python.org/3/library/sys.html#sys.path"
       }
     ]
@@ -6651,13 +6729,17 @@
       "C": "Functional",
       "D": "Integration"
     },
-    "explanation_vi": "Dòng mã sử dụng câu lệnh assert để kiểm tra kết quả trả về của một hàm đơn lẻ (`myIntegrate`) với các đầu vào cụ thể. Đây là ví dụ điển hình của Unit Test (kiểm thử đơn vị), nhằm xác minh tính chính xác của một khối chức năng nhỏ nhất độc lập.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A — Unit test.** Dòng `assert` gọi một hàm được kiểm thử với đầu vào xác định rồi so sánh kết quả với giá trị kỳ vọng. Nếu mục tiêu là kiểm tra riêng hợp đồng/kết quả của `myIntegrate`, đây là kiểm thử đơn vị: một phép kiểm tra nhỏ, tự động, thường chạy nhanh và không cần dựng toàn bộ hệ thống.\n\nĐề nhắc hàm tích phân nhận một hàm khác (lambda). Việc truyền lambda vào làm đầu vào vẫn có thể nằm trong unit test; nó không tự biến test thành integration test. Integration test thường kiểm tra giao tiếp giữa các thành phần/hệ thống độc lập (ví dụ gọi service thật hoặc đọc từ storage). Functional test tập trung xác nhận một luồng/chức năng theo yêu cầu rộng hơn; manual test cần người thực hiện tương tác.\n\n- **B Manual** sai vì phép kiểm tra được biểu diễn thành mã, có thể chạy tự động.\n- **C Functional** rộng hơn kiểm thử một hàm đơn lẻ; dòng này chỉ kiểm tra một kết quả cụ thể.\n- **D Integration** sai trừ khi test thực sự ghép các thành phần độc lập cần tích hợp; gọi một callback Python không đủ để kết luận như vậy.\n\nLưu ý chất lượng test: tích phân của `x*x` từ 0 đến 3 đúng là 9. Trong Python, `assert` cũng có thể bị loại bỏ khi chạy với tối ưu hóa (`-O`), nên suite nghiêm túc thường dùng framework như `pytest` hoặc `unittest`.",
     "page": null,
     "image": "img/q_223.jpg",
     "references": [
       {
-        "title": "Python assert Statement documentation",
+        "title": "Python language reference: assert statements",
         "url": "https://docs.python.org/3/reference/simple_stmts.html#the-assert-statement"
+      },
+      {
+        "title": "Python unittest documentation",
+        "url": "https://docs.python.org/3/library/unittest.html"
       }
     ]
   },
@@ -6679,41 +6761,41 @@
       "C": "Phủ hết mọi nhánh và đường đi mã nguồn",
       "D": "Mô phỏng sát nhất cách ứng dụng dùng thực tế"
     },
-    "explanation_vi": "Kiểm thử tích hợp từ đầu đến cuối (End-to-End Test / E2E) có mục tiêu chính là mô phỏng luồng hành vi của người dùng thực tế trên toàn bộ hệ thống từ đầu đến cuối, giúp xác minh rằng tất cả các thành phần và hệ thống phụ thuộc tích hợp và hoạt động chính xác với nhau.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** End-to-end (E2E) test chạy một luồng hoàn chỉnh xuyên qua các lớp của ứng dụng để xác nhận hệ thống hoạt động như người dùng hoặc client thật sẽ sử dụng. Ví dụ, với một pipeline dữ liệu: gửi đầu vào, chạy orchestration, ghi dữ liệu, rồi xác nhận đầu ra có thể được truy vấn. Mục tiêu là phát hiện lỗi tương tác giữa nhiều thành phần mà unit test riêng từng hàm có thể bỏ sót.\n\n- **A sai**: E2E có thể được tự động hóa, nhưng tự động hóa không phải lợi ích định nghĩa của loại test này; unit/integration test cũng tự động hóa được.\n- **B mô tả unit test**: kiểm tra hàm/module nhỏ và giúp khoanh vùng lỗi ở building block.\n- **C sai**: một số test E2E không thể bao phủ mọi nhánh/đường đi. Cố đạt toàn bộ coverage bằng E2E thường chậm và khó bảo trì.\n- **D đúng**: mô phỏng sát luồng sử dụng thực tế qua hệ thống hoàn chỉnh.\n\nE2E thường có giá trị lớn cho các luồng nghiệp vụ quan trọng, nhưng chậm hơn và dễ phụ thuộc môi trường/dữ liệu hơn unit test. Vì vậy nên kết hợp nhiều tầng kiểm thử; dùng unit test để bắt lỗi nhỏ nhanh và E2E để xác nhận đường đi tích hợp từ đầu đến cuối.",
     "page": null,
     "image": "img/q_224.jpg",
     "references": [
       {
-        "title": "Software Testing Fundamentals - End-to-End Testing",
-        "url": "https://softwaretestingfundamentals.com/end-to-end-testing/"
+        "title": "Google Testing Blog: Just say no to more end-to-end tests",
+        "url": "https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end.html"
       }
     ]
   },
   {
     "id": 225,
     "topic": 1,
-    "question": "Which REST API call can be used to review the notebooks configured to run as tasks in a multi-task job?",
+    "question": "Given a known `job_id`, which REST API endpoint retrieves that single job's definition, including the notebook tasks configured for a multi-task job?",
     "options": {
-      "A": "/jobs/runs/list",
-      "B": "/jobs/list",
-      "C": "/jobs/runs/get",
-      "D": "/jobs/get"
+      "A": "GET `/api/2.2/jobs/runs/list?job_id=<job_id>`",
+      "B": "GET `/api/2.2/jobs/list`",
+      "C": "GET `/api/2.2/jobs/runs/get?run_id=<run_id>`",
+      "D": "GET `/api/2.2/jobs/get?job_id=<job_id>`"
     },
     "answer": "D",
-    "question_vi": "Lệnh REST API nào dùng để xem các notebook được cấu hình làm task trong một multi-task job?",
+    "question_vi": "Khi đã biết `job_id`, endpoint REST nào lấy định nghĩa của đúng job đó, gồm các notebook task trong một multi-task job?",
     "options_vi": {
-      "A": "/jobs/runs/list",
-      "B": "/jobs/list",
-      "C": "/jobs/runs/get",
-      "D": "/jobs/get"
+      "A": "GET `/api/2.2/jobs/runs/list?job_id=<job_id>` — liệt kê các lần chạy của job.",
+      "B": "GET `/api/2.2/jobs/list` — liệt kê nhiều job trong workspace.",
+      "C": "GET `/api/2.2/jobs/runs/get?run_id=<run_id>` — lấy chi tiết một lần chạy.",
+      "D": "GET `/api/2.2/jobs/get?job_id=<job_id>` — lấy định nghĩa của một job cụ thể."
     },
-    "explanation_vi": "Để xem cấu hình chi tiết của một job (bao gồm các notebook được cấu hình chạy như các tác vụ/tasks), ta sử dụng API endpoint GET '/api/2.1/jobs/get' kèm theo parameter 'job_id'. Endpoint này trả về thông tin định nghĩa tĩnh của job, bao gồm danh sách tasks.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang hỏi gì?** Cần đọc cấu hình tĩnh của một job đã biết ID, đặc biệt là các task/notebook được khai báo trong multi-task job; không hỏi log hay kết quả của một lần chạy.\n\n**Đáp án D — `GET /api/2.2/jobs/get?job_id=<job_id>`.** Endpoint `jobs/get` nhận `job_id` và trả định nghĩa của job, trong đó có cấu hình tasks. Vì vậy ứng dụng có thể duyệt các task để xem notebook path hoặc loại task đã thiết lập.\n\n**Vì sao các phương án khác sai?**\n- **A — `jobs/runs/list`:** trả danh sách các lần chạy của job; đó là execution history, không phải endpoint lấy định nghĩa job theo yêu cầu.\n- **B — `jobs/list`:** dùng để liệt kê jobs. Khi đã có một `job_id` và cần đọc cấu hình chính xác của job đó, `jobs/get` rõ ràng hơn và hỗ trợ truy vấn theo ID.\n- **C — `jobs/runs/get`:** cần `run_id` và trả metadata của một run cụ thể, không phải cấu hình job hiện hành.\n\n**Quy tắc nhớ:** `jobs/get` đọc định nghĩa job; `jobs/list` liệt kê job; `jobs/runs/get` đọc một lần chạy.",
     "page": null,
     "image": "img/q_225.jpg",
     "references": [
       {
-        "title": "Databricks Jobs API Reference",
-        "url": "https://docs.databricks.com/en/sql/language-manual/functions/get"
+        "title": "Databricks Jobs API: Get a single job",
+        "url": "https://docs.databricks.com/api/jobs/v2/job"
       }
     ]
   },
@@ -6735,13 +6817,17 @@
       "C": "Chạy unit test với dữ liệu phi production gần giống production",
       "D": "Viết hàm và unit test trong cùng notebook"
     },
-    "explanation_vi": "Để chạy unit test một cách hiệu quả bằng các framework kiểm thử Python tiêu chuẩn (như pytest) trên Databricks, giải pháp tốt nhất là tổ chức các hàm nghiệp vụ dưới dạng các tệp mã nguồn Python (.py) trong Databricks Repos (Git Folders). Điều này cho phép import các hàm như module thông thường để kiểm thử và tích hợp CI/CD.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** Đưa hàm nghiệp vụ vào module Python trong Git folder (trước đây gọi Databricks Repos) giúp import code như module bình thường và chạy framework chuẩn như `pytest`/`unittest`. Test có thể chạy trong CI hoặc notebook test riêng, dùng fixture/test data có kiểm soát. Điều này tách logic khỏi giao diện notebook, giúp review, version control và tái sử dụng dễ hơn.\n\nCụm từ “functions that work with data in production” không nên hiểu là unit test phải ghi/đọc trực tiếp dữ liệu production. Unit test nên kiểm tra logic bằng dữ liệu nhỏ cô lập; kiểm thử kết nối production nên là integration/smoke test riêng, với quyền tối thiểu và dữ liệu được bảo vệ.\n\n- **A sai** vì import/export notebook khác để gọi function tạo coupling với notebook runtime và không phải cách tổ chức module/test tiêu chuẩn.\n- **C sai** vì dữ liệu non-production tương tự là lựa chọn tốt cho kiểm thử an toàn, nhưng không giải quyết việc tổ chức/import các hàm ở nhiều notebook như stem hỏi.\n- **D sai** vì nhúng test và implementation cùng notebook làm khó tái sử dụng, CI và kiểm soát phạm vi; không đáp ứng tốt code trải trên nhiều notebook production.\n\nTách module và suite test trong repo là cách dễ kiểm thử và bảo trì nhất trong các lựa chọn.",
     "page": null,
     "image": "img/q_226.jpg",
     "references": [
       {
-        "title": "Manage code with Databricks Git folders (Repos)",
-        "url": "https://docs.databricks.com/en/repos/git-folders-concepts"
+        "title": "Databricks Git folders",
+        "url": "https://docs.databricks.com/aws/en/repos/git-folders-concepts"
+      },
+      {
+        "title": "Databricks notebook and Python testing",
+        "url": "https://docs.databricks.com/aws/en/dev-tools/vscode-ext/test"
       }
     ]
   },
@@ -6862,7 +6948,7 @@
       "C": "CAN ATTACH TO",
       "D": "CAN MANAGE"
     },
-    "answer": "A",
+    "answer": "D",
     "question_vi": "Cluster shared access mode mặc định; cần cho team dev xem driver logs. Quyền tối thiểu?",
     "options_vi": {
       "A": "CAN VIEW",
@@ -6870,13 +6956,12 @@
       "C": "CAN ATTACH TO",
       "D": "CAN MANAGE"
     },
-    "explanation_vi": "Quyền 'CAN VIEW' là quyền tối thiểu ở mức cluster cho phép người dùng xem cấu hình cluster, xem các số liệu đo lường (metrics) và xem logs của driver. Quyền 'CAN ATTACH TO' cho phép đính kèm notebook vào cluster, 'CAN RESTART' cho phép khởi động lại và 'CAN MANAGE' cho phép sửa đổi cấu hình hoặc xoá cluster.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D — `CAN MANAGE`.** Với compute dùng shared/standard access mode và cấu hình mặc định, driver logs bị giới hạn cho principal có `CAN MANAGE` vì log có thể chứa thông tin nhạy cảm. `CAN VIEW` thậm chí không phải mức permission chuẩn trong các lựa chọn ACL compute này; `CAN ATTACH TO` và `CAN RESTART` cho phép các hành động khác nhưng không mặc nhiên cấp quyền đọc driver logs ở cấu hình mặc định.\n\n- **A `CAN VIEW`** không phải mức ACL compute trong bảng quyền hiện hành và không cấp log access.\n- **B `CAN RESTART`** cho phép restart/terminate theo quyền, nhưng log vẫn được bảo vệ mặc định.\n- **C `CAN ATTACH TO`** cho phép attach notebook và xem Spark UI/metrics trong phạm vi tương ứng; không đồng nghĩa xem driver logs.\n- **D `CAN MANAGE`** bao gồm quản lý compute và xem driver logs.\n\nCó thể cấu hình `spark.databricks.acl.needAdminPermissionToViewLogs=false` để cho phép `CAN ATTACH TO` hoặc `CAN RESTART` xem log; nhưng stem nói cấu hình mặc định nên không áp dụng ngoại lệ này. Quyền này rộng hơn mức chỉ đọc log, nên trong môi trường thật cần cân nhắc rủi ro lộ secrets trong stdout/stderr.",
     "page": null,
-    "image": "img/q_231.jpg",
     "references": [
       {
-        "title": "Cluster access control privileges",
-        "url": "https://docs.databricks.com/en/dev-tools/databricks-apps/permissions"
+        "title": "Access control lists: compute permissions and driver logs",
+        "url": "https://docs.databricks.com/aws/en/security/auth/access-control/"
       }
     ]
   },
@@ -6885,26 +6970,26 @@
     "topic": 1,
     "question": "A data engineer wants to create a cluster using the Databricks CLI for a big ETL pipeline. The cluster should have five workers and one driver of type i3.xlarge and should use the '14.3.x-scala2.12' runtime.\nWhich command should the data engineer use?",
     "options": {
-      "A": "`databricks compute add 14.3.x-scala2.12 --num-workers 5 --node-type-id i3.xlarge --cluster-name Data Engineer_cluster`",
-      "B": "`databricks clusters create 14.3.x-scala2.12 --num-workers 5 --node-type-id i3.xlarge --cluster-name Data Engineer_cluster`",
-      "C": "`databricks compute create 14.3.x-scala2.12 --num-workers 5 --node-type-id i3.xlarge --cluster-name Data Engineer_cluster`",
-      "D": "`databricks clusters add 14.3.x-scala2.12 --num-workers 5 --node-type-id i3.xlarge --cluster-name Data Engineer_cluster`"
+      "A": "`databricks compute add 14.3.x-scala2.12 --num-workers 5 --node-type-id i3.xlarge --cluster-name \"Data Engineer_cluster\"`",
+      "B": "`databricks clusters create 14.3.x-scala2.12 --num-workers 5 --node-type-id i3.xlarge --driver-node-type-id i3.xlarge --cluster-name \"Data Engineer_cluster\"`",
+      "C": "`databricks compute create 14.3.x-scala2.12 --num-workers 5 --node-type-id i3.xlarge --driver-node-type-id i3.xlarge --cluster-name \"Data Engineer_cluster\"`",
+      "D": "`databricks clusters add 14.3.x-scala2.12 --num-workers 5 --node-type-id i3.xlarge --driver-node-type-id i3.xlarge --cluster-name \"Data Engineer_cluster\"`"
     },
     "answer": "B",
     "question_vi": "Muốn tạo một cluster gồm 5 workers và 1 driver thuộc loại `i3.xlarge`, chạy runtime `14.3.x-scala2.12` bằng **Databricks CLI**. Lệnh nào đúng?",
     "options_vi": {
-      "A": "`databricks compute add 14.3.x-scala2.12 --num-workers 5 --node-type-id i3.xlarge --cluster-name Data Engineer_cluster`",
-      "B": "`databricks clusters create 14.3.x-scala2.12 --num-workers 5 --node-type-id i3.xlarge --cluster-name Data Engineer_cluster`",
-      "C": "`databricks compute create 14.3.x-scala2.12 --num-workers 5 --node-type-id i3.xlarge --cluster-name Data Engineer_cluster`",
-      "D": "`databricks clusters add 14.3.x-scala2.12 --num-workers 5 --node-type-id i3.xlarge --cluster-name Data Engineer_cluster`"
+      "A": "`databricks compute add 14.3.x-scala2.12 --num-workers 5 --node-type-id i3.xlarge --cluster-name \"Data Engineer_cluster\"`",
+      "B": "`databricks clusters create 14.3.x-scala2.12 --num-workers 5 --node-type-id i3.xlarge --driver-node-type-id i3.xlarge --cluster-name \"Data Engineer_cluster\"`",
+      "C": "`databricks compute create 14.3.x-scala2.12 --num-workers 5 --node-type-id i3.xlarge --driver-node-type-id i3.xlarge --cluster-name \"Data Engineer_cluster\"`",
+      "D": "`databricks clusters add 14.3.x-scala2.12 --num-workers 5 --node-type-id i3.xlarge --driver-node-type-id i3.xlarge --cluster-name \"Data Engineer_cluster\"`"
     },
-    "explanation_vi": "Trong **Databricks CLI**, lệnh tạo cụm máy tính (cluster) là `databricks clusters create`. Lệnh này nhận đầu vào là cấu hình cụm thông qua đối số **JSON** hoặc các cờ tương ứng (như `--num-workers`, `--node-type-id`, và `--cluster-name`). Các lệnh sử dụng từ khóa `compute` hoặc subcommand `add` không phải là cú pháp hợp lệ của **Databricks CLI**.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** Trong Databricks CLI hiện hành, cú pháp là `databricks clusters create <SPARK_VERSION> [flags]`. Lệnh đúng phải nêu runtime `14.3.x-scala2.12`, số worker là 5, worker node type `i3.xlarge`, và driver node type `i3.xlarge`. Tên cluster có dấu cách nên được đặt trong dấu nháy để shell truyền thành một giá trị duy nhất.\n\n- **A sai** vì command group `compute` không có subcommand `add` cho cú pháp này.\n- **C sai** vì command group `compute` không có subcommand `create` trong CLI được kiểm tra.\n- **D sai** vì nhóm `clusters` dùng subcommand `create`, không phải `add`.\n\nLệnh tạo cluster thường trả về trước khi cluster sẵn sàng (trạng thái `PENDING`); có thể cần chờ/poll cho đến `RUNNING`. Câu hỏi chỉ hỏi cú pháp gửi yêu cầu tạo cluster, không bảo đảm rằng cloud provider sẽ cấp đủ máy. Các cờ `--node-type-id` và `--driver-node-type-id` được ghi rõ ở lựa chọn B để yêu cầu đúng loại máy cho cả worker lẫn driver.",
     "page": null,
     "image": "img/q_232.jpg",
     "references": [
       {
-        "title": "Databricks CLI Clusters Command Reference",
-        "url": "https://docs.databricks.com/en/archive/dev-tools/cli/clusters-cli"
+        "title": "Databricks CLI clusters command group",
+        "url": "https://docs.databricks.com/aws/en/dev-tools/cli/reference/clusters-commands"
       }
     ]
   },
@@ -6939,56 +7024,56 @@
   {
     "id": 234,
     "topic": 1,
-    "question": "The data governance team has instituted a requirement that the `user` table containing Personal Identifiable Information (PII) must have the appropriate masking on the `SSN` column. This means that anyone outside of the `HRAdminGroup` should see masked social security numbers as `***-**-****`.\nThe team created a masking function.\nWhat does the data governance team need to do next to achieve this goal?",
+    "question": "The `users` table already exists with an `ssn STRING` column, and the Unity Catalog SQL masking function `ssn_mask` has been created. It returns the SSN only to members of `HRAdminGroup` and `***-**-****` to other users.\nWhat should the data governance team do next to apply the mask?",
     "options": {
-      "A": "`CREATE TABLE users (name STRING); ALTER TABLE users CREATE COLUMN ssn CREATE MASK ssn_mask;`",
-      "B": "`CREATE TABLE users (name STRING, int STRING); ALTER TABLE users ALTER COLUMN ssn CREATE MASK if is_member('HRAdminGroup');`",
-      "C": "`CREATE TABLE users (name STRING, ssn INT MASKED ssn_mask);`",
-      "D": "`CREATE TABLE users (name STRING, ssn STRING); ALTER TABLE users ALTER COLUMN ssn SET MASK ssn_mask;`"
+      "A": "`ALTER TABLE users ALTER COLUMN ssn CREATE MASK ssn_mask;`",
+      "B": "`ALTER TABLE users ALTER COLUMN ssn SET MASK if is_member('HRAdminGroup');`",
+      "C": "`ALTER TABLE users ALTER COLUMN ssn SET TAGS ('mask' = 'ssn_mask');`",
+      "D": "`ALTER TABLE users ALTER COLUMN ssn SET MASK ssn_mask;`"
     },
     "answer": "D",
-    "question_vi": "Bảng `users` chứa **PII**; cột `SSN` phải được mask thành `***-**-****` cho mọi người trừ `HRAdminGroup`. Hàm mask đã có. Cần làm gì tiếp?",
+    "question_vi": "Bảng `users` đã tồn tại với cột `ssn STRING`; hàm mask Unity Catalog `ssn_mask` đã được tạo và chỉ trả SSN thật cho thành viên `HRAdminGroup`. Cần làm gì tiếp để áp dụng mask?",
     "options_vi": {
-      "A": "`CREATE TABLE users (name STRING); ALTER TABLE users CREATE COLUMN ssn CREATE MASK ssn_mask;`",
-      "B": "`CREATE TABLE users (name STRING, int STRING); ALTER TABLE users ALTER COLUMN ssn CREATE MASK if is_member('HRAdminGroup');`",
-      "C": "`CREATE TABLE users (name STRING, ssn INT MASKED ssn_mask);`",
-      "D": "`CREATE TABLE users (name STRING, ssn STRING); ALTER TABLE users ALTER COLUMN ssn SET MASK ssn_mask;`"
+      "A": "`ALTER TABLE users ALTER COLUMN ssn CREATE MASK ssn_mask;`",
+      "B": "`ALTER TABLE users ALTER COLUMN ssn SET MASK if is_member('HRAdminGroup');`",
+      "C": "`ALTER TABLE users ALTER COLUMN ssn SET TAGS ('mask' = 'ssn_mask');`",
+      "D": "`ALTER TABLE users ALTER COLUMN ssn SET MASK ssn_mask;`"
     },
-    "explanation_vi": "Để áp dụng một hàm masking đã có cho cột chứa thông tin nhạy cảm (như `ssn`) trong **Unity Catalog**, quy trình chuẩn bao gồm việc định nghĩa cột đó khi tạo bảng và sau đó sử dụng lệnh `ALTER TABLE ... ALTER COLUMN ... SET MASK ssn_mask` để gán chính sách mask.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang hỏi gì?** Hàm SQL UDF `ssn_mask` đã chứa logic quyết định ai xem được SSN thật. Bảng và cột đã có sẵn; bước còn thiếu là gắn hàm đó làm column mask cho cột `ssn`.\n\n**Đáp án D — `ALTER TABLE users ALTER COLUMN ssn SET MASK ssn_mask`.** Unity Catalog đánh giá column mask khi truy vấn cột. Thành viên `HRAdminGroup` nhận giá trị thật theo logic của UDF; người khác nhận chuỗi đã che. Lệnh này áp dụng chính sách ở cấp cột mà không cần tạo lại bảng. Người chạy cần quyền quản lý phù hợp trên bảng.\n\n**Vì sao các phương án khác sai?**\n- **A sai:** `CREATE MASK` không phải mệnh đề SQL để gắn mask vào cột; hàm đã được tạo, nên dùng `SET MASK`.\n- **B sai:** điều kiện nhóm phải nằm trong UDF đã đăng ký. `SET MASK` nhận tên hàm, không nhận biểu thức điều kiện inline; đồng thời hàm kiểm tra group membership cần dùng cơ chế Unity Catalog phù hợp.\n- **C sai:** tag là metadata để phân loại/governance, không thực thi che giá trị cột.\n\nMask chỉ bảo vệ dữ liệu khi người dùng truy vấn qua bảng đã gắn policy; vẫn cần phân quyền bảng, kiểm soát quyền sở hữu và thử cả trường hợp thuộc/không thuộc nhóm.",
     "page": null,
     "image": "img/q_234.jpg",
     "references": [
       {
-        "title": "Mask sensitive column data using column masks",
-        "url": "https://docs.databricks.com/en/tables/features/column-mapping"
+        "title": "Manually apply row filters and column masks",
+        "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/filters-and-masks/manually-apply"
       }
     ]
   },
   {
     "id": 235,
     "topic": 1,
-    "question": "A data engineer needs to create an application that will collect information about the latest job run including the repair history.\nHow should the data engineer format the request?",
+    "question": "A data engineer already has a `run_id` (for example, from listing a job's runs) and needs metadata for that run, including its repair history.\nWhich request should the application send?",
     "options": {
-      "A": "Call `/api/2.1/jobs/runs/list` with the `run_id` and `include_history` parameters",
-      "B": "Call `/api/2.1/jobs/runs/get` with the `run_id` and `include_history` parameters",
-      "C": "Call `/api/2.1/jobs/runs/get` with the `job_id` and `include_history` parameters",
-      "D": "Call `/api/2.1/jobs/runs/list` with the `job_id` and `include_history` parameters"
+      "A": "Call `/api/2.2/jobs/runs/list` with the `run_id` and `include_history` parameters",
+      "B": "Call `/api/2.2/jobs/runs/get` with the `run_id` and `include_history` parameters",
+      "C": "Call `/api/2.2/jobs/runs/get` with the `job_id` and `include_history` parameters",
+      "D": "Call `/api/2.2/jobs/runs/list` with the `job_id` and `include_history` parameters"
     },
     "answer": "B",
-    "question_vi": "Cần lấy thông tin lần chạy job mới nhất kèm lịch sử sửa/chạy lại. Định dạng request thế nào?",
+    "question_vi": "Kỹ sư đã có `run_id` (chẳng hạn lấy từ danh sách các lần chạy của job) và cần metadata của lần chạy đó, gồm cả lịch sử repair.  Request nào đúng?",
     "options_vi": {
       "A": "Gọi `/api/2.1/jobs/runs/list` với `run_id` và `include_history`",
       "B": "Gọi `/api/2.1/jobs/runs/get` với `run_id` và `include_history`",
       "C": "Gọi `/api/2.1/jobs/runs/get` với `job_id` và `include_history`",
       "D": "Gọi `/api/2.1/jobs/runs/list` với `job_id` và `include_history`"
     },
-    "explanation_vi": "Để lấy thông tin chi tiết về một lần chạy (run) cụ thể của một job, bao gồm cả lịch sử sửa chữa/chạy lại (repair history), ta sử dụng **REST API** endpoint `GET /api/2.1/jobs/runs/get` với tham số `run_id` và `include_history=true`.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang hỏi gì?** Ứng dụng đã biết `run_id` của lần chạy cần tra cứu và muốn lấy chi tiết của đúng lần chạy đó, gồm lịch sử sửa/chạy lại (repair history).\n\n**Đáp án B — gọi `jobs/runs/get` bằng `run_id` và bật `include_history=true`.** Request có dạng:\n```http\nGET /api/2.2/jobs/runs/get?run_id=<run_id>&include_history=true\n```\nEndpoint `runs/get` trả metadata của một lần chạy; `run_id` xác định duy nhất lần chạy, còn `include_history` yêu cầu API đưa repair history vào phản hồi. Nếu ứng dụng chưa biết lần chạy mới nhất, trước đó cần gọi `jobs/runs/list?job_id=<job_id>`, chọn `run_id` phù hợp rồi mới gọi `runs/get`.\n\n**Vì sao các phương án khác sai?**\n- **A sai:** `runs/list` liệt kê nhiều runs theo bộ lọc như `job_id`; nó không nhận `run_id` để trả chi tiết một run như yêu cầu.\n- **C sai:** `runs/get` bắt buộc nhận `run_id`; `job_id` nhận diện job có thể có nhiều lần chạy.\n- **D sai:** `runs/list` với `job_id` có thể giúp tìm các run, nhưng không phải request chi tiết có `include_history` để lấy repair history của một run cụ thể.",
     "page": null,
     "image": "img/q_235.jpg",
     "references": [
       {
-        "title": "Databricks Jobs API - Get job run",
-        "url": "https://docs.databricks.com/en/pyspark/reference/classes/runtimeconfig/unset"
+        "title": "Databricks Jobs API: Get a single job run",
+        "url": "https://docs.databricks.com/api/jobs/v2/get-run"
       }
     ]
   },
@@ -7150,10 +7235,19 @@
       "C": "Tạo view với `WHERE` động và hàm replace để mask email.",
       "D": "Chỉ tạo row filter vì mask không kết hợp được với row filter."
     },
-    "explanation_vi": "Trong **Unity Catalog**, row filters và column masks được triển khai bằng cách tạo các hàm SQL **UDF** định nghĩa logic lọc và ẩn dữ liệu nhạy cảm (dựa trên thông tin vùng của người dùng hoặc tư cách thành viên nhóm). Sau đó, các hàm này được áp dụng trực tiếp lên bảng bằng lệnh `ALTER TABLE SET ROW FILTER` và `ALTER COLUMN SET MASK`.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** Tạo hai SQL UDF có logic riêng: row-filter UDF quyết định người dùng được thấy dòng nào (ví dụ tra vùng được phép của `current_user()`), còn mask UDF trả email đầy đủ cho nhóm được miễn mask và giá trị đã che cho người khác. Gắn UDF lọc bằng `ALTER TABLE ... SET ROW FILTER ... ON (...)`, rồi gắn UDF mask cho cột bằng `ALTER TABLE ... ALTER COLUMN email SET MASK ...`. Unity Catalog áp dụng chính sách tại thời điểm truy cập; người đọc không thể bỏ qua chúng chỉ bằng cách gửi query khác.\n\nB không phải cú pháp `GRANT ... WITH TAG` hợp lệ để áp chính sách động, và lọc ở ứng dụng không bảo vệ dữ liệu khi người dùng truy cập bảng qua workload khác. C vừa trộn view động với string replacement, vừa mô tả sai cú pháp mask. D sai vì row filter và column mask có thể cùng áp dụng trên một bảng; không cần drop/recreate bảng. Cần cấp quyền dùng UDF phù hợp và kiểm thử bằng danh tính/nhóm đại diện (bao gồm người dùng ngoài nhóm admin) để xác nhận chính sách không vô tình lộ PII.",
     "page": null,
     "image": "img/q_241.jpg",
-    "references": []
+    "references": [
+      {
+        "title": "Row filters and column masks — Unity Catalog",
+        "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/filters-and-masks/"
+      },
+      {
+        "title": "Unity Catalog SQL group-membership function",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/functions/is_account_group_member"
+      }
+    ]
   },
   {
     "id": 242,
@@ -7214,7 +7308,7 @@
   {
     "id": 244,
     "topic": 1,
-    "question": "When monitoring a complex workload, being able to see the query plan is critical to understanding what the workload is doing.\nWhere can the visualization of the query plan be found?",
+    "question": "When monitoring a complex Spark SQL or DataFrame application, being able to inspect the query plan is critical to understanding execution.\nWhere can the visualization of a query plan be found?",
     "options": {
       "A": "In the **Spark UI**, under the **Jobs** tab",
       "B": "In the **Query Profiler**, under **Query Source**",
@@ -7222,20 +7316,20 @@
       "D": "In the **Query Profiler**, under the **Stages** tab"
     },
     "answer": "C",
-    "question_vi": "Muốn xem trực quan query plan khi theo dõi workload phức tạp. Xem ở đâu?",
+    "question_vi": "Khi theo dõi ứng dụng Spark SQL hoặc DataFrame phức tạp, cần xem sơ đồ thực thi truy vấn. Có thể mở phần trực quan hóa query plan ở đâu?",
     "options_vi": {
       "A": "**Spark UI**, tab **Jobs**",
       "B": "**Query Profiler**, tab **Query Source**",
       "C": "**Spark UI**, tab **SQL/DataFrame**",
       "D": "**Query Profiler**, tab **Stages**"
     },
-    "explanation_vi": "Để xem trực quan hóa của sơ đồ truy vấn (query plan) và đồ thị hướng không chu trình (**DAG**) của một Spark job, ta xem dưới tab **SQL/DataFrame** (hoặc chỉ **SQL** ở các bản Spark UI cũ hơn) trong giao diện **Spark UI**.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang hỏi gì?** Đây là query plan của một ứng dụng Spark SQL/DataFrame đang chạy trên compute, không phải văn bản SQL hay một truy vấn chạy trên SQL warehouse.\n\n**Đáp án C — tab SQL/DataFrame trong Spark UI.** Khi Spark thực thi một truy vấn từ SQL hoặc DataFrame API, Spark UI ghi nhận query và hiển thị sơ đồ các toán tử/quan hệ thực thi (DAG) trong tab SQL/DataFrame. Sơ đồ giúp lần theo scan, join, aggregate và các metric của từng phần để tìm bước tốn thời gian hoặc đọc dữ liệu quá nhiều.\n\n**Vì sao các lựa chọn khác sai?**\n- **A — tab Jobs:** hữu ích để xem job, stage và tiến độ; không phải nơi hiển thị đồ thị query plan gắn với SQL/DataFrame.\n- **B — Query Profiler / Query Source:** Query Profiler thuộc luồng phân tích truy vấn SQL warehouse; Query Source cho biết câu truy vấn nguồn, không phải DAG của Spark application.\n- **D — Query Profiler / Stages:** phần stages có thể trình bày thông tin thực thi của truy vấn warehouse, nhưng câu hỏi đang hỏi query plan của Spark SQL/DataFrame application trong Spark UI.\n\n**Cách dùng:** mở trang compute chạy workload, chọn Spark UI rồi mở SQL/DataFrame. Với truy vấn chạy trên SQL warehouse, dùng Query Profile thay vì Spark UI.",
     "page": null,
     "image": "img/q_244.jpg",
     "references": [
       {
-        "title": "Databricks Spark UI reference",
-        "url": "https://docs.databricks.com/en/compute/troubleshooting/debugging-spark-ui"
+        "title": "Debugging with the Spark UI",
+        "url": "https://docs.databricks.com/aws/en/compute/troubleshooting/debugging-spark-ui"
       }
     ]
   },
@@ -7257,13 +7351,13 @@
       "C": "Sử dụng lệnh `EXPLAIN` để xem logical plan và ước lượng shuffle.",
       "D": "Chạy thử với mệnh đề `LIMIT` để so sánh thời gian."
     },
-    "explanation_vi": "Bảng điều khiển **Top Operators** trong **Query Profile** của **Databricks SQL** cung cấp danh sách xếp hạng các toán tử tốn kém nhất theo thời gian thực thi (như `BroadcastNestedLoopJoin`, `Shuffle`, `TableScan`), giúp xác định chính xác nút thắt cổ chai mà không cần phân tích thủ công logical plan phức tạp.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A — Query Profile, đặc biệt Top Operators.** Với truy vấn Databricks SQL, Query Profile hiển thị các toán tử trong physical execution cùng thời gian/chi phí và số liệu đọc/đầu ra. Top Operators giúp tìm nhanh phần chiếm nhiều thời gian; từ đó kiểm tra scan, join (ví dụ `BroadcastNestedLoopJoin`) và shuffle. Khi nghi ngờ data skipping, đối chiếu thông tin scan/pruned files hoặc bytes đọc so với dữ liệu đầu vào; chỉ nhìn tên một operator chưa đủ để kết luận nguyên nhân.\n\n- **B sai** vì Jobs UI và metric compute cho biết job/runtime/cụm đang bận đến đâu, nhưng không phân rã chi phí theo toán tử của SQL query để xác định join hoặc scan cụ thể.\n- **C có ích nhưng chưa đủ**: `EXPLAIN` cho thấy logical/physical plan dự kiến, không phải runtime profile đầy đủ; ước lượng thủ công shuffle không xác nhận điều gì đã thực sự xảy ra.\n- **D gây nhiễu**: `LIMIT` có thể khiến optimizer đọc ít dữ liệu hơn và thay đổi plan, nên thời gian chạy mẫu nhỏ không đáng tin để suy ra bottleneck của truy vấn đầy đủ.\n\nQuery Profile là điểm bắt đầu chẩn đoán; sau khi xác định operator bất thường, cần kiểm tra join keys, statistics, pruning và dữ liệu skew trước khi chọn cách tối ưu.",
     "page": null,
     "image": "img/q_245.jpg",
     "references": [
       {
-        "title": "Databricks SQL Query Profile reference",
-        "url": "https://docs.databricks.com/en/sql/user/queries/query-profile"
+        "title": "Databricks SQL Query Profile",
+        "url": "https://docs.databricks.com/aws/en/sql/user/queries/query-profile"
       }
     ]
   },
@@ -7285,13 +7379,17 @@
       "C": "Luôn dùng open protocol vì bảo mật hơn **D2D**.",
       "D": "**D2D** chỉ dùng cùng cloud nên phải dùng open sharing, **UC** không áp dụng khi chia sẻ ra ngoài."
     },
-    "explanation_vi": "**Delta Sharing** hỗ trợ hai mô hình chia sẻ: Databricks-to-Databricks (**D2D**) cho phép chia sẻ trực tiếp không cần token giữa các workspace Databricks có **Unity Catalog**; và Open Sharing (**D2O**) cho phép chia sẻ dữ liệu với các nền tảng không phải Databricks (như **Apache Spark** trên **AWS**) thông qua file thông tin xác thực chứa bearer token an toàn.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** Đối tác A có workspace Databricks bật Unity Catalog nên dùng Databricks-to-Databricks (D2D/OpenSharing). Hai bên thiết lập recipient/share giữa các metastore; người nhận không cần bearer token, xác thực và audit được Databricks quản lý. D2D hỗ trợ khác cloud provider (AWS/Azure/GCP), nên việc đối tác B chạy AWS không phải giới hạn của D2D — điều quyết định ở đây là B không dùng Databricks/Unity Catalog.\n\nĐối tác B dùng Apache Spark ngoài Databricks nên dùng Databricks-to-Open (D2O). Có thể cấp credential bằng bearer token dài hạn, phân phối an toàn, hoặc OIDC federation để xác thực theo identity provider của đối tác với OAuth token ngắn hạn. Không có lựa chọn nào mặc định “luôn an toàn hơn” trong mọi tổ chức; chọn theo khả năng IdP, quản lý vòng đời credential và chính sách bảo mật.\n\n- **B sai** vì buộc cả hai đối tác dùng bearer token D2O, trong khi D2D tránh việc quản lý token thủ công cho workspace Unity Catalog.\n- **C sai** vì không có căn cứ nói D2O an toàn hơn D2D trong mọi trường hợp hay bearer token luôn an toàn hơn native identity federation.\n- **D sai** vì D2D hoạt động giữa các Databricks accounts trên AWS, Azure hoặc GCP; Unity Catalog là lớp governance cho share đó.\n\nVì dữ liệu nhạy cảm, nên xét OIDC cho đối tác không dùng Databricks nếu hệ thống danh tính hai bên hỗ trợ.",
     "page": null,
     "image": "img/q_246.jpg",
     "references": [
       {
-        "title": "Databricks Delta Sharing guide",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "What is OpenSharing?",
+        "url": "https://docs.databricks.com/aws/en/opensharing"
+      },
+      {
+        "title": "Databricks-to-Open sharing",
+        "url": "https://docs.databricks.com/aws/en/opensharing/share-data-open"
       }
     ]
   },
@@ -7302,7 +7400,7 @@
     "options": {
       "A": "```python\nclass Pipeline:\n    def transform(self, df):\n        return df.withColumn(\"value_upper\", upper(col(\"value\")))\n\npipeline = Pipeline()\nassertDataFrameEqual(pipeline.transform(test_input), expected)\n```",
       "B": "```python\ndef transform_data(input_df):\n    # transformation logic here\n    return output_df\n\ntest_input = spark.createDataFrame([(1, \"a\")], [\"id\", \"value\"])\nassertDataFrameEqual(transform_data(test_input), expected)\n```",
-      "C": "```python\ndef upper_transform(df):\n    return df.withColumn(\"value_upper\", upper(col(\"value\")))\n\nactual = test_input.transform(upper_transform)\nassertDataFrameEqual(actual, expected)\n```",
+      "C": "```python\ndef upper_transform(df):\n    return df.withColumn(\"value_upper\", upper(col(\"value\")))\n\ntest_input = spark.createDataFrame([(1, \"a\")], [\"id\", \"value\"])\nexpected = spark.createDataFrame([(1, \"a\", \"A\")], [\"id\", \"value\", \"value_upper\"])\nactual = test_input.transform(upper_transform)\nassertDataFrameEqual(actual, expected)\n```",
       "D": "```python\ndef upper_value(df):\n    return df.withColumn(\"value_upper\", upper(col(\"value\")))\n\ndef filter_positive(df):\n    return df.filter(df[\"id\"] > 0)\n\npipeline_df = df.transform(upper_value).transform(filter_positive)\n```"
     },
     "answer": "C",
@@ -7310,16 +7408,19 @@
     "options_vi": {
       "A": "```python\nclass Pipeline:\n    def transform(self, df):\n        return df.withColumn(\"value_upper\", upper(col(\"value\")))\n\npipeline = Pipeline()\nassertDataFrameEqual(pipeline.transform(test_input), expected)\n```",
       "B": "```python\ndef transform_data(input_df):\n    # transformation logic here\n    return output_df\n\ntest_input = spark.createDataFrame([(1, \"a\")], [\"id\", \"value\"])\nassertDataFrameEqual(transform_data(test_input), expected)\n```",
-      "C": "```python\ndef upper_transform(df):\n    return df.withColumn(\"value_upper\", upper(col(\"value\")))\n\nactual = test_input.transform(upper_transform)\nassertDataFrameEqual(actual, expected)\n```",
+      "C": "```python\ndef upper_transform(df):\n    return df.withColumn(\"value_upper\", upper(col(\"value\")))\n\ntest_input = spark.createDataFrame([(1, \"a\")], [\"id\", \"value\"])\nexpected = spark.createDataFrame([(1, \"a\", \"A\")], [\"id\", \"value\", \"value_upper\"])\nactual = test_input.transform(upper_transform)\nassertDataFrameEqual(actual, expected)\n```",
       "D": "```python\ndef upper_value(df):\n    return df.withColumn(\"value_upper\", upper(col(\"value\")))\n\ndef filter_positive(df):\n    return df.filter(df[\"id\"] > 0)\n\npipeline_df = df.transform(upper_value).transform(filter_positive)\n```"
     },
-    "explanation_vi": "Sử dụng phương thức `DataFrame.transform()` của **PySpark** cho phép xâu chuỗi (chaining) các hàm biến đổi độc lập nhận vào một `DataFrame` và trả về một `DataFrame` mới. Cách tiếp cận này giúp mã nguồn **ETL** có tính mô-đun cao, dễ đọc, tái sử dụng và dễ viết Unit Test độc lập cho từng hàm bằng cách truyền vào các `DataFrame` giả lập (mock DataFrame).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** C định nghĩa hàm biến đổi thuần nhận `DataFrame` và trả về `DataFrame` mới; gọi bằng API `DataFrame.transform`; rồi so sánh kết quả với DataFrame kỳ vọng. Fixture đầu vào/đầu ra được khai báo rõ, nên phép biến đổi nhỏ có thể được kiểm thử độc lập và lắp vào ETL.\n\nA có thể là thiết kế hướng đối tượng và vẫn kiểm thử được, nhưng `pipeline.transform(...)` là method tự viết của lớp chứ không phải API `DataFrame.transform()` đang được hỏi. B trả về `output_df` chưa được định nghĩa nên không chạy được. D xâu chuỗi các hàm qua API đúng, nhưng đoạn mã không có fixture/assertion nên chưa chứng minh khả năng kiểm thử. Trong dự án thật, hãy kiểm thử riêng từng hàm và cả chuỗi pipeline với schema, null và edge case phù hợp.",
     "page": null,
-    "image": "img/q_247.jpg",
     "references": [
       {
-        "title": "PySpark DataFrame transform API reference",
+        "title": "PySpark DataFrame `transform` API",
         "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.transform.html"
+      },
+      {
+        "title": "PySpark `assertDataFrameEqual` testing helper",
+        "url": "https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.testing.assertDataFrameEqual.html"
       }
     ]
   },
@@ -7397,41 +7498,45 @@
       "C": "`COMMENT ON TABLE table_name TAGS ('key1' = 'value1', 'key2' = 'value2');`",
       "D": "`SET TAGS FOR table_name AS ('key1' = 'value1', 'key2' = 'value2');`"
     },
-    "explanation_vi": "Cú pháp `ALTER TABLE table_name SET TAGS ('key1' = 'value1', 'key2' = 'value2');` được sử dụng để gắn các thẻ (tags) vào bảng trong **Unity Catalog** theo cách lập trình bằng ngôn ngữ **SQL**.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang hỏi gì?** Pipeline ETL cần gắn nhiều cặp key/value làm tag lên một bảng Unity Catalog bằng SQL, không phải sửa comment hay cập nhật dữ liệu trong các hàng.\n\n**Đáp án A — `ALTER TABLE table_name SET TAGS (...)`.** Cú pháp `SET TAGS` gắn metadata tags lên đối tượng bảng. Ví dụ:\n```sql\nALTER TABLE main.analytics.events\nSET TAGS ('data_domain' = 'marketing', 'owner_team' = 'analytics');\n```\nTag có thể hỗ trợ phân loại/tìm kiếm và governance; nó không thay thế ACL hoặc row/column security. Trên Unity Catalog, thao tác cần quyền `APPLY TAG`; lệnh này áp dụng trên Databricks SQL/Runtime từ các phiên bản hỗ trợ (13.3 LTS trở lên).\n\n**Vì sao các phương án khác sai?**\n- **B sai:** `APPLY TAGS ON ... VALUES` không phải cú pháp SQL của Databricks.\n- **C sai:** `COMMENT ON TABLE` dùng để ghi mô tả/comment; nó không nhận mệnh đề `TAGS` như trong phương án.\n- **D sai:** `SET TAGS FOR ... AS` đảo sai cấu trúc cú pháp; Databricks yêu cầu `ALTER TABLE ... SET TAGS`.\n\nNếu bảng thuộc Unity Catalog nhưng principal không có quyền `APPLY TAG`, cú pháp đúng vẫn sẽ bị từ chối; kiểm tra quyền trước khi chạy trong pipeline.",
     "page": null,
     "image": "img/q_250.jpg",
     "references": [
       {
-        "title": "Databricks ALTER TABLE SQL syntax reference",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-alter-table"
+        "title": "ALTER TABLE SQL reference: SET TAGS",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table"
       }
     ]
   },
   {
     "id": 251,
     "topic": 1,
-    "question": "A platform engineer needs to report the resource consumption, categorized by **SKU** tier, across all workspaces. The engineer decides to use the `system.billing.usage` system table to create a query.\nWhich **SQL** query will accurately return the daily usage by product?",
+    "question": "A platform engineer needs daily billable usage quantities, grouped by SKU and unit, across workspaces. The query uses `system.billing.usage`.\nWhich SQL query returns the correct daily totals?",
     "options": {
-      "A": "```sql\nSELECT\n  DATE_TRUNC('day', usage_start_time) AS day,\n  sku_name,\n  SUM(dbus) AS daily_dbus\nFROM system.billing.usage\nWHERE sku_name IS NOT NULL\nGROUP BY day, sku_name;\n```",
-      "B": "```sql\nSELECT\n  CAST(usage_start_time AS DATE) AS usage_day,\n  sku_name,\n  COUNT(usage_quantity) AS dbu_count\nFROM system.billing.usage\nGROUP BY usage_day, sku_name\nORDER BY usage_day;\n```",
-      "C": "```sql\nSELECT\n  DATE_TRUNC('day', usage_start_time) AS usage_day,\n  sku_name,\n  SUM(usage_quantity) AS total_daily_dbus\nFROM system.billing.usage\nWHERE usage_quantity IS NOT NULL\nGROUP BY usage_day, sku_name\nORDER BY usage_day;\n```",
-      "D": "```sql\nSELECT\n  TO_DATE(usage_start_time) AS usage_day,\n  sku_name,\n  SUM(usage_quantity) AS total_dbus\nFROM system.billing.usage\nGROUP BY usage_day, sku_name\nORDER BY usage_day;\n```"
+      "A": "```sql\nSELECT\n  DATE_TRUNC('day', usage_start_time) AS usage_day,\n  sku_name,\n  SUM(dbus) AS daily_usage\nFROM system.billing.usage\nGROUP BY usage_day, sku_name;\n```",
+      "B": "```sql\nSELECT\n  usage_date,\n  sku_name,\n  COUNT(usage_quantity) AS usage_count\nFROM system.billing.usage\nGROUP BY usage_date, sku_name\nORDER BY usage_date;\n```",
+      "C": "```sql\nSELECT\n  usage_date,\n  sku_name,\n  usage_unit,\n  SUM(usage_quantity) AS total_daily_usage\nFROM system.billing.usage\nGROUP BY usage_date, sku_name, usage_unit\nORDER BY usage_date;\n```",
+      "D": "```sql\nSELECT\n  usage_start_time AS usage_day,\n  sku_name,\n  usage_unit,\n  SUM(usage_quantity) AS total_usage\nFROM system.billing.usage\nGROUP BY usage_start_time, sku_name, usage_unit\nORDER BY usage_start_time;\n```"
     },
     "answer": "C",
-    "question_vi": "Platform engineer muốn báo cáo mức sử dụng theo **SKU** cho mọi workspace bằng bảng `system.billing.usage`. Câu lệnh **SQL** nào trả usage theo sản phẩm mỗi ngày?",
+    "question_vi": "Platform engineer cần tổng lượng usage tính phí theo ngày, nhóm theo SKU và đơn vị, trên các workspace bằng `system.billing.usage`. Query nào đúng?",
     "options_vi": {
-      "A": "```sql\nSELECT\n  DATE_TRUNC('day', usage_start_time) AS day,\n  sku_name,\n  SUM(dbus) AS daily_dbus\nFROM system.billing.usage\nWHERE sku_name IS NOT NULL\nGROUP BY day, sku_name;\n```",
-      "B": "```sql\nSELECT\n  CAST(usage_start_time AS DATE) AS usage_day,\n  sku_name,\n  COUNT(usage_quantity) AS dbu_count\nFROM system.billing.usage\nGROUP BY usage_day, sku_name\nORDER BY usage_day;\n```",
-      "C": "```sql\nSELECT\n  DATE_TRUNC('day', usage_start_time) AS usage_day,\n  sku_name,\n  SUM(usage_quantity) AS total_daily_dbus\nFROM system.billing.usage\nWHERE usage_quantity IS NOT NULL\nGROUP BY usage_day, sku_name\nORDER BY usage_day;\n```",
-      "D": "```sql\nSELECT\n  TO_DATE(usage_start_time) AS usage_day,\n  sku_name,\n  SUM(usage_quantity) AS total_dbus\nFROM system.billing.usage\nGROUP BY usage_day, sku_name\nORDER BY usage_day;\n```"
+      "A": "```sql\nSELECT\n  DATE_TRUNC('day', usage_start_time) AS usage_day,\n  sku_name,\n  SUM(dbus) AS daily_usage\nFROM system.billing.usage\nGROUP BY usage_day, sku_name;\n```",
+      "B": "```sql\nSELECT\n  usage_date,\n  sku_name,\n  COUNT(usage_quantity) AS usage_count\nFROM system.billing.usage\nGROUP BY usage_date, sku_name\nORDER BY usage_date;\n```",
+      "C": "```sql\nSELECT\n  usage_date,\n  sku_name,\n  usage_unit,\n  SUM(usage_quantity) AS total_daily_usage\nFROM system.billing.usage\nGROUP BY usage_date, sku_name, usage_unit\nORDER BY usage_date;\n```",
+      "D": "```sql\nSELECT\n  usage_start_time AS usage_day,\n  sku_name,\n  usage_unit,\n  SUM(usage_quantity) AS total_usage\nFROM system.billing.usage\nGROUP BY usage_start_time, sku_name, usage_unit\nORDER BY usage_start_time;\n```"
     },
-    "explanation_vi": "Bảng hệ thống `system.billing.usage` lưu trữ lượng tiêu thụ **DBU** chi tiết. Để truy vấn lượng sử dụng hàng ngày theo từng sản phẩm (**SKU**), ta thực hiện tính tổng cột `usage_quantity` và gom nhóm (`GROUP BY`) theo ngày sử dụng (`usage_date`) và tên sản phẩm (`sku_name`).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Câu hỏi đang hỏi gì?** Cần tính tổng lượng usage trong từng ngày cho mỗi SKU và đơn vị tính trên bảng billable usage, không phải đếm số bản ghi hay nhóm theo từng timestamp.\n\n**Đáp án C.** `system.billing.usage` cung cấp `usage_date` (ngày của bản ghi), `sku_name`, `usage_unit` và `usage_quantity`. Gom nhóm theo ba trường đầu rồi `SUM(usage_quantity)` sẽ cho tổng lượng theo từng cặp ngày–SKU–đơn vị. Dùng cột ngày chuyên dụng cũng tránh phải biến đổi timestamp trong phép nhóm.\n\n**Vì sao các phương án khác sai?**\n- **A sai:** `dbus` không phải cột trong schema system table; lượng ghi nhận nằm ở `usage_quantity`, với đơn vị ở `usage_unit`.\n- **B sai:** `COUNT` đếm số dòng usage record, không cộng lượng tiêu thụ. Một bản ghi lớn và một bản ghi nhỏ sẽ đều chỉ được đếm là một.\n- **D sai:** nhóm theo `usage_start_time` nguyên vẹn sẽ tách dữ liệu theo từng thời điểm bắt đầu, không gom toàn bộ bản ghi trong ngày.\n\nKhi cần chi phí tiền tệ thay vì quantity, phải kết hợp usage với bảng giá phù hợp; `usage_quantity` tự nó không phải số tiền.",
     "page": null,
     "image": "img/q_251.jpg",
     "references": [
       {
-        "title": "Billing system tables reference in Databricks",
-        "url": "https://docs.databricks.com/en/admin/system-tables/billing"
+        "title": "Billable usage system table reference",
+        "url": "https://docs.databricks.com/aws/en/admin/system-tables/billing"
+      },
+      {
+        "title": "Monitor costs using system tables",
+        "url": "https://docs.databricks.com/aws/en/admin/usage/system-tables"
       }
     ]
   },
@@ -7578,7 +7683,7 @@
   {
     "id": 257,
     "topic": 1,
-    "question": "A data engineer is using **Auto Loader** to read in **JSON** data as it arrives. They have configured **Auto Loader** to quarantine invalid **JSON** records. They are noticing that over time, some records are being quarantined even though they are well-formed **JSON**.\nThe snippet of code is:\nWhat is the cause of the missing data?",
+    "question": "A data engineer uses Auto Loader to parse single-line JSON with the explicit schema `a INT, b INT` and writes malformed records to `badRecordsPath`. Some quarantined records are syntactically valid JSON but contain values or fields that do not match the expected schema. What is the most likely cause?",
     "options": {
       "A": "The source data is valid **JSON**, but doesn’t conform to their defined schema in some way.",
       "B": "The `badRecordsPath` location is accumulating many small files.",
@@ -7586,20 +7691,24 @@
       "D": "At some point, the upstream data provider switched everything to multi-line **JSON**."
     },
     "answer": "A",
-    "question_vi": "**Auto Loader** đọc **JSON** và cách ly bản ghi lỗi; theo thời gian có bản ghi **JSON** hợp lệ vẫn bị đưa vào quarantine.",
+    "question_vi": "Kỹ sư dùng Auto Loader đọc JSON mỗi dòng một record với schema tường minh `a INT, b INT` và đưa record parse lỗi vào `badRecordsPath`. Một số record bị cách ly có cú pháp JSON hợp lệ nhưng giá trị/trường không khớp schema kỳ vọng. Nguyên nhân có khả năng nhất là gì?",
     "options_vi": {
       "A": "Dữ liệu **JSON** hợp lệ nhưng không khớp schema đã định.",
       "B": "Thư mục `badRecordsPath` tích lũy quá nhiều file nhỏ.",
       "C": "Quên set option `cloudFiles.quarantineMode` = `rescue`.",
       "D": "Nguồn upstream chuyển sang multi-line **JSON**."
     },
-    "explanation_vi": "Khi sử dụng **Auto Loader** (`cloudFiles`) để đọc dữ liệu **JSON**, nếu cấu trúc hoặc kiểu dữ liệu của một số trường trong bản ghi **JSON** không khớp với schema đã định nghĩa trước (schema mismatch), bản ghi đó sẽ bị xếp vào nhóm lỗi hoặc đưa vào đường dẫn cách ly (`badRecordsPath`) mặc dù bản thân chuỗi **JSON** vẫn hợp lệ (well-formed).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** Schema khai báo là `a INT, b INT`, nên một payload có thể là JSON hợp lệ về cú pháp nhưng không khớp schema kỳ vọng, ví dụ trường có kiểu khác hoặc cấu trúc không đúng. Với schema/parser hiện tại và đường dẫn `badRecordsPath`, các lỗi parse/schema tương ứng có thể bị cách ly; nguyên nhân nằm ở hợp đồng dữ liệu, không phải ở dung lượng thư mục quarantine.\n\n- **B sai** vì nhiều file nhỏ có thể ảnh hưởng hiệu năng/lưu trữ nhưng không khiến một record hợp lệ về schema tự bị đánh dấu lỗi.\n- **C sai** vì `cloudFiles.quarantineMode=\"rescue\"` không phải cách viết cấu hình cần thêm vào đoạn này. Auto Loader dùng `rescuedDataColumn`/`_rescued_data` cho dữ liệu không khớp schema; `badRecordsPath` là cơ chế khác.\n- **D chưa được chứng minh**: multi-line JSON cần parser option phù hợp và có thể gây lỗi nếu format đổi, nhưng stem không cho dấu hiệu đó; lỗi vẫn có thể xuất phát từ schema mismatch.\n\nLưu ý hành vi hiện hành: nếu cấu hình `rescuedDataColumn`, Auto Loader đưa type mismatch/cột không khớp vào cột rescued; `badRecordsPath` khi đó dành cho JSON thiếu/hỏng về cú pháp, không phải mọi mismatch kiểu. Khi vận hành, kiểm tra `_rescued_data`, schema, parser mode và mẫu record cụ thể trước khi gọi chung tất cả là “JSON invalid”.",
     "page": null,
     "image": "img/q_257.jpg",
     "references": [
       {
-        "title": "Configure schema inference and evolution in Auto Loader reference",
-        "url": "https://docs.databricks.com/en/pyspark/reference/classes/datastreamreader/schema"
+        "title": "Configure schema inference and evolution in Auto Loader",
+        "url": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/schema"
+      },
+      {
+        "title": "Auto Loader best practices",
+        "url": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/best-practices"
       }
     ]
   },
@@ -7680,7 +7789,7 @@
   {
     "id": 261,
     "topic": 1,
-    "question": "A data engineer and a platform engineer are working together to automate their system tasks. A script needs to be executed outside of **Databricks** only if a particular daily **Databricks** job finishes successfully for the day. A **Databricks CLI** command was used to check the last execution of the job.\nWhat are the required command options for that task?",
+    "question": "A daily Databricks job may have multiple runs. A script outside Databricks should proceed only after a run that started today (UTC) has finished successfully. The CLI is used to retrieve completed runs since UTC midnight; the script must then inspect each run's result state.\n\nWhich command options retrieve the relevant completed runs?",
     "options": {
       "A": "`databricks jobs list-runs --job-id JOB_ID --start-time-to TODAY_MIDNIGHT_EPOCH_MS --completed-only`",
       "B": "`databricks jobs list-runs --job-id JOB_ID --start-time-from TODAY_MIDNIGHT_EPOCH_MS --active-only`",
@@ -7688,20 +7797,19 @@
       "D": "`databricks jobs list-runs --job-id JOB_ID --start-time-from TODAY_MIDNIGHT_EPOCH_MS --completed-only`"
     },
     "answer": "D",
-    "question_vi": "Cần chạy script ngoài **Databricks** chỉ khi job hằng ngày hoàn tất; dùng **Databricks CLI** để kiểm tra lần chạy cuối của job trong ngày.",
+    "question_vi": "Một job Databricks chạy hằng ngày có thể có nhiều lượt chạy. Script bên ngoài chỉ được tiếp tục sau khi có lượt chạy bắt đầu trong ngày hôm nay (UTC) và kết thúc thành công. CLI được dùng để lấy các lượt đã kết thúc kể từ 00:00 UTC; sau đó script phải kiểm tra result state của từng lượt.\n\nNhóm option nào lấy các lượt chạy đã kết thúc cần xét?",
     "options_vi": {
       "A": "`databricks jobs list-runs --job-id JOB_ID --start-time-to TODAY_MIDNIGHT_EPOCH_MS --completed-only`",
       "B": "`databricks jobs list-runs --job-id JOB_ID --start-time-from TODAY_MIDNIGHT_EPOCH_MS --active-only`",
       "C": "`databricks jobs list-runs --job-id JOB_ID --start-time-to TODAY_MIDNIGHT_EPOCH_MS --active-only`",
       "D": "`databricks jobs list-runs --job-id JOB_ID --start-time-from TODAY_MIDNIGHT_EPOCH_MS --completed-only`"
     },
-    "explanation_vi": "Để xác định xem một job đã hoàn thành thành công trong ngày hôm nay hay chưa, lệnh **CLI** cần lọc các lượt chạy bắt đầu từ nửa đêm hôm nay (`--start-time-from TODAY_MIDNIGHT_EPOCH_MS`) và chỉ lấy những lượt chạy đã kết thúc (`--completed-only`). Nếu kết quả trả về có ít nhất một lượt chạy thành công, script bên ngoài có thể tiếp tục thực thi.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** `--start-time-from TODAY_MIDNIGHT_EPOCH_MS` lọc run theo thời điểm bắt đầu từ 00:00 UTC; `--completed-only` loại các run còn đang chạy. Hai tùy chọn này lấy các ứng viên phù hợp trong số lựa chọn. Tuy nhiên, “completed” chỉ nghĩa là run đã kết thúc, không đồng nghĩa thành công: run thất bại, bị hủy hoặc timeout cũng có thể đã hoàn tất. Script phải đọc `result_state` và chỉ tiếp tục khi giá trị là `SUCCESS` (đồng thời xử lý trường hợp không có run hoặc có nhiều run).\n\nA và C lọc thời điểm kết thúc đến nửa đêm hôm nay, nên không lấy các run bắt đầu trong ngày sau mốc đó; `active-only` lại chọn run còn chạy, ngược điều kiện. B lọc run bắt đầu hôm nay nhưng cũng dùng `active-only`. Epoch phải là milliseconds theo UTC; có thể thêm `--start-time-to` để chặn trên cửa sổ thời gian nếu cần.",
     "page": null,
-    "image": "img/q_261.jpg",
     "references": [
       {
-        "title": "Databricks CLI Jobs command reference",
-        "url": "https://docs.databricks.com/en/archive/dev-tools/cli/jobs-cli"
+        "title": "Databricks CLI jobs command reference (`list-runs`)",
+        "url": "https://docs.databricks.com/aws/en/dev-tools/cli/reference/jobs-commands"
       }
     ]
   },
@@ -7764,7 +7872,7 @@
   {
     "id": 264,
     "topic": 1,
-    "question": "A data architect is implementing **Delta Sharing** as part of their data governance strategy to enable secure data collaboration with external partners and internal business units. The architect must establish a permission framework that allows designated data stewards to create shares for their respective domains while maintaining security boundaries and audit compliance.\nWhich specific permissions and roles must be assigned to enable users to create, configure, and manage **Delta Shares** while maintaining proper security governance and access controls?",
+    "question": "A data steward needs to create a new Delta Sharing share in a Unity Catalog metastore. Which permission is required for the create operation? (Managing recipients and source-table access is configured separately after creation.)",
     "options": {
       "A": "Only workspace admins can create and manage shares",
       "B": "Users need the MANAGE SHARES permission on the workspace",
@@ -7772,20 +7880,23 @@
       "D": "Any user with `USE_CATALOG` privilege can create shares"
     },
     "answer": "C",
-    "question_vi": "Thiết lập **Delta Sharing**: cần quyền nào để data steward tạo và quản lý share đúng quản trị?",
+    "question_vi": "Data steward cần tạo một share mới trong metastore Unity Catalog. Quyền nào cần cho thao tác tạo share? (Quyền quản lý recipients và truy cập bảng nguồn sẽ được cấu hình riêng sau đó.)",
     "options_vi": {
       "A": "Chỉ workspace admin mới tạo/quản lý share.",
       "B": "User cần quyền MANAGE SHARES ở workspace.",
       "C": "Phải là metastore admin hoặc được cấp `CREATE SHARE` trên metastore.",
       "D": "Bất kỳ user có `USE_CATALOG` đều tạo được share."
     },
-    "explanation_vi": "Trong mô hình quản trị của **Unity Catalog**, quyền tạo và quản lý **Delta Shares** là một quyền cấp cao ở mức Metastore. Chỉ các quản trị viên Metastore (metastore admins) hoặc người dùng được cấp đặc quyền `CREATE SHARE` trên metastore mới có thể tạo, cấu hình và quản lý các lượt chia sẻ (shares) dữ liệu.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** Để **tạo một share mới** trong Unity Catalog OpenSharing, principal phải là metastore admin hoặc được cấp `CREATE SHARE` trên metastore. Sau khi tạo share, cần quản trị riêng quyền sở hữu, thêm assets/recipients và cấp quyền truy cập; `CREATE SHARE` không tự cấp quyền đọc bảng nguồn, không tự chia sẻ dữ liệu và cũng không có nghĩa người tạo được toàn quyền quản trị mọi share khác.\n\n- **A sai** vì workspace admin không phải điều kiện duy nhất; quyền `CREATE SHARE` có thể được cấp cho data steward theo nguyên tắc least privilege.\n- **B sai** vì `MANAGE SHARES` không phải tên privilege Unity Catalog hiện hành cho thao tác tạo share trong câu hỏi.\n- **D sai** vì `USE CATALOG` chỉ cho phép tương tác với object trong catalog khi có quyền phù hợp; quyền này không tạo share ở cấp metastore.\n\nĐể quy trình stewardship an toàn, cấp `CREATE SHARE` cho nhóm được chỉ định, sau đó đặt owner phù hợp cho share và cấp quyền `SELECT`/quyền chia sẻ recipient theo nhu cầu. Nếu cần thay đổi recipients hoặc chuyển ownership, còn áp dụng các quyền riêng như `SET SHARE PERMISSION`, `USE SHARE` và quy tắc owner/metastore admin.",
     "page": null,
-    "image": "img/q_264.jpg",
     "references": [
       {
-        "title": "Delta Sharing privileges and permissions reference",
-        "url": "https://docs.databricks.com/en/opensharing/share-data-databricks"
+        "title": "Unity Catalog privileges reference",
+        "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/privileges-reference"
+      },
+      {
+        "title": "Create shares for OpenSharing",
+        "url": "https://docs.databricks.com/aws/en/opensharing/create-share"
       }
     ]
   },
@@ -8047,28 +8158,31 @@
   {
     "id": 274,
     "topic": 1,
-    "question": "A data engineer is analyzing transactional data in a **PySpark** **DataFrame** `df` containing `customer_id`, `transaction_timestamp` (precise to milliseconds), and `amount_spent`. The objective is to compute a cumulative sum of `amount_spent` per customer, strictly ordered by `transaction_timestamp`. The cumulative sum must include all transactions from the earliest timestamp up to and including the current row, respecting temporal ordering within each customer partition. Which **PySpark** code snippet most accurately constructs the appropriate window specification and applies the aggregation to yield the correct cumulative expenditure per customer?",
+    "question": "A PySpark DataFrame `df` contains `customer_id`, a unique `transaction_id`, `transaction_timestamp` (precise to milliseconds; ties are possible), and `amount_spent`. Compute a cumulative sum per customer in timestamp order, using `transaction_id` as a deterministic tie-breaker. Include all rows from the beginning of that customer's ordered transactions through the current row. Assume `Window` and `pyspark.sql.functions as F` are imported. Which code correctly specifies the window and computes the sum?",
     "options": {
-      "A": "```python\nfrom pyspark.sql import Window\nfrom pyspark.sql.functions import col, sum\n\nwindow_spec = Window.partitionBy(\"customer_id\").rowsBetween(Window.unboundedPreceding, Window.currentRow)\ndf = df.withColumn(\"cumulative_spent\", sum(\"amount_spent\").over(window_spec))\n```",
-      "B": "```python\nfrom pyspark.sql import Window\nfrom pyspark.sql import functions as F\n\nwindow_spec = Window.orderBy(\"transaction_timestamp\").rowsBetween(Window.unboundedPreceding, Window.currentRow)\ndf = df.withColumn(\"cumulative_spent\", F.sum(\"amount_spent\").over(window_spec))\n```",
-      "C": "```python\nfrom pyspark.sql import Window\nfrom pyspark.sql import functions as F\n\nwindow_spec = Window.partitionBy(\"customer_id\").orderBy(\"transaction_timestamp\").rowsBetween(Window.unboundedPreceding, Window.currentRow)\ndf = df.withColumn(\"cumulative_spent\", F.sum(\"amount_spent\").over(window_spec))\n```",
-      "D": "```python\nfrom pyspark.sql import Window\nfrom pyspark.sql import functions as F\n\nwindow_spec = Window.partitionBy(\"customer_id\").orderBy(\"transaction_timestamp\")\ndf = df.withColumn(\"cumulative_spent\", F.sum(\"amount_spent\").over(window_spec))\n```"
+      "A": "```python\nwindow_spec = Window.partitionBy(\"customer_id\")\ndf = df.withColumn(\"cumulative_spent\", F.sum(\"amount_spent\").over(window_spec))\n```",
+      "B": "```python\nwindow_spec = (Window.orderBy(\"transaction_timestamp\", \"transaction_id\")\n    .rowsBetween(Window.unboundedPreceding, Window.currentRow))\ndf = df.withColumn(\"cumulative_spent\", F.sum(\"amount_spent\").over(window_spec))\n```",
+      "C": "```python\nwindow_spec = (Window.partitionBy(\"customer_id\")\n    .orderBy(\"transaction_timestamp\", \"transaction_id\")\n    .rowsBetween(Window.unboundedPreceding, Window.currentRow))\ndf = df.withColumn(\"cumulative_spent\", F.sum(\"amount_spent\").over(window_spec))\n```",
+      "D": "```python\nwindow_spec = Window.partitionBy(\"customer_id\").orderBy(\"transaction_timestamp\")\ndf = df.withColumn(\"cumulative_spent\", F.sum(\"amount_spent\").over(window_spec))\n```"
     },
     "answer": "C",
-    "question_vi": "Cần tính lũy kế `amount_spent` theo khách hàng, sắp xếp đúng theo `transaction_timestamp` (ms) trong **PySpark**.",
+    "question_vi": "DataFrame PySpark `df` có `customer_id`, `transaction_id` duy nhất, `transaction_timestamp` (độ chính xác mili-giây nên có thể trùng thời gian), và `amount_spent`. Hãy tính tổng lũy kế theo khách hàng, sắp xếp theo timestamp và dùng `transaction_id` để phá hòa ổn định. Tổng gồm mọi dòng từ đầu thứ tự của khách đến dòng hiện tại. Giả sử đã import `Window` và `pyspark.sql.functions as F`. Đoạn code nào khai báo window và tính tổng đúng?",
     "options_vi": {
-      "A": "```python\nfrom pyspark.sql import Window\nfrom pyspark.sql.functions import col, sum\n\nwindow_spec = Window.partitionBy(\"customer_id\").rowsBetween(Window.unboundedPreceding, Window.currentRow)\ndf = df.withColumn(\"cumulative_spent\", sum(\"amount_spent\").over(window_spec))\n```",
-      "B": "```python\nfrom pyspark.sql import Window\nfrom pyspark.sql import functions as F\n\nwindow_spec = Window.orderBy(\"transaction_timestamp\").rowsBetween(Window.unboundedPreceding, Window.currentRow)\ndf = df.withColumn(\"cumulative_spent\", F.sum(\"amount_spent\").over(window_spec))\n```",
-      "C": "```python\nfrom pyspark.sql import Window\nfrom pyspark.sql import functions as F\n\nwindow_spec = Window.partitionBy(\"customer_id\").orderBy(\"transaction_timestamp\").rowsBetween(Window.unboundedPreceding, Window.currentRow)\ndf = df.withColumn(\"cumulative_spent\", F.sum(\"amount_spent\").over(window_spec))\n```",
-      "D": "```python\nfrom pyspark.sql import Window\nfrom pyspark.sql import functions as F\n\nwindow_spec = Window.partitionBy(\"customer_id\").orderBy(\"transaction_timestamp\")\ndf = df.withColumn(\"cumulative_spent\", F.sum(\"amount_spent\").over(window_spec))\n```"
+      "A": "```python\nwindow_spec = Window.partitionBy(\"customer_id\")\ndf = df.withColumn(\"cumulative_spent\", F.sum(\"amount_spent\").over(window_spec))\n```",
+      "B": "```python\nwindow_spec = (Window.orderBy(\"transaction_timestamp\", \"transaction_id\")\n    .rowsBetween(Window.unboundedPreceding, Window.currentRow))\ndf = df.withColumn(\"cumulative_spent\", F.sum(\"amount_spent\").over(window_spec))\n```",
+      "C": "```python\nwindow_spec = (Window.partitionBy(\"customer_id\")\n    .orderBy(\"transaction_timestamp\", \"transaction_id\")\n    .rowsBetween(Window.unboundedPreceding, Window.currentRow))\ndf = df.withColumn(\"cumulative_spent\", F.sum(\"amount_spent\").over(window_spec))\n```",
+      "D": "```python\nwindow_spec = Window.partitionBy(\"customer_id\").orderBy(\"transaction_timestamp\")\ndf = df.withColumn(\"cumulative_spent\", F.sum(\"amount_spent\").over(window_spec))\n```"
     },
-    "explanation_vi": "Đáp án **C**: Để tính lũy kế (cumulative sum) trong **PySpark** một cách chính xác theo từng khách hàng, chúng ta phải định nghĩa một **Window** phân vùng theo `customer_id`, sắp xếp theo `transaction_timestamp` tăng dần và xác định khung giới hạn (frame) từ điểm bắt đầu phân vùng đến dòng hiện tại: `.rowsBetween(Window.unboundedPreceding, Window.currentRow)`. Sau đó, áp dụng hàm `F.sum('amount_spent').over(window_spec)`.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** `partitionBy(\"customer_id\")` đặt lại phép tính ở mỗi khách hàng. `orderBy(\"transaction_timestamp\", \"transaction_id\")` xác định thứ tự tăng dần ổn định cả khi nhiều giao dịch cùng timestamp. `rowsBetween(unboundedPreceding, currentRow)` lấy mọi dòng trước đó trong thứ tự cùng dòng hiện tại; `sum(...).over(window_spec)` tạo tổng lũy kế.\n\nA thiếu thứ tự nên không xác định được dòng trước/current. B có thứ tự và frame nhưng không partition theo khách hàng nên cộng lẫn giao dịch của khách. D bỏ tie-breaker và frame ROWS tường minh: khi timestamp trùng, thứ tự giữa giao dịch không xác định; frame mặc định theo RANGE có thể tính cùng tổng cho các peer cùng timestamp, khác yêu cầu tuần tự từng dòng. Đề dùng `transaction_id` để phá hòa và yêu cầu frame ROWS rõ ràng.",
     "page": null,
-    "image": "img/q_274.jpg",
     "references": [
       {
-        "title": "Window Functions - PySpark Reference",
+        "title": "PySpark Window API",
         "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Window.html"
+      },
+      {
+        "title": "PySpark `rowsBetween` API",
+        "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Window.rowsBetween.html"
       }
     ]
   },
@@ -8090,13 +8204,17 @@
       "C": "`overwriteSchema = true`",
       "D": "`mergeSchema = true`"
     },
-    "explanation_vi": "Đáp án **D**: Để cấu hình **Delta Lake** tự động chấp nhận và tích hợp các thay đổi về cấu trúc bảng (schema changes) như thêm cột mới từ nguồn dữ liệu mà không làm lỗi pipeline ghi (append-only), chúng ta cần bật tùy chọn `mergeSchema = true`. Tùy chọn này cho phép tự động gộp các cột mới vào schema hiện tại của bảng **Delta**.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D: `mergeSchema = true`.** Với một lần ghi Delta append, tùy chọn schema evolution này cho phép các cột có trong DataFrame nguồn nhưng chưa có ở bảng đích được thêm vào schema bảng. Hãy bật trên đúng thao tác ghi (ví dụ `.option(\"mergeSchema\", \"true\")`) thay vì áp dụng mơ hồ cho mọi workload. Schema evolution không thay thế việc kiểm soát thay đổi nguồn.\n\nA `ignoreChanges` là tùy chọn đọc nguồn streaming đời cũ để xử lý thay đổi file, không tiến hóa schema đích; runtime mới dùng `skipChangeCommits` cho trường hợp bỏ qua commit thay đổi. B `validateSchema=false` không phải lựa chọn schema evolution đúng. C `overwriteSchema` thay thế schema toàn bảng khi ghi đè, không phù hợp pipeline append-only. `mergeSchema` xử lý thêm cột tương thích; nó không tự giải quyết mọi thay đổi như đổi kiểu hoặc đổi tên cột.",
     "page": null,
     "image": "img/q_275.jpg",
     "references": [
       {
-        "title": "Delta Lake Schema Validation and Evolution - Databricks",
-        "url": "https://docs.databricks.com/en/tables/update-schema"
+        "title": "Update table schemas with schema evolution",
+        "url": "https://docs.databricks.com/aws/en/tables/update-schema"
+      },
+      {
+        "title": "Delta Lake streaming reads and writes",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/delta-lake"
       }
     ]
   },
@@ -8271,28 +8389,27 @@
   {
     "id": 282,
     "topic": 1,
-    "question": "A data engineer is ingesting **JSON** files from cloud object storage using **Databricks Auto Loader**. The source folder may occasionally receive large files of data, which risks overwhelming the stream. To ensure predictable micro-batch sizes, the team wants to throttle ingestion based on the volume of data scanned at 1 GB, regardless of the number of files. Which **Auto Loader** configuration should the data engineer use to achieve this?",
+    "question": "A data engineer ingests JSON files from cloud object storage with Databricks Auto Loader. The team wants Auto Loader to **aim for about 1 GB of input per micro-batch when possible**, regardless of file count. This is a best-effort target: a single large file might exceed it because files are not split across micro-batches. Which setting is intended for this byte-based admission control?",
     "options": {
-      "A": "Configure `cloudFiles.maxBytesPerTrigger` with 1 GB to place a limit.",
-      "B": "Configure `cloudFiles.maxSizePerTrigger` with 1 GB to place a limit.",
-      "C": "Configure `cloudFiles.maxFilesPerTrigger` and estimate the average file size to approximate a size-based throttle of 1 GB.",
-      "D": "Configure `cloudFiles.maxPartitionBytes` with 1 GB to limit data in each partition."
+      "A": "Set `cloudFiles.maxBytesPerTrigger` to about 1 GB as a best-effort byte target.",
+      "B": "Set `cloudFiles.maxSizePerTrigger` to a hard limit of 1 GB.",
+      "C": "Set `cloudFiles.maxFilesPerTrigger` and estimate average file size for an exact 1 GB cap.",
+      "D": "Set `cloudFiles.maxPartitionBytes` to 1 GB to limit Auto Loader input per micro-batch."
     },
     "answer": "A",
-    "question_vi": "Một kỹ sư đang ingest file **JSON** bằng **Databricks Auto Loader**. Thư mục nguồn đôi khi nhận file lớn, có thể làm quá tải luồng. Nhóm muốn điều tiết (throttle) kích thước micro-batch ở mức 1 GB theo dung lượng quét, bất kể số file. Cần cấu hình gì?",
+    "question_vi": "Một kỹ sư ingest file JSON từ object storage bằng Databricks Auto Loader. Nhóm muốn Auto Loader **cố gắng xử lý khoảng 1 GB dữ liệu đầu vào mỗi micro-batch khi có thể**, không phụ thuộc số lượng file. Đây là mục tiêu best-effort: một file riêng lẻ quá lớn có thể khiến batch vượt mức vì file không bị chia giữa các micro-batch. Cấu hình nào dùng để điều tiết theo số byte?",
     "options_vi": {
-      "A": "Đặt `cloudFiles.maxBytesPerTrigger = 1 GB` để giới hạn.",
-      "B": "Đặt `cloudFiles.maxSizePerTrigger = 1 GB` để giới hạn.",
-      "C": "Đặt `cloudFiles.maxFilesPerTrigger` và ước tính kích thước file để gần đúng 1 GB.",
-      "D": "Đặt `cloudFiles.maxPartitionBytes = 1 GB` để giới hạn dữ liệu mỗi partition."
+      "A": "Đặt `cloudFiles.maxBytesPerTrigger` khoảng 1 GB làm mục tiêu byte best-effort.",
+      "B": "Đặt `cloudFiles.maxSizePerTrigger` làm giới hạn cứng 1 GB.",
+      "C": "Đặt `cloudFiles.maxFilesPerTrigger` rồi ước lượng kích thước trung bình để giới hạn chính xác 1 GB.",
+      "D": "Đặt `cloudFiles.maxPartitionBytes` bằng 1 GB để giới hạn dữ liệu Auto Loader nhận mỗi micro-batch."
     },
-    "explanation_vi": "Đáp án **A**: Để giới hạn và kiểm soát dung lượng dữ liệu quét (throughput) cho mỗi micro-batch của **Auto Loader** ở mức 1 GB nhằm tránh quá tải dòng dữ liệu, kỹ sư dữ liệu cần cấu hình thuộc tính `cloudFiles.maxBytesPerTrigger = 1g` (hoặc giá trị byte tương đương 1073741824). Thuộc tính này sẽ giới hạn tổng số byte tối đa được nạp trong một trigger.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** `cloudFiles.maxBytesPerTrigger` điều tiết lượng đầu vào theo byte và được dùng với Auto Loader; có thể đặt khoảng `1g` (hoặc số byte tương ứng) để nhắm tới micro-batch cỡ đó. Đây là soft/best-effort limit, không phải hard cap: file là đơn vị admission và Auto Loader không chia một file lớn qua nhiều micro-batch, nên file 3 GB có thể làm một batch vượt 1 GB.\n\nB không phải tên option Auto Loader trong trường hợp này. C đếm số file, do đó chỉ ước lượng khi kích thước file tương đối đồng đều và không bảo đảm ngưỡng byte. D `maxPartitionBytes` điều khiển cách Spark chia file thành partition để xử lý, không phải ngưỡng Auto Loader nhận file vào trigger. Nếu cần kiểm soát tải chặt hơn, hãy kết hợp ngưỡng byte với chiến lược chia nhỏ file ở upstream và theo dõi backlog/throughput.",
     "page": null,
-    "image": "img/q_282.jpg",
     "references": [
       {
-        "title": "Auto Loader options reference - Databricks",
-        "url": "https://docs.databricks.com/en/pyspark/reference/classes/datastreamwriter/options"
+        "title": "Spark API options reference: Auto Loader",
+        "url": "https://docs.databricks.com/aws/en/spark/api-options"
       }
     ]
   },
@@ -8621,7 +8738,7 @@
   {
     "id": 294,
     "topic": 1,
-    "question": "A data engineer is tasked with ensuring that a **Delta** table in **Databricks** continuously retains deleted files for 15 days (instead of the default 7 days), in order to permanently comply with the organization’s data retention policy. Which code snippet correctly sets this retention period for deleted files?",
+    "question": "An engineer wants `VACUUM` to retain logically deleted files in a Delta table for at least 15 days before they become eligible for physical deletion. Which code snippet sets that table-level threshold?",
     "options": {
       "A": "`spark.sql(\"ALTER TABLE my_table SET TBLPROPERTIES ('delta.deletedFileRetentionDuration' = 'interval 15 days')\")`",
       "B": "```python\nfrom delta.tables import DeltaTable\ndeltaTable = DeltaTable.forPath(spark, \"/mnt/data/table\")\ndeltaTable.deletedFileRetentionDuration(\"interval 15 days\")\n```",
@@ -8629,20 +8746,24 @@
       "D": "`spark.conf.set(\"spark.databricks.delta.deletedFileRetentionDuration\", \"15 days\")`"
     },
     "answer": "A",
-    "question_vi": "Cần giữ file đã xóa của bảng **Delta** trong 15 ngày (mặc định 7 ngày). Câu lệnh nào đúng?",
+    "question_vi": "Kỹ sư muốn `VACUUM` giữ các file đã xóa về mặt logic trong Delta table ít nhất 15 ngày trước khi chúng đủ điều kiện bị xóa vật lý. Đoạn code nào đặt ngưỡng ở cấp bảng?",
     "options_vi": {
       "A": "`spark.sql(\"ALTER TABLE my_table SET TBLPROPERTIES ('delta.deletedFileRetentionDuration' = 'interval 15 days')\")`",
       "B": "```python\nfrom delta.tables import DeltaTable\ndeltaTable = DeltaTable.forPath(spark, \"/mnt/data/table\")\ndeltaTable.deletedFileRetentionDuration(\"interval 15 days\")\n```",
       "C": "`spark.sql(\"VACUUM my_table RETAIN HOURS\")`",
       "D": "`spark.conf.set(\"spark.databricks.delta.deletedFileRetentionDuration\", \"15 days\")`"
     },
-    "explanation_vi": "Đáp án **A**: Để thay đổi thời gian lưu trữ các tệp đã xóa của bảng **Delta** (mặc định là 7 ngày) lên thành 15 ngày nhằm tuân thủ chính sách lưu trữ dữ liệu, kỹ sư dữ liệu cần đặt thuộc tính bảng `delta.deletedFileRetentionDuration` thành khoảng thời gian tương ứng bằng câu lệnh `ALTER TABLE my_table SET TBLPROPERTIES ('delta.deletedFileRetentionDuration' = 'interval 15 days')`.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** `delta.deletedFileRetentionDuration` đặt ngưỡng tuổi tối thiểu trước khi `VACUUM` đủ điều kiện xóa các data file không còn được version hiện tại tham chiếu. Giá trị mặc định là 7 ngày; đặt thành `interval 15 days` sẽ nới ngưỡng lên 15 ngày. Lệnh `ALTER TABLE ... SET TBLPROPERTIES` thay đổi thuộc tính cho đúng bảng.\n\nThuộc tính không tự chạy VACUUM và cũng không phải cơ chế lưu trữ vĩnh viễn: khi `VACUUM` chạy, file đủ cũ mới có thể bị xóa vật lý. Nếu mục tiêu là time travel 15 ngày, cần giữ cả data file và transaction log; log retention mặc định thường 30 ngày, nhưng nên đảm bảo chính sách phù hợp và không để log bị xóa sớm hơn.\n\n- **B sai** vì `DeltaTable` API không có method `deletedFileRetentionDuration(...)` như đoạn code.\n- **C sai** vì cú pháp `VACUUM ... RETAIN HOURS` còn thiếu số giờ và chỉ thay đổi một lần chạy, không cấu hình retention policy của bảng.\n- **D sai** vì key `spark.databricks.delta.deletedFileRetentionDuration` không thay thế table property cho từng bảng; retention là thuộc tính Delta của table.\n\nĐừng giảm retention dưới mức an toàn nếu workload streaming/long-running readers còn cần file cũ; Delta có kiểm tra bảo vệ VACUUM để tránh xóa dữ liệu mà reader chưa đọc xong.",
     "page": null,
     "image": "img/q_294.jpg",
     "references": [
       {
+        "title": "Work with table history and data retention",
+        "url": "https://docs.databricks.com/aws/en/tables/history"
+      },
+      {
         "title": "Delta table properties reference",
-        "url": "https://docs.databricks.com/en/tables/table-properties"
+        "url": "https://docs.databricks.com/aws/en/tables/table-properties"
       }
     ]
   },
