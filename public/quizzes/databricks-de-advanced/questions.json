@@ -2214,102 +2214,103 @@
   {
     "id": 69,
     "topic": 1,
-    "question": "The business intelligence team has a dashboard configured to track various summary metrics for retail stores. This includes total sales for the previous day alongside totals and averages for a variety of time periods. The fields required to populate this dashboard have the following schema:\nFor demand forecasting, the Lakehouse contains a validated table of all itemized sales updated incrementally in near real-time. This table, named `products_per_order`, includes the following fields:\nBecause reporting on long-term sales trends is less volatile, analysts using the new dashboard only require data to be refreshed once daily.\nBecause the dashboard will be queried interactively by many users throughout a normal business day, it should return results quickly and reduce total compute associated with each materialization.\nWhich solution meets the expectations of the end users while controlling and limiting possible costs?",
+    "question": "A retail BI dashboard shows sales by store for the previous day, quarter to date, year to date, and the last seven days. Its output columns are:\n```text\nstore_id INT, total_sales_qtd FLOAT, avg_daily_sales_qtd FLOAT,\ntotal_sales_ytd FLOAT, avg_daily_sales_ytd FLOAT, previous_day_sales FLOAT,\ntotal_sales_7d FLOAT, avg_daily_sales_7d FLOAT, updated TIMESTAMP\n```\nThe source table `products_per_order` is updated near real time and has this schema:\n```text\nstore_id INT, order_id INT, product_id INT, quantity INT,\nprice FLOAT, order_timestamp TIMESTAMP\n```\nAnalysts only need the dashboard data refreshed once per day, but many people query it interactively throughout the day. Which approach gives fast dashboard reads while controlling compute costs?",
     "options": {
-      "A": "Populate the dashboard by configuring a nightly batch job to save the required values as a table overwritten with each update.",
-      "B": "Use **Structured Streaming** to configure a live dashboard against the `products_per_order` table within a **Databricks** notebook.",
-      "C": "Configure a webhook to execute an incremental read against `products_per_order` each time the dashboard is refreshed.",
-      "D": "Use the **Delta Cache** to persist the `products_per_order` table in memory to quickly update the dashboard with each query.",
-      "E": "Define a view against the `products_per_order` table and define the dashboard against this view."
+      "A": "Run a nightly batch aggregation from `products_per_order` and overwrite a compact per-store summary table used by the dashboard.",
+      "B": "Keep a continuously running Structured Streaming query and serve the live detailed source table to the dashboard.",
+      "C": "Build a webhook that launches a fresh incremental aggregation every time a viewer refreshes the dashboard.",
+      "D": "Enable disk caching for `products_per_order` and recompute every metric from its detailed rows for each dashboard query.",
+      "E": "Create a regular view that calculates every metric from `products_per_order` for every dashboard query."
     },
     "answer": "A",
-    "question_vi": "Dashboard bán lẻ chỉ cần làm mới mỗi ngày, truy vấn tương tác nhiều. Giải pháp nào vừa đáp ứng người dùng vừa kiểm soát chi phí?",
+    "question_vi": "Dashboard BI bán lẻ hiển thị doanh số theo cửa hàng cho ngày trước đó, từ đầu quý, từ đầu năm và 7 ngày gần nhất. Các cột đầu ra gồm:\n```text\nstore_id INT, total_sales_qtd FLOAT, avg_daily_sales_qtd FLOAT,\ntotal_sales_ytd FLOAT, avg_daily_sales_ytd FLOAT, previous_day_sales FLOAT,\ntotal_sales_7d FLOAT, avg_daily_sales_7d FLOAT, updated TIMESTAMP\n```\nBảng nguồn `products_per_order` được cập nhật gần thời gian thực, có schema:\n```text\nstore_id INT, order_id INT, product_id INT, quantity INT,\nprice FLOAT, order_timestamp TIMESTAMP\n```\nNhà phân tích chỉ cần dữ liệu dashboard làm mới mỗi ngày một lần, nhưng nhiều người sẽ truy vấn tương tác trong ngày. Cách nào giúp đọc dashboard nhanh mà vẫn kiểm soát chi phí compute?",
     "options_vi": {
-      "A": "Cấu hình job hàng đêm ghi đè bảng kết quả cần thiết.",
-      "B": "Dùng **Structured Streaming** tạo dashboard trực tiếp trên `products_per_order`.",
-      "C": "Webhook chạy incremental read mỗi lần dashboard refresh.",
-      "D": "Dùng **Delta Cache** giữ `products_per_order` trong bộ nhớ để trả lời nhanh mỗi truy vấn.",
-      "E": "Định nghĩa view trên `products_per_order` và xây dashboard từ view đó."
+      "A": "Chạy batch aggregation mỗi đêm từ `products_per_order`, ghi đè bảng tóm tắt gọn theo cửa hàng và dùng bảng đó cho dashboard.",
+      "B": "Duy trì Structured Streaming chạy liên tục và cho dashboard đọc trực tiếp bảng chi tiết mới nhất.",
+      "C": "Tạo webhook chạy một phép tổng hợp incremental mới mỗi khi người xem refresh dashboard.",
+      "D": "Bật disk cache cho `products_per_order` nhưng vẫn tính lại mọi chỉ số từ dữ liệu chi tiết ở mỗi truy vấn dashboard.",
+      "E": "Tạo view thường để tính mọi chỉ số từ `products_per_order` mỗi lần dashboard chạy truy vấn."
     },
-    "explanation_vi": "Do `dashboard` chỉ cần làm mới một lần mỗi ngày (`once daily`) và được truy vấn tương tác bởi nhiều người dùng trong ngày, giải pháp tối ưu chi phí và hiệu năng nhất là cấu hình một batch job chạy hàng đêm để tính toán sẵn và ghi đè bảng tổng hợp. Khi người dùng truy vấn `dashboard`, họ sẽ truy vấn trực tiếp trên bảng tổng hợp đã tính sẵn này thay vì chạy lại các phép tính phức tạp trên bảng gốc thời gian thực, giúp giảm thiểu tài nguyên tính toán và chi phí.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** Tần suất cập nhật mong muốn là một lần mỗi ngày, nên không cần duy trì pipeline realtime. Một Lakeflow Job có thể chạy sau khi dữ liệu ngày đã ổn định, nhóm theo `store_id`, tính tổng/trung bình cho các khoảng ngày cần báo cáo, rồi ghi đè bảng summary nhỏ. Dashboard sau đó đọc vài dòng tổng hợp thay vì quét và gom nhóm lại toàn bộ đơn hàng mỗi lần có người mở hoặc tương tác. Cách này chuyển compute sang một lần chạy theo lịch; chi phí truy vấn lặp lại trong ngày thấp hơn và thời điểm dữ liệu cập nhật phù hợp yêu cầu nghiệp vụ. Nên xác định timezone và ranh giới “ngày kinh doanh” nhất quán khi tính `previous_day_sales`, QTD và YTD.\n\n**Vì sao các lựa chọn khác kém phù hợp?**\n\n- **B**: Streaming liên tục duy trì compute và cập nhật dữ liệu thường xuyên hơn mức dashboard yêu cầu. Đọc bảng chi tiết cũng buộc dashboard tự tổng hợp lại, làm lặp compute giữa nhiều người dùng.\n- **C**: Webhook biến mỗi thao tác refresh thành một lần tính toán, làm tăng tải đúng lúc nhiều người dùng truy cập; còn phải tự xử lý retry, concurrency và kết quả dashboard.\n- **D**: Cache có thể giảm đọc lặp một số file trên compute, nhưng không thay phép tổng hợp đã tính trước. Mỗi truy vấn vẫn chạy các phép nhóm/tổng hợp; cache cũng không bảo đảm chỉ số được cập nhật đúng lịch nghiệp vụ.\n- **E**: View thường lưu định nghĩa truy vấn chứ không lưu sẵn kết quả. Vì vậy phép tính thường vẫn chạy lại khi view được truy vấn. Materialized view có cơ chế duy trì kết quả riêng, nhưng đó không phải lựa chọn trong câu hỏi.\n\n**Mô hình dữ liệu:** giữ bảng chi tiết làm nguồn tin cậy, tạo bảng tổng hợp theo cửa hàng làm lớp phục vụ dashboard. Nếu sau này cần gần realtime, hãy cân nhắc materialized view hoặc pipeline incremental thay cho lịch batch hàng ngày.",
     "page": null,
-    "image": "img/q_69.jpg",
     "references": [
       {
-        "title": "Databricks Jobs Intro",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "Aggregate data on Databricks",
+        "url": "https://docs.databricks.com/aws/en/transform/aggregation"
       },
       {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q69",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82759-question-69-topic-1/"
+        "title": "Lakeflow Jobs",
+        "url": "https://docs.databricks.com/aws/en/jobs"
+      },
+      {
+        "title": "Dataset optimization and caching for AI/BI dashboards",
+        "url": "https://docs.databricks.com/aws/en/dashboards/caching"
       }
     ]
   },
   {
     "id": 70,
     "topic": 1,
-    "question": "A data ingestion task requires a one-TB JSON dataset to be written out to Parquet with a target part-file size of 512 MB. Because `Parquet` is being used instead of **Delta Lake**, built-in file-sizing features such as **Auto-Optimize** & **Auto-Compaction** cannot be used.\nWhich strategy will yield the best performance without shuffling data?",
+    "question": "A file-based ingestion job reads 1 TiB of splittable, uncompressed JSON and writes Parquet. The goal is approximately 512 MiB per output part file, with narrow transformations that do not materially change the data volume. The job must avoid a shuffle; output file size can only be approximate because compression and row distribution vary. Which strategy best influences the number of input tasks, and therefore the approximate number of output files?",
     "options": {
-      "A": "Set `spark.sql.files.maxPartitionBytes` to 512 MB, ingest the data, execute the narrow transformations, and then write to `Parquet`.",
-      "B": "Set `spark.sql.shuffle.partitions` to 2,048 partitions (1TB*1024*1024/512), ingest the data, execute the narrow transformations, optimize the data by sorting it (which automatically `repartition`s the data), and then write to `Parquet`.",
-      "C": "Set `spark.sql.adaptive.advisoryPartitionSizeInBytes` to 512 MB bytes, ingest the data, execute the narrow transformations, `coalesce` to 2,048 partitions (1TB*1024*1024/512), and then write to `Parquet`.",
-      "D": "Ingest the data, execute the narrow transformations, `repartition` to 2,048 partitions (1TB* 1024*1024/512), and then write to `Parquet`.",
-      "E": "Set `spark.sql.shuffle.partitions` to 512, ingest the data, execute the narrow transformations, and then write to `Parquet`."
+      "A": "Set `spark.sql.files.maxPartitionBytes` to `512 * 1024 * 1024` before reading, then apply the narrow transformations and write Parquet.",
+      "B": "Set `spark.sql.shuffle.partitions` to 2,048 and sort the data; sorting automatically repartitions without a shuffle.",
+      "C": "Set `spark.sql.adaptive.advisoryPartitionSizeInBytes` to 512 MiB and call `coalesce(2048)` to increase the number of output partitions.",
+      "D": "Call `repartition(2048)` after reading and before writing; this changes partitions without moving data between workers.",
+      "E": "Set `spark.sql.shuffle.partitions` to 512 before reading; this directly controls file-source read partitions and output file sizes."
     },
     "answer": "A",
-    "question_vi": "Ingest 1 TB JSON -> `Parquet`, mục tiêu file 512 MB, không dùng **Auto-Optimize**/**Auto-Compaction**. Chiến lược nào cho hiệu năng tốt nhất không shuffle nhiều?",
+    "question_vi": "Một job đọc 1 TiB JSON không nén, có thể chia split, rồi ghi Parquet. Mục tiêu là file đầu ra xấp xỉ 512 MiB; các phép biến đổi là narrow và không làm thay đổi đáng kể dung lượng. Job phải tránh shuffle; kích thước file chỉ có thể gần đúng vì còn phụ thuộc nén và phân bố dòng. Cấu hình nào tác động tốt nhất đến số input task, từ đó ảnh hưởng gần đúng đến số file đầu ra?",
     "options_vi": {
-      "A": "Đặt `spark.sql.files.maxPartitionBytes` = 512 MB, ingest, thực hiện biến đổi hẹp rồi ghi `Parquet`.",
-      "B": "Đặt `spark.sql.shuffle.partitions` = 2,048, ingest, làm biến đổi hẹp, sort (tự `repartition`), rồi ghi `Parquet`.",
-      "C": "Đặt `spark.sql.adaptive.advisoryPartitionSizeInBytes` = 512 MB, ingest, biến đổi hẹp, `coalesce` 2,048 partitions rồi ghi.",
-      "D": "Ingest, biến đổi hẹp, `repartition` 2,048 partitions rồi ghi `Parquet`.",
-      "E": "Đặt `spark.sql.shuffle.partitions` = 512, ingest, biến đổi hẹp rồi ghi `Parquet`."
+      "A": "Đặt `spark.sql.files.maxPartitionBytes` thành `512 * 1024 * 1024` trước khi đọc, sau đó thực hiện narrow transformations và ghi Parquet.",
+      "B": "Đặt `spark.sql.shuffle.partitions` thành 2.048 rồi sort dữ liệu; sort tự repartition mà không cần shuffle.",
+      "C": "Đặt `spark.sql.adaptive.advisoryPartitionSizeInBytes` thành 512 MiB rồi gọi `coalesce(2048)` để tăng số output partition.",
+      "D": "Gọi `repartition(2048)` sau khi đọc; thao tác này đổi số partition mà không chuyển dữ liệu giữa các worker.",
+      "E": "Đặt `spark.sql.shuffle.partitions` thành 512 trước khi đọc; giá trị này điều khiển trực tiếp partition đọc file và kích thước file đầu ra."
     },
-    "explanation_vi": "Để ghi dữ liệu ra định dạng `Parquet` với kích thước tệp mục tiêu là 512 MB mà không thực hiện shuffle dữ liệu, phương án tốt nhất là cấu hình ``spark.sql.files.maxPartitionBytes`` thành 512 MB trước khi đọc dữ liệu. Spark sẽ chia dữ liệu đầu vào thành các phân vùng có kích thước xấp xỉ 512 MB. Vì chỉ thực hiện các biến đổi hẹp (**narrow transformations** - không gây xáo trộn dữ liệu), Spark sẽ ghi các phân vùng này ra tệp `Parquet` trực tiếp với kích thước tương ứng, đảm bảo hiệu năng tối ưu mà không mất chi phí shuffle.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** `spark.sql.files.maxPartitionBytes` đặt giới hạn số byte Spark gom vào một partition **khi đọc nguồn dạng file** như JSON, Parquet hoặc ORC. Với khoảng 1 TiB dữ liệu splittable và ngưỡng 512 MiB, số task đọc ở gần `1 TiB / 512 MiB = 2.048` (tùy cách chia file và overhead). Nếu các bước sau đều là narrow transformations, không shuffle và không đổi đáng kể lượng dữ liệu, số partition được giữ lại; thao tác ghi thường tạo xấp xỉ một part file cho mỗi output partition. Đây là cách gần mục tiêu mà không thêm shuffle.\n\n**Cấu hình này không đặt chính xác kích thước file ghi.** Nó tác động partition đầu vào. Nén Parquet, độ dài dòng JSON, skew và thay đổi số byte sau biến đổi có thể khiến file nhỏ/lớn hơn 512 MiB; kích thước chính xác cần compact/điều chỉnh thêm và có thể phải shuffle.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **B**: `spark.sql.shuffle.partitions` chỉ định số partition cho phép shuffle; sort toàn cục thường cần shuffle, trái yêu cầu. Cấu hình này không tự điều khiển partition đầu vào của file source.\n- **C**: `spark.sql.adaptive.advisoryPartitionSizeInBytes` định hướng kích thước partition sau shuffle/AQE. `coalesce` thường giảm số partition và không dùng để tăng lên 2.048.\n- **D**: `repartition(2048)` có thể tạo số partition mong muốn nhưng phải phân phối lại dữ liệu qua mạng—đó là shuffle.\n- **E**: 512 shuffle partitions không có nghĩa mỗi partition 512 MiB và không chi phối cách Spark chia file JSON khi đọc.",
     "page": null,
-    "image": "img/q_70.jpg",
     "references": [
       {
-        "title": "Spark SQL Performance Tuning",
-        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html"
+        "title": "Performance Tuning - Spark SQL and DataFrames",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html#other-configuration-options"
       },
       {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q70",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82461-question-70-topic-1/"
+        "title": "Spark SQL Performance Tuning: coalesce hints",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html#coalesce-hints-for-sql-queries"
       }
     ]
   },
   {
     "id": 71,
     "topic": 1,
-    "question": "A junior data engineer has been asked to develop a streaming data pipeline with a grouped aggregation using `DataFrame` `df`. The pipeline needs to calculate the average humidity and average temperature for each non-overlapping five-minute interval. Incremental state information should be maintained for 10 minutes for late-arriving data.\nStreaming `DataFrame` `df` has the following schema:\n`device_id INT, event_time TIMESTAMP, temp FLOAT, humidity FLOAT`\n**Code block:**\nChoose the response that correctly fills in the blank within the code block to complete this task.",
+    "question": "A junior data engineer is building a Structured Streaming pipeline from streaming DataFrame `df` with schema `device_id INT, event_time TIMESTAMP, temp FLOAT, humidity FLOAT`. The pipeline must compute average humidity and temperature per device for each **non-overlapping five-minute event-time window**, and tolerate data arriving up to 10 minutes late. Complete the blank:\n```python\n(df.__________(\"event_time\", \"10 minutes\")\n  .groupBy(\n      window(\"event_time\", \"5 minutes\").alias(\"time\"),\n      \"device_id\"\n  )\n  .agg(\n      avg(\"temp\").alias(\"avg_temp\"),\n      avg(\"humidity\").alias(\"avg_humidity\")\n  )\n  .writeStream\n  .format(\"delta\")\n  .saveAsTable(\"sensor_avg\")\n)\n```\nWhich method belongs in the blank?",
     "options": {
-      "A": "`withWatermark(\"event_time\", \"10 minutes\")`",
-      "B": "`awaitArrival(\"event_time\", \"10 minutes\")`",
-      "C": "`await(\"event_time + '10 minutes'\")`",
-      "D": "`slidingWindow(\"event_time\", \"10 minutes\")`",
-      "E": "`delayWrite(\"event_time\", \"10 minutes\")`"
+      "A": "`withWatermark`",
+      "B": "`awaitArrival`",
+      "C": "`await`",
+      "D": "`slidingWindow`",
+      "E": "`delayWrite`"
     },
     "answer": "A",
-    "question_vi": "Pipeline streaming cần tính trung bình nhiệt độ/độ ẩm mỗi cửa sổ không chồng 5 phút và giữ trạng thái (`state`) 10 phút cho dữ liệu đến muộn. Dòng mã nào điền vào chỗ trống?",
+    "question_vi": "Một kỹ sư xây pipeline Structured Streaming từ DataFrame `df` có schema `device_id INT, event_time TIMESTAMP, temp FLOAT, humidity FLOAT`. Pipeline cần tính nhiệt độ/độ ẩm trung bình theo từng thiết bị trong mỗi **cửa sổ event-time 5 phút không chồng lấp**, đồng thời chấp nhận dữ liệu đến muộn tối đa 10 phút. Điền vào chỗ trống:\n```python\n(df.__________(\"event_time\", \"10 minutes\")\n  .groupBy(\n      window(\"event_time\", \"5 minutes\").alias(\"time\"),\n      \"device_id\"\n  )\n  .agg(\n      avg(\"temp\").alias(\"avg_temp\"),\n      avg(\"humidity\").alias(\"avg_humidity\")\n  )\n  .writeStream\n  .format(\"delta\")\n  .saveAsTable(\"sensor_avg\")\n)\n```\nPhương thức nào cần đặt vào chỗ trống?",
     "options_vi": {
-      "A": "`withWatermark(\"event_time\", \"10 minutes\")`",
-      "B": "`awaitArrival(\"event_time\", \"10 minutes\")`",
-      "C": "`await(\"event_time + '10 minutes'\")`",
-      "D": "`slidingWindow(\"event_time\", \"10 minutes\")`",
-      "E": "`delayWrite(\"event_time\", \"10 minutes\")`"
+      "A": "`withWatermark`",
+      "B": "`awaitArrival`",
+      "C": "`await`",
+      "D": "`slidingWindow`",
+      "E": "`delayWrite`"
     },
-    "explanation_vi": "Trong **Structured Streaming**, để kiểm soát dữ liệu đến muộn (late-arriving data) và giải phóng các trạng thái trung gian (`state`) cũ trong bộ nhớ RAM, ta sử dụng hàm `withWatermark`. Dòng mã điền vào chỗ trống là `withWatermark(\"event_time\", \"10 minutes\")` để chỉ định rằng hệ thống sẽ duy trì trạng thái của các cửa sổ thời gian trong vòng 10 phút tính từ mốc thời gian sự kiện trễ tối đa cho phép.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A — `withWatermark`.** Dòng đầy đủ là `df.withWatermark(\"event_time\", \"10 minutes\")`. Phương thức này khai báo ngưỡng trễ tối đa mà Structured Streaming dùng để quản lý state của phép tổng hợp theo event time. Khi watermark vượt mốc liên quan, engine có thể phát kết quả cửa sổ đã hoàn tất và dọn state cũ; bản ghi đến quá trễ có thể bị loại khỏi kết quả. Nhờ vậy state không tăng vô hạn khi luồng có dữ liệu đến muộn.\n\nHai khoảng thời gian trong code có hai vai trò riêng: `window(\"event_time\", \"5 minutes\")` tạo cửa sổ 5 phút; khi không truyền slide duration, đây là các cửa sổ tumbling không chồng lấp. `withWatermark(..., \"10 minutes\")` không đổi độ dài cửa sổ, cũng không có nghĩa là giữ chính xác mọi state 10 phút kể từ lúc nhận từng bản ghi. Nó đặt mức trễ event-time mà query dùng để quyết định hoàn tất cửa sổ/dọn state.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **B**: `awaitArrival` không phải API watermark của DataFrame Structured Streaming.\n- **C**: `await` không khai báo watermark hay quản lý độ trễ trong PySpark DataFrame.\n- **D**: `slidingWindow` không phải phương thức cần gọi trên `df`; cửa sổ đã được tạo đúng bằng `window(...)` trong `groupBy`.\n- **E**: `delayWrite` không phải API Structured Streaming.\n\nNếu cần chấp nhận dữ liệu trễ hơn, phải tăng watermark và tính đến state/bộ nhớ tăng. Giảm watermark có thể khiến nhiều bản ghi trễ bị bỏ khỏi aggregate.",
     "page": null,
-    "image": "img/q_71.jpg",
     "references": [
       {
-        "title": "Structured Streaming Watermarking",
+        "title": "Structured Streaming Programming Guide: handling late data and watermarking",
         "url": "https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#handling-late-data-and-watermarking"
       },
       {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q71",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82823-question-71-topic-1/"
+        "title": "pyspark.sql.functions.window - Apache Spark",
+        "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.window.html"
       }
     ]
   },
@@ -2353,34 +2354,37 @@
   {
     "id": 73,
     "topic": 1,
-    "question": "A **Structured Streaming** job deployed to production has been resulting in higher than expected cloud storage costs. At present, during normal execution, each microbatch of data is processed in less than 3s; at least 12 times per minute, a microbatch is processed that contains 0 records.\nThe streaming write was configured using the default trigger settings. The production job is currently scheduled alongside many other Databricks jobs in a workspace with instance pools provisioned to reduce start-up time for jobs with batch execution.\nHolding all other variables constant and assuming records need to be processed in less than 10 minutes, which adjustment will meet the requirement?",
+    "question": "A production Structured Streaming job polls a cloud-storage source continuously. Most microbatches finish in under 3 seconds, but at least 12 microbatches per minute contain zero records, increasing source listing/API costs. Dashboard consumers can tolerate up to 10 minutes of ingestion latency. The job runs on scheduled job compute backed by an instance pool; assume startup plus processing takes no more than 2 minutes. Which adjustment reduces unnecessary polling while meeting the latency target?",
     "options": {
-      "A": "Set the `trigger` interval to 3 seconds; the default `trigger` interval is consuming too many records per batch, resulting in spill to disk that can\nincrease volume costs.",
-      "B": "Increase the number of shuffle partitions to maximize parallelism, since the `trigger` interval cannot be modified without modifying the\ncheckpoint directory.",
-      "C": "Set the `trigger` interval to 10 minutes; each batch calls APIs in the source storage account, so decreasing trigger frequency to maximum\nallowable threshold should minimize this cost.",
-      "D": "Set the `trigger` interval to 500 milliseconds; setting a small but non-zero `trigger` interval ensures that the source is not queried too\nfrequently.",
-      "E": "Use the `trigger once` option and configure a Databricks job to execute the query every 10 minutes; this approach minimizes costs for both compute and storage."
+      "A": "Set a 3-second processing-time trigger; this reduces how often the source is checked.",
+      "B": "Increase shuffle partitions because the trigger interval cannot be changed without replacing the checkpoint directory.",
+      "C": "Set a 10-minute processing-time trigger on an always-running stream; this also shuts down compute after every batch.",
+      "D": "Set a 500-millisecond processing-time trigger so the source is checked less often.",
+      "E": "Use `Trigger.AvailableNow` and schedule the job every 8 minutes, allowing up to 2 minutes for startup and processing."
     },
     "answer": "E",
-    "question_vi": "Job **Structured Streaming** tốn chi phí storage vì nhiều microbatch rỗng (mặc định trigger). Cần xử lý <10 phút. Điều chỉnh nào phù hợp?",
+    "question_vi": "Một job Structured Streaming production liên tục thăm dò nguồn cloud storage. Hầu hết microbatch chạy dưới 3 giây, nhưng mỗi phút có ít nhất 12 batch rỗng, làm tăng chi phí liệt kê/gọi API nguồn. Người dùng dashboard chấp nhận độ trễ ingest tối đa 10 phút. Job chạy bằng job compute theo lịch, có instance pool; giả sử thời gian khởi động và xử lý không quá 2 phút. Điều chỉnh nào giảm polling thừa mà vẫn đáp ứng SLA?",
     "options_vi": {
-      "A": "Đặt `trigger` 3 giây vì `trigger` mặc định tiêu thụ quá nhiều bản ghi.",
-      "B": "Tăng shuffle partitions vì không thể đổi `trigger` nếu không đổi `checkpoint`.",
-      "C": "Đặt `trigger` 10 phút để giảm số lần gọi API nguồn, tối thiểu chi phí.",
-      "D": "Đặt `trigger` 500 ms để truy vấn nguồn không quá thường xuyên.",
-      "E": "Dùng `trigger once` và lập job chạy mỗi 10 phút, giảm chi phí compute/storage."
+      "A": "Đặt processing-time trigger 3 giây; cách này làm nguồn được kiểm tra ít thường xuyên hơn.",
+      "B": "Tăng shuffle partitions vì không thể đổi trigger interval nếu không thay checkpoint directory.",
+      "C": "Đặt processing-time trigger 10 phút cho stream luôn chạy; cách này cũng tắt compute sau mỗi batch.",
+      "D": "Đặt processing-time trigger 500 mili giây để kiểm tra nguồn ít thường xuyên hơn.",
+      "E": "Dùng `Trigger.AvailableNow` và lên lịch job mỗi 8 phút, dành tối đa 2 phút cho khởi động và xử lý."
     },
-    "explanation_vi": "Sử dụng tùy chọn ``trigger(once=True)`` (hoặc ``Trigger.AvailableNow``) kết hợp với việc lập lịch chạy job Databricks cứ mỗi 10 phút một lần là giải pháp tối ưu nhất. Phương pháp này giúp tránh việc duy trì cluster chạy liên tục 24/7 chỉ để kiểm tra các batch trống (`0` records), giảm thiểu cả chi phí tính toán (compute) lẫn chi phí gọi API lưu trữ cloud (storage read/write requests), đồng thời đáp ứng được yêu cầu xử lý dữ liệu trong vòng 10 phút.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án E.** `Trigger.AvailableNow` xử lý dữ liệu đã có tại thời điểm job chạy, cập nhật checkpoint rồi kết thúc query. Job scheduler khởi chạy lại ở chu kỳ kế tiếp; checkpoint giúp lần sau tiếp tục từ tiến độ đã lưu thay vì đọc lại dữ liệu cũ. Chu kỳ 8 phút cộng tối đa 2 phút khởi động và xử lý nằm trong ngân sách SLA 10 phút theo giả thiết đề bài, còn compute chỉ hoạt động quanh mỗi lần chạy. Cách này giảm số lần kiểm tra nguồn so với query luôn chạy và phát sinh 12 batch rỗng mỗi phút.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **A**: Trigger 3 giây kiểm tra nguồn thường xuyên hơn, nên không giải quyết chi phí do batch rỗng.\n- **B**: Số shuffle partition điều khiển một phần xử lý sau khi đọc, không quyết định tần suất trigger. Đổi trigger không đòi xóa checkpoint nếu giữ nguyên query identity/checkpoint path phù hợp.\n- **C**: Processing-time trigger 10 phút có thể giảm tần suất microbatch, nhưng query vẫn chạy và giữ compute hoạt động; trigger interval không tự tắt cluster sau mỗi batch. Đợi đủ 10 phút còn không chừa thời gian cho SLA nghiêm ngặt.\n- **D**: 500 mili giây còn polling dày hơn trigger 3 giây.\n\n**Giới hạn của lựa chọn:** `AvailableNow` phù hợp xử lý incremental theo đợt, không dành cho workload cần phản ứng liên tục trong vài giây. Cần giữ checkpoint ổn định, bật tự retry và đo startup/processing thực tế; nếu vượt ngân sách 2 phút thì giảm chu kỳ lịch hoặc tăng compute.",
     "page": null,
-    "image": "img/q_73.jpg",
     "references": [
       {
-        "title": "Structured Streaming Triggers",
-        "url": "https://docs.databricks.com/en/structured-streaming/triggers"
+        "title": "Configure Structured Streaming trigger intervals",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/triggers"
       },
       {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q73",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82760-question-73-topic-1/"
+        "title": "Production considerations for Structured Streaming",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/production"
+      },
+      {
+        "title": "Run jobs continuously and with bounded streaming triggers",
+        "url": "https://docs.databricks.com/aws/en/jobs/continuous"
       }
     ]
   },
@@ -2421,136 +2425,140 @@
   {
     "id": 75,
     "topic": 1,
-    "question": "A data engineer is configuring a pipeline that will potentially see late-arriving, duplicate records.\nIn addition to de-duplicating records within the batch, which of the following approaches allows the data engineer to deduplicate data against previously processed records as it is inserted into a **Delta** table?",
+    "question": "A pipeline can receive late records and duplicate events. The incoming batch has already been deduplicated internally. When inserting it into a **Delta Lake** target, which method also prevents inserting a key that was processed in an earlier batch? Assume each event has a stable, non-null unique key.",
     "options": {
-      "A": "Set the configuration `delta.deduplicate = true`.",
-      "B": "`VACUUM` the **Delta** table after each batch completes.",
-      "C": "Perform an insert-only `MERGE` with a matching condition on a unique key.",
-      "D": "Perform a full outer join on a unique key and overwrite existing data.",
-      "E": "Rely on **Delta Lake** schema enforcement to prevent duplicate records."
+      "A": "Set the Delta table property `delta.deduplicate = true`.",
+      "B": "Run `VACUUM` after each batch so old duplicate rows are removed.",
+      "C": "Use an insert-only `MERGE` matching the incoming key to the target key, and insert only when there is no match.",
+      "D": "Full-outer-join the batch with the target and overwrite the entire target after every batch.",
+      "E": "Rely on Delta schema enforcement to reject duplicate key values."
     },
     "answer": "C",
-    "question_vi": "Pipeline có khả năng bản ghi trễ và trùng. Ngoài khử trùng lặp trong batch, cách nào cho phép khử trùng lặp với dữ liệu đã xử lý khi chèn vào **Delta Lake**?",
+    "question_vi": "Pipeline có thể nhận event đến muộn và bị gửi trùng. Batch đầu vào đã được khử trùng lặp bên trong batch. Khi ghi vào bảng đích **Delta Lake**, cách nào còn ngăn chèn lại khóa đã xuất hiện ở batch trước? Giả sử mỗi event có khóa duy nhất, ổn định và không null.",
     "options_vi": {
-      "A": "Đặt cấu hình `delta.deduplicate = true`.",
-      "B": "`VACUUM` bảng **Delta Lake** sau mỗi batch.",
-      "C": "Thực hiện `MERGE` chỉ `INSERT` với điều kiện khớp trên khóa duy nhất.",
-      "D": "Thực hiện full outer join trên khóa duy nhất và overwrite dữ liệu hiện tại.",
-      "E": "Dựa vào schema enforcement của **Delta Lake** để ngăn bản ghi trùng."
+      "A": "Đặt thuộc tính bảng Delta `delta.deduplicate = true`.",
+      "B": "Chạy `VACUUM` sau mỗi batch để xóa các dòng bị trùng cũ.",
+      "C": "Dùng `MERGE` chỉ chèn, so khớp khóa đầu vào với khóa bảng đích và chỉ insert khi chưa có khóa khớp.",
+      "D": "Full outer join batch với bảng đích rồi overwrite toàn bộ bảng sau mỗi batch.",
+      "E": "Dựa vào schema enforcement của Delta để từ chối các khóa bị trùng."
     },
-    "explanation_vi": "Để loại bỏ các bản ghi trùng lặp so với dữ liệu lịch sử đã được lưu trữ trong **Delta** table, phương pháp chuẩn là sử dụng câu lệnh `MERGE INTO` chỉ thực hiện chèn dữ liệu mới (insert-only `MERGE`). Bằng cách so sánh khóa duy nhất của batch dữ liệu đầu vào với bảng đích trong điều kiện ``WHEN NOT MATCHED``, ta chỉ thực hiện chèn (`INSERT`) những dòng dữ liệu chưa từng xuất hiện trong bảng, loại bỏ hoàn toàn việc ghi đè hoặc trùng lặp.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** `MERGE` kiểm tra từng khóa ổn định của batch với các khóa đã tồn tại trong bảng đích. Với nhánh `WHEN NOT MATCHED THEN INSERT`, chỉ bản ghi chưa có trong bảng được thêm; bản ghi đến muộn nhưng mang khóa đã xử lý sẽ khớp và không bị chèn lại. Trong streaming thường thực hiện mẫu này trong `foreachBatch` để mỗi microbatch được merge vào Delta.\n\n```sql\nMERGE INTO target AS t\nUSING new_deduplicated_batch AS s\nON t.event_id = s.event_id\nWHEN NOT MATCHED THEN INSERT *;\n```\n\n**Vì sao các lựa chọn khác sai?**\n\n- **A**: Không có table property chung `delta.deduplicate` tự bật ràng buộc uniqueness cho mọi bảng Delta.\n- **B**: `VACUUM` dọn file dữ liệu cũ không còn được snapshot tham chiếu; nó không tìm và xóa dòng duplicate logic trong bảng hiện hành.\n- **D**: Join toàn bảng rồi overwrite tốn kém và không cần thiết cho bài toán chỉ thêm event mới.\n- **E**: Schema enforcement kiểm tra cấu trúc và kiểu dữ liệu, không tự áp đặt unique constraint lên một cột.\n\n**Điều kiện quan trọng:** Khử trùng lặp trong từng batch trước khi `MERGE`. Nếu source batch còn nhiều dòng cùng khóa, các dòng đó đều có thể được chèn khi khóa chưa tồn tại ở target. Khóa null hoặc không ổn định cũng làm điều kiện so khớp không đáng tin. Với `foreachBatch`, giữ thao tác idempotent để retry không làm sai dữ liệu.",
     "page": null,
-    "image": "img/q_75.jpg",
     "references": [
       {
-        "title": "Delta Lake Merge operations",
-        "url": "https://docs.databricks.com/en/delta/merge"
+        "title": "Upsert into a Delta Lake table using merge",
+        "url": "https://docs.databricks.com/aws/en/delta/merge"
       },
       {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q75",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82766-question-75-topic-1/"
+        "title": "Delta Lake table streaming reads and writes",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/delta-lake"
       }
     ]
   },
   {
     "id": 76,
     "topic": 1,
-    "question": "A data pipeline uses **Structured Streaming** to ingest data from **Apache Kafka** to **Delta Lake**. Data is being stored in a bronze table, and includes the Kafka-generated timestamp, key, and value. Three months after the pipeline is deployed, the data engineering team has noticed some latency issues during certain times of the day.\nA senior data engineer updates the **Delta** table's schema and ingestion logic to include the current timestamp (as recorded by **Apache Spark**) as well as the **Kafka** topic and partition. The team plans to use these additional metadata fields to diagnose the transient processing delays.\nWhich limitation will the team face while diagnosing this problem?",
+    "question": "A Kafka-to-Delta Structured Streaming pipeline has run for three months. The bronze table currently stores Kafka `timestamp`, `key`, and `value`, but not the topic, partition, or Spark processing timestamp. The team now adds those fields to the ingestion logic and evolves the Delta schema so it can diagnose future latency. What limitation applies to the three months of records already stored?",
     "options": {
-      "A": "New fields will not be computed for historic records.",
-      "B": "**Spark** cannot capture the topic and partition fields from a **Kafka** source.",
-      "C": "New fields cannot be added to a production **Delta** table.",
-      "D": "Updating the table schema will invalidate the **Delta** transaction log metadata.",
-      "E": "Updating the table schema requires a default value provided for each field added."
+      "A": "The new fields are not automatically reconstructed for historical rows; they are null unless the team backfills them from another retained source.",
+      "B": "Spark cannot read Kafka topic and partition metadata.",
+      "C": "A production Delta table cannot have columns added after creation.",
+      "D": "Adding columns invalidates the Delta transaction log and makes existing files unreadable.",
+      "E": "Every added column must have a default value before Delta allows a schema update."
     },
     "answer": "A",
-    "question_vi": "Pipeline ****Kafka**** -> **Delta Lake** lưu timestamp, key, value. Sau 3 tháng thêm cột timestamp **Spark** hiện tại, topic và partition để phân tích độ trễ. Hạn chế nào sẽ gặp?",
+    "question_vi": "Pipeline Structured Streaming đọc Kafka và ghi Delta đã chạy ba tháng. Bảng bronze hiện lưu `timestamp`, `key`, `value` của Kafka nhưng chưa lưu topic, partition hay thời điểm xử lý của Spark. Nhóm bổ sung các trường này vào logic ingest và tiến hóa schema để chẩn đoán độ trễ trong tương lai. Hạn chế nào áp dụng cho ba tháng dữ liệu đã lưu?",
     "options_vi": {
-      "A": "Các trường mới sẽ không được tính cho dữ liệu lịch sử.",
-      "B": "**Spark** không bắt được topic và partition từ nguồn **Kafka**.",
-      "C": "Không thể thêm trường mới cho bảng **Delta Lake** production.",
-      "D": "Cập nhật schema sẽ làm mất hiệu lực metadata transaction log.",
-      "E": "Cập nhật schema yêu cầu giá trị mặc định cho từng cột thêm."
+      "A": "Các trường mới không tự được khôi phục cho dòng lịch sử; chúng sẽ null nếu nhóm không backfill từ một nguồn còn lưu khác.",
+      "B": "Spark không đọc được metadata topic và partition của Kafka.",
+      "C": "Không thể thêm cột sau khi tạo bảng Delta production.",
+      "D": "Thêm cột làm Delta transaction log mất hiệu lực và khiến các file cũ không đọc được.",
+      "E": "Delta bắt buộc phải có giá trị mặc định cho mọi cột mới trước khi cho đổi schema."
     },
-    "explanation_vi": "Khi tiến hóa schema của một **Delta** table bằng cách thêm các trường siêu dữ liệu mới (như `Spark` timestamp, `Kafka` topic, partition), schema mới sẽ được áp dụng cho dữ liệu ghi sau đó. Tuy nhiên, các bản ghi lịch sử đã được lưu từ trước trong bảng sẽ không tự động được tính toán các giá trị mới này (các trường này sẽ mang giá trị `NULL` đối với dữ liệu lịch sử), đây là hạn chế lớn nhất khi cần phân tích hồi tố dữ liệu cũ.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** Thêm cột và tiến hóa schema giúp các lần ingest sau ghi thêm thông tin, nhưng không tự chạy lại logic trên ba tháng dữ liệu cũ. Các dòng lịch sử không có giá trị cho cột mới và thường đọc ra `NULL`. Muốn phân tích hồi tố, nhóm phải backfill bằng nguồn còn giữ metadata tương ứng (ví dụ archive Kafka, log ingest hoặc bảng offset/metadata riêng). Nếu thông tin đó chưa từng được lưu và Kafka đã xóa dữ liệu cũ, có thể không khôi phục chính xác được.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **B**: Kafka source của Structured Streaming có metadata như `topic`, `partition`, `offset`, `timestamp`, `key` và `value`. Pipeline cần chọn rồi ghi chúng vào Delta nếu muốn lưu lại.\n- **C**: Delta hỗ trợ thêm cột bằng schema evolution hoặc DDL. Cần điều phối thay đổi với writer/reader đang chạy và restart stream khi thích hợp, nhưng việc thêm cột không bị cấm chỉ vì bảng đã ở production.\n- **D**: Delta transaction log quản lý phiên bản và metadata bảng. Thêm cột là thay đổi schema có kiểm soát; nó không làm file cũ không thể đọc. Cột mới không có trong file cũ thường được đọc là null.\n- **E**: Không phải lúc nào cũng cần default. Một default cũng không thể tự tái tạo metadata lịch sử thực tế như topic/partition đã xử lý.\n\n**Lưu ý thiết kế:** `current_timestamp()` trong Spark là processing time của lần xử lý, không phải timestamp gốc do producer/broker gắn vào event. Hãy phân biệt event time, Kafka timestamp và processing/ingestion time; lưu riêng từng loại nếu cần đo độ trễ end-to-end.",
     "page": null,
-    "image": "img/q_76.jpg",
     "references": [
       {
-        "title": "Delta Lake Schema Evolution",
-        "url": "https://docs.databricks.com/en/tables/update-schema"
+        "title": "Connect to Apache Kafka on Databricks",
+        "url": "https://docs.databricks.com/aws/en/connect/streaming/kafka/"
       },
       {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q76",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82765-question-76-topic-1/"
+        "title": "Update table schemas with schema evolution",
+        "url": "https://docs.databricks.com/aws/en/tables/update-schema"
       }
     ]
   },
   {
     "id": 77,
     "topic": 1,
-    "question": "In order to facilitate near real-time workloads, a data engineer is creating a helper function to leverage the schema detection and evolution functionality of **Databricks Auto Loader**. The desired function will automatically detect the schema of the source directly, incrementally process JSON files as they arrive in a source directory, and automatically evolve the schema of the table when new fields are detected.\nThe function is displayed below with a blank:\nWhich response correctly fills in the blank to meet the specified requirements?",
+    "question": "A data engineer is writing an Auto Loader helper that infers the schema of incoming JSON files, processes new files incrementally, and evolves the target Delta table when new source fields appear. Complete the blank in this function; `schema_path` and `checkpoint_path` are persistent, dedicated paths:\n```python\ndef auto_load_json(source_path: str, schema_path: str,\n                   checkpoint_path: str, target_table_path: str):\n    return (spark.readStream\n        .format(\"cloudFiles\")\n        .option(\"cloudFiles.format\", \"json\")\n        .option(\"cloudFiles.schemaLocation\", schema_path)\n        .load(source_path)\n        .__________\n    )\n```\nWhich expression belongs in the blank for an incremental streaming write to Delta with schema evolution?",
     "options": {
       "A": "`.writeStream.option(\"mergeSchema\", \"true\").start(target_table_path)`",
       "B": "`.writeStream.option(\"checkpointLocation\", checkpoint_path).option(\"mergeSchema\", \"true\").trigger(once=True).start(target_table_path)`",
       "C": "`.write.option(\"checkpointLocation\", checkpoint_path).option(\"mergeSchema\", \"true\").outputMode(\"append\").save(target_table_path)`",
       "D": "`.write.option(\"mergeSchema\", \"true\").mode(\"append\").save(target_table_path)`",
-      "E": "`.writeStream.option(\"checkpointLocation\", checkpoint_path).option(\"mergeSchema\", \"true\").start(target_table_path)`"
+      "E": "`.writeStream.format(\"delta\").option(\"checkpointLocation\", checkpoint_path).option(\"mergeSchema\", \"true\").start(target_table_path)`"
     },
     "answer": "E",
-    "question_vi": "Muốn viết hàm trợ giúp **Auto Loader**: tự phát hiện schema nguồn, xử lý `JSON` tăng dần, tự tiến hóa schema khi có trường mới. Chỗ trống trong hàm nên điền gì?",
+    "question_vi": "Một kỹ sư viết helper Auto Loader để suy luận schema file JSON mới, xử lý file tăng dần và tiến hóa schema bảng Delta đích khi nguồn có trường mới. Điền vào chỗ trống; `schema_path` và `checkpoint_path` là hai đường dẫn bền vững, chuyên biệt:\n```python\ndef auto_load_json(source_path: str, schema_path: str,\n                   checkpoint_path: str, target_table_path: str):\n    return (spark.readStream\n        .format(\"cloudFiles\")\n        .option(\"cloudFiles.format\", \"json\")\n        .option(\"cloudFiles.schemaLocation\", schema_path)\n        .load(source_path)\n        .__________\n    )\n```\nBiểu thức nào phù hợp để ghi streaming tăng dần vào Delta và cho phép tiến hóa schema?",
     "options_vi": {
       "A": "`.writeStream.option(\"mergeSchema\", \"true\").start(target_table_path)`",
       "B": "`.writeStream.option(\"checkpointLocation\", checkpoint_path).option(\"mergeSchema\", \"true\").trigger(once=True).start(target_table_path)`",
       "C": "`.write.option(\"checkpointLocation\", checkpoint_path).option(\"mergeSchema\", \"true\").outputMode(\"append\").save(target_table_path)`",
       "D": "`.write.option(\"mergeSchema\", \"true\").mode(\"append\").save(target_table_path)`",
-      "E": "`.writeStream.option(\"checkpointLocation\", checkpoint_path).option(\"mergeSchema\", \"true\").start(target_table_path)`"
+      "E": "`.writeStream.format(\"delta\").option(\"checkpointLocation\", checkpoint_path).option(\"mergeSchema\", \"true\").start(target_table_path)`"
     },
-    "explanation_vi": "Trong **Databricks Auto Loader**, để cấu hình tự động phát hiện schema và tiến hóa schema khi có cột mới trong nguồn `JSON`, ta sử dụng cơ chế streaming với định dạng `\"cloudFiles\"`. Phép ghi dữ liệu phải dùng Structured Streaming (`writeStream`) kết hợp với các cấu hình ``.option(\"cloudFiles.schemaLocation\", schemaPath)`` để lưu trữ lịch sử schema và ``.option(\"mergeSchema\", \"true\")`` trên Delta sink để cho phép cập nhật cột mới vào bảng đích.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án E.** Auto Loader trả về streaming DataFrame, vì vậy cần `writeStream`. `format(\"delta\")` chọn Delta sink; `checkpointLocation` lưu tiến độ/offset để query có thể khôi phục và tiếp tục incremental sau restart; `mergeSchema=true` bật schema evolution ở phía ghi để cột mới được thêm vào bảng Delta. Cuối cùng `start(target_table_path)` khởi chạy query tới đích. Phía đọc cũng cần `cloudFiles.schemaLocation` bền vững để Auto Loader lưu schema đã suy luận và theo dõi thay đổi.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **A**: Thiếu checkpoint location tường minh. Với pipeline incremental bền vững, checkpoint phải được giữ ổn định qua lần restart để Spark biết đã xử lý tới đâu.\n- **B**: Có checkpoint và schema evolution, nhưng `Trigger.Once` chạy một lượt rồi kết thúc; không phù hợp yêu cầu stream gần realtime chạy liên tục. Nếu chọn mô hình bounded chạy theo lịch, dùng `AvailableNow` là hướng hiện hành được Databricks khuyến nghị.\n- **C**: `.write` là DataFrameWriter cho batch, không phải `DataStreamWriter` cho streaming DataFrame; chuỗi API còn chứa phương thức không thuộc writer batch này.\n- **D**: Batch `.write` cũng không khởi chạy luồng Auto Loader incremental.\n\n**Hai nơi lưu có vai trò khác nhau:** `cloudFiles.schemaLocation` giữ schema Auto Loader suy luận; `checkpointLocation` giữ tiến độ xử lý của Structured Streaming. Có cấu hình cho phép dùng chung thư mục trong một số trường hợp, nhưng tách `schema_path` và `checkpoint_path` giúp backup/vận hành rõ ràng hơn. Khi phát hiện cột mới, Auto Loader có thể dừng với `UnknownFieldException` để cập nhật schema; cấu hình job tự restart để tiếp tục với schema đã tiến hóa.",
     "page": null,
-    "image": "img/q_77.jpg",
     "references": [
       {
-        "title": "Auto Loader Schema Inference & Evolution",
-        "url": "https://docs.databricks.com/en/pyspark/reference/classes/datastreamreader/schema"
+        "title": "Configure schema inference and evolution in Auto Loader",
+        "url": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/schema"
       },
       {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q77",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82768-question-77-topic-1/"
+        "title": "Update table schemas with schema evolution",
+        "url": "https://docs.databricks.com/aws/en/tables/update-schema"
+      },
+      {
+        "title": "Production considerations for Structured Streaming",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/production"
       }
     ]
   },
   {
     "id": 78,
     "topic": 1,
-    "question": "The data engineering team maintains the following code:\nAssuming that this code produces logically correct results and the data in the source table has been de-duplicated and validated, which statement describes what will occur when this code is executed?",
+    "question": "The data engineering team runs this PySpark code:\n```python\nimport pyspark.sql.functions as F\n\n(spark.table(\"silver_customer_sales\")\n    .groupBy(\"customer_id\")\n    .agg(\n        F.min(\"sale_date\").alias(\"first_transaction_date\"),\n        F.max(\"sale_date\").alias(\"last_transaction_date\"),\n        F.mean(\"sale_total\").alias(\"average_sales\"),\n        F.countDistinct(\"order_id\").alias(\"total_orders\"),\n        F.sum(\"sale_total\").alias(\"lifetime_value\")\n    )\n    .write\n    .mode(\"overwrite\")\n    .table(\"gold_customer_lifetime_sales_summary\")\n)\n```\nThe source table is validated and deduplicated. What happens when this code runs?",
     "options": {
-      "A": "The `silver_customer_sales` table will be overwritten by aggregated values calculated from all records in the `gold_customer_lifetime_sales_summary` table as a batch job.",
-      "B": "A batch job will update the `gold_customer_lifetime_sales_summary` table, replacing only those rows that have different values than the current version of the table, using `customer_id` as the primary key.",
-      "C": "The `gold_customer_lifetime_sales_summary` table will be overwritten by aggregated values calculated from all records in the `silver_customer_sales` table as a batch job.",
-      "D": "An incremental job will leverage running information in the state store to update aggregate values in the `gold_customer_lifetime_sales_summary` table.",
-      "E": "An incremental job will detect if new rows have been written to the `silver_customer_sales` table; if new rows are detected, all aggregates will be recalculated and used to overwrite the `gold_customer_lifetime_sales_summary` table."
+      "A": "The `silver_customer_sales` table is overwritten with aggregates read from the gold summary table.",
+      "B": "A batch job updates only changed rows in the gold table, using `customer_id` as an automatically enforced primary key.",
+      "C": "A batch aggregation reads all current rows from `silver_customer_sales` and overwrites the gold summary table with one aggregate row per customer.",
+      "D": "A streaming aggregation uses a state store to incrementally update the gold summary table.",
+      "E": "An incremental job detects new silver rows, recalculates all aggregates, and overwrites the gold table only when new rows exist."
     },
     "answer": "C",
-    "question_vi": "Code duy trì bảng vàng từ bảng bạc đã sạch. Khi chạy, chuyện gì xảy ra?",
+    "question_vi": "Nhóm kỹ thuật dữ liệu chạy đoạn PySpark sau:\n```python\nimport pyspark.sql.functions as F\n\n(spark.table(\"silver_customer_sales\")\n    .groupBy(\"customer_id\")\n    .agg(\n        F.min(\"sale_date\").alias(\"first_transaction_date\"),\n        F.max(\"sale_date\").alias(\"last_transaction_date\"),\n        F.mean(\"sale_total\").alias(\"average_sales\"),\n        F.countDistinct(\"order_id\").alias(\"total_orders\"),\n        F.sum(\"sale_total\").alias(\"lifetime_value\")\n    )\n    .write\n    .mode(\"overwrite\")\n    .table(\"gold_customer_lifetime_sales_summary\")\n)\n```\nBảng nguồn đã được kiểm tra và khử trùng lặp. Khi chạy đoạn code này, điều gì xảy ra?",
     "options_vi": {
-      "A": "`silver_customer_sales` bị overwrite bởi tổng hợp từ `gold_customer_lifetime_sales_summary` dưới dạng batch.",
-      "B": "Batch job cập nhật `gold_customer_lifetime_sales_summary`, chỉ thay đổi các hàng khác giá trị, khóa chính `customer_id`.",
-      "C": "`gold_customer_lifetime_sales_summary` bị overwrite bởi tổng hợp từ `silver_customer_sales` (batch).",
-      "D": "Job incremental dùng state store cập nhật aggregate trong `gold_customer_lifetime_sales_summary`.",
-      "E": "Job incremental phát hiện dòng mới ở `silver_customer_sales`; nếu có, tính lại toàn bộ aggregate và overwrite `gold_customer_lifetime_sales_summary`."
+      "A": "Bảng `silver_customer_sales` bị ghi đè bằng số liệu tổng hợp đọc từ bảng gold.",
+      "B": "Batch job chỉ cập nhật các dòng thay đổi ở bảng gold, dùng `customer_id` làm khóa chính được tự động bảo đảm.",
+      "C": "Batch aggregation đọc toàn bộ dòng hiện tại từ `silver_customer_sales`, rồi ghi đè bảng gold bằng một dòng tổng hợp cho mỗi khách hàng.",
+      "D": "Streaming aggregation dùng state store để cập nhật tăng dần bảng gold.",
+      "E": "Job incremental phát hiện dòng silver mới, tính lại mọi aggregate và chỉ ghi đè bảng gold khi có dòng mới."
     },
-    "explanation_vi": "Mã nguồn thực hiện đọc dữ liệu từ bảng `silver_customer_sales` dưới dạng batch, thực hiện gom nhóm và tính toán các thống kê tổng hợp (lifetime value, number of orders), sau đó ghi ghi đè (`.mode(\"overwrite\")`) vào bảng đích `gold_customer_lifetime_sales_summary`. Do đó, mỗi khi code này chạy, toàn bộ dữ liệu trong bảng đích sẽ bị xóa sạch và ghi đè hoàn toàn bằng tập kết quả tổng hợp mới nhất tính từ bảng bạc.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** `spark.table(\"silver_customer_sales\")` tạo DataFrame batch từ snapshot hiện tại của bảng silver. `groupBy(\"customer_id\")` gom các giao dịch theo khách hàng; code lấy ngày giao dịch đầu/cuối, doanh số trung bình, số order phân biệt và tổng giá trị giao dịch. Cuối cùng `.write.mode(\"overwrite\").table(...)` ghi kết quả batch vào bảng gold với chế độ overwrite, thay dữ liệu hiện có bằng kết quả tổng hợp vừa tính. Mỗi lần chạy, job đọc lại dữ liệu silver hiện có và tạo lại toàn bộ summary; không có checkpoint hay state store để chỉ xử lý phần mới.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **A**: Hướng đọc/ghi bị đảo. Source là `silver_customer_sales`; đích được chỉ rõ trong `.table(...)` là `gold_customer_lifetime_sales_summary`.\n- **B**: Không có `MERGE` hay predicate chỉ cập nhật dòng thay đổi. `customer_id` dùng để groupBy tạo một dòng kết quả mỗi nhóm, nhưng không tự thành primary key được Delta cưỡng chế.\n- **D**: Đây là batch DataFrame từ `spark.table`, không phải streaming DataFrame (`readStream`) và không có stateful streaming aggregation.\n- **E**: Không có cơ chế incremental change detection trong code. Toàn query được tính lại khi job chạy; dù nguồn có dòng mới hay không, writer vẫn thực hiện overwrite.\n\n**Hệ quả vận hành:** Overwrite giúp bảng gold phản ánh snapshot silver tại thời điểm đọc, nhưng chi phí tăng theo kích thước nguồn. Nếu bảng lớn, có thể cân nhắc materialized view hoặc pipeline incremental dùng CDC/Change Data Feed và `MERGE`, sau khi xác định rõ cách xử lý update/delete. Đừng gọi đây là job incremental chỉ vì đầu ra có thể giống kết quả tính tăng dần—code đang đọc và tổng hợp batch.",
     "page": null,
-    "image": "img/q_78.jpg",
     "references": [
       {
-        "title": "Delta Lake Table Writes",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "Aggregate data on Databricks",
+        "url": "https://docs.databricks.com/aws/en/transform/aggregation"
       },
       {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q78",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82767-question-78-topic-1/"
+        "title": "PySpark DataFrameWriter.mode API",
+        "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameWriter.mode.html"
+      },
+      {
+        "title": "Delta Lake table streaming reads and writes",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/delta-lake"
       }
     ]
   },
@@ -2586,41 +2594,40 @@
   {
     "id": 80,
     "topic": 1,
-    "question": "The marketing team is looking to share data in an aggregate table with the sales organization, but the field names used by the teams do not match, and a number of marketing-specific fields have not been approved for the sales org.\nWhich of the following solutions addresses the situation while emphasizing simplicity?",
+    "question": "The marketing team wants to share an aggregate table with the sales organization. The teams use different field names, and several marketing-only fields are not approved for sales. Which solution meets this need with the least operational complexity?",
     "options": {
-      "A": "Create a view on the marketing table selecting only those fields approved for the sales team; alias the names of any fields that should be\nstandardized to the sales naming conventions.",
+      "A": "Create a view on the marketing table, select only approved fields, and alias field names to match sales conventions.",
       "B": "Create a new table with the required schema and use **Delta Lake**'s `DEEP CLONE` functionality to sync up changes committed to one table to\nthe corresponding table.",
       "C": "Use a `CTAS` statement to create a derivative table from the marketing table; configure a production job to propagate changes.",
       "D": "Add a parallel table write to the current production pipeline, updating a new sales table that varies as required from the marketing table.",
       "E": "Instruct the marketing team to download results as a CSV and email them to the sales organization."
     },
     "answer": "A",
-    "question_vi": "Marketing muốn chia sẻ bảng tổng hợp cho sales nhưng tên cột khác và có cột riêng chưa được phép. Giải pháp đơn giản nhất?",
+    "question_vi": "Nhóm marketing muốn chia sẻ một bảng tổng hợp với sales. Hai nhóm đặt tên cột khác nhau, và một số cột chỉ dành cho marketing chưa được phép chia sẻ. Giải pháp nào đáp ứng nhu cầu với ít phức tạp vận hành nhất?",
     "options_vi": {
-      "A": "Tạo view trên bảng marketing, chọn các cột được phép cho sales; alias tên cột theo chuẩn sales.",
+      "A": "Tạo view trên bảng marketing, chỉ chọn cột đã được duyệt và alias tên cột theo quy ước của sales.",
       "B": "Tạo bảng mới với schema yêu cầu và dùng `DEEP CLONE` để đồng bộ thay đổi.",
       "C": "Dùng `CTAS` tạo bảng dẫn xuất từ marketing; cấu hình job production để đồng bộ.",
       "D": "Thêm nhánh ghi song song trong pipeline để cập nhật bảng sales mới khác schema.",
       "E": "Bảo marketing tải CSV và email cho sales."
     },
-    "explanation_vi": "Tạo một view (khung nhìn) là giải pháp đơn giản nhất và tối ưu chi phí nhất. View cho phép ta chỉ lựa chọn các cột được phê duyệt và đổi tên (alias) các trường theo chuẩn của nhóm sales mà không cần sao chép hoặc đồng bộ hóa tệp dữ liệu thực tế, giúp quản lý quyền truy cập đơn giản và đồng nhất dữ liệu thời gian thực.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** Một view SQL lưu định nghĩa truy vấn chứ không sao chép toàn bộ dữ liệu. View có thể chỉ chiếu các cột đã duyệt và đặt alias để khớp cách gọi của sales. Nhờ đó nhóm tạo một lớp dữ liệu ổn định cho người dùng downstream mà không phải duy trì thêm bản sao hay một job đồng bộ; khi bảng nguồn cập nhật, view phản ánh dữ liệu nguồn theo lần truy vấn. Cấp quyền `SELECT` cho sales trên view theo cơ chế quản trị đang dùng và chỉ đưa các trường được phép vào định nghĩa.\n\n**Vì sao các lựa chọn khác kém phù hợp?**\n\n- **B**: Deep clone tạo bản sao dữ liệu tại một thời điểm; nó không tự đồng bộ mọi thay đổi liên tục giữa hai bảng như phương án mô tả. Clone còn tạo thêm vòng đời và chi phí lưu trữ.\n- **C**: CTAS tạo bảng vật lý tại thời điểm chạy. Muốn theo kịp nguồn phải thêm job đồng bộ, xử lý lịch chạy/lỗi và chấp nhận độ trễ; phức tạp hơn một view khi chỉ cần chọn/đổi tên cột.\n- **D**: Sửa pipeline để ghi đồng thời sang hai schema tạo thêm đích ghi, logic mapping và rủi ro hai bảng lệch nhau. Đề bài ưu tiên giải pháp đơn giản.\n- **E**: CSV gửi email tạo bản sao ngoài catalog, khó kiểm soát quyền, lịch sử, cập nhật và tái lập truy vấn.\n\n**Giới hạn:** View thường không lưu trước kết quả nên các phép aggregate có thể vẫn phải chạy khi được truy vấn. Nếu truy vấn nguồn quá đắt và cần lưu sẵn kết quả, hãy cân nhắc materialized view hoặc bảng tổng hợp được refresh theo lịch; yêu cầu hiện tại đặt nặng thay đổi schema/chính sách truy cập đơn giản.",
     "page": null,
-    "image": "img/q_80.jpg",
     "references": [
       {
-        "title": "Databricks CREATE VIEW syntax",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-view"
+        "title": "CREATE VIEW - Databricks SQL Language Manual",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view"
       },
       {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q80",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82765-question-80-topic-1/"
+        "title": "Hive metastore privileges and securable objects (legacy)",
+        "url": "https://docs.databricks.com/aws/en/data-governance/table-acls/object-privileges"
       }
     ]
   },
   {
     "id": 81,
     "topic": 1,
-    "question": "A `CHECK` constraint has been successfully added to the **Delta** table named `activity_details` using the following logic:\nA batch job is attempting to insert new records to the table, including a record where `latitude = 45.50` and `longitude = 212.67`.\nWhich statement describes the outcome of this batch insert?",
+    "question": "A `CHECK` constraint has been added to the Delta table `activity_details`:\n```sql\nALTER TABLE activity_details\nADD CONSTRAINT valid_coordinates\nCHECK (\n  latitude >= -90 AND latitude <= 90 AND\n  longitude >= -180 AND longitude <= 180\n);\n```\nA batch write includes a row with `latitude = 45.50` and `longitude = 212.67`. Which statement describes the outcome of this write?",
     "options": {
       "A": "The write will fail when the violating record is reached; any records previously processed will be recorded to the target table.",
       "B": "The write will fail completely because of the constraint violation and no records will be inserted into the target table.",
@@ -2629,7 +2636,7 @@
       "E": "The write will insert all records except those that violate the table constraints; the violating records will be reported in a warning log."
     },
     "answer": "B",
-    "question_vi": "Bảng Delta `activity_details` có `CHECK` constraint `latitude BETWEEN -90 AND 90 AND longitude BETWEEN -180 AND 180`. Batch insert có bản ghi `latitude = 45.50`, `longitude = 212.67`. Kết quả?",
+    "question_vi": "Bảng Delta `activity_details` đã có `CHECK` constraint:\n```sql\nALTER TABLE activity_details\nADD CONSTRAINT valid_coordinates\nCHECK (\n  latitude >= -90 AND latitude <= 90 AND\n  longitude >= -180 AND longitude <= 180\n);\n```\nMột batch ghi có dòng `latitude = 45.50`, `longitude = 212.67`. Điều gì xảy ra với lần ghi này?",
     "options_vi": {
       "A": "Ghi sẽ lỗi tại bản ghi vi phạm; các bản ghi trước đó vẫn được chèn.",
       "B": "Ghi thất bại hoàn toàn, không bản ghi nào được chèn.",
@@ -2637,17 +2644,16 @@
       "D": "Ghi chèn mọi bản ghi; vi phạm được đánh dấu trong cột boolean `valid_coordinates`.",
       "E": "Ghi chèn mọi bản ghi trừ bản vi phạm; bản vi phạm được ghi trong log cảnh báo."
     },
-    "explanation_vi": "**Delta Lake** hỗ trợ tính năng ràng buộc kiểm tra (`CHECK` constraint) để đảm bảo chất lượng dữ liệu. Vì **Delta Lake** đảm bảo tính nguyên tử (Atomicity) của các giao dịch ghi (giao dịch **ACID**), nếu có bất kỳ bản ghi nào trong lô ghi (batch insert) vi phạm ràng buộc (ví dụ vĩ độ hoặc kinh độ ngoài phạm vi), toàn bộ giao dịch ghi sẽ bị hủy (`rollback`) và không có bất kỳ bản ghi nào được ghi vào bảng.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** `longitude = 212.67` nằm ngoài miền hợp lệ từ -180 đến 180, nên vi phạm `CHECK` constraint `valid_coordinates`. Trên Databricks, constraint được kiểm tra trước khi commit dữ liệu; nếu có bản ghi vi phạm, **toàn bộ transaction ghi thất bại**. Không có dòng nào của batch trở thành một phần của snapshot Delta đã commit—kể cả những dòng hợp lệ xử lý trước dòng lỗi. Các file tạm có thể đã được tạo trong storage trong lúc thực thi, nhưng chúng không được transaction log đưa vào bảng như dữ liệu đã commit.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **A**: Mô tả ghi từng dòng không nguyên tử. Delta commit theo transaction; không giữ lại một phần dòng hợp lệ trước lỗi.\n- **C**: `CHECK` không tự tách bản ghi sai sang quarantine. Cần tự kiểm tra/route dữ liệu trước khi ghi nếu muốn cách ly lỗi.\n- **D**: Constraint làm transaction thất bại; nó không tự thêm cột `valid_coordinates` hay ghi cờ boolean vào bảng.\n- **E**: Vi phạm không chỉ được ghi cảnh báo trong khi các dòng còn lại vẫn được chèn; batch write bị từ chối.\n\n**Cách xử lý trong pipeline:** Validate tọa độ trước khi ghi, tách dòng lỗi sang bảng quarantine kèm lý do, rồi chỉ ghi dòng hợp lệ vào bảng có constraint. Giữ constraint ở bảng đích như lớp bảo vệ cuối để dữ liệu ngoài miền không lọt vào bảng production.",
     "page": null,
-    "image": "img/q_81.jpg",
     "references": [
       {
-        "title": "Delta Lake Constraints",
-        "url": "https://docs.databricks.com/en/tables/constraints"
+        "title": "Constraints on Databricks",
+        "url": "https://docs.databricks.com/aws/en/tables/constraints"
       },
       {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q81",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82821-question-81-topic-1/"
+        "title": "Isolation levels and write conflicts",
+        "url": "https://docs.databricks.com/aws/en/optimizations/isolation"
       }
     ]
   },
@@ -2684,75 +2690,81 @@
   {
     "id": 83,
     "topic": 1,
-    "question": "All records from an **Apache Kafka** producer are being ingested into a single **Delta Lake** table with the following schema:\n`key BINARY, value BINARY, topic STRING, partition LONG, offset LONG, timestamp LONG`\nThere are 5 unique topics being ingested. Only the `\"registration\"` topic contains Personal Identifiable Information (PII). The company wishes to restrict access to PII. The company also wishes to only retain records containing PII in this table for 14 days after initial ingestion. However, for non-PII information, it would like to retain these records indefinitely.\nWhich of the following solutions meets the requirements?",
+    "question": "Records from five Kafka topics are being ingested into one Delta Lake landing table. Only the `registration` topic contains PII. The company must restrict access to that PII, remove those records from active queryable data 14 days after ingestion, and keep non-PII records indefinitely. Assume the design can be changed and the ingestion pipeline can add an `ingested_at TIMESTAMP` column. Which design best meets the requirements?",
     "options": {
-      "A": "All data should be deleted biweekly; **Delta Lake**'s time travel functionality should be leveraged to maintain a history of non-PII information.",
-      "B": "Data should be partitioned by the registration field, allowing ACLs and delete statements to be set for the PII directory.",
-      "C": "Because the value field is stored as binary data, this information is not considered PII and no special precautions should be taken.",
-      "D": "Separate object storage containers should be specified based on the partition field, allowing isolation at the storage level.",
-      "E": "Data should be partitioned by the `topic` field, allowing ACLs and delete statements to leverage partition boundaries."
+      "A": "Keep all topics in one table, delete the whole table every two weeks, and rely on Delta Time Travel to preserve non-PII indefinitely.",
+      "B": "Keep one table partitioned by `topic` and use cloud-folder ACLs on the `registration` partition as the PII access boundary.",
+      "C": "Treat `value BINARY` as non-PII because it is not stored as readable text.",
+      "D": "Route `registration` into a separate restricted Delta table and other topics into a separate non-PII table; grant access separately and apply a 14-day row-retention policy to the PII table using `ingested_at`.",
+      "E": "Partition one shared table by `topic` and grant `SELECT` on just the `registration` partition to approved users."
     },
-    "answer": "E",
-    "question_vi": "Tất cả bản ghi từ Kafka vào một bảng **Delta Lake**: `key, value, topic, partition, offset, timestamp`. Có 5 topic, chỉ topic `\"registration\"` chứa PII; cần hạn chế truy cập PII và chỉ giữ PII 14 ngày, còn lại giữ vô thời hạn. Giải pháp nào đáp ứng?",
+    "answer": "D",
+    "question_vi": "Bản ghi từ năm Kafka topic đang được nạp vào một bảng Delta landing. Chỉ topic `registration` chứa PII. Công ty cần hạn chế quyền truy cập PII, xóa các bản ghi đó khỏi dữ liệu đang truy vấn được sau 14 ngày kể từ khi ingest, đồng thời giữ non-PII vô thời hạn. Giả sử có thể đổi thiết kế và pipeline có thể thêm cột `ingested_at TIMESTAMP`. Thiết kế nào phù hợp nhất?",
     "options_vi": {
-      "A": "Xoá toàn bộ dữ liệu hai tuần một lần; dùng time travel để giữ lịch sử non-PII.",
-      "B": "Partition theo trường `registration` để ACL và delete trên thư mục PII.",
-      "C": "Vì value là binary nên không coi là PII, không cần biện pháp đặc biệt.",
-      "D": "Chia container lưu trữ theo trường partition, cô lập ở mức storage.",
-      "E": "Partition theo `topic` để ACL và delete dựa trên ranh giới partition."
+      "A": "Giữ mọi topic trong một bảng, xóa toàn bảng mỗi hai tuần và dựa vào Delta Time Travel để giữ non-PII vô thời hạn.",
+      "B": "Giữ một bảng partition theo `topic` rồi dùng ACL của thư mục cloud ở partition `registration` làm ranh giới bảo mật PII.",
+      "C": "Coi `value BINARY` là không chứa PII vì dữ liệu không lưu dưới dạng văn bản đọc được.",
+      "D": "Đưa `registration` vào bảng Delta riêng có giới hạn quyền, các topic khác vào bảng non-PII riêng; cấp quyền riêng và áp dụng retention 14 ngày cho bảng PII theo `ingested_at`.",
+      "E": "Partition bảng dùng chung theo `topic` rồi cấp `SELECT` riêng cho partition `registration`."
     },
-    "explanation_vi": "Phân hoạch bảng (partitioning) theo trường `topic` giúp chia các bản ghi của từng topic thành các thư mục vật lý riêng biệt trên đĩa lưu trữ. Điều này cho phép áp dụng quyền truy cập chọn lọc (ACLs) trên thư mục chứa topic `registration` để bảo vệ PII, đồng thời giúp thực hiện các câu lệnh xóa (`DELETE` hoặc `VACUUM`) nhanh chóng và hiệu quả bằng cách loại bỏ trực tiếp thư mục phân hoạch của PII sau 14 ngày mà không ảnh hưởng đến các topic khác.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** Tách luồng PII khỏi non-PII ngay lúc ingest tạo ranh giới quản trị rõ ràng: bảng `registration` chỉ cấp `SELECT` cho nhóm được duyệt bằng Unity Catalog; bảng non-PII có chính sách truy cập phù hợp và được giữ lại lâu dài. Cột `ingested_at` ghi thời điểm dữ liệu đi vào lakehouse, cho phép áp dụng retention theo đúng mốc 14 ngày. Với Unity Catalog managed tables trên runtime hỗ trợ Auto-TTL, có thể đặt chính sách xóa dòng theo timestamp; ở môi trường chưa hỗ trợ, chạy job định kỳ `DELETE` các dòng quá hạn rồi dọn file cũ theo retention đã phê duyệt. Không sao chép payload PII sang bảng non-PII.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **A**: Xóa toàn bộ bảng sẽ xóa cả dữ liệu non-PII cần giữ. Time Travel không phải kho lưu trữ vô hạn; file lịch sử có thể bị loại bởi `VACUUM`/retention.\n- **B**: Partition trong một bảng Delta không phải đối tượng cấp quyền độc lập. ACL trực tiếp trên thư mục có thể bypass mô hình quản trị của catalog và không nên dùng làm ranh giới quyền cho một partition.\n- **C**: Mã hóa/serialize thành `BINARY` không làm dữ liệu hết nhạy cảm; payload vẫn có thể chứa thông tin định danh.\n- **E**: Quyền `SELECT` của catalog áp trên bảng/view, không cấp theo partition như một thư mục bảo mật. Partition theo topic có thể giúp lọc/dọn dữ liệu nhưng không tự giới hạn người đọc PII.\n\n**Phân biệt retention logic và xóa vật lý:** Row TTL có thể xóa bản ghi khỏi snapshot trước, còn file cũ và lịch sử Delta vẫn tồn tại trong thời gian retention. Nếu chính sách yêu cầu xóa vật lý đúng hạn, phải tính cả `VACUUM`, thời gian lưu Time Travel, bản sao/backup và độ trễ purge; cơ chế Auto-TTL chạy nền cũng không cam kết thời điểm vật lý chính xác tuyệt đối.",
     "page": null,
-    "image": "img/q_83.jpg",
     "references": [
       {
-        "title": "Delta Lake Partitions",
-        "url": "https://docs.databricks.com/en/tables/partitions"
+        "title": "Automatic row deletion with auto time-to-live",
+        "url": "https://docs.databricks.com/aws/en/tables/operations/auto-ttl"
       },
       {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q83",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82765-question-83-topic-1/"
+        "title": "Prepare your data for GDPR compliance",
+        "url": "https://docs.databricks.com/aws/en/ldp/gdpr"
+      },
+      {
+        "title": "Unity Catalog permissions model concepts",
+        "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/permissions-concepts"
       }
     ]
   },
   {
     "id": 84,
     "topic": 1,
-    "question": "The data architect has decided that once data has been ingested from external sources into the **Databricks Lakehouse**, table access controls will be leveraged to manage permissions for all production tables and views.\nThe following logic was executed to grant privileges for interactive queries on a production database to the core engineering group.\n`GRANT USAGE ON DATABASE prod TO eng;`\n`GRANT SELECT ON DATABASE prod TO eng;`\nAssuming these are the only privileges that have been granted to the eng group and that these users are not workspace administrators, which statement describes their privileges?",
+    "question": "Assume this workspace uses the **legacy Hive metastore with table access control enabled**, not Unity Catalog. The administrator grants the `eng` group these privileges on database/schema `prod`:\n```sql\nGRANT USAGE ON DATABASE prod TO eng;\nGRANT SELECT ON DATABASE prod TO eng;\n```\nNo other privileges are granted, and group members are not workspace administrators. What can they do?",
     "options": {
-      "A": "Group members have full permissions on the `prod` database and can also assign permissions to other users or groups.",
-      "B": "Group members are able to list all tables in the `prod` database but are not able to see the results of any queries on those tables.",
-      "C": "Group members are able to query and modify all tables and views in the `prod` database, but cannot create new tables or views.",
-      "D": "Group members are able to query all tables and views in the `prod` database, but cannot create or edit anything in the database.",
-      "E": "Group members are able to create, query, and modify all tables and views in the `prod` database, but cannot define custom functions."
+      "A": "They have full permissions on `prod` and can grant privileges to other users or groups.",
+      "B": "They can list tables in `prod`, but cannot query their data.",
+      "C": "They can query and modify all tables and views in `prod`, but cannot create new ones.",
+      "D": "They can query tables and views in `prod`, but cannot create, modify, or delete them.",
+      "E": "They can create, query, and modify all tables and views in `prod`, but cannot define custom functions."
     },
     "answer": "D",
-    "question_vi": "Đã cấp quyền: `GRANT USAGE ON DATABASE prod TO eng; GRANT SELECT ON DATABASE prod TO eng;` (không phải admin). Quyền của nhóm eng là gì?",
+    "question_vi": "Giả sử workspace dùng **Hive metastore legacy và bật table access control**, không dùng Unity Catalog. Admin cấp các quyền sau cho nhóm `eng` trên database/schema `prod`:\n```sql\nGRANT USAGE ON DATABASE prod TO eng;\nGRANT SELECT ON DATABASE prod TO eng;\n```\nKhông có quyền nào khác được cấp và thành viên nhóm không phải workspace admin. Họ có thể làm gì?",
     "options_vi": {
-      "A": "Thành viên có toàn quyền trên `prod` và có thể cấp quyền cho người khác.",
-      "B": "Thành viên có thể liệt kê bảng nhưng không xem kết quả truy vấn.",
-      "C": "Thành viên có thể truy vấn và sửa mọi bảng/view, nhưng không tạo mới.",
-      "D": "Thành viên có thể truy vấn mọi bảng/view nhưng không tạo hay chỉnh sửa.",
-      "E": "Thành viên có thể tạo, truy vấn, sửa mọi bảng/view nhưng không định nghĩa hàm tùy chỉnh."
+      "A": "Họ có toàn quyền trong `prod` và có thể cấp quyền cho người dùng/nhóm khác.",
+      "B": "Họ có thể liệt kê bảng trong `prod` nhưng không truy vấn được dữ liệu.",
+      "C": "Họ có thể truy vấn và sửa mọi bảng/view trong `prod` nhưng không tạo mới.",
+      "D": "Họ có thể truy vấn bảng/view trong `prod` nhưng không tạo, sửa hay xóa chúng.",
+      "E": "Họ có thể tạo, truy vấn và sửa mọi bảng/view trong `prod` nhưng không định nghĩa hàm tùy chỉnh."
     },
-    "explanation_vi": "Quyền `USAGE` cho phép người dùng tương tác và xem thông tin siêu dữ liệu của cơ sở dữ liệu (như liệt kê các bảng), và quyền `SELECT` cho phép đọc/truy vấn dữ liệu từ các bảng và view trong cơ sở dữ liệu đó. Do không được cấp quyền `CREATE` hay `MODIFY`, các thành viên thuộc nhóm `eng` chỉ có thể đọc dữ liệu mà không có quyền tạo mới, chỉnh sửa hay xóa bất kỳ đối tượng nào trong database `prod`.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** Câu hỏi nêu rõ đang dùng quyền của Hive metastore legacy. `USAGE` là điều kiện cần để tham chiếu các đối tượng trong schema; riêng nó không cấp quyền đọc hay ghi. `SELECT` ở cấp schema/database cấp quyền đọc các bảng và view hiện có cũng như được tạo sau này trong phạm vi đó. Vì nhóm không được cấp `CREATE` hay `MODIFY`, họ không thể tạo bảng/view mới hoặc thay đổi dữ liệu.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **A**: `USAGE` + `SELECT` không phải `ALL PRIVILEGES`; cũng không trao quyền grant cho người khác.\n- **B**: `SELECT` cho phép đọc/truy vấn nội dung, không chỉ liệt kê metadata. `USAGE` đáp ứng điều kiện sử dụng schema.\n- **C**: Đọc được không đồng nghĩa được sửa. Không có `MODIFY`.\n- **E**: Không có `CREATE` để tạo đối tượng mới và không có `MODIFY` để thêm/xóa/sửa dữ liệu.\n\n**Đừng áp dụng nguyên xi cho Unity Catalog:** Unity Catalog dùng mô hình khác; để query thường cần `USE CATALOG`, `USE SCHEMA` và `SELECT` trên bảng/view. Các câu `GRANT ... ON DATABASE` trong đề thuộc bối cảnh Hive metastore legacy đã nêu.",
     "page": null,
-    "image": "img/q_84.jpg",
     "references": [
       {
-        "title": "Databricks Table Access Control Privileges",
-        "url": "https://docs.databricks.com/en/volumes/privileges"
+        "title": "Hive metastore privileges and securable objects (legacy)",
+        "url": "https://docs.databricks.com/aws/en/data-governance/table-acls/object-privileges"
       },
       {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q84",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82683-question-84-topic-1/"
+        "title": "Privileges and securable objects in the Hive metastore",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges-hms"
+      },
+      {
+        "title": "Unity Catalog permissions model concepts",
+        "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/permissions-concepts"
       }
     ]
   },
   {
     "id": 85,
     "topic": 1,
-    "question": "A distributed team of data analysts share computing resources on an interactive cluster with autoscaling configured. In order to better manage costs and query throughput, the workspace administrator is hoping to evaluate whether cluster upscaling is caused by many concurrent users or resource-intensive queries.\nIn which location can one review the timeline for cluster resizing events?",
+    "question": "A distributed data-analytics team shares a Databricks all-purpose cluster with autoscaling enabled. The workspace administrator wants to inspect the timeline of worker-count resize events and their event details. Where should they look?",
     "options": {
       "A": "Workspace audit logs",
       "B": "Driver's log file",
@@ -2761,7 +2773,7 @@
       "E": "Executor's log file"
     },
     "answer": "D",
-    "question_vi": "Nhóm phân tích dùng cụm tương tác auto-scaling; admin muốn xem lịch sử cluster scale để biết do người dùng đông hay truy vấn nặng. Xem timeline sự kiện scale ở đâu?",
+    "question_vi": "Một nhóm phân tích dữ liệu dùng chung cluster all-purpose Databricks bật autoscaling. Admin muốn xem dòng thời gian các lần thay đổi số worker cùng chi tiết sự kiện. Nên xem ở đâu?",
     "options_vi": {
       "A": "Nhật ký kiểm toán workspace",
       "B": "Log của driver",
@@ -2769,58 +2781,60 @@
       "D": "**Cluster Event Log**",
       "E": "Log của executor"
     },
-    "explanation_vi": "**Cluster Event Log** (Nhật ký sự kiện cụm) ghi lại tất cả các hoạt động quản trị của cluster trong suốt vòng đời của nó, bao gồm các sự kiện tự động co giãn cụm (resizing events như `RESIZING`, `UPSIZE`, `DOWNSIZE`). Đây là nơi chuẩn nhất để kiểm tra lịch sử co giãn cụm, còn Ganglia chỉ là công cụ giám sát tải CPU/RAM của các VM hiện tại.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D — Compute Event Log (Cluster Event Log).** Mở trang chi tiết của compute/cluster và chọn tab **Event log**. Log ghi lại các sự kiện trong vòng đời compute, gồm thay đổi cấu hình và những lần tăng/giảm kích thước do autoscaling; có timestamp và chi tiết sự kiện để đối chiếu thời điểm tải thay đổi với lúc số worker đổi. Lưu ý log của compute classic được giữ 60 ngày theo tài liệu hiện hành; nếu cần phân tích dài hạn, hãy xuất/lưu sự kiện hoặc dùng system tables phù hợp.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **A**: Audit log ghi nhiều hành động quản trị nhưng không phải giao diện chuyên dụng để xem timeline resize; sự kiện resize có luồng sự kiện compute riêng.\n- **B**: Driver log phục vụ debug driver, Spark và thư viện; nó không phải nhật ký tổng hợp vòng đời cluster.\n- **C**: Ganglia (ở runtime cũ) hiển thị metric tài nguyên như CPU/RAM/network theo thời gian. Metric có thể giúp tìm nguyên nhân tải cao, nhưng không ghi sự kiện resize và kết quả autoscaling.\n- **E**: Executor/worker log giúp debug tác vụ ở từng executor; không tổng hợp thời điểm cluster thay đổi số worker.\n\nĐể tìm **nguyên nhân** scale-up, hãy ghép timeline sự kiện với Spark UI, CPU/memory/active-task metrics và lịch chạy job/người dùng. Event log cho biết “khi nào/đã đổi thế nào”; một mình nó không luôn chứng minh resize xảy ra vì nhiều người dùng hay vì một query cụ thể.",
     "page": null,
-    "image": "img/q_85.jpg",
     "references": [
       {
-        "title": "Databricks Cluster Event Log",
-        "url": "https://docs.databricks.com/en/compute/clusters-manage#event-log"
+        "title": "Manage classic compute: compute event logs",
+        "url": "https://docs.databricks.com/aws/en/compute/clusters-manage"
       },
       {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q85",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82764-question-85-topic-1/"
+        "title": "Compute system tables reference",
+        "url": "https://docs.databricks.com/aws/en/admin/system-tables/compute"
+      },
+      {
+        "title": "Audit log reference",
+        "url": "https://docs.databricks.com/aws/en/admin/account-settings/audit-logs"
       }
     ]
   },
   {
     "id": 86,
     "topic": 1,
-    "question": "When evaluating the Ganglia Metrics for a given cluster with 3 executor nodes, which indicator would signal proper utilization of the VM's resources?",
+    "question": "A team is reviewing Ganglia metrics for an older Databricks cluster running a Runtime version where Ganglia is available. For a compute-bound test where some headroom is desired, which observation is the most direct evidence that CPU resources are actively being used without staying fully saturated? Treat this as a workload-specific signal, not a universal target.",
     "options": {
       "A": "The five Minute Load Average remains consistent/flat",
       "B": "Bytes Received never exceeds 80 million bytes per second",
       "C": "Network I/O never spikes",
       "D": "Total Disk Space remains constant",
-      "E": "`CPU Utilization` is around 75%"
+      "E": "Sustained CPU utilization is around 75%, with no node pinned at 100%."
     },
     "answer": "E",
-    "question_vi": "Xem metric Ganglia của cụm có 3 executor; chỉ số nào cho thấy tài nguyên VM được dùng hợp lý?",
+    "question_vi": "Nhóm đang xem Ganglia của cluster Databricks cũ chạy Runtime còn hỗ trợ Ganglia. Trong bài thử compute-bound muốn vẫn còn một phần headroom, quan sát nào trực tiếp nhất cho thấy CPU đang được sử dụng nhưng chưa bão hòa liên tục? Hãy xem đây là tín hiệu tùy workload, không phải ngưỡng tối ưu áp dụng cho mọi hệ thống.",
     "options_vi": {
       "A": "Five Minute Load Average phẳng",
       "B": "Bytes Received không vượt 80 triệu byte/giây",
       "C": "Network I/O không bao giờ tăng vọt",
       "D": "Dung lượng đĩa tổng giữ ổn định",
-      "E": "`CPU` dùng khoảng 75%"
+      "E": "CPU duy trì khoảng 75% và không node nào bị ghim liên tục ở mức 100%."
     },
-    "explanation_vi": "Trong việc đánh giá metric Ganglia của cụm máy tính ảo chạy Spark, hiệu năng sử dụng tài nguyên được xem là tối ưu và kinh tế nhất khi tỷ lệ sử dụng CPU (`CPU Utilization`) duy trì ổn định xung quanh mức 75%. Mức này chứng tỏ cluster đang thực hiện tính toán hiệu quả, không bị quá tải (CPU > 90%) và cũng không bị lãng phí tài nguyên tính toán (CPU thấp).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án E.** Trong một workload compute-bound, CPU duy trì quanh 75% mà không node nào luôn ở 100% là tín hiệu trực tiếp cho thấy phép tính đang sử dụng CPU và vẫn còn một phần headroom. Có thể đặt dấu hiệu này cạnh task throughput, thời gian chờ, CPU từng node và tốc độ xử lý để xem cluster có đang dùng tài nguyên hiệu quả hay bắt đầu bão hòa.\n\n**75% không phải “mức chuẩn tối ưu” cho mọi cluster.** Đây chỉ là phương án hợp lý nhất trong các lựa chọn của câu hỏi. Một job có thể bình thường khi CPU thấp vì đang chờ I/O; workload khác có thể chạy tốt ở mức sử dụng cao hơn. Cần xem cả `iowait`, memory/GC, skew, active tasks và thời gian xử lý trước khi tăng/giảm compute. Ganglia cũng là công cụ cũ: Databricks chỉ cung cấp Ganglia cho Runtime 12.2 LTS trở xuống; Runtime mới dùng tab Metrics/compute metrics.\n\n**Vì sao các lựa chọn khác không đủ?**\n\n- **A**: Load average phẳng chỉ nói tải ổn định; nó có thể ổn định ở mức quá thấp hoặc quá cao, không chỉ ra phần trăm CPU đang dùng.\n- **B**: Mốc 80 triệu byte/giây không có ý nghĩa nếu không biết loại VM, network bandwidth, số node và workload.\n- **C**: Network không có spike không chứng minh compute hiệu quả; batch job có thể truyền dữ liệu theo đợt hoặc không bị giới hạn bởi network.\n- **D**: Tổng dung lượng đĩa giữ nguyên gần như không phản ánh CPU hay mức độ hoàn thành tác vụ.",
     "page": null,
-    "image": "img/q_86.jpg",
     "references": [
       {
-        "title": "Databricks Ganglia Metrics",
-        "url": "https://docs.databricks.com/en/compute/clusters-manage#ganglia-metrics"
+        "title": "Manage compute: Ganglia metrics availability",
+        "url": "https://docs.databricks.com/en/user-guide/clusters/sparkui.html"
       },
       {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q86",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82762-question-86-topic-1/"
+        "title": "View compute metrics",
+        "url": "https://docs.databricks.com/aws/en/compute/cluster-metrics"
       }
     ]
   },
   {
     "id": 87,
     "topic": 1,
-    "question": "Which of the following technologies can be used to identify key areas of text when parsing **Spark Driver** `log4j` output?",
+    "question": "Which text-pattern matching technique is commonly used to identify and extract fields from unstructured Spark Driver Log4j output?",
     "options": {
       "A": "Regex",
       "B": "Julia",
@@ -2829,7 +2843,7 @@
       "E": "C++"
     },
     "answer": "A",
-    "question_vi": "Công nghệ nào dùng để xác định vùng văn bản khi phân tích `log4j` của **Spark Driver**?",
+    "question_vi": "Kỹ thuật khớp mẫu văn bản nào thường dùng để nhận diện và trích xuất trường từ log Log4j chưa có cấu trúc của Spark Driver?",
     "options_vi": {
       "A": "Regex",
       "B": "Julia",
@@ -2837,17 +2851,12 @@
       "D": "Scala Datasets",
       "E": "C++"
     },
-    "explanation_vi": "Regular Expressions (``Regex`` (Biểu thức chính quy)) là công nghệ tiêu chuẩn và mạnh mẽ nhất để phân tích (parse) và trích xuất thông tin có cấu trúc từ các tệp nhật ký văn bản thô (như `log4j` của **Spark Driver**). Bằng cách định nghĩa các khuôn mẫu ký tự, `Regex` có thể dễ dàng lọc ra các lỗi (errors), cảnh báo (warnings) hoặc phân tách thời gian sự kiện từ log.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A — Regular expressions (Regex).** Regex mô tả mẫu ký tự để tìm hoặc trích xuất những đoạn như timestamp, log level (`WARN`, `ERROR`), tên class, request ID hay mã lỗi từ dòng log văn bản. Ví dụ, có thể dùng nhóm bắt để tách timestamp và severity khỏi một dòng theo định dạng cố định; sau đó kiểm tra trên log thực tế vì định dạng có thể khác giữa phiên bản/thư viện. Regex là kỹ thuật xử lý văn bản, không tự hiểu ngữ nghĩa của lỗi và cũng không thay thế việc dùng log có cấu trúc khi hệ thống hỗ trợ.\n\n**Vì sao các lựa chọn khác không phù hợp?**\n\n- **B — Julia**: là ngôn ngữ lập trình; chỉ riêng tên ngôn ngữ không phải kỹ thuật khớp mẫu log.\n- **C — `pyspark.ml.feature`**: thư viện feature engineering/machine learning cho dữ liệu Spark, không phải bộ trích xuất pattern thông thường cho dòng Log4j.\n- **D — Scala Datasets**: API biểu diễn dữ liệu có cấu trúc; có thể dùng để đọc và biến đổi log, nhưng đề hỏi kỹ thuật nhận diện pattern trong text.\n- **E — C++**: là ngôn ngữ tổng quát, không phải cơ chế pattern matching chuyên biệt trong lựa chọn.\n\nNếu log đã ở JSON/structured logging, nên parse theo schema thay vì viết regex dễ vỡ. Regex phù hợp khi đầu vào là text và mẫu tương đối ổn định.",
     "page": null,
-    "image": "img/q_87.jpg",
     "references": [
       {
-        "title": "Java Regex Pattern Class",
-        "url": "https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html"
-      },
-      {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q87",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82676-question-87-topic-1/"
+        "title": "Pattern (Java Platform SE) - Oracle",
+        "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/regex/Pattern.html"
       }
     ]
   },
