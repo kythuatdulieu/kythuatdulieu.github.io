@@ -1973,7 +1973,7 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "VACUUM xóa các tệp dữ liệu không còn được phiên bản Delta hiện tại tham chiếu khi chúng cũ hơn ngưỡng lưu giữ tệp đã cấu hình. Vì vậy, nếu đặt ngưỡng ngắn rồi chạy VACUUM, các tệp cần cho phiên bản cách đây 3 ngày có thể bị xóa.\n\nNgưỡng mặc định của tệp dữ liệu đã bị thay thế là 7 ngày. Do đó, VACUUM chạy với cấu hình mặc định bình thường sẽ không xóa tệp mới 3 ngày tuổi. Muốn xảy ra tình huống trong câu hỏi, bảng phải dùng retention ngắn hơn; Databricks thường có kiểm tra an toàn để chặn khoảng lưu giữ nguy hiểm. Nhật ký giao dịch vẫn có thể liệt kê phiên bản cũ sau khi tệp dữ liệu bị xóa, nhưng chỉ nhật ký thì không thể dựng lại nội dung các tệp đó.\n\nCác lựa chọn khác không phù hợp: time travel chỉ đọc snapshot cũ chứ không xóa tệp; Delta không có lệnh DELETE HISTORY; OPTIMIZE ghi lại và gom tệp nhưng tự nó không xóa vĩnh viễn các tệp cũ. VACUUM mới là thao tác dọn và xóa các tệp đó.",
+    "explanation_vi": "**Đáp án A.** Câu hỏi hỏi thao tác nào có thể khiến các tệp cần để đọc phiên bản Delta từ ba ngày trước biến mất. `VACUUM` dọn các tệp dữ liệu đã bị phiên bản hiện tại thay thế hoặc không còn được tham chiếu, nếu chúng cũ hơn ngưỡng lưu giữ. Nếu đặt ngưỡng ngắn hơn ba ngày rồi chạy `VACUUM`, các tệp của snapshot cũ có thể bị xóa; khi đó chỉ còn metadata lịch sử thì chưa đủ để khôi phục nội dung snapshot.\n\nNgưỡng lưu giữ mặc định cho data file là bảy ngày. Databricks khuyến nghị không đặt thấp hơn bảy ngày và có safety check để chặn cấu hình nguy hiểm; muốn dùng ngưỡng thấp phải chủ động tắt kiểm tra sau khi xác nhận không có thao tác chạy lâu cần các tệp đó. Vì đề nói tệp cũ đã mất, cần hiểu là thao tác dọn đã thực sự chạy với retention ngắn.\n\n- A — Đúng: `VACUUM` với retention ngắn có thể xóa file ba ngày tuổi sau khi chúng không còn được phiên bản hiện tại dùng.\n- B — Sai: Time travel đọc một snapshot lịch sử; bản thân truy vấn không xóa file.\n- C — Sai: `DELETE HISTORY` không phải lệnh Delta Lake hợp lệ để dọn lịch sử bảng.\n- D — Sai: `OPTIMIZE` ghi lại bố cục và đánh dấu file cũ không còn dùng; xóa vật lý các file cũ là vai trò của `VACUUM` sau retention.\n\nMuốn khôi phục phiên bản cũ, cả transaction log lẫn data files cần thiết đều phải còn được giữ. Hãy cấu hình `delta.deletedFileRetentionDuration` phù hợp với thời gian time travel cần hỗ trợ và tránh xem lịch sử Delta như bản sao lưu dài hạn.",
     "references": [
       {
         "title": "Work with table history",
@@ -2006,7 +2006,7 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Bronze là lớp tiếp nhận dữ liệu thô. Lớp này giữ dữ liệu gần với trạng thái nguồn nhất và thường chỉ kiểm tra hoặc làm sạch ở mức tối thiểu, nhờ đó các lớp phía sau có thể xử lý lại từ dữ liệu gốc. Tuy vậy, hệ thống vẫn cần schema để đọc và biểu diễn các trường. Để tránh mất dữ liệu khi nguồn thêm hoặc đổi trường, Databricks khuyến nghị cân nhắc lưu nhiều trường Bronze dưới dạng STRING, VARIANT hoặc binary. Vì vậy, trong các lựa chọn, C mô tả đúng nhất.\n\nA sai vì bảng Bronze không nhất thiết nhỏ hơn dữ liệu nguồn. B đảo ngược mục tiêu của lớp: mức kiểm định và độ tin cậy tăng dần khi dữ liệu đi từ Bronze sang Silver rồi Gold. D cũng đảo ngược quan hệ: tệp nguồn thô không phải là phiên bản kém tinh chỉnh hơn bảng Bronze; chính Bronze là lớp lưu dữ liệu gần nguyên bản nhất trong lakehouse.",
+    "explanation_vi": "**Đáp án C.** Câu hỏi kiểm tra Bronze lưu dữ liệu như thế nào so với dữ liệu nguồn thô. Bronze thường là lớp đầu tiên đưa dữ liệu nguồn vào lakehouse, giữ nguyên hoặc gần nguyên trạng để có thể truy vết và xử lý lại. Để biến các tệp đó thành bảng có thể truy vấn, pipeline vẫn phải biểu diễn trường và kiểu dữ liệu bằng schema; vì vậy “dữ liệu thô có schema được áp dụng” là mô tả phù hợp nhất trong các lựa chọn.\n\nSchema ở Bronze không nhất thiết phải suy luận thật chặt ngay lúc ingest. Với nguồn hay thay đổi như JSON, đội dữ liệu có thể lưu payload dưới dạng chuỗi, `VARIANT` hoặc nhị phân để tránh làm rơi trường mới, rồi diễn giải chi tiết ở Silver. Mục tiêu là giữ độ trung thực với nguồn và có thể phát lại, không phải làm sạch sâu.\n\n- A — Sai: Bronze không được định nghĩa bằng việc có ít dữ liệu hơn tệp nguồn; số dòng và kích thước tùy cách ingest.\n- B — Sai: Bronze không “đáng tin cậy hơn” nguồn chỉ vì đã nạp vào lakehouse. Chất lượng và mức kiểm tra thường tăng khi đi lên Silver/Gold.\n- C — Đúng: dữ liệu gốc được lưu ở lớp Bronze và có cấu trúc/schema để truy vấn, dù schema có thể rất linh hoạt.\n- D — Sai: Bronze không kém tinh chỉnh hơn chính dữ liệu thô; nó là cách tổ chức/persist dữ liệu thô trong kiến trúc lakehouse.\n\nMedallion là cách tổ chức logic được khuyến nghị, không bắt buộc mọi hệ thống phải có đúng ba bảng hoặc ba bước. Điểm phân biệt cốt lõi là Bronze giữ nguồn, còn Silver làm sạch và chuẩn hóa hơn.",
     "references": [
       {
         "title": "What is the medallion lakehouse architecture?",
@@ -2035,7 +2035,7 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Một pipeline có thể chạy cần mã nguồn khai báo các dataset và phép biến đổi. Lakeflow pipelines hiện nhận các tệp nguồn SQL hoặc Python; notebook cũng có thể được dùng làm tài sản nguồn. Vì vậy, B là thành phần định nghĩa công việc của pipeline.\n\nCặp khóa-giá trị cấu hình chỉ cần khi muốn thay đổi một thiết lập cụ thể. Pipeline không bắt buộc phải khai báo đường dẫn lưu trữ đám mây trong mọi trường hợp vì nền tảng có thể quản lý mặc định về lưu trữ và compute. Catalog và schema đích cũng có giá trị mặc định; khai báo riêng hữu ích khi muốn chọn nơi xuất bản dữ liệu, nhưng không thay thế mã nguồn biến đổi.",
+    "explanation_vi": "**Đáp án B.** Câu hỏi hỏi tài sản nào mang logic biến đổi để pipeline biết cần tạo hoặc cập nhật dataset nào. Lakeflow Declarative Pipelines cần ít nhất một tệp nguồn SQL hoặc Python (có thể là notebook/source asset phù hợp) khai báo các bảng, view hay flow và các phép biến đổi. Pipeline phân tích những khai báo này để dựng dependency graph rồi thực thi chúng; do đó mã nguồn là yêu cầu trực tiếp trong câu hỏi.\n\nMột pipeline cũng có các thiết lập hạ tầng như catalog/schema đích, compute, channel và mode. Databricks cấp một số giá trị mặc định nên các mục đó không phải lúc nào cũng cần người dùng nhập lại. Đích lưu trữ cụ thể có thể cần khi muốn kiểm soát nơi xuất bản dữ liệu, nhưng không thay thế định nghĩa SQL/Python của phép biến đổi.\n\n- A — Sai: key-value configuration dùng để truyền tham số hoặc cấu hình Spark/pipeline; một cặp cấu hình không tự khai báo phép biến đổi.\n- B — Đúng: source file hoặc notebook chứa mã SQL/Python cho pipeline biết cần đọc và xử lý dữ liệu thế nào.\n- C — Sai: pipeline có thể quản lý vị trí lưu trữ theo thiết lập mặc định; path cloud không phải đầu vào bắt buộc trong mọi pipeline.\n- D — Sai: catalog/schema xác định namespace xuất bản, không mô tả logic biến đổi; có thể dùng giá trị đích mặc định.\n\nVì vậy hãy phân biệt **mã nguồn pipeline** (định nghĩa công việc) với **cấu hình hạ tầng/đích** (cách và nơi công việc chạy). Nội dung câu dùng tên Lakeflow hiện hành, còn các pipeline cũ có thể mang cấu hình legacy khác.",
     "references": [
       {
         "title": "Configure pipelines",
@@ -2064,7 +2064,7 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trường Depends on tạo quan hệ thứ tự giữa các task trong DAG của job. Chọn task chạy trước khi task mới cần dữ liệu đầu ra của nó hoặc phải đợi nó hoàn tất. Mặc định, task phía sau chỉ chạy khi tất cả dependency đã hoàn tất thành công (All succeeded).\n\nDependency không dùng để thay thế task, chia sẻ thư viện hay chọn kích thước compute. Nếu task phía sau cần chạy sau khi task trước kết thúc bất kể thành công hay thất bại, hãy cấu hình điều kiện Run if khác; chỉ thêm dependency sẽ dùng điều kiện mặc định là thành công.",
+    "explanation_vi": "**Đáp án B.** Trường `Depends on` khai báo cạnh phụ thuộc trong đồ thị DAG của Lakeflow Job. Nếu task mới cần kết quả do task khác tạo ra, hoặc chỉ được bắt đầu sau khi task kia hoàn tất, hãy đặt task kia làm dependency. Scheduler sẽ chạy upstream trước rồi mới xét task downstream; mặc định điều kiện chạy là `All succeeded`, tức tất cả dependency phải kết thúc thành công.\n\nDependency thể hiện thứ tự và quan hệ điều khiển giữa các task, chứ không phải một cấu hình chia sẻ compute hay thư viện. Có thể khai báo nhiều dependency; chúng phải hoàn thành trước khi task sau được xét. Nếu cần chạy tác vụ dọn dẹp bất kể upstream thành công hay thất bại, vẫn khai báo dependency nhưng đổi `Run if` sang điều kiện như `All done`.\n\n- A — Sai: thay thế task là chỉnh sửa hoặc xóa task trong job, không phải tạo quan hệ phụ thuộc.\n- B — Đúng: downstream task được khai báo phụ thuộc để chờ upstream hoàn tất; mặc định còn yêu cầu thành công.\n- C — Sai: hai task có chung library không làm task này cần chờ task kia; khai báo dependency không cài/chia sẻ thư viện.\n- D — Sai: mức compute được cấu hình riêng cho job/task hoặc policy, không điều khiển bằng `Depends on`.\n\nTóm lại, chọn dependency khi có quan hệ thứ tự hoặc cần đầu ra của task trước. Nếu chỉ muốn tiết kiệm compute, hãy cấu hình compute phù hợp thay vì thêm một cạnh DAG.",
     "references": [
       {
         "title": "Configure task dependencies",
@@ -2093,7 +2093,7 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "UNION gộp các dòng do hai câu SELECT trả về và mặc định loại bỏ dòng trùng, nên B tạo được bảng theo yêu cầu. Hai truy vấn đầu vào phải có cùng số cột, kiểu dữ liệu tương thích và các cột tương ứng phải nằm đúng thứ tự.\n\nUNION ALL ở A giữ lại bản ghi trùng nên không đảm bảo yêu cầu nếu một trong hai bảng có dòng lặp. INTERSECT ở C chỉ trả về những dòng xuất hiện trong cả hai bảng; EXCEPT ở D chỉ trả về các dòng của tháng 3 không có trong tháng 4. Cả hai đều không lấy toàn bộ dữ liệu từ hai bảng.",
+    "explanation_vi": "**Đáp án B — `UNION`.** Câu hỏi muốn gộp toàn bộ hàng của bảng tháng 3 và tháng 4 vào một bảng mới, đồng thời kết quả không chứa dòng trùng. `UNION` mặc định áp dụng ngữ nghĩa distinct: hợp hai tập kết quả rồi bỏ các hàng trùng nhau. Hai nhánh `SELECT` phải trả về cùng số cột và các vị trí tương ứng phải có kiểu dữ liệu tương thích; CTAS tạo bảng `all_transactions` từ kết quả đó.\n\n- A — Sai: `UNION ALL` nối kết quả nhưng giữ nguyên mọi bản sao. Dù đề nói không có bản ghi trùng giữa hai bảng, phương án này cũng không bảo đảm loại trùng nếu trong từng bảng có hàng lặp.\n- B — Đúng: `UNION` gộp cả hai nguồn và loại dòng trùng theo giá trị các cột.\n- C — Sai: `INTERSECT` chỉ trả về hàng xuất hiện ở cả hai bảng, không phải tất cả giao dịch của cả hai tháng.\n- D — Sai: `EXCEPT` chỉ trả về hàng ở truy vấn bên trái mà không có ở truy vấn bên phải; nó loại phần giao thay vì hợp hai bảng.\n\nNếu đã biết dữ liệu hai tập hoàn toàn không trùng và ưu tiên tốc độ, `UNION ALL` có thể là lựa chọn kỹ thuật khác; nhưng đề hỏi kết quả **không có bản ghi trùng**, nên toán tử diễn đạt trực tiếp yêu cầu là `UNION`. Thứ tự cột và kiểu dữ liệu hai bảng cũng phải khớp để truy vấn chạy.",
     "references": [
       {
         "title": "Set operators",
@@ -2126,7 +2126,7 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Merge tích hợp các thay đổi từ một nhánh vào nhánh đang được cập nhật và xử lý xung đột nếu phát sinh. Databricks Git folders có hỗ trợ merge nhánh.\n\nCommit ghi lại một nhóm thay đổi cục bộ. Pull lấy và tích hợp cập nhật từ nhánh trên remote, tức nguồn thay đổi khác với thao tác gộp giữa hai nhánh được hỏi ở đây. Clone tạo một Git folder từ repository.",
+    "explanation_vi": "**Đáp án C — Merge.** Câu hỏi mô tả việc đưa các commit của một nhánh nguồn vào nhánh đích. Trong Git, `merge` tích hợp lịch sử của nhánh này với nhánh hiện tại (hoặc nhánh được chỉ định), có thể tạo merge commit hoặc fast-forward nếu lịch sử cho phép. Databricks Git folders hỗ trợ quản lý nhánh và merge, cũng như hiển thị/xử lý xung đột.\n\n- A — Sai: `commit` ghi lại các thay đổi trong repository cục bộ thành một điểm trong lịch sử; nó chưa tích hợp nhánh khác.\n- B — Sai: `pull` lấy thay đổi từ nhánh upstream trên remote và tích hợp vào nhánh hiện tại. Nó phù hợp để đồng bộ remote, nhưng câu hỏi hỏi thao tác Git tổng quát gộp một branch vào branch khác.\n- C — Đúng: `merge` là thao tác kết hợp thay đổi giữa các nhánh.\n- D — Sai: `clone` tạo một bản sao làm việc của repository, không gộp lịch sử nhánh.\n\nMột luồng điển hình là commit thay đổi, push nhánh feature lên remote, rồi merge qua Git client hoặc pull request vào nhánh đích. Tên sản phẩm Databricks đã đổi từ Repos thành Git folders; thao tác merge vẫn là khái niệm Git tương tự.",
     "references": [
       {
         "title": "Databricks Git folders concepts",
@@ -2159,7 +2159,7 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "STREAM yêu cầu pipeline đọc nguồn theo ngữ nghĩa streaming: xử lý tăng dần phần dữ liệu mới thay vì coi nguồn như một snapshot batch. Trong cú pháp LIVE dạng cũ này, customers được kỳ vọng là streaming live table, nên C giải thích vì sao truy vấn cần STREAM.\n\nTừ khóa này không thừa: bỏ nó đi sẽ chuyển cách đọc sang ngữ nghĩa batch và không còn biểu đạt dependency streaming dự kiến. STREAM không có nghĩa là bảng vừa thay đổi kể từ lần chạy trước; LIVE.customers là tham chiếu đến dataset trong pipeline, không phải truy vấn trên PySpark DataFrame. Tài liệu hiện hành của Databricks dùng thuật ngữ và cú pháp Lakeflow Declarative Pipelines mới hơn; câu hỏi này cố ý giữ cú pháp LIVE cũ.",
+    "explanation_vi": "**Đáp án C.** Truy vấn dùng cú pháp pipeline SQL legacy: `STREAM(LIVE.customers)` yêu cầu đọc dataset `customers` theo ngữ nghĩa streaming/incremental. Điều này phù hợp khi `customers` được khai báo là streaming live table (theo thuật ngữ cũ); `loyal_customers` cũng được tạo như streaming table nên pipeline có thể xử lý các bản ghi mới tăng dần, thay vì đọc lại toàn bộ nguồn như một snapshot batch.\n\n- A — Sai: trong chế độ/pipeline legacy phù hợp, `STREAM` là tín hiệu ngữ nghĩa đọc quan trọng; không thể kết luận nó thừa và gây lỗi.\n- B — Sai: việc nguồn có thay đổi kể từ lần chạy trước không giải thích cú pháp. `STREAM` thể hiện cách pipeline đọc nguồn, không phải kiểm tra xem bảng vừa cập nhật hay chưa.\n- C — Đúng: `customers` là streaming live table nên downstream đọc nó bằng `STREAM(...)` để giữ ngữ nghĩa tăng dần.\n- D — Sai: `LIVE.customers` tham chiếu dataset được định nghĩa trong pipeline, không phải tham chiếu trực tiếp đến một truy vấn Structured Streaming PySpark độc lập.\n\nCần lưu ý đây là kiến thức cú pháp legacy. Databricks đã ngừng dùng `LIVE` virtual schema cho pipeline mới và khuyến nghị chuyển sang publishing mode hiện hành; vì vậy câu trả lời giải thích mã dự án cũ, không phải khuyến nghị viết pipeline mới theo cú pháp này.",
     "references": [
       {
         "title": "Use standalone streaming tables",
@@ -2168,6 +2168,10 @@
       {
         "title": "Configure pipelines",
         "url": "https://docs.databricks.com/aws/en/ldp/configure-pipeline"
+      },
+      {
+        "title": "LIVE schema (legacy pipeline mode)",
+        "url": "https://docs.databricks.com/aws/en/ldp/live-schema"
       }
     ],
     "question_vi": "Một kỹ sư dữ liệu thấy truy vấn Delta Live Tables dạng cũ sau trong dự án:\n```sql\nCREATE STREAMING LIVE TABLE loyal_customers AS\nSELECT customer_id\nFROM STREAM(LIVE.customers)\nWHERE loyalty_level = 'high';\n```\nVì sao truy vấn dùng STREAM khi đọc LIVE.customers?",
@@ -2192,7 +2196,7 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Biểu thức Quartz Cron biểu diễn các trường của một lịch chạy lặp lại dưới dạng chuỗi gọn, có thể gửi qua Jobs API và tái sử dụng trong cấu hình job. API nhận quartz_cron_expression cùng mã múi giờ.\n\nDateType và TimestampType là kiểu dữ liệu Spark dành cho giá trị trong cột dữ liệu, không phải lịch chạy lặp. datetime của Python biểu diễn hoặc thao tác với một thời điểm cụ thể; bản thân nó không mô tả lịch job định kỳ.",
+    "explanation_vi": "**Đáp án D — biểu thức Quartz Cron.** Câu hỏi cần một cách mã hóa lịch chạy lặp lại để gửi qua cấu hình/API và dùng lại ở nhiều job. Quartz Cron biểu diễn thời điểm chạy bằng chuỗi trường lịch; Jobs API nhận trường `quartz_cron_expression` cùng `timezone_id`, nên nhóm có thể lưu, kiểm tra và tái sử dụng cả lịch phức tạp mà không chọn lại từng trường trong form.\n\n- A — Sai: `DateType` là kiểu ngày trong schema Spark, dùng để biểu diễn giá trị của một cột chứ không mô tả trigger định kỳ.\n- B — Sai: `datetime` của Python biểu diễn hoặc xử lý một thời điểm/lịch thời gian trong mã Python; nó không phải định dạng lịch mà Jobs API cần cho schedule Quartz.\n- C — Sai: `TimestampType` là kiểu timestamp của cột Spark, không phải cú pháp scheduler.\n- D — Đúng: Quartz Cron là biểu diễn lịch của Databricks Jobs; cần khai báo thêm múi giờ để xác định lịch theo khu vực mong muốn.\n\nCron cần được kiểm tra cẩn thận vì Quartz có quy tắc riêng cho giây, ngày trong tháng và ngày trong tuần; không nên sao chép máy móc biểu thức 5 trường của cron Unix. Khi tạo job bằng API, cả biểu thức lẫn timezone đều ảnh hưởng thời điểm chạy thực tế.",
     "references": [
       {
         "title": "Jobs API: job schedule",
@@ -2225,7 +2229,7 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Catalog Explorer hiển thị chủ sở hữu trên trang chi tiết của đối tượng, thường ở thẻ Overview. Người dùng có quyền BROWSE trên bảng hoặc đối tượng cha có thể xem chủ sở hữu dù chưa có quyền đọc dữ liệu của bảng. Vì vậy C là nơi trực tiếp để tìm người cần liên hệ.\n\nTrang Permissions hữu ích để xem các quyền đã cấp, nhưng trường Owner nằm trong phần chi tiết đối tượng. Dịch vụ lưu trữ đám mây không hiển thị quyền sở hữu trong Unity Catalog, và vẫn có cách xác định chủ sở hữu.",
+    "explanation_vi": "**Đáp án C.** Câu hỏi hỏi nơi xem chủ sở hữu của một bảng thuộc Unity Catalog để liên hệ xin quyền. Trong Catalog Explorer, mở trang chi tiết của bảng; với hầu hết đối tượng, trường owner nằm trên tab Overview. Người dùng có `BROWSE` trên catalog chứa bảng (hoặc quyền phù hợp trên đối tượng/cha) có thể xem metadata chủ sở hữu mà không cần được cấp quyền đọc nội dung bảng.\n\n- A — Sai: thẻ Permissions hiển thị grants/quyền đã cấp; trường Owner được trình bày trong thông tin chi tiết/Overview, không phải cách trực tiếp nhất theo giao diện hiện hành.\n- B — Sai: Unity Catalog có thông tin owner và cung cấp cả giao diện Catalog Explorer lẫn lệnh `DESCRIBE ... EXTENDED` để xem.\n- C — Đúng: trang chi tiết trong Catalog Explorer hiển thị chủ sở hữu, thường ở tab Overview.\n- D — Sai: cloud storage IAM quản lý truy cập ở tầng lưu trữ, không phải trường quyền sở hữu của đối tượng bảng trong Unity Catalog.\n\nLưu ý: biết owner không đồng nghĩa đã có `SELECT` trên bảng. Sau khi xác định người sở hữu, họ hoặc principal có quyền quản trị phù hợp cần cấp quyền bảng; người dùng vẫn cần các quyền sử dụng catalog/schema cần thiết để truy cập.",
     "references": [
       {
         "title": "Manage object ownership in Unity Catalog",
@@ -2254,7 +2258,7 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "JDBC là tên data source provider của Spark để đọc hoặc ghi cơ sở dữ liệu quan hệ thông qua JDBC driver, nên A là đáp án đúng. URL xác định tệp cơ sở dữ liệu SQLite, dbtable chọn bảng nguồn, còn driver nêu tên SQLite JDBC driver. Tệp JAR của driver phải được cài đặt hoặc cung cấp cho compute.\n\ncloudFiles là Auto Loader của Databricks để nạp tăng dần các tệp từ cloud storage. org.apache.spark.sql.sqlite không phải tên provider SQLite tích hợp sẵn của Spark, còn SQLITE không phải provider dùng trong cú pháp này. Ví dụ đang dùng JDBC data source của Spark chứ không phải một định dạng bảng SQLite gốc.",
+    "explanation_vi": "**Đáp án A — `JDBC`.** Trong cú pháp `CREATE TABLE ... USING ... OPTIONS`, phần `USING` chọn data source provider của Spark. Provider JDBC tích hợp của Spark được gọi bằng tên ngắn `JDBC`; `url` chỉ định kết nối đến tệp database SQLite, `dbtable` chọn bảng `employees`, còn `driver` nêu lớp Java của SQLite JDBC driver. Đề đã giả định driver có sẵn, nên `USING JDBC` là giá trị cần điền.\n\n- A — Đúng: `JDBC` là provider Spark dùng để đọc/ghi nguồn quan hệ qua JDBC.\n- B — Sai: `cloudFiles` là nguồn Auto Loader để phát hiện/nạp tệp từ cloud object storage, không kết nối SQLite.\n- C — Sai: `org.apache.spark.sql.sqlite` không phải tên provider có sẵn của Spark; tên lớp driver được khai báo riêng bằng tùy chọn `driver`.\n- D — Sai: `SQLITE` không phải short name của data source trong cú pháp Spark SQL này.\n\nCần phân biệt provider với driver: `USING JDBC` chọn connector chung của Spark, còn `org.sqlite.JDBC` (hoặc lớp driver được cung cấp) thực hiện giao thức của database. Trong workload thực tế, driver JAR phải có trên classpath của compute và URL phải đúng cú pháp mà driver SQLite hỗ trợ; các giả định này đã được câu hỏi nêu rõ.",
     "references": [
       {
         "title": "CREATE TABLE [USING]",
@@ -2287,7 +2291,7 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "INSERT INTO thường thêm các hàng mới vào bảng. Nếu cùng một bản ghi nghiệp vụ có thể xuất hiện lại trong dữ liệu đến, thao tác append đơn thuần có thể tạo bản sao. MERGE INTO cho phép đối chiếu khóa nghiệp vụ giữa nguồn và đích: cập nhật hàng đã khớp, chỉ chèn hàng chưa tồn tại. Vì vậy D là tình huống phù hợp nhất.\n\nMERGE không tự bảo đảm tính duy nhất nếu điều kiện ON dùng sai khóa hoặc dữ liệu nguồn có nhiều hàng khớp cùng một hàng đích; cần xác định khóa đúng và loại trùng ở nguồn khi cần. A là vấn đề về vị trí lưu trữ, B không phải lý do phân biệt MERGE với INSERT, còn C không bắt buộc vì dữ liệu nguồn có thể đến từ nhiều loại quan hệ như bảng, view hoặc DataFrame. Bảng Delta đích là trường hợp được MERGE hỗ trợ.",
+    "explanation_vi": "**Đáp án D.** Câu hỏi hỏi khi nào cần đối chiếu một hàng đến với bảng đích thay vì chỉ chèn thêm hàng mới. `INSERT INTO` append hàng; nếu cùng một khách hàng/sự kiện được gửi lại, câu lệnh có thể tạo bản sao. `MERGE INTO` so khớp khóa nghiệp vụ giữa nguồn và đích, cho phép cập nhật hàng đã khớp và chèn hàng chưa tồn tại, nên phù hợp khi bảng cần tránh nạp lặp.\n\nĐiều kiện `ON` phải dùng khóa nhận diện bản ghi đúng. Nếu nguồn có nhiều hàng cùng khóa khớp một hàng đích, thao tác MERGE có thể báo lỗi hoặc cần khử trùng trước; MERGE không tự tạo ràng buộc UNIQUE và không thể bù cho khóa sai. Đây là điểm quan trọng: chọn MERGE giúp viết upsert, còn tính duy nhất vẫn cần được thiết kế trong dữ liệu và logic pipeline.\n\n- A — Sai: đổi vị trí dữ liệu là thay đổi cấu hình lưu trữ/bảng, không phải lý do dùng MERGE thay INSERT.\n- B — Sai: loại managed hay external không quyết định nhu cầu upsert; cần xét ngữ nghĩa chèn/cập nhật và khả năng của định dạng/bảng đích.\n- C — Sai: nguồn không bắt buộc phải là bảng Delta; MERGE có thể dùng một truy vấn/DataFrame nguồn phù hợp. Cần bảo đảm bảng đích hỗ trợ MERGE.\n- D — Đúng: nếu khóa nghiệp vụ đã có thì cập nhật hàng đó, nếu chưa có mới chèn; tránh append thêm một bản sao của cùng thực thể.\n\nNếu mọi dòng đến đều là sự kiện mới và không cần sửa hàng cũ, `INSERT INTO` đơn giản hơn. Câu hỏi nêu rõ cần tránh bản ghi trùng trong đích nên upsert bằng MERGE là lựa chọn đúng.",
     "references": [
       {
         "url": "https://docs.databricks.com/aws/en/delta/merge",
@@ -2316,7 +2320,7 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Auto Loader là lựa chọn phù hợp để nạp tăng dần các tệp mới từ cloud storage mà không cần di chuyển hoặc xóa tệp nguồn. Nguồn cloudFiles theo dõi tiến độ xử lý bằng checkpoint, nhờ đó các lần chạy tiếp theo phát hiện tệp mới và bỏ qua những tệp đã được xử lý. Có thể chạy theo lịch hoặc qua trigger; dữ liệu nạp thường được ghi vào bảng Delta.\n\nUnity Catalog quản trị quyền và đối tượng dữ liệu nhưng không tự phát hiện tệp mới. Delta Lake là định dạng bảng/transaction layer, Databricks SQL là môi trường truy vấn; hai thành phần này không thay Auto Loader trong việc khám phá tệp đầu vào mới.",
+    "explanation_vi": "**Đáp án D — Auto Loader.** Bài toán cần quan sát một thư mục cloud storage nơi tệp cũ phải được giữ lại, nhưng mỗi lượt chạy chỉ xử lý tệp mới. Auto Loader cung cấp Structured Streaming source `cloudFiles`, phát hiện tệp tăng dần và ghi trạng thái các tệp đã phát hiện vào checkpoint. Nhờ checkpoint, lần chạy tiếp theo tiếp tục từ tiến độ trước thay vì đọc lại toàn bộ lịch sử như một lần nạp mới.\n\nNguồn Auto Loader mặc định không xóa hay di chuyển tệp sau khi ingest; chỉ khi cấu hình riêng `cloudFiles.cleanSource` thì pipeline mới archive/xóa nguồn. Có thể dùng `Trigger.AvailableNow` trong Lakeflow Job để xử lý các tệp đã có tại thời điểm bắt đầu bằng nhiều micro-batch rồi kết thúc, trong khi vẫn giữ trạng thái checkpoint cho lịch chạy sau.\n\n- A — Sai: Unity Catalog quản lý danh tính, quyền và metadata; tự nó không phát hiện tệp mới trong thư mục.\n- B — Sai: Delta Lake là transaction/storage layer thường dùng làm đích, không phải cơ chế khám phá file đầu vào tăng dần.\n- C — Sai: Databricks SQL là môi trường truy vấn/warehouse; không giữ tiến độ ingest file trong checkpoint.\n- D — Đúng: Auto Loader theo dõi file mới bằng nguồn `cloudFiles` và tiến độ/checkpoint qua các lần chạy.\n\nCheckpoint phải ổn định giữa các lần chạy và không nên bị xóa tùy tiện; nếu tạo checkpoint mới, pipeline có thể xem tệp cũ như chưa xử lý. Vì vậy Auto Loader khớp chính xác yêu cầu giữ nguyên nguồn nhưng chỉ nạp phần tăng thêm.",
     "references": [
       {
         "url": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader",
@@ -2338,30 +2342,34 @@
   {
     "id": 73,
     "topic": 1,
-    "question": "In the classic Databricks architecture, which of the following is stored in the customer cloud account?",
+    "question": "In a classic Databricks workspace, which item below represents the data payload of a Delta table stored in the customer's cloud account, rather than workspace assets or control-plane services?",
     "options": {
       "A": "Databricks web application",
       "B": "Cluster management metadata",
       "C": "Notebooks",
-      "D": "Data"
+      "D": "Delta table data files"
     },
     "answer": "D",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trong kiến trúc classic, dữ liệu của tổ chức được lưu trong tài khoản cloud của khách hàng; compute classic cũng được triển khai trong tài khoản đó. Trong các phương án, D là đáp án mô tả tài sản dữ liệu cần bảo vệ và quản lý tại nơi khách hàng sở hữu. Control plane của Databricks, gồm ứng dụng web và các dịch vụ điều phối/quản lý, nằm trong tài khoản do Databricks vận hành.\n\nCâu hỏi có giới hạn ở kiến trúc classic: với serverless, compute plane do Databricks quản lý. Dù mô hình triển khai compute thay đổi, vị trí lưu dữ liệu vẫn phụ thuộc vào loại workspace và cấu hình storage; câu này kiểm tra ranh giới classic control plane/compute plane.",
+    "explanation_vi": "**Đáp án D.** Câu hỏi đã được thu hẹp vào **các tệp dữ liệu của bảng Delta**, không hỏi mọi loại tài sản workspace. Với classic workspace, compute plane chạy trong cloud account của khách hàng và các bảng dữ liệu khách hàng thường nằm trên storage do khách hàng quản lý (ví dụ S3). Control plane do Databricks vận hành chứa web application và các dịch vụ quản lý workspace.\n\nCần phân biệt dữ liệu bảng với tài sản workspace: classic workspace cũng có bucket lưu workspace storage, nơi Databricks có thể lưu một số tài sản/hệ thống workspace và DBFS legacy. Notebook là một workspace asset nên không phải đáp án cho câu đã hỏi riêng “Delta table data files”. Việc đặt câu hỏi theo đúng loại dữ liệu này tránh nhập nhằng giữa workspace storage và data lake/table storage.\n\n- A — Sai: web application thuộc control plane của Databricks, không phải các tệp dữ liệu Delta trong storage khách hàng.\n- B — Sai: metadata điều phối/quản lý cluster thuộc control plane; nó không phải file dữ liệu của bảng.\n- C — Sai: notebook là workspace asset (có thể dùng workspace storage), không phải các data files của bảng Delta được hỏi.\n- D — Đúng: các tệp Parquet của bảng Delta nằm ở table storage do workspace/khách hàng cấu hình; classic compute truy cập dữ liệu ở cloud account tương ứng.\n\nTách control plane, compute plane, workspace storage và storage của bảng là mấu chốt: những thành phần này có thể được đặt ở các vị trí khác nhau trong kiến trúc hiện đại.",
     "references": [
       {
-        "url": "https://docs.databricks.com/aws/en/getting-started/high-level-architecture",
-        "title": "High-level architecture"
+        "title": "High-level architecture",
+        "url": "https://docs.databricks.com/aws/en/getting-started/high-level-architecture"
+      },
+      {
+        "title": "Design storage architecture for Databricks",
+        "url": "https://docs.databricks.com/aws/en/lakehouse-architecture/deployment-guide/storage"
       }
     ],
-    "question_vi": "Trong kiến trúc Databricks classic, thành phần nào sau đây được lưu trữ trong tài khoản đám mây của khách hàng?",
+    "question_vi": "Trong workspace Databricks classic, mục nào dưới đây là dữ liệu của bảng Delta được lưu trong tài khoản cloud của khách hàng, thay vì tài sản workspace hoặc dịch vụ control plane?",
     "options_vi": {
       "A": "Ứng dụng web Databricks",
       "B": "Metadata quản lý cluster",
       "C": "Notebook",
-      "D": "Dữ liệu"
+      "D": "Các tệp dữ liệu của bảng Delta"
     }
   },
   {
@@ -2378,11 +2386,15 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Temporary view lưu định nghĩa truy vấn chứ không tạo bản sao vật lý của kết quả. View này chỉ hiển thị trong session tạo ra nó và tự hết hiệu lực khi session kết thúc. Vì yêu cầu chỉ dùng trong phiên hiện tại và cần kết hợp hai bảng mà không lưu dữ liệu kết quả, D là lựa chọn phù hợp.\n\nView thông thường cũng lưu định nghĩa thay vì sao chép dữ liệu, nhưng được đăng ký lâu dài trong catalog và có thể được dùng từ các session khác theo quyền truy cập. Bảng Spark SQL hoặc bảng Delta là bảng lưu trữ có metadata và dữ liệu; tạo bảng vật lý không đáp ứng mục tiêu chỉ cần đối tượng tạm trong một phiên.",
+    "explanation_vi": "**Đáp án D — Temporary view.** Câu hỏi đưa ra ba điều kiện: kết quả được tạo từ hai bảng, không cần lưu bản sao vật lý, và chỉ cần sử dụng trong phiên hiện tại. Temporary view chỉ lưu định nghĩa truy vấn; khi được đọc, hệ thống chạy định nghĩa trên các bảng nguồn thay vì ghi thêm một bảng dữ liệu. View tạm thông thường chỉ tồn tại trong Spark session tạo ra nó rồi biến mất khi session kết thúc.\n\n- A — Sai: Spark SQL table là bảng đăng ký lâu dài và thường có dữ liệu lưu trữ; không phù hợp nếu chỉ cần đối tượng trong phiên.\n- B — Sai: view thường cũng không lưu bản sao kết quả, nhưng metadata tồn tại trong catalog để dùng lại giữa các phiên, trái yêu cầu không cần chia sẻ lâu dài.\n- C — Sai: Delta table là bảng dữ liệu có transaction log và lưu trữ; tạo bảng vật lý không tiết kiệm dung lượng như view.\n- D — Đúng: temporary view vừa tránh materialize kết quả vừa giới hạn phạm vi sống theo session.\n\nTemporary view không phải snapshot: nếu bảng nguồn thay đổi, truy vấn view sau đó có thể thấy dữ liệu mới. Nếu cần tái sử dụng view ở notebook/session khác, hãy tạo view lâu dài; nếu cần lưu kết quả tính trước để tăng tốc hoặc bảo toàn snapshot, cần cân nhắc materialized view/bảng thay vì temporary view.",
     "references": [
       {
-        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
-        "title": "CREATE VIEW"
+        "title": "CREATE VIEW",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view"
+      },
+      {
+        "title": "SQL warehouse sessions and temporary views",
+        "url": "https://docs.databricks.com/aws/en/sql/user/queries/sessions"
       }
     ],
     "question_vi": "Một kỹ sư dữ liệu muốn tạo đối tượng quan hệ bằng cách kết hợp dữ liệu từ hai bảng. Đối tượng chỉ cần dùng trong phiên làm việc hiện tại, không cần chia sẻ với kỹ sư khác ở phiên khác, và không muốn sao chép/lưu dữ liệu vật lý để tiết kiệm chi phí. Nên tạo đối tượng nào?",
@@ -2407,7 +2419,7 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "count_if nhận một biểu thức Boolean và đếm số hàng mà biểu thức đó là TRUE. Với member_id IS NULL, kết quả chính là số giá trị NULL trong cột; do đó C đúng.\n\ncount(member_id) ở A chỉ đếm các giá trị khác NULL nên không trả về số NULL. count_null không phải hàm aggregate Databricks như cách viết ở B; nếu cần, có thể tính số NULL bằng count(*) - count(member_id), nhưng lựa chọn này không đưa ra đúng biểu thức. null(member_id) ở D cũng không phải hàm để đếm NULL.",
+    "explanation_vi": "**Đáp án C.** `count_if` nhận một biểu thức Boolean và trả về số hàng mà biểu thức đó có giá trị TRUE. Biểu thức `member_id IS NULL` đúng đúng với các hàng thiếu mã thành viên, nên `SELECT count_if(member_id IS NULL) FROM my_table` đếm trực tiếp số giá trị NULL trong cột.\n\n- A — Sai: `count(member_id)` chỉ đếm các giá trị khác NULL. Nó cho số mã hiện diện, không phải số ô bị thiếu.\n- B — Sai: `count_null` không phải aggregate Databricks được nêu trong cú pháp đó. Nếu muốn tính gián tiếp có thể dùng `count(*) - count(member_id)`, nhưng B lại lấy `count(member_id) - count_null(member_id)`.\n- C — Đúng: predicate `IS NULL` tạo điều kiện đúng cho từng hàng cần đếm; `count_if` đếm các hàng TRUE.\n- D — Sai: `null(member_id)` không phải hàm đếm null. Nó cũng không nêu phép aggregate để trả về một số lượng.\n\nKhông nhầm với `count(*)`, vốn đếm tất cả hàng, kể cả hàng có `member_id` NULL. Nếu muốn đếm mã không NULL thì dùng `count(member_id)`; nếu muốn đếm NULL, điều kiện phải được viết rõ như trong lựa chọn C.",
     "references": [
       {
         "url": "https://docs.databricks.com/aws/en/sql/language-manual/functions/count_if",
@@ -2440,15 +2452,15 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "### Giải thích chọn đáp án:\n\n*   **Đáp án đúng là B (Spark Structured Streaming)**: Auto Loader được xây dựng dựa trên nền tảng của công cụ xử lý dữ liệu luồng **Spark Structured Streaming** để thực hiện việc phát hiện tệp mới và nạp dữ liệu một cách gia tăng và tin cậy thông qua nguồn `cloudFiles`.\n*   **Các lựa chọn khác không chính xác**:\n    *   **Checkpointing** (A) chỉ là cơ chế lưu trữ trạng thái để phục hồi sau sự cố, không phải là công cụ xử lý chính.\n    *   **Databricks SQL** (C) là dịch vụ chạy truy vấn SQL phục vụ phân tích (BI/Reporting).\n    *   **Unity Catalog** (D) là giải pháp quản trị phân quyền dữ liệu tập trung.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B — Spark Structured Streaming.** Auto Loader không phải một engine tách biệt thay thế Spark; nó cung cấp nguồn `cloudFiles` để Structured Streaming phát hiện và xử lý file tăng dần từ cloud storage. Vì vậy công cụ/nền tảng xử lý dữ liệu theo luồng mà câu hỏi hỏi là Spark Structured Streaming.\n\n- A — Sai: checkpoint lưu tiến độ và trạng thái để khôi phục/tiếp tục query; đây là cơ chế tin cậy, không phải engine thực hiện các phép biến đổi.\n- B — Đúng: Auto Loader được tích hợp như một source của Structured Streaming. Query dùng streaming DataFrame để xử lý các tệp mới.\n- C — Sai: Databricks SQL là compute và ngôn ngữ truy vấn SQL, không phải nền tảng streaming mà Auto Loader dựa vào.\n- D — Sai: Unity Catalog là lớp quản trị và kiểm soát quyền, không thực hiện xử lý luồng.\n\nCần tách vai trò: `cloudFiles` phát hiện/đọc file; Structured Streaming điều phối micro-batch và biến đổi; checkpoint giữ tiến độ; sink (thường là Delta table) ghi kết quả. Auto Loader có thể chạy bằng Trigger.AvailableNow theo lịch rồi dừng, nhưng API nguồn vẫn là Structured Streaming.",
     "references": [
       {
         "title": "What is Auto Loader?",
-        "url": "https://docs.databricks.com/ingestion/auto-loader/index.html"
+        "url": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader"
       },
       {
-        "title": "Auto Loader connection with Structured Streaming",
-        "url": "https://docs.databricks.com/ingestion/auto-loader/index.html"
+        "title": "Run a Structured Streaming workload",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/tutorial"
       }
     ],
     "question_vi": "Công cụ nào được Auto Loader sử dụng để xử lý dữ liệu một cách tăng dần (incrementally)?",
@@ -2473,11 +2485,15 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "### Giải thích chọn đáp án:\n\n*   **Đáp án đúng là D**: Các hàm xử lý mảng (array functions) trong Spark SQL (ví dụ: `explode`, `array_contains`, `flatten`, v.v.) được thiết kế để làm việc với các kiểu dữ liệu phức tạp (complex/nested data) lồng nhau. Dữ liệu từ các tệp JSON thường có cấu trúc phân cấp và lồng nhau dưới dạng mảng (arrays) hoặc cấu trúc (structs).\n*   **Các lựa chọn khác**:\n    *   **A** liên quan đến việc ép kiểu (`CAST` hoặc chuyển đổi kiểu dữ liệu động).\n    *   **B** liên quan đến các hàm cửa sổ (Window functions).\n    *   **C** liên quan đến các hàm xử lý thời gian (Date and Time functions).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** Câu hỏi hỏi lợi ích của nhóm hàm xử lý mảng trong Spark SQL. JSON thường biểu diễn dữ liệu phân cấp, trong đó một trường có thể là danh sách các sản phẩm, địa chỉ hoặc sự kiện lồng nhau. Array functions như `filter`, `transform`, `exists`, `flatten` và `explode` cho phép truy cập, lọc, biến đổi hoặc trải các phần tử đó ngay trong SQL/DataFrame mà không cần chuyển toàn bộ dữ liệu thành chuỗi rồi tự phân tích bằng mã thủ công. Vì vậy D gắn trực tiếp nhất với arrays và dữ liệu nested.\n\n- A — Sai: kiểu ARRAY trong Spark có một kiểu phần tử chung; nó không được thiết kế để chứa tùy ý nhiều kiểu không liên quan trong cùng một mảng. Muốn cấu trúc nhiều trường có tên, dùng STRUCT.\n- B — Sai: phân vùng dữ liệu và cửa sổ phân tích thuộc partitioning/window functions; chúng không phải lợi ích riêng của hàm mảng.\n- C — Sai: cửa sổ thời gian là khái niệm của xử lý timestamp/streaming, không phải thao tác trên ARRAY.\n- D — Đúng: hàm mảng giúp xử lý các danh sách lồng trong dữ liệu phức tạp, thường gặp sau khi parse JSON thành kiểu dữ liệu native.\n\nKhông phải mọi đối tượng JSON đều là array: JSON còn có object/struct và scalar. Câu hỏi nhắm vào trường hợp dữ liệu JSON có danh sách lồng nhau; khi đọc JSON, hãy khai báo/kiểm tra schema để chọn hàm phù hợp với ARRAY, MAP hay STRUCT.",
     "references": [
       {
-        "title": "Array Functions (Spark SQL)",
-        "url": "https://docs.databricks.com/sql/language-manual/sql-ref-functions-builtin.html#array-functions"
+        "title": "Transform complex data types",
+        "url": "https://docs.databricks.com/aws/en/semi-structured/complex-types"
+      },
+      {
+        "title": "Higher-order functions for arrays",
+        "url": "https://docs.databricks.com/aws/en/notebooks/source/higher-order-functions.html"
       }
     ],
     "question_vi": "Lợi ích nào sau đây được cung cấp bởi các hàm xử lý mảng (array functions) trong Spark SQL?",
@@ -2503,11 +2519,11 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "### Giải thích chọn đáp án:\n\n*   **Đáp án đúng là C (Databricks web application)**: Trong kiến trúc Databricks cổ điển (classic architecture), các dịch vụ thuộc **Control Plane** (như giao diện ứng dụng web Databricks, dịch vụ quản lý cụm, lịch trình công việc và dịch vụ lưu trữ cấu hình) được host hoàn toàn trong tài khoản đám mây do Databricks quản lý.\n*   **Các lựa chọn khác không chính xác**:\n    *   **Worker node** (A) và **Driver node** (E) chạy trong môi trường điện toán đám mây của khách hàng (Data Plane).\n    *   **JDBC data source** (B) nằm bên ngoài môi trường của Databricks.\n    *   **Databricks Filesystem (DBFS)** (D) được ánh xạ từ một bộ lưu trữ đám mây (ví dụ S3 hoặc ADLS) nằm trong tài khoản của khách hàng (Data Plane).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C — Databricks web application.** Câu hỏi hỏi thành phần nào nằm hoàn toàn trong control plane của kiến trúc classic. Control plane là lớp dịch vụ backend Databricks quản lý trong tài khoản Databricks; web application chạy ở lớp này để người dùng cấu hình workspace và thao tác với notebook/job.\n\n- A — Sai: worker node chạy xử lý phân tán trên compute plane classic trong cloud account khách hàng.\n- B — Sai: JDBC data source là hệ thống kết nối bên ngoài Databricks; nó không phải dịch vụ control plane.\n- C — Đúng: web application là thành phần của control plane.\n- D — Sai: DBFS root/mounts là cơ chế filesystem legacy gắn với cloud storage của khách hàng; chúng không được host hoàn toàn trong control plane và không được khuyến nghị cho dữ liệu production mới.\n- E — Sai: driver node điều phối Spark workload bên trong compute plane, không thuộc control plane.\n\nĐừng nhầm control plane với driver: tên “driver” nghe giống bộ điều khiển nhưng driver là một node compute chạy Spark của workload. Control plane quản trị workspace; compute plane chạy lệnh và truy cập dữ liệu.",
     "references": [
       {
-        "title": "Databricks classic architecture overview",
-        "url": "https://docs.databricks.com/getting-started/overview.html"
+        "title": "High-level architecture",
+        "url": "https://docs.databricks.com/aws/en/getting-started/high-level-architecture"
       }
     ],
     "question_vi": "Thành phần nào sau đây được lưu trữ hoàn toàn trong Control Plane (phân vùng kiểm soát) của kiến trúc Databricks cổ điển?",
@@ -2534,15 +2550,15 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "### Giải thích chọn đáp án:\n\n*   **Đáp án đúng là D**: Delta Lake cho phép các kỹ sư hợp nhất quy trình xử lý dữ liệu lô (batch) và luồng (streaming) trên cùng một bảng dữ liệu một cách đồng thời, đảm bảo độ tin cậy thông qua các giao dịch ACID và quản lý phiên bản dữ liệu (time travel).\n*   **Các lựa chọn khác không chính xác**:\n    *   **A, E** là các tính năng cốt lõi của Apache Spark và workspace (ví dụ: chạy đa ngôn ngữ Python/Scala/SQL, kiến trúc tính toán phân tán).\n    *   **B** là tính năng cộng tác trực tiếp của Databricks Notebook.\n    *   **C** là tính năng của Databricks SQL Alerts.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** Câu hỏi yêu cầu năng lực do Delta Lake cung cấp. Delta mở rộng các tệp dữ liệu Parquet bằng transaction log để hỗ trợ giao dịch, tính nhất quán và metadata; đồng thời tích hợp với Structured Streaming. Nhờ vậy, một bản sao bảng Delta có thể được dùng cho cả truy vấn batch lẫn luồng thay đổi, thay vì duy trì hai kho dữ liệu riêng.\n\n- A — Sai: dùng nhiều ngôn ngữ trên cùng dữ liệu là khả năng của Spark và Databricks APIs, không phải lợi ích đặc trưng của Delta Lake.\n- B — Sai: cộng tác thời gian thực trên notebook là tính năng workspace/notebook.\n- C — Sai: cảnh báo khi truy vấn lỗi được cấu hình trong Databricks SQL Alerts.\n- D — Đúng: Delta Lake hỗ trợ đọc/ghi theo lô và dùng bảng làm nguồn/đích cho Structured Streaming.\n- E — Sai: thực thi phân tán workload là năng lực của Spark compute; Delta cung cấp lớp lưu trữ và transaction log.\n\n“Cùng bảng cho batch và streaming” không có nghĩa hai workload không cần phối hợp về schema, concurrency hoặc retention. Transaction log giúp các lần ghi được kiểm soát; khi dùng bảng làm streaming source cần bảo đảm query chạy trong khoảng lưu giữ dữ liệu và log.",
     "references": [
       {
-        "title": "Delta Lake Guide",
-        "url": "https://docs.databricks.com/delta/index.html"
+        "title": "What is Delta Lake in Databricks?",
+        "url": "https://docs.databricks.com/aws/en/delta"
       },
       {
-        "title": "Delta Lake Streaming Reads & Writes",
-        "url": "https://docs.databricks.com/delta/delta-streaming.html"
+        "title": "Delta Lake table streaming reads and writes",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/delta-lake"
       }
     ],
     "question_vi": "Lợi ích nào sau đây khi sử dụng Nền tảng Databricks Lakehouse được cung cấp bởi Delta Lake?",
@@ -2561,7 +2577,7 @@
     "options": {
       "A": "Delta tables are stored in a single file that contains data, history, metadata, and other attributes.",
       "B": "Delta tables store their data in a single file and all metadata in a collection of files in a separate location.",
-      "C": "Delta tables are stored in a collection of files that contain data, history, metadata, and other attributes.",
+      "C": "A Delta table is a directory of data files (typically Parquet) plus a transaction log that records table metadata and versions.",
       "D": "Delta tables are stored in a collection of files that contain only the data stored within the table.",
       "E": "Delta tables are stored in a single file that contains only the data stored within the table."
     },
@@ -2569,22 +2585,18 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "### Giải thích chọn đáp án:\n\n*   **Đáp án đúng là C**: Một bảng Delta được tổ chức dưới dạng một thư mục lưu trữ chứa một tập hợp các tệp dữ liệu (định dạng Parquet) và một thư mục con tên là `_delta_log` chứa các tệp nhật ký giao dịch (transaction log) định dạng JSON ghi lại siêu dữ liệu (metadata), lịch sử thay đổi (history), schema và các thuộc tính khác.\n*   **Các lựa chọn khác không chính xác**:\n    *   **A, B, E** sai vì bảng Delta không bao giờ được lưu trữ trong chỉ một tệp duy nhất.\n    *   **D** sai vì thiếu đi phần lưu trữ siêu dữ liệu và lịch sử thay đổi quan trọng trong thư mục `_delta_log`.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** Một bảng Delta không phải một tệp duy nhất. Về vật lý, đường dẫn bảng là một thư mục chứa nhiều data files (thường là Parquet) và thư mục `_delta_log` chứa transaction log, metadata và các checkpoint cần để dựng trạng thái/phiên bản của bảng. Vì vậy mô tả đúng nhất là một tập hợp tệp gồm cả dữ liệu bảng lẫn thông tin quản lý trạng thái.\n\nLưu ý cách diễn đạt của lựa chọn C nói về **toàn bộ tập hợp**: không phải mỗi file dữ liệu riêng lẻ đều chứa lịch sử và metadata. Data files chứa các hàng; log/checkpoint mô tả file nào thuộc phiên bản nào, schema và giao dịch đã commit. Không nên sửa trực tiếp hoặc xóa riêng file trong thư mục này vì có thể làm hỏng tính nhất quán.\n\n- A — Sai: không có một file duy nhất gói toàn bộ dữ liệu, lịch sử và metadata của một bảng Delta.\n- B — Sai: dữ liệu bảng cũng gồm nhiều data files, không bị giới hạn trong một file đơn.\n- C — Đúng: thư mục bảng gồm nhiều data files và transaction-log/checkpoint files phục vụ metadata/lịch sử.\n- D — Sai: chỉ mô tả data files mà bỏ qua `_delta_log`, phần tạo nên transaction và snapshot semantics của Delta.\n- E — Sai: vừa nói một file duy nhất vừa bỏ qua transaction log.\n\nTách khái niệm logical table khỏi file vật lý giúp đọc câu hỏi chính xác: Delta là giao thức/lớp bảng trên storage, Parquet là định dạng phổ biến của data files, còn `_delta_log` điều khiển trạng thái bảng.",
     "references": [
       {
-        "title": "How Delta Lake stores tables",
-        "url": "https://docs.databricks.com/delta/index.html"
-      },
-      {
-        "title": "Delta transaction log overview",
-        "url": "https://docs.databricks.com/delta/delta-transaction-log.html"
+        "title": "What is Delta Lake in Databricks?",
+        "url": "https://docs.databricks.com/aws/en/delta"
       }
     ],
     "question_vi": "Phát biểu nào sau đây mô tả đúng cách tổ chức lưu trữ của một bảng Delta (Delta table)?",
     "options_vi": {
       "A": "Bảng Delta được lưu trữ trong một tệp duy nhất chứa dữ liệu, lịch sử, siêu dữ liệu và các thuộc tính khác.",
       "B": "Bảng Delta lưu trữ dữ liệu của chúng trong một tệp duy nhất và tất cả siêu dữ liệu trong một tập hợp các tệp ở một vị trí riêng biệt.",
-      "C": "Bảng Delta được lưu trữ trong một tập hợp các tệp chứa dữ liệu, lịch sử, siêu dữ liệu và các thuộc tính khác.",
+      "C": "Bảng Delta là một thư mục gồm các tệp dữ liệu (thường là Parquet) và transaction log ghi metadata cùng các phiên bản của bảng.",
       "D": "Bảng Delta được lưu trữ trong một tập hợp các tệp chỉ chứa dữ liệu được lưu trữ trong bảng.",
       "E": "Bảng Delta được lưu trữ trong một tệp duy nhất chỉ chứa dữ liệu được lưu trữ trong bảng."
     }
