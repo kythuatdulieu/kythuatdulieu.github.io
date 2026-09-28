@@ -4480,53 +4480,60 @@
   {
     "id": 139,
     "topic": 1,
-    "question": "A **Structured Streaming** job deployed to production has been resulting in higher than expected cloud storage costs. At present, during normal execution, each microbatch of data is processed in less than 3s; at least 12 times per minute, a microbatch is processed that contains 0 records.\nThe streaming write was configured using the default trigger settings. The production job is currently scheduled alongside many other **Databricks** jobs in a workspace with instance pools provisioned to reduce start-up time for jobs with batch execution.\nHolding all other variables constant and assuming records need to be processed in less than 10 minutes, which adjustment will meet the requirement?",
+    "question": "A **Structured Streaming** job polls a cloud-storage source. Under the default trigger, many microbatches contain no records; a non-empty microbatch normally finishes in under 3 seconds. The job runs on a cluster configured from an instance pool, and records must be available to downstream users in less than 10 minutes. Which change best reduces unnecessary source polling while meeting that latency target?",
     "options": {
-      "A": "Set the trigger interval to 3 seconds; the default trigger interval is consuming too many records per batch, resulting in spill to disk that can increase volume costs.",
-      "B": "Use the `trigger once` option and configure a **Databricks** job to execute the query every 10 minutes; this approach minimizes costs for both compute and storage.",
-      "C": "Set the trigger interval to 10 minutes; each batch calls APIs in the source storage account, so decreasing trigger frequency to maximum allowable threshold should minimize this cost.",
-      "D": "Set the trigger interval to 500 milliseconds; setting a small but non-zero trigger interval ensures that the source is not queried too frequently."
+      "A": "Set a 3-second processing-time trigger and keep the streaming query running continuously.",
+      "B": "Use **AvailableNow** with the existing checkpoint and schedule the job every 5 minutes, leaving time for startup and processing.",
+      "C": "Set a 10-minute processing-time trigger; the trigger interval alone guarantees data is visible in under 10 minutes.",
+      "D": "Set a 500-millisecond processing-time trigger so the source is checked less frequently."
     },
     "answer": "B",
-    "question_vi": "Job **Structured Streaming** xử lý <3s/batch, nhiều batch trống, trigger mặc định gây tốn chi phí storage. Cần xử lý trong <10 phút. Điều chỉnh nào phù hợp?",
+    "question_vi": "Một job **Structured Streaming** thăm dò nguồn trên cloud storage. Với trigger mặc định, nhiều microbatch không có bản ghi; microbatch có dữ liệu thường xử lý xong trong dưới 3 giây. Job chạy trên cluster cấu hình từ instance pool, và dữ liệu phải đến tay người dùng hạ nguồn trong chưa đầy 10 phút. Thay đổi nào giảm việc thăm dò nguồn không cần thiết mà vẫn đáp ứng độ trễ?",
     "options_vi": {
-      "A": "Đặt trigger 3s; trigger mặc định đang gom nhiều bản ghi gây spill.",
-      "B": "Dùng `trigger once` và lên lịch job chạy mỗi 10 phút để giảm chi phí compute/storage.",
-      "C": "Đặt trigger 10 phút để giảm số lần gọi API.",
-      "D": "Đặt trigger 500ms để không truy vấn nguồn quá thường xuyên."
+      "A": "Đặt trigger theo thời gian 3 giây và giữ query streaming chạy liên tục.",
+      "B": "Dùng **AvailableNow** với checkpoint hiện tại và lên lịch job mỗi 5 phút, chừa thời gian cho khởi động và xử lý.",
+      "C": "Đặt trigger theo thời gian 10 phút; chỉ riêng khoảng trigger đã đảm bảo dữ liệu hiển thị trong dưới 10 phút.",
+      "D": "Đặt trigger theo thời gian 500 mili giây để nguồn được kiểm tra ít thường xuyên hơn."
     },
-    "explanation_vi": "Mặc định, **Structured Streaming** chạy ở chế độ liên tục (default trigger) khiến Spark liên tục thăm dò nguồn dữ liệu. Nếu dữ liệu đến thưa thớt, việc này tạo ra rất nhiều microbatch trống (0 records) nhưng vẫn ghi nhận các log/metadata commit vào cloud storage, làm tăng mạnh chi phí API và lưu trữ. Bằng cách sử dụng tùy chọn '`trigger once`' (hoặc `AvailableNow`) kết hợp với việc lên lịch chạy job **Databricks** cứ sau mỗi 10 phút, luồng stream sẽ chỉ khởi chạy, xử lý toàn bộ dữ liệu hiện có rồi tự động tắt. Cách này giúp loại bỏ hoàn toàn các batch trống và tối ưu hóa tối đa chi phí compute lẫn storage.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** Trigger mặc định của Structured Streaming tương đương processingTime với khoảng 0 ms: Spark liên tục kiểm tra xem nguồn có dữ liệu mới hay không, thường là vài lần mỗi giây hoặc nhanh hơn tùy thời gian xử lý. Với nguồn dựa trên file, đặc biệt Auto Loader ở chế độ liệt kê thư mục, các lần khám phá file liên tục có thể tạo nhiều lời gọi API tới cloud storage dù không có bản ghi mới. Chi phí ở đây chủ yếu là hoạt động khám phá/kiểm tra nguồn, không phải cứ batch rỗng là Delta nhất thiết phải ghi một commit chứa dữ liệu.\n\n**AvailableNow** xử lý phần dữ liệu đang có kể từ checkpoint rồi kết thúc query. Lên lịch job mỗi 5 phút sẽ giảm đáng kể tần suất thăm dò so với query chạy liên tục; checkpoint cũ giúp lần chạy tiếp tục từ tiến độ đã ghi nhận thay vì đọc lại từ đầu. Khoảng 5 phút để lại khoảng trống cho thời gian khởi động cluster, lập lịch và hoàn tất batch trước mục tiêu 10 phút. Instance pool có thể giảm thời gian cấp phát máy nhưng không loại bỏ chi phí compute của mỗi lần chạy. Cần theo dõi thời gian end-to-end thực tế và bảo đảm một lần chạy bắt kịp dữ liệu trong phần thời gian còn lại; nếu không, phải tăng năng lực xử lý hoặc dùng lịch dày hơn.\n\n- **A sai:** khoảng 3 giây giảm số lần kiểm tra so với mặc định 0 ms, nhưng query vẫn chạy liên tục và tiếp tục gọi nguồn cả khi không có dữ liệu. Đây có thể là lựa chọn cân bằng độ trễ/chi phí khác, nhưng không giảm hoạt động thăm dò nhiều bằng xử lý theo đợt trong tình huống này.\n- **B đúng:** **AvailableNow** phù hợp với xử lý tăng dần theo lịch; nó nạp dữ liệu sẵn có rồi dừng, thay vì duy trì vòng thăm dò liên tục. Lịch 5 phút giữ khoảng đệm cho SLA dưới 10 phút, và tái sử dụng checkpoint bảo toàn tiến độ.\n- **C sai:** chu kỳ đúng 10 phút đã có thể khiến bản ghi chờ gần 10 phút, chưa tính độ trễ của scheduler, khởi động và xử lý. Vì yêu cầu là *dưới* 10 phút, không thể xem chu kỳ 10 phút là bảo đảm SLA.\n- **D sai:** 500 ms là kiểm tra thường xuyên hơn 3 giây, nên làm tăng chứ không giảm hoạt động khám phá nguồn.\n\nTrong Databricks Runtime 11.3 LTS trở lên, Trigger.Once đã deprecated; tài liệu Databricks khuyến nghị AvailableNow cho các workload xử lý tăng dần theo đợt. AvailableNow có hỗ trợ cho nhiều nguồn phổ biến, gồm file, Delta và Auto Loader; vẫn cần xác nhận connector cụ thể có hỗ trợ trigger này.\n\n📚 **Tham khảo:** [Databricks — Configure Structured Streaming trigger intervals](https://docs.databricks.com/aws/en/structured-streaming/triggers); [Databricks — Configure Auto Loader for production workloads](https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/production)",
     "page": null,
-    "image": "img/q_139.jpg",
     "references": [
       {
-        "title": "Structured Streaming Triggers on Databricks",
-        "url": "https://docs.databricks.com/en/structured-streaming/triggers"
+        "title": "Databricks — Configure Structured Streaming trigger intervals",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/triggers"
+      },
+      {
+        "title": "Databricks — Configure Auto Loader for production workloads",
+        "url": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/production"
       }
     ]
   },
   {
     "id": 140,
     "topic": 1,
-    "question": "Which statement describes **Delta Lake** optimized writes?",
+    "question": "Which statement best describes **Delta Lake** optimized writes?",
     "options": {
-      "A": "Before a Jobs cluster terminates, OPTIMIZE is executed on all tables modified during the most recent job.",
-      "B": "An asynchronous job runs after the write completes to detect if files could be further compacted; if yes, an OPTIMIZE job is executed toward a default of 1 GB.",
-      "C": "A shuffle occurs prior to writing to try to group similar data together resulting in fewer files instead of each executor writing multiple files based on directory partitions.",
-      "D": "Optimized writes use logical partitions instead of directory partitions; because partition boundaries are only represented in metadata, fewer small files are written."
+      "A": "Before a Jobs cluster terminates, OPTIMIZE runs on every table modified during the most recent job.",
+      "B": "An asynchronous post-write task always runs OPTIMIZE and compacts each file to a fixed 1 GB target.",
+      "C": "A shuffle occurs before writing to redistribute rows for the target table partitions, helping produce fewer, larger files instead of many small files.",
+      "D": "Optimized writes replace directory partitions with logical partitions that exist only in metadata."
     },
     "answer": "C",
-    "question_vi": "Phát biểu nào mô tả optimized writes của **Delta Lake**?",
+    "question_vi": "Phát biểu nào mô tả chính xác nhất tính năng optimized writes của **Delta Lake**?",
     "options_vi": {
-      "A": "Trước khi job cluster tắt sẽ chạy OPTIMIZE trên mọi bảng vừa ghi.",
-      "B": "Sau ghi chạy job async kiểm tra và OPTIMIZE về 1 GB nếu cần.",
-      "C": "Shuffle trước khi ghi để gom dữ liệu tương tự, giảm số file thay vì mỗi executor ghi nhiều file.",
-      "D": "Optimized writes dùng partition logic thay vì directory partitions để viết ít file nhỏ."
+      "A": "Trước khi cluster của Jobs tắt, OPTIMIZE sẽ chạy trên mọi bảng vừa được job sửa đổi.",
+      "B": "Một tác vụ bất đồng bộ luôn chạy OPTIMIZE sau khi ghi và gom mỗi file về kích thước cố định 1 GB.",
+      "C": "Một lượt shuffle phân phối lại các dòng theo partition đích trước khi ghi, giúp tạo ít file lớn hơn thay vì nhiều file nhỏ.",
+      "D": "Optimized writes thay directory partition bằng logical partition chỉ tồn tại trong metadata."
     },
-    "explanation_vi": "Tính năng ghi tối ưu (optimized writes) của **Delta Lake** hoạt động bằng cách thực hiện một lượt xáo trộn dữ liệu (shuffle) ngay trước khi ghi xuống đĩa. Mục đích của việc này là gom nhóm các dữ liệu có cùng partition hoặc thuộc tính lại với nhau trên cùng một executor, giúp ghi ra ít file hơn với kích thước lớn hơn, tránh việc mỗi executor ghi ra nhiều file nhỏ phân tán tại các thư mục partition khác nhau.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** Optimized writes điều chỉnh cách dữ liệu được phân phối *trước* thao tác ghi. Spark thêm một lượt shuffle để gom dữ liệu phù hợp với các partition đích của bảng, rồi các task ghi ra số file nhỏ hơn và có kích thước hữu ích hơn. Lợi ích đặc biệt rõ với bảng Delta được partition: nhiều executor không còn tự tạo quá nhiều file nhỏ trong cùng một partition. Đổi lại, lượt shuffle có thể làm tăng thời gian của chính thao tác ghi. Tính năng này hướng đến chất lượng layout khi ghi; nó không cam kết mọi file luôn đúng một kích thước hay thay thế hoàn toàn việc bảo trì layout cho bảng rất lớn.\n\n- **A sai:** optimized writes không tự gọi câu lệnh SQL OPTIMIZE khi cluster sắp tắt. OPTIMIZE là thao tác viết lại các file hiện có và thường được chạy riêng hoặc thông qua predictive optimization cho bảng Unity Catalog được bật tính năng đó.\n- **B sai:** mô tả này trộn optimized writes với các cơ chế bảo trì sau ghi. Auto compaction chạy sau khi thao tác ghi thành công trên cluster ghi; predictive optimization có thể chạy bảo trì bất đồng bộ. Không cơ chế nào được định nghĩa là luôn chạy sau mọi lần ghi và ép mọi file về đúng 1 GB. Databricks tự điều chỉnh kích thước mục tiêu theo loại bảng và workload.\n- **C đúng:** lượt shuffle nằm trước khi ghi và giúp nhóm dữ liệu theo partition đích để hạn chế small files. Chi phí đánh đổi là thêm công việc shuffle và có thể tăng write latency.\n- **D sai:** Delta vẫn dùng partitioning vật lý theo thư mục khi bảng được khai báo partitioned. Optimized writes không biến partition thành metadata-only và cũng không thay đổi định nghĩa partition của bảng.\n\nPhân biệt ba thao tác: optimized writes cải thiện kích thước/layout ngay trong lúc ghi; auto compaction gom một số small files sau khi ghi; OPTIMIZE là thao tác bảo trì/viết lại file riêng. Với Unity Catalog managed tables trên các cấu hình được hỗ trợ, Databricks tự bật hoặc tự điều chỉnh nhiều thiết lập nên không phải lúc nào cũng cần bật thủ công.\n\n📚 **Tham khảo:** [Databricks — Control data file size, mục Optimized writes](https://docs.databricks.com/aws/en/tables/tune-file-size)",
     "page": null,
-    "image": "img/q_140.jpg",
-    "references": []
+    "references": [
+      {
+        "title": "Databricks — Control data file size (Optimized writes)",
+        "url": "https://docs.databricks.com/aws/en/tables/tune-file-size"
+      }
+    ]
   },
   {
     "id": 141,
