@@ -2616,11 +2616,11 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "### Giải thích chọn đáp án:\n\n*   **Đáp án đúng là C (`DELETE FROM my_table WHERE age > 25;`)**: Để xóa các hàng từ một bảng dữ liệu dựa trên một điều kiện lọc cụ thể, SQL sử dụng cú pháp `DELETE FROM <table_name> WHERE <condition>`. Do đó, mệnh đề này sẽ loại bỏ hoàn toàn các dòng có `age > 25` khỏi bảng Delta `my_table`.\n*   **Các lựa chọn khác không chính xác**:\n    *   **A** chỉ thực hiện truy vấn và trả về dữ liệu (không xóa dữ liệu trong bảng gốc).\n    *   **B, D** dùng sai cú pháp `UPDATE` và không phải là hành động xóa.\n    *   **E** thực hiện hành động xóa nhưng áp dụng sai điều kiện lọc (`age <= 25` thay vì `age > 25`).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C — `DELETE FROM my_table WHERE age > 25;`.** Đây là lệnh DML xóa các hàng thỏa điều kiện khỏi bảng Delta. Phần `WHERE age > 25` xác định chính xác tập hàng cần xóa; giao dịch Delta ghi nhận thay đổi thành một phiên bản mới của bảng. Những hàng có `age <= 25` không bị tác động. Nếu `age` là NULL, phép so sánh không cho kết quả TRUE nên hàng đó cũng không thỏa điều kiện để bị xóa.\n\n**Vì sao từng phương án còn lại không phù hợp?**\n- **A:** ** `SELECT` chỉ đọc và trả kết quả truy vấn; nó không sửa bảng nguồn.\n- **B:** ** `UPDATE` dùng để gán giá trị mới cho cột, nhưng câu lệnh này thiếu mệnh đề `SET`, nên cú pháp không đầy đủ. Hơn nữa, đề yêu cầu xóa hàng chứ không cập nhật giá trị.\n- **D:** ** Câu lệnh cũng thiếu `SET`, và dù có bổ sung `SET` thì `age <= 25` vẫn là điều kiện ngược với yêu cầu.\n- **E:** ** Đây là dạng lệnh xóa, nhưng xóa các hàng có tuổi nhỏ hơn hoặc bằng 25, trái với điều kiện `age > 25` trong đề.\n\nĐiểm cần phân biệt là `DELETE` loại bỏ hàng khỏi trạng thái hiện tại của bảng, còn lịch sử Delta có thể vẫn cho phép truy vấn phiên bản cũ trong thời gian lưu giữ. Nếu cần xóa vật lý dữ liệu cũ khỏi storage, đó là một thao tác quản lý retention riêng, không phải ý nghĩa của câu lệnh trong câu hỏi. Lệnh này áp dụng cho bảng Delta.",
     "references": [
       {
-        "title": "DELETE FROM syntax on Databricks SQL",
-        "url": "https://docs.databricks.com/sql/language-manual/sql-ref-syntax-dml-delete.html"
+        "title": "Databricks SQL: DELETE FROM",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/delta-delete-from"
       }
     ],
     "question_vi": "Khối mã nào sau đây sẽ xóa các dòng có giá trị trong cột age lớn hơn 25 khỏi bảng Delta hiện có tên là my_table và lưu lại bảng đã cập nhật?",
@@ -2647,15 +2647,15 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "### Giải thích chọn đáp án:\n\n*   **Đáp án đúng là B**: Việc hỗ trợ các giao dịch tuân thủ thuộc tính **ACID** (Atomicity, Consistency, Isolation, Durability) đảm bảo rằng bất kỳ hoạt động đọc/ghi dữ liệu nào đều diễn ra trọn vẹn và an toàn. Điều này ngăn ngừa tình trạng hỏng dữ liệu (partial writes), dữ liệu mâu thuẫn khi có nhiều người ghi đồng thời, từ đó trực tiếp nâng cao và duy trì chất lượng dữ liệu tốt hơn so với Data Lake truyền thống.\n*   **Các lựa chọn khác không chính xác**:\n    *   Các đáp án **A, C, D, E** mô tả những ưu điểm khác của Lakehouse nhưng không trực tiếp đóng vai trò như là cơ chế kỹ thuật cốt lõi giúp đảm bảo chất lượng dữ liệu tin cậy như ACID.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B — Lakehouse hỗ trợ giao dịch ACID.** Tính nguyên tử và tính nhất quán của giao dịch giúp một lần ghi hoặc cập nhật được commit trọn vẹn, thay vì để người đọc nhìn thấy trạng thái ghi dở dang. Cơ chế cô lập kiểm soát xung đột giữa các thao tác đồng thời, còn tính bền vững giữ lại các thay đổi đã commit. Với Delta Lake, transaction log và schema enforcement hỗ trợ duy trì trạng thái bảng có thể đọc tin cậy khi nhiều pipeline cùng làm việc.\n\nCần hiểu đúng phạm vi của đáp án: ACID tăng **tính toàn vẹn và độ tin cậy của thao tác lưu trữ**, nhưng tự nó không kiểm tra quy tắc nghiệp vụ như “tuổi phải dương” hay “mã khách hàng không được trùng”. Các quy tắc chất lượng ngữ nghĩa vẫn cần constraints, expectations hoặc kiểm tra trong pipeline.\n\n**Vì sao các lựa chọn khác không phải đáp án câu này?**\n- **A:** ** Hỗ trợ cả dữ liệu có cấu trúc và phi cấu trúc là ưu điểm về phạm vi lưu trữ; nó không bảo đảm một lần ghi bảng được commit nhất quán.\n- **C:** ** Có thể dùng SQL để kiểm tra dữ liệu giúp phân tích thuận tiện, nhưng ngôn ngữ truy vấn không tự ngăn cập nhật đồng thời tạo ra trạng thái không toàn vẹn.\n- **D:** ** Định dạng mở giúp khả năng tương tác và tránh khóa vào nhà cung cấp. Riêng “mở” không đồng nghĩa với có transaction ACID.\n- **E:** ** Hỗ trợ workload ML/AI nói về loại tác vụ có thể chạy trên Lakehouse, không phải cơ chế bảo đảm dữ liệu sau thao tác ghi.\n\nVì vậy B là lựa chọn gắn trực tiếp nhất với độ tin cậy giao dịch mà mô hình Lakehouse/Delta bổ sung so với data lake tệp thuần túy.",
     "references": [
       {
-        "title": "Data lakehouse details",
-        "url": "https://docs.databricks.com/lakehouse/index.html"
+        "title": "Databricks: What are ACID guarantees?",
+        "url": "https://docs.databricks.com/aws/en/lakehouse/acid"
       },
       {
-        "title": "ACID Transactions in Delta Lake",
-        "url": "https://docs.databricks.com/delta/index.html"
+        "title": "Databricks: Best practices for reliability",
+        "url": "https://docs.databricks.com/aws/en/lakehouse-architecture/reliability/best-practices"
       }
     ],
     "question_vi": "Tính năng nào sau đây của data lakehouse giúp cải thiện chất lượng dữ liệu vượt trội so với data lake truyền thống?",
@@ -2670,11 +2670,11 @@
   {
     "id": 83,
     "topic": 1,
-    "question": "A data engineer has left the organization. The data team needs to transfer ownership of the data engineer’s Delta tables to a new data engineer. The new data engineer is the lead engineer on the data team.Assuming the original data engineer no longer has access, which of the following individuals must be the one to transfer ownership of the Delta tables in Data Explorer?",
+    "question": "A data engineer has left the organization. The data team needs to transfer ownership of the engineer’s Delta tables in Unity Catalog. Assume the former owner, the owner of the containing schema, and any user with the MANAGE privilege are unavailable. Which individual has sufficient authority to transfer ownership to the new lead data engineer in Catalog Explorer?",
     "options": {
       "A": "Databricks account representative",
       "B": "This transfer is not possible",
-      "C": "Workspace administrator",
+      "C": "Metastore administrator",
       "D": "New lead data engineer",
       "E": "Original data engineer"
     },
@@ -2682,18 +2682,22 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "### Giải thích chọn đáp án:\n\n*   **Đáp án đúng là C (Workspace administrator)**: Khi chủ sở hữu hiện tại của đối tượng bảng dữ liệu không còn khả năng truy cập hoặc đã rời tổ chức, chỉ có người dùng có vai trò Quản trị viên (Workspace Administrator hoặc Metastore Admin trong Unity Catalog) mới có đặc quyền cao nhất để can thiệp và chuyển giao quyền sở hữu (Transfer Ownership) sang người khác.\n*   **Các lựa chọn khác không chính xác**:\n    *   **A**: Đại diện Databricks không có quyền can thiệp vào tài nguyên của khách hàng.\n    *   **D**: Kỹ sư trưởng mới không thể tự phân quyền/sở hữu bảng nếu không có quyền Admin.\n    *   **E**: Kỹ sư cũ đã không còn quyền truy cập.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C — metastore administrator.** Câu hỏi đã nêu rõ các principal thông thường có thể chuyển ownership đều không khả dụng. Trong Unity Catalog, quyền này không thuộc mặc định về mọi workspace administrator: người chuyển có thể là chủ sở hữu hiện tại, chủ sở hữu container (schema của bảng), người được cấp `MANAGE` trên đối tượng hoặc metastore admin. Theo giả định trong đề, chỉ lựa chọn metastore administrator còn có thẩm quyền cần thiết.\n\nTrong Catalog Explorer, metastore admin có thể tiếp quản việc quản trị đối tượng và gán owner mới. Sau khi chuyển, kỹ sư trưởng mới trở thành owner; điều đó không có nghĩa họ được tự ý chuyển bảng khi chưa có một trong các quyền kể trên.\n\n**Các lựa chọn khác:**\n- **A:** Đại diện Databricks:** hỗ trợ tài khoản hoặc sản phẩm nhưng không tự có quyền sở hữu dữ liệu trong Unity Catalog của khách hàng.\n- **B:** Không thể chuyển:** sai vì Unity Catalog cung cấp thao tác chuyển owner cho các vai trò được cấp quyền.\n- **D:** Kỹ sư trưởng mới:** vai trò “lead” trong tổ chức không tự tạo privilege trong catalog; người này chỉ có thể tự chuyển nếu đã có quyền phù hợp, điều mà đề đã loại trừ.\n- **E:** Kỹ sư cũ:** đề nói người này đã rời tổ chức và không thể thực hiện thao tác.\n\n**Lưu ý phiên bản và phạm vi:** trên một số workspace mới được tự động bật Unity Catalog, workspace admin có thêm quyền mặc định để quản lý workspace catalog và đối tượng con của catalog đó. Tuy nhiên, quyền workspace admin không phải quyền tổng quát để đổi owner của mọi đối tượng hiện hữu mà họ không sở hữu. Vì vậy câu hỏi đã nêu rõ “bảng trong Unity Catalog” và loại trừ owner/container owner/`MANAGE` để đáp án không phụ thuộc nhầm vào mô hình quyền cũ của Data Explorer.",
     "references": [
       {
-        "title": "Transfer ownership of Unity Catalog objects",
-        "url": "https://docs.databricks.com/data-governance/unity-catalog/manage-privileges.html#transfer-ownership"
+        "title": "Databricks: Manage object ownership in Unity Catalog",
+        "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/manage-privileges/ownership"
+      },
+      {
+        "title": "Databricks: Admin privileges in Unity Catalog",
+        "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/manage-privileges/admin-privileges"
       }
     ],
-    "question_vi": "Một kỹ sư dữ liệu đã rời công ty. Nhóm dữ liệu cần chuyển quyền sở hữu (ownership) các bảng Delta của kỹ sư đó sang cho một kỹ sư dữ liệu mới (là kỹ sư trưởng của nhóm). Giả định rằng kỹ sư dữ liệu cũ không còn quyền truy cập, ai trong số những người sau đây phải thực hiện việc chuyển quyền sở hữu các bảng Delta này trong Catalog Explorer?",
+    "question_vi": "Một kỹ sư dữ liệu đã rời tổ chức và nhóm cần chuyển quyền sở hữu các bảng Delta trong Unity Catalog sang cho kỹ sư trưởng mới bằng Catalog Explorer. Giả sử chủ sở hữu cũ, chủ sở hữu schema chứa bảng và mọi người dùng có quyền MANAGE đều không thể thực hiện việc này. Vai trò nào có đủ thẩm quyền để chuyển ownership?",
     "options_vi": {
       "A": "Đại diện tài khoản Databricks",
       "B": "Việc chuyển giao này là không thể thực hiện",
-      "C": "Workspace administrator (Quản trị viên không gian làm việc)",
+      "C": "Metastore administrator (Quản trị viên metastore)",
       "D": "Kỹ sư trưởng dữ liệu mới",
       "E": "Kỹ sư dữ liệu cũ"
     }
@@ -2713,11 +2717,11 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "### Giải thích chọn đáp án:\n\n*   **Đáp án đúng là C (`DESCRIBE DATABASE customer360;`)**: Câu lệnh `DESCRIBE DATABASE` hiển thị thông tin siêu dữ liệu chi tiết của cơ sở dữ liệu bao gồm tên, mô tả mô tả ngắn gọn, và đường dẫn thư mục lưu trữ vật lý (Location) của cơ sở dữ liệu đó.\n*   **Các lựa chọn khác không chính xác**:\n    *   **A**: `SHOW DATABASE` không phải cú pháp hợp lệ.\n    *   **B**: `SELECT LOCATION` không dùng để truy vấn metadata của cơ sở dữ liệu.\n    *   **D**: `SHOW DETAIL` là câu lệnh dành riêng để xem thông tin chi tiết của bảng Delta, không dùng cho cơ sở dữ liệu.\n    *   **E**: `USE` chỉ thay đổi ngữ cảnh làm việc hiện tại của phiên SQL sang cơ sở dữ liệu đó.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C — `DESCRIBE DATABASE customer360;`.** Lệnh DESCRIBE đọc metadata của database/schema và trả về các mục như tên, mô tả và vị trí gốc trên filesystem. Trong Databricks SQL hiện nay, “schema” là thuật ngữ được khuyến nghị; DATABASE và SCHEMA vẫn được hỗ trợ như tên gọi có thể dùng thay thế trong cú pháp này. Vì thế câu lệnh ở lựa chọn C là cách phù hợp để xem location của `customer360`.\n\n**Phân biệt các lựa chọn:**\n- **A:** `SHOW DATABASE customer360`:** cú pháp không liệt kê một schema cụ thể theo cách này. Lệnh SHOW DATABASES/SCHEMAS dùng để liệt kê các schema, chứ không trả metadata location của riêng đối tượng như yêu cầu.\n- **B:** `SELECT LOCATION FROM customer360`:** xem schema như một bảng có cột LOCATION; đây không phải truy vấn hợp lệ để lấy metadata của schema.\n- **C:** `DESCRIBE DATABASE`:** đúng vì lệnh mô tả metadata database/schema và hiển thị root location.\n- **D:** `SHOW DETAIL`:** không phải cú pháp Databricks SQL để xem metadata database; `DESCRIBE DETAIL` mới là lệnh thường dùng cho chi tiết của một bảng Delta.\n- **E:** `USE customer360`:** chuyển schema hiện tại của phiên; không trả location như kết quả truy vấn metadata.\n\nNếu muốn đọc schema properties mở rộng, có thể dùng `DESCRIBE DATABASE EXTENDED customer360` hoặc cú pháp tương ứng với SCHEMA. Hãy xem đúng dòng location trong kết quả thay vì nhầm nó với location của một bảng cụ thể.",
     "references": [
       {
-        "title": "DESCRIBE DATABASE (Databricks SQL)",
-        "url": "https://docs.databricks.com/sql/language-manual/sql-ref-syntax-aux-describe-database.html"
+        "title": "Databricks SQL: DESCRIBE SCHEMA (DATABASE)",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-schema"
       }
     ],
     "question_vi": "Câu lệnh nào sau đây sẽ trả về vị trí lưu trữ (location) của cơ sở dữ liệu customer360?",
@@ -2732,7 +2736,7 @@
   {
     "id": 85,
     "topic": 1,
-    "question": "A data engineer is attempting to drop a Spark SQL table my_table. The data engineer wants to delete all table metadata and data.They run the following command:\nDROP TABLE IF EXISTS my_table -While the object no longer appears when they run SHOW TABLES, the data files still exist.Which of the following describes why the data files still exist and the metadata files were deleted?",
+    "question": "A data engineer drops a legacy Spark SQL table named my_table from the Hive metastore. The table was created as an external table with LOCATION pointing to a customer-managed path. After running DROP TABLE IF EXISTS my_table;, the table no longer appears in SHOW TABLES, but its data files remain at that path. Which statement explains this behavior?",
     "options": {
       "A": "The table’s data was larger than 10 GB",
       "B": "The table’s data was smaller than 10 GB",
@@ -2744,18 +2748,18 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "### Giải thích chọn đáp án:\n\n*   **Đáp án đúng là C (Bảng này là bảng ngoài - External Table)**: Trong Spark SQL/Databricks, khi bạn xóa một **bảng ngoài (External Table / Unmanaged Table)** bằng lệnh `DROP TABLE`, hệ thống sẽ chỉ xóa định nghĩa schema và metadata trong Catalog (Hive metastore). Dữ liệu vật lý thực tế lưu trữ ở đường dẫn bên ngoài sẽ không bị thay đổi. Đối với **bảng được quản lý (Managed Table)**, lệnh `DROP TABLE` sẽ xóa sạch cả metadata lẫn dữ liệu vật lý.\n*   **Các lựa chọn khác không chính xác**:\n    *   **A, B**: Kích thước bảng không quyết định hành vi xóa của lệnh `DROP TABLE`.\n    *   **D**: Bảng ngoài bắt buộc phải có đường dẫn vị trí lưu trữ dữ liệu.\n    *   **E**: Nếu là bảng Managed, các tệp dữ liệu vật lý đã bị xóa cùng metadata.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C — đây là external table.** Khi đăng ký external table, metastore lưu định nghĩa và metadata để người dùng tìm bảng, còn dữ liệu vật lý nằm tại LOCATION do người dùng quản lý. `DROP TABLE` bỏ đăng ký bảng và xóa metadata trong metastore; lệnh không xóa các tệp tại đường dẫn external. Vì thế tên bảng biến mất khỏi SHOW TABLES nhưng dữ liệu vẫn còn ở storage.\n\n**Loại trừ từng phương án:**\n- **A.** Kích thước lớn hơn 10 GB không quyết định DROP TABLE có xóa external files hay không; con số 10 GB không liên quan đến ngữ nghĩa lệnh.\n- **B.** Kích thước nhỏ hơn 10 GB cũng không làm thay đổi hành vi xóa; table type và quyền sở hữu LOCATION mới là điều quyết định.\n- **C:** ** External table phù hợp với dấu hiệu metadata bị gỡ nhưng file tại LOCATION vẫn tồn tại.\n- **D:** ** Đề đã chỉ rõ LOCATION tồn tại và trỏ đến đường dẫn ngoài; “không có location” không giải thích được file còn nguyên ở đó.\n- **E:** ** Với managed table, hệ thống quản lý cả metadata lẫn vòng đời dữ liệu, nên đây không phải lời giải thích cho trường hợp external path không bị đụng tới.\n\nCâu hỏi này cố ý giới hạn vào bảng legacy Hive metastore có LOCATION để tránh nhập nhằng với Unity Catalog hiện hành: managed table trong Unity Catalog có thể được giữ trong khoảng phục hồi mặc định trước khi tiến trình purge xóa vật lý file. Với external table, cần chủ động xóa dữ liệu ở storage nếu muốn dọn file; xóa metadata trong catalog không đồng nghĩa xóa dữ liệu nguồn.",
     "references": [
       {
-        "title": "DROP TABLE (Databricks SQL)",
-        "url": "https://docs.databricks.com/sql/language-manual/sql-ref-syntax-ddl-drop-table.html"
+        "title": "Databricks SQL: DROP TABLE",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-table"
       },
       {
-        "title": "Managed and external tables",
-        "url": "https://docs.databricks.com/data-governance/unity-catalog/managed-vs-external.html"
+        "title": "Databricks SQL: CREATE TABLE and LOCATION",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using"
       }
     ],
-    "question_vi": "Một kỹ sư dữ liệu đang cố gắng xóa bảng Spark SQL my_table. Kỹ sư muốn xóa toàn bộ siêu dữ liệu (metadata) và dữ liệu của bảng đó. Họ chạy câu lệnh sau:\n`DROP TABLE IF EXISTS my_table;` - Mặc dù đối tượng bảng không còn xuất hiện khi chạy lệnh SHOW TABLES, nhưng các tệp dữ liệu vật lý vẫn tồn tại. Lý do nào sau đây giải thích tại sao dữ liệu vẫn tồn tại còn tệp siêu dữ liệu đã bị xóa?",
+    "question_vi": "Một kỹ sư dữ liệu xóa bảng Spark SQL cũ tên my_table khỏi Hive metastore. Bảng được tạo dưới dạng external table, với LOCATION trỏ đến đường dẫn do khách hàng quản lý. Sau khi chạy `DROP TABLE IF EXISTS my_table;`, bảng không còn xuất hiện trong SHOW TABLES nhưng các tệp dữ liệu vẫn ở đường dẫn đó. Phát biểu nào giải thích đúng hành vi này?",
     "options_vi": {
       "A": "Dữ liệu của bảng lớn hơn 10 GB",
       "B": "Dữ liệu của bảng nhỏ hơn 10 GB",
@@ -2779,11 +2783,19 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "### Giải thích chọn đáp án:\n\n*   **Đáp án đúng là E (Table - Bảng)**: Để thực thể dữ liệu có thể chia sẻ công khai cho nhiều kỹ sư ở các phiên làm việc khác nhau sử dụng, đồng thời lưu trữ dữ liệu vật lý trên ổ đĩa, ta cần tạo một **Bảng (Table)**.\n*   **Các lựa chọn khác không chính xác**:\n    *   **Database** (A) là không gian chứa logic để phân nhóm bảng/khung nhìn.\n    *   **Function** (B) là các khối logic nghiệp vụ.\n    *   **View** (C) chỉ lưu cấu trúc câu lệnh truy vấn logic chứ không nhân bản hay lưu trữ dữ liệu vật lý mới.\n    *   **Temporary View** (D) chỉ tồn tại giới hạn trong một phiên làm việc hiện tại và không lưu trữ dữ liệu vật lý.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án E — tạo một table bền vững.** Table là thực thể phù hợp khi cần một bộ dữ liệu có thể được tra cứu trong các phiên làm việc khác nhau và có dữ liệu được lưu tại một vị trí vật lý. Có thể tạo bảng từ truy vấn kết hợp nhiều nguồn, ví dụ `CREATE TABLE ... AS SELECT ...`. Tên bảng và metadata được đăng ký trong schema/catalog, còn dữ liệu nằm trong managed location mặc định hoặc external LOCATION được cấu hình.\n\n**Vì sao các lựa chọn còn lại không đạt đủ hai yêu cầu?**\n- **A:** Database:** là namespace/container để tổ chức các đối tượng; bản thân database không phải kết quả dữ liệu được tạo từ vài bảng và không lưu các hàng kết quả của truy vấn.\n- **B:** Function:** đóng gói logic có thể gọi lại; hàm không phải nơi vật lý lưu dataset đã ghép.\n- **C:** View:** view lâu dài có thể dùng giữa các session, nhưng thông thường chỉ lưu định nghĩa truy vấn và tính kết quả khi đọc; nó không lưu bản dữ liệu vật lý riêng.\n- **D:** Temporary view:** định nghĩa chỉ tồn tại trong session hiện tại nên không đáp ứng yêu cầu chia sẻ giữa các session khác.\n- **E:** Table:** đáp ứng cả tính tồn tại lâu dài trong catalog và việc lưu dữ liệu tại table location.\n\nKhông nên nhầm table với materialized view: materialized view cũng lưu kết quả được tính trước, nhưng không có trong các lựa chọn và có cơ chế refresh riêng. Trong câu hỏi này, thực thể cơ bản để tạo và lưu kết quả là table; chọn managed hay external phụ thuộc yêu cầu sở hữu dữ liệu, không làm thay đổi đáp án về loại entity.",
     "references": [
       {
-        "title": "Views vs Tables on Databricks",
-        "url": "https://docs.databricks.com/sql/language-manual/sql-ref-syntax-ddl-create-view.html"
+        "title": "Databricks: Tables and views",
+        "url": "https://docs.databricks.com/aws/en/data-engineering/tables-views"
+      },
+      {
+        "title": "Databricks SQL: CREATE TABLE",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using"
+      },
+      {
+        "title": "Databricks SQL: CREATE VIEW",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view"
       }
     ],
     "question_vi": "Một kỹ sư dữ liệu muốn tạo một thực thể dữ liệu (data entity) từ một vài bảng khác nhau. Thực thể dữ liệu này phải chia sẻ được cho các kỹ sư khác sử dụng trong các phiên làm việc khác, đồng thời phải được lưu vào một vị trí vật lý. Kỹ sư đó nên tạo thực thể dữ liệu nào?",
@@ -2810,11 +2822,15 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "### Giải thích chọn đáp án:\n\n*   **Đáp án đúng là D (Delta Live Tables)**: Delta Live Tables (DLT) cung cấp tính năng **Expectations** (Ràng buộc chất lượng) tích hợp sẵn, giúp tự động giám sát chất lượng dữ liệu tại các giai đoạn nạp, ghi nhận lịch sử vi phạm chất lượng bản ghi lỗi vào event log một cách tự động.\n*   **Các lựa chọn khác không chính xác**:\n    *   **Unity Catalog** (A) và **Data Explorer** (B) dùng cho quản lý bảo mật và truy xuất dữ liệu.\n    *   **Delta Lake** (C) cho phép ràng buộc ràng buộc tĩnh nhưng không tích hợp sẵn bảng điều khiển giám sát tự động hóa quy trình như DLT.\n    *   **Auto Loader** (E) chỉ là công cụ nạp dữ liệu gia tăng tối ưu từ file storage.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D — Delta Live Tables, nay thuộc Lakeflow Declarative Pipelines.** Expectations cho phép khai báo điều kiện chất lượng ngay trong pipeline, chẳng hạn timestamp phải hợp lệ hoặc khóa định danh không được NULL. Pipeline áp dụng hành động cấu hình khi một hàng vi phạm và cung cấp metric để theo dõi số bản ghi đạt/trượt trong giao diện chất lượng dữ liệu hoặc event log. Nhờ vậy nhóm có thể quan sát chất lượng qua các lần cập nhật thay vì chỉ phát hiện lỗi thủ công sau khi người dùng báo cáo.\n\nExpectations có các hành vi khác nhau: mặc định giữ hàng nhưng ghi nhận metric; cấu hình DROP ROW sẽ bỏ hàng vi phạm khỏi dataset đích; FAIL UPDATE làm flow thất bại khi gặp hàng không đạt. Chúng không tự sửa dữ liệu sai và cũng không tự động lưu từng hàng lỗi vào quarantine trừ khi pipeline được thiết kế thêm nhánh cách ly.\n\n**Các phương án khác:**\n- **A:** Unity Catalog** quản trị quyền truy cập, ownership, khám phá và governance; nó không phải công cụ khai báo expectation cho từng dataset pipeline.\n- **B:** Data Explorer/Catalog Explorer** giúp duyệt và xem metadata đối tượng, không điều phối quy tắc chất lượng khi nạp.\n- **C:** Delta Lake** cung cấp transaction, schema enforcement và constraints ở cấp bảng; nhưng câu hỏi nhắm tới theo dõi chất lượng tự động trong pipeline, nơi expectations là tính năng trực tiếp.\n- **E:** Auto Loader** phát hiện/nạp file mới tăng dần từ cloud storage; nó hỗ trợ schema inference và rescued data nhưng không thay thế hệ thống expectation tổng quát.\n\nDo đó D là câu trả lời cụ thể nhất. Khi đọc tài liệu mới, hãy tìm “Lakeflow pipelines expectations”; tên DLT vẫn được giữ trong đề thi cũ.",
     "references": [
       {
-        "title": "Manage data quality with Delta Live Tables",
-        "url": "https://docs.databricks.com/delta-live-tables/expectations.html"
+        "title": "Databricks: Manage data quality with pipeline expectations",
+        "url": "https://docs.databricks.com/aws/en/ldp/expectations"
+      },
+      {
+        "title": "Databricks: Auto Loader overview",
+        "url": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader"
       }
     ],
     "question_vi": "Một kỹ sư dữ liệu đang bảo trì một đường ống dẫn dữ liệu. Khi nạp dữ liệu, kỹ sư nhận thấy dữ liệu nguồn bắt đầu có chất lượng kém đi. Kỹ sư muốn tự động hóa quy trình giám sát mức độ chất lượng dữ liệu này. Kỹ sư dữ liệu có thể sử dụng công cụ nào sau đây để giải quyết vấn đề trên?",
@@ -2829,11 +2845,11 @@
   {
     "id": 88,
     "topic": 1,
-    "question": "A dataset has been defined using Delta Live Tables and includes an expectations clause:CONSTRAINT valid_timestamp EXPECT (timestamp > '2020-01-01') ON VIOLATION DROP ROWWhat is the expected behavior when a batch of data containing data that violates these constraints is processed?",
+    "question": "A dataset is defined in a Delta Live Tables pipeline with this expectation: CONSTRAINT valid_timestamp EXPECT (timestamp > '2020-01-01') ON VIOLATION DROP ROW. What happens when a processed batch contains rows that violate the expectation?",
     "options": {
       "A": "Records that violate the expectation are dropped from the target dataset and loaded into a quarantine table.",
       "B": "Records that violate the expectation are added to the target dataset and flagged as invalid in a field added to the target dataset.",
-      "C": "Records that violate the expectation are dropped from the target dataset and recorded as invalid in the event log.",
+      "C": "Records that violate the expectation are dropped from the target dataset, and dropped-record metrics can be viewed in the pipeline UI or event log.",
       "D": "Records that violate the expectation are added to the target dataset and recorded as invalid in the event log.",
       "E": "Records that violate the expectation cause the job to fail."
     },
@@ -2841,18 +2857,18 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "### Giải thích chọn đáp án:\n\n*   **Đáp án đúng là C**: Mệnh đề `ON VIOLATION DROP ROW` chỉ định rằng tất cả các dòng dữ liệu không đạt điều kiện kiểm tra (`timestamp > '2020-01-01'`) sẽ bị loại bỏ (dropped) ngay lập tức khỏi bảng đích. Đồng thời, thông tin thống kê về các hàng bị drop này sẽ được lưu trữ tự động trong nhật ký sự kiện (**event log**) để người quản trị theo dõi.\n*   **Các lựa chọn khác không chính xác**:\n    *   **A**: Hệ thống không tự động cách ly vào bảng khác trừ khi ta tự cấu hình luồng xử lý tùy biến.\n    *   **B, D**: Các dòng bị vi phạm sẽ bị loại bỏ hoàn toàn, không được ghi vào đích.\n    *   **E**: Toàn bộ công việc chỉ thất bại nếu sử dụng hành vi `ON VIOLATION FAIL UPDATE`.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** `ON VIOLATION DROP ROW` yêu cầu pipeline loại khỏi dataset đích từng hàng mà điều kiện `timestamp > '2020-01-01'` không đánh giá là đúng. Các hàng hợp lệ vẫn tiếp tục được xử lý. Pipeline ghi metric về số hàng bị loại; có thể xem metric qua giao diện chất lượng pipeline hoặc truy vấn event log. Metric là số liệu theo dõi, không có nghĩa event log tự lưu nguyên từng bản ghi lỗi.\n\n**Đối chiếu từng lựa chọn:**\n- **A:** ** DROP ROW tự nó không tạo quarantine table. Muốn lưu lại hàng lỗi, cần bổ sung nhánh/logic riêng để ghi chúng sang bảng khác.\n- **B:** ** Sai vì hàng vi phạm không được ghi vào target kèm một cột cờ do expectation tự thêm.\n- **C:** ** Đúng: hàng lỗi bị loại khỏi target và metric số lượng bị drop có thể được theo dõi.\n- **D:** ** Đây gần với hành vi mặc định của expectation không chỉ định action: giữ hàng nhưng ghi metric; nó không áp dụng khi đã yêu cầu DROP ROW.\n- **E:** ** Lệnh này không làm toàn bộ job thất bại. Chỉ action FAIL UPDATE mới yêu cầu pipeline fail khi gặp hàng vi phạm.\n\nMột chi tiết quan trọng: tên syntax cũ là DLT, hiện được tài liệu Databricks gọi là Lakeflow pipelines. Cú pháp SQL và ba lựa chọn retain/drop/fail vẫn là cơ sở giải thích hành vi trong câu hỏi.",
     "references": [
       {
-        "title": "Manage data quality with Delta Live Tables",
-        "url": "https://docs.databricks.com/delta-live-tables/expectations.html"
+        "title": "Databricks: Manage data quality with pipeline expectations",
+        "url": "https://docs.databricks.com/aws/en/ldp/expectations"
       }
     ],
-    "question_vi": "Một tập dữ liệu đã được định nghĩa bằng Delta Live Tables và chứa mệnh đề ràng buộc chất lượng (expectation): `CONSTRAINT valid_timestamp EXPECT (timestamp > '2020-01-01') ON VIOLATION DROP ROW`. Hành vi nào sẽ xảy ra khi một lô dữ liệu chứa các bản ghi vi phạm ràng buộc này được xử lý?",
+    "question_vi": "Một dataset được định nghĩa trong pipeline Delta Live Tables với expectation sau: `CONSTRAINT valid_timestamp EXPECT (timestamp > '2020-01-01') ON VIOLATION DROP ROW`. Điều gì xảy ra khi lô dữ liệu được xử lý có các hàng vi phạm expectation?",
     "options_vi": {
       "A": "Các bản ghi vi phạm ràng buộc sẽ bị loại bỏ khỏi tập dữ liệu đích và được nạp vào một bảng cách ly (quarantine table).",
       "B": "Các bản ghi vi phạm ràng buộc vẫn được thêm vào tập dữ liệu đích và bị gắn cờ không hợp lệ trong một trường mới được thêm vào tập dữ liệu đích.",
-      "C": "Các bản ghi vi phạm ràng buộc sẽ bị loại bỏ khỏi tập dữ liệu đích và được ghi nhận là không hợp lệ trong nhật ký sự kiện (event log).",
+      "C": "Các bản ghi vi phạm expectation bị loại khỏi dataset đích; số lượng bản ghi bị loại được theo dõi bằng metric trong giao diện pipeline hoặc event log.",
       "D": "Các bản ghi vi phạm ràng buộc vẫn được thêm vào tập dữ liệu đích và được ghi nhận là không hợp lệ trong nhật ký sự kiện (event log).",
       "E": "Các bản ghi vi phạm ràng buộc sẽ khiến cho toàn bộ công việc (job) bị lỗi/thất bại."
     }
@@ -2860,11 +2876,11 @@
   {
     "id": 89,
     "topic": 1,
-    "question": "A data engineer has configured a Structured Streaming job to read from a table, manipulate the data, and then perform a streaming write into a new table.The cade block used by the data engineer is below:\nIf the data engineer only wants the query to execute a micro-batch to process data every 5 seconds, which of the following lines of code should the data engineer use to fill in the blank?",
+    "question": "A data engineer is using PySpark Structured Streaming to read a table, transform the data, and write a stream to a new table. The query code is shown below. Which trigger line should replace the blank so the query uses micro-batches on a 5-second processing-time interval?\n```python\nquery = (\n    transformed_df.writeStream\n        .format(\"delta\")\n        .outputMode(\"append\")\n        ______\n        .option(\"checkpointLocation\", \"/checkpoints/events\")\n        .toTable(\"analytics.events\")\n)\n```",
     "options": {
-      "A": "trigger(\"5 seconds\")",
+      "A": "trigger(interval=\"5 seconds\")",
       "B": "trigger()",
-      "C": "trigger(once=\"5 seconds\")",
+      "C": "trigger(once=True)",
       "D": "trigger(processingTime=\"5 seconds\")",
       "E": "trigger(continuous=\"5 seconds\")"
     },
@@ -2872,18 +2888,22 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "### Giải thích chọn đáp án:\n\n*   **Đáp án đúng là D (`trigger(processingTime=\"5 seconds\")`)**: Trong Structured Streaming, để yêu cầu Spark kích hoạt xử lý dữ liệu định kỳ mỗi 5 giây dưới dạng các micro-batch, cú pháp chính xác cần sử dụng là `.trigger(processingTime=\"5 seconds\")`.\n*   **Các lựa chọn khác không chính xác**:\n    *   **A, B**: Sai cú pháp định dạng thời gian kích hoạt.\n    *   **C**: Tham số `once` nhận giá trị boolean (ví dụ `once=True`), thực hiện xử lý 1 lần duy nhất rồi tắt, không dùng để lặp lại sau mỗi 5 giây.\n    *   **E**: Tham số `continuous` dùng cho chế độ Continuous Processing (xử lý liên tục luồng với độ trễ tính bằng mili giây), không phải chế độ micro-batch mặc định.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D — `.trigger(processingTime=\"5 seconds\")`.** Trong PySpark Structured Streaming, tham số `processingTime` thiết lập chu kỳ kích hoạt micro-batch. Spark kiểm tra và xử lý dữ liệu mới theo chu kỳ đó; cú pháp chỉ rõ cả tên tham số lẫn đơn vị thời gian giúp đoạn mã đọc được và tránh nhầm với các trigger khác. Checkpoint trong mã lưu tiến độ và trạng thái cần thiết để truy vấn có thể tiếp tục sau lần chạy trước.\n\n**Loại trừ các lựa chọn còn lại:**\n- **A:** `trigger(interval=\"5 seconds\")`:** API không có tham số tên `interval`, nên lời gọi không hợp lệ.\n- **B:** `trigger()`:** đây là lời gọi hợp lệ để dùng chế độ mặc định, nhưng không đặt chu kỳ 5 giây như đề yêu cầu.\n- **C:** `trigger(once=True)`:** xử lý dữ liệu có sẵn theo một lượt rồi dừng; đây không phải trigger lặp lại mỗi 5 giây. Với ứng dụng mới, AvailableNow thường phù hợp hơn cho xử lý backlog theo đợt, nhưng cũng không phải chu kỳ định kỳ.\n- **D:** `trigger(processingTime=\"5 seconds\")`:** đúng cú pháp và đúng loại trigger micro-batch được yêu cầu.\n- **E:** `trigger(continuous=\"5 seconds\")`:** chọn chế độ continuous processing, không phải micro-batch theo processing-time interval; hai chế độ có mô hình thực thi và hỗ trợ khác nhau.\n\nKhoảng 5 giây là lịch kích hoạt mục tiêu, không phải cam kết mỗi batch chắc chắn hoàn tất trong đúng 5 giây. Nếu xử lý lâu hơn chu kỳ, Spark không chạy chồng hai batch của cùng query; batch tiếp theo được bắt đầu khi có thể. Cũng vì vậy, chỉ thay trigger không đảm bảo end-to-end latency cố định.",
     "references": [
       {
-        "title": "Structured Streaming Triggers",
-        "url": "https://docs.databricks.com/structured-streaming/triggers.html"
+        "title": "Databricks: Configure Structured Streaming trigger intervals",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/triggers"
+      },
+      {
+        "title": "PySpark API: DataStreamWriter.trigger",
+        "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.ss/api/pyspark.sql.streaming.DataStreamWriter.trigger.html"
       }
     ],
-    "question_vi": "Một kỹ sư dữ liệu đã cấu hình một công việc Structured Streaming để đọc từ một bảng, biến đổi dữ liệu, và thực hiện ghi luồng (streaming write) vào một bảng mới. Khối mã của kỹ sư sử dụng ở dưới đây:\nNếu kỹ sư dữ liệu chỉ muốn truy vấn thực hiện một vi lô (micro-batch) để xử lý dữ liệu sau mỗi 5 giây, dòng mã nào sau đây nên được điền vào chỗ trống?",
+    "question_vi": "Một kỹ sư dữ liệu dùng PySpark Structured Streaming để đọc một bảng, biến đổi dữ liệu rồi ghi luồng sang bảng mới. Khối mã truy vấn ở dưới đây. Dòng trigger nào cần thay cho chỗ trống để truy vấn chạy các micro-batch theo chu kỳ processing time 5 giây?\n```python\nquery = (\n    transformed_df.writeStream\n        .format(\"delta\")\n        .outputMode(\"append\")\n        ______\n        .option(\"checkpointLocation\", \"/checkpoints/events\")\n        .toTable(\"analytics.events\")\n)\n```",
     "options_vi": {
-      "A": "trigger(\"5 seconds\")",
+      "A": "trigger(interval=\"5 seconds\")",
       "B": "trigger()",
-      "C": "trigger(once=\"5 seconds\")",
+      "C": "trigger(once=True)",
       "D": "trigger(processingTime=\"5 seconds\")",
       "E": "trigger(continuous=\"5 seconds\")"
     }
@@ -2891,7 +2911,7 @@
   {
     "id": 90,
     "topic": 1,
-    "question": "Which of the following describes when to use the CREATE STREAMING LIVE TABLE (formerly CREATE INCREMENTAL LIVE TABLE) syntax over the CREATE LIVE TABLE syntax when creating Delta Live Tables (DLT) tables using SQL?",
+    "question": "In the legacy Delta Live Tables SQL syntax, when should CREATE STREAMING LIVE TABLE be used instead of CREATE LIVE TABLE? (In current Lakeflow Declarative Pipelines SQL, the corresponding syntax is CREATE STREAMING TABLE.)",
     "options": {
       "A": "CREATE STREAMING LIVE TABLE should be used when the subsequent step in the DLT pipeline is static.",
       "B": "CREATE STREAMING LIVE TABLE should be used when data needs to be processed incrementally.",
@@ -2903,14 +2923,18 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "### Giải thích chọn đáp án:\n\n*   **Đáp án đúng là B**: Cú pháp `CREATE STREAMING LIVE TABLE` được sử dụng khi bạn muốn bảng DLT đọc dữ liệu đầu vào gia tăng (incrementally) bằng cách sử dụng nguồn dữ liệu streaming (với hàm `STREAM(...)`). Bảng sẽ chỉ xử lý phần dữ liệu mới xuất hiện kể từ đợt chạy trước đó thay vì tính toán lại toàn bộ dữ liệu từ đầu như bảng Live Table tĩnh thông thường (`CREATE LIVE TABLE`).\n*   **Các lựa chọn khác không chính xác**:\n    *   **A, E**: Việc lựa chọn streaming hay static phụ thuộc vào tính gia tăng của nguồn dữ liệu chứ không phụ thuộc vào trạng thái tĩnh của các bước tiếp theo hoặc trước đó.\n    *   **C**: Cú pháp này vô cùng quan trọng đối với các tác vụ xử lý streaming thời gian thực.\n    *   **D**: Đối với các phép tổng hợp phức tạp (chẳng hạn các phép toán không thể cộng gộp trực tiếp), ta thường buộc phải tính lại toàn bộ và dùng bảng Live Table tĩnh.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B — khi muốn xử lý dữ liệu gia tăng (incrementally).** Trong mô hình SQL cũ của DLT, `CREATE STREAMING LIVE TABLE` khai báo một streaming table, được pipeline cập nhật từ nguồn streaming và theo dõi tiến độ để tiếp nhận dữ liệu mới mà không phải dựng lại toàn bộ kết quả như một phép tính batch từ đầu. Trong cú pháp Lakeflow Declarative Pipelines hiện tại, tên được dùng là `CREATE STREAMING TABLE`; khái niệm cốt lõi vẫn là bảng có hỗ trợ xử lý streaming hoặc incremental.\n\n**Vì sao các lựa chọn còn lại sai?**\n- **A:** ** Việc bước tiếp theo là static không quyết định kiểu bảng ở bước hiện tại. Bước sau có thể đọc streaming table theo cách mà pipeline hỗ trợ, hoặc tạo kết quả khác tùy logic.\n- **B:** ** Đây là tiêu chí đúng: chọn streaming table khi dữ liệu nguồn cần được xử lý tăng dần/streaming.\n- **C:** ** Không dư thừa trong đề cũ: hai loại bảng có semantics khác nhau. Tuy nhiên tên cú pháp đã thay đổi trong giao diện SQL hiện hành, nên cần đọc theo thời điểm của câu hỏi.\n- **D:** ** “Tổng hợp phức tạp” không phải tiêu chí tự động để chọn streaming table. Điều quyết định là nguồn, semantics cập nhật, trạng thái cần giữ và liệu phép biến đổi có hỗ trợ incrementally hay không; độ phức tạp đơn thuần không trả lời được điều đó.\n- **E:** ** Việc bước trước là static cũng không buộc bước hiện tại phải streaming; streaming table có thể đọc từ các nguồn hỗ trợ luồng và pipeline xác định cách refresh.\n\nCụm `LIVE` thuộc publishing mode legacy. Databricks khuyến nghị chuyển pipeline cũ sang publishing mode mặc định và cú pháp mới; không nên sao chép nguyên dạng `CREATE STREAMING LIVE TABLE` khi bắt đầu pipeline hiện tại nếu tài liệu phiên bản đang dùng yêu cầu `CREATE STREAMING TABLE`.",
     "references": [
       {
-        "title": "Delta Live Tables SQL language reference",
-        "url": "https://docs.databricks.com/delta-live-tables/sql-ref.html"
+        "title": "Databricks SQL: CREATE STREAMING TABLE (pipelines)",
+        "url": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-streaming-table"
+      },
+      {
+        "title": "Databricks: LIVE schema (legacy)",
+        "url": "https://docs.databricks.com/aws/en/ldp/live-schema"
       }
     ],
-    "question_vi": "Phát biểu nào sau đây mô tả đúng thời điểm nên sử dụng cú pháp CREATE STREAMING LIVE TABLE thay vì CREATE LIVE TABLE khi tạo các bảng Delta Live Tables (DLT) bằng SQL?",
+    "question_vi": "Trong cú pháp SQL cũ của Delta Live Tables, khi nào nên dùng `CREATE STREAMING LIVE TABLE` thay cho `CREATE LIVE TABLE`? (Trong Lakeflow Declarative Pipelines hiện nay, cú pháp tương ứng là `CREATE STREAMING TABLE`.)",
     "options_vi": {
       "A": "CREATE STREAMING LIVE TABLE nên được sử dụng khi bước tiếp theo trong đường ống DLT là tĩnh (static).",
       "B": "CREATE STREAMING LIVE TABLE nên được sử dụng khi dữ liệu cần được xử lý một cách tăng dần (incrementally).",
