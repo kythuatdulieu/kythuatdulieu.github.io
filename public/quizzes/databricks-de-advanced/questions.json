@@ -2007,154 +2007,173 @@
   {
     "id": 63,
     "topic": 1,
-    "question": "A **Databricks SQL** dashboard has been configured to monitor the total number of records present in a collection of **Delta Lake** tables using the following query pattern:\n`SELECT COUNT(*) FROM table`\nWhich of the following describes how results are generated each time the dashboard is updated?",
+    "question": "A **Databricks SQL** dashboard runs `SELECT COUNT(*) FROM table` against a **Delta Lake** table. Assume the query is not served from a reusable result cache and the current Delta snapshot has valid per-file row-count statistics, so the engine can apply its metadata-only aggregation optimization. Where does the row count come from?",
     "options": {
-      "A": "The total count of rows is calculated by scanning all data files.",
-      "B": "The total count of rows will be returned from cached results unless `REFRESH` is run.",
-      "C": "The total count of records is calculated from the Delta transaction logs.",
-      "D": "The total count of records is calculated from the Parquet file metadata.",
-      "E": "The total count of records is calculated from the **Hive Metastore**."
+      "A": "The engine must scan every active Parquet data file and count its rows.",
+      "B": "The dashboard returns a saved result until an administrator runs `REFRESH`.",
+      "C": "The engine sums the active files’ row-count statistics recorded in the Delta transaction log.",
+      "D": "The engine reads the Hive Metastore, which stores the table’s current exact row count.",
+      "E": "The SQL warehouse creates a new count snapshot each time the dashboard is opened."
     },
     "answer": "C",
-    "question_vi": "Dashboard **Databricks SQL** đếm số bản ghi bằng mẫu `SELECT COUNT(*) FROM table`. Mỗi lần cập nhật, kết quả được tạo như thế nào?",
+    "question_vi": "Dashboard **Databricks SQL** chạy `SELECT COUNT(*) FROM table` trên bảng **Delta Lake**. Giả sử truy vấn không lấy kết quả từ cache và snapshot Delta hiện tại có thống kê số dòng hợp lệ cho từng file, cho phép engine tối ưu phép đếm bằng metadata. Số dòng được lấy từ đâu?",
     "options_vi": {
-      "A": "Đếm bằng cách quét toàn bộ file dữ liệu.",
-      "B": "Trả về số đếm từ kết quả cache trừ khi chạy `REFRESH`.",
-      "C": "Đếm từ Delta transaction log.",
-      "D": "Đếm từ metadata của file Parquet.",
-      "E": "Đếm từ **Hive Metastore**."
+      "A": "Engine bắt buộc quét từng file Parquet đang hoạt động rồi đếm số dòng.",
+      "B": "Dashboard luôn trả kết quả đã lưu cho tới khi admin chạy `REFRESH`.",
+      "C": "Engine cộng thống kê số dòng của các file đang hoạt động được ghi trong Delta transaction log.",
+      "D": "Engine đọc Hive Metastore, nơi lưu chính xác số dòng hiện tại của bảng.",
+      "E": "SQL warehouse tạo một snapshot số dòng mới mỗi lần mở dashboard."
     },
-    "explanation_vi": "Đáp án đúng: C. Trong **Delta Lake**, truy vấn `SELECT COUNT(*)` mà không có điều kiện lọc được tối ưu hóa cực kỳ mạnh mẽ. Thay vì phải quét toàn bộ các tệp dữ liệu Parquet thực tế (điều này rất chậm và tốn kém), công cụ truy vấn của **Databricks** sẽ đọc trực tiếp từ transaction log của Delta. Nhật ký giao dịch này đã lưu trữ sẵn các số liệu thống kê mức tệp (bao gồm số lượng bản ghi trong mỗi tệp Parquet hoạt động) và chỉ cần tính tổng các số liệu này để trả về kết quả ngay lập tức.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** Với điều kiện đề bài đã nêu, engine có thể tính `COUNT(*)` bằng metadata thay vì mở và đọc nội dung từng file Parquet. Mỗi `add` action trong Delta transaction log có thể chứa thống kê file, trong đó `numRecords` là số dòng của file. Engine dựng snapshot hiện hành của bảng, chỉ lấy các file còn thuộc snapshot đó, rồi cộng số dòng tương ứng. Vì vậy, số đếm vẫn phản ánh phiên bản bảng hiện tại sau các thao tác ghi/xóa; đây không phải một con số lịch sử được giữ cố định trong catalog.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **A**: Quét file là cách tính có thể cần dùng nếu thiếu thống kê hoặc phép tối ưu không áp dụng, nhưng không phải cách trong điều kiện của câu hỏi.\n- **B**: Cache có thể giúp một số lần chạy, nhưng đề đã loại trừ cache. `REFRESH` cũng không phải cơ chế bắt buộc để mỗi lần đếm phản ánh dữ liệu mới; truy vấn chạy trên snapshot Delta hiện hành.\n- **D**: Metastore quản lý thông tin định danh và metadata của bảng; ở đây số dòng lấy từ thống kê file trong transaction log, không phải một tổng số chính xác do Hive Metastore duy trì.\n- **E**: Dashboard/warehouse không tự tạo snapshot dữ liệu mới theo cách mô tả. Snapshot và danh sách file hợp lệ do Delta xác định khi thực thi truy vấn.\n\n**Lưu ý thực tế:** Không nên suy ra rằng mọi `COUNT(*)` trên mọi bảng Delta luôn miễn phí hoặc luôn chỉ đọc log. Nếu thống kê không có/không dùng được, bảng có cấu hình hay nguồn đọc khác, hoặc query có điều kiện, engine có thể phải đọc một phần hay toàn bộ dữ liệu.",
     "page": null,
-    "image": "img/q_63.jpg",
     "references": [
       {
-        "title": "What is Delta Lake? - Databricks",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "Data skipping - Databricks",
+        "url": "https://docs.databricks.com/aws/en/tables/data-skipping"
+      },
+      {
+        "title": "How Delta Lake uses metadata to make certain aggregations much faster - Delta Lake",
+        "url": "https://delta.io/blog/2023-04-19-faster-aggregations-metadata/"
       }
     ]
   },
   {
     "id": 64,
     "topic": 1,
-    "question": "A **Delta Lake** table was created with the below query:\nConsider the following query:\n`DROP TABLE prod.sales_by_store`\nIf this statement is executed by a workspace admin, which result will occur?",
+    "question": "A Unity Catalog **managed Delta table** is created with CTAS, without a `LOCATION` clause:\n```sql\nCREATE TABLE prod.sales_by_store AS\nSELECT *\nFROM prod.sales AS a\nJOIN prod.store AS b\n  ON a.store_id = b.store_id;\n```\nA workspace administrator then runs `DROP TABLE prod.sales_by_store`. What happens?",
     "options": {
-      "A": "Nothing will occur until a `COMMIT` command is executed.",
-      "B": "The table will be removed from the catalog but the data will remain in storage.",
-      "C": "The table will be removed from the catalog and the data will be deleted.",
-      "D": "An error will occur because **Delta Lake** prevents the deletion of production data.",
-      "E": "Data will be marked as deleted but still recoverable with Time Travel."
+      "A": "Nothing happens until the administrator runs `COMMIT`.",
+      "B": "Only the catalog entry is removed; the managed table’s data is retained indefinitely.",
+      "C": "The table is dropped and its managed data is marked for deletion; the table can be recovered with `UNDROP TABLE` during the recovery window.",
+      "D": "The command fails because Databricks blocks administrators from dropping production tables.",
+      "E": "The table is dropped, but its old version can always be queried with Delta Time Travel."
     },
     "answer": "C",
-    "question_vi": "Với bảng **Delta Lake**, nếu admin chạy `DROP TABLE prod.sales_by_store`, điều gì xảy ra?",
+    "question_vi": "Một bảng **Delta managed bởi Unity Catalog** được tạo bằng CTAS, không khai báo `LOCATION`:\n```sql\nCREATE TABLE prod.sales_by_store AS\nSELECT *\nFROM prod.sales AS a\nJOIN prod.store AS b\n  ON a.store_id = b.store_id;\n```\nSau đó workspace admin chạy `DROP TABLE prod.sales_by_store`. Điều gì xảy ra?",
     "options_vi": {
-      "A": "Không làm gì cho tới khi `COMMIT`.",
-      "B": "Bảng bị xoá khỏi catalog nhưng dữ liệu vẫn còn trên storage.",
-      "C": "Bảng bị xoá khỏi catalog và dữ liệu bị xoá.",
-      "D": "Lỗi vì **Delta Lake** ngăn xoá dữ liệu production.",
-      "E": "Dữ liệu được đánh dấu xoá nhưng có thể khôi phục bằng Time Travel."
+      "A": "Không có gì xảy ra cho đến khi admin chạy `COMMIT`.",
+      "B": "Chỉ mục trong catalog bị xóa; dữ liệu của bảng managed được giữ vô thời hạn.",
+      "C": "Bảng bị drop và dữ liệu managed được đánh dấu để xóa; có thể khôi phục bảng bằng `UNDROP TABLE` trong thời hạn khôi phục.",
+      "D": "Lệnh lỗi vì Databricks chặn admin xóa bảng production.",
+      "E": "Bảng bị drop nhưng luôn có thể truy vấn phiên bản cũ bằng Delta Time Travel."
     },
-    "explanation_vi": "Đáp án đúng: C. Trong **Databricks**, khi một bảng là Managed Table (bảng được quản lý, được tạo mà không chỉ định vị trí `LOCATION` bên ngoài), việc thực hiện lệnh `DROP TABLE` bởi quản trị viên workspace sẽ loại bỏ hoàn toàn cả siêu dữ liệu (metadata) của bảng trong catalog lẫn tất cả các tệp dữ liệu vật lý được lưu trữ trong thư mục tương ứng của bảng trên hệ thống lưu trữ đám mây.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** Vì câu hỏi xác định đây là bảng **Unity Catalog managed** và không chỉ định `LOCATION`, Unity Catalog chịu trách nhiệm quản lý cả metadata lẫn vị trí dữ liệu. `DROP TABLE` loại bảng khỏi catalog; dữ liệu managed được đánh dấu để dọn sau thời hạn khôi phục mặc định (7 ngày). Trong thời hạn này có thể dùng `UNDROP TABLE` để phục hồi bảng nếu tên chưa bị một bảng khác chiếm.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **A**: `DROP TABLE` là câu lệnh DDL; không cần một lệnh `COMMIT` thủ công như transaction nhiều bước.\n- **B**: Đây gần với hành vi của **external table**: drop metadata nhưng giữ file do người dùng quản lý. Với managed table, Databricks có thể xóa dữ liệu sau thời hạn khôi phục.\n- **D**: Quyền cho phép thực thi lệnh không biến `DROP TABLE` thành thao tác bị chặn tự động chỉ vì tên bảng gợi ý đây là dữ liệu production. Quy trình triển khai thực tế cần kiểm soát quyền và backup riêng.\n- **E**: **Time Travel** cần cả lịch sử Delta và các file dữ liệu cũ còn tồn tại. Sau khi drop, cách khôi phục được hỗ trợ trong thời hạn là `UNDROP TABLE`; không nên hiểu rằng có thể truy vấn vô hạn một phiên bản của bảng đã drop.\n\n**Phân biệt quan trọng:** Nếu là external table, `DROP TABLE` thường chỉ xóa metadata khỏi catalog, còn dữ liệu ở external location vẫn do chủ sở hữu storage quản lý. Hành vi trong câu hỏi đúng vì đề nói rõ Unity Catalog managed table.",
     "page": null,
-    "image": "img/q_64.jpg",
     "references": [
       {
         "title": "DROP TABLE - Databricks SQL Language Manual",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-drop-table"
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-table"
+      },
+      {
+        "title": "UNDROP TABLE - Databricks SQL Language Manual",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-undrop-table"
       }
     ]
   },
   {
     "id": 65,
     "topic": 1,
-    "question": "Two of the most common data locations on **Databricks** are the **DBFS** root storage and external object storage mounted with `dbutils.fs.mount()`. Which of the following statements is correct?",
+    "question": "**DBFS root** and paths created with the legacy `dbutils.fs.mount()` mechanism are both older ways to access files in Databricks. Which statement describes DBFS most accurately?",
     "options": {
-      "A": "**DBFS** is a file system protocol that allows users to interact with files stored in object storage using syntax and guarantees similar to Unix file systems.",
-      "B": "By default, both the **DBFS** root and mounted data sources are only accessible to workspace administrators.",
-      "C": "The **DBFS** root is the most secure location to store data, because mounted storage volumes must have full public read and write permissions.",
-      "D": "Neither the **DBFS** root nor mounted storage can be accessed when using `%sh` in a **Databricks** notebook.",
-      "E": "The **DBFS** root stores files in ephemeral block volumes attached to the driver, while mounted directories will always persist saved data to external storage between sessions."
+      "A": "DBFS exposes file-style paths and filesystem utilities over workspace-backed or cloud object storage; this does not make the underlying storage a POSIX disk.",
+      "B": "By default, DBFS root and every mount are accessible only to workspace administrators.",
+      "C": "DBFS root is inherently the most secure place for production data, while mounted storage must be public.",
+      "D": "Neither DBFS root nor mounted storage can ever be accessed from a notebook `%sh` command.",
+      "E": "DBFS root is ephemeral block storage attached to the driver, while every mount is guaranteed to persist indefinitely."
     },
     "answer": "A",
-    "question_vi": "So sánh **DBFS** root và storage gắn mount bằng `dbutils.fs.mount()`. Phát biểu nào đúng?",
+    "question_vi": "**DBFS root** và các đường dẫn tạo bằng cơ chế cũ `dbutils.fs.mount()` đều là cách truy cập file đời cũ trên Databricks. Phát biểu nào mô tả DBFS chính xác nhất?",
     "options_vi": {
-      "A": "**DBFS** là giao thức cho phép truy cập object storage với cú pháp giống Unix.",
-      "B": "Mặc định cả **DBFS** root và mount chỉ admin mới truy cập được.",
-      "C": "**DBFS** root an toàn nhất vì mount phải cho phép read/write công khai.",
-      "D": "Không thể truy cập **DBFS** root hay mount khi dùng `%sh`.",
-      "E": "**DBFS** root lưu trên đĩa tạm của driver, còn mount luôn ghi ra object storage và tồn tại giữa các phiên."
+      "A": "DBFS cung cấp đường dẫn kiểu file và tiện ích hệ thống tệp trên storage của workspace hoặc object storage; điều đó không biến backend thành ổ đĩa POSIX.",
+      "B": "Mặc định chỉ workspace admin mới truy cập được DBFS root và mọi mount.",
+      "C": "DBFS root mặc nhiên là nơi an toàn nhất cho dữ liệu production, còn storage mount phải được công khai.",
+      "D": "Notebook không bao giờ truy cập được DBFS root hay storage mount bằng lệnh `%sh`.",
+      "E": "DBFS root là ổ đĩa tạm gắn với driver, còn mọi mount chắc chắn tồn tại vĩnh viễn."
     },
-    "explanation_vi": "Đáp án đúng: A. **DBFS** (**Databricks File System**) là một giao thức hệ thống tệp tin được ánh xạ trên các dịch vụ lưu trữ đối tượng đám mây (như AWS S3, Azure Blob). Nó cho phép người dùng tương tác với dữ liệu lưu trữ đối tượng bằng cách sử dụng các cú pháp đường dẫn thư mục chuẩn và đảm bảo các cơ chế hoạt động giống như một hệ thống tệp tin Unix thông thường, giúp đơn giản hóa việc đọc/ghi tệp tin trên cụm tính toán.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** DBFS tạo một giao diện quen thuộc để Spark, `dbutils.fs` và một số công cụ thao tác với dữ liệu bằng đường dẫn dạng file. Nhưng DBFS root/mount được ánh xạ tới storage phía sau, thường là object storage; giao diện giống thư mục không đồng nghĩa backend có đầy đủ bảo đảm của filesystem POSIX cục bộ như khóa file, độ trễ hay ngữ nghĩa thao tác nguyên tử.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **B**: Quyền truy cập phụ thuộc cấu hình và cơ chế quản trị workspace/storage, không có quy tắc phổ quát rằng chỉ admin được truy cập tất cả DBFS/mount.\n- **C**: DBFS root không mặc nhiên là nơi an toàn nhất cho production; mount cũng không bắt buộc public. Cần cấu hình quyền và credential đúng. Databricks hiện đánh dấu DBFS root và mounts là cách cũ, đồng thời khuyến nghị dùng Unity Catalog volumes hoặc external locations cho truy cập có quản trị.\n- **D**: `%sh` chạy trên driver. Việc truy cập đường dẫn phụ thuộc runtime, FUSE và loại compute; vì vậy phát biểu “không bao giờ” là quá tuyệt đối.\n- **E**: DBFS root không phải ổ đĩa ephemeral của driver. Ngược lại, dữ liệu phía sau mount thường nằm trên external storage bền vững, nhưng thời hạn tồn tại còn do chủ storage/quy trình quản trị quyết định chứ không được bảo đảm vô hạn bởi mount.\n\n**Ghi nhớ khi thiết kế hệ thống mới:** Đừng chọn DBFS root hay mount làm mặc định cho dữ liệu production mới. Hãy ưu tiên Unity Catalog volumes/external locations để quản lý quyền và định danh storage tập trung.",
     "page": null,
-    "image": "img/q_65.jpg",
     "references": [
       {
-        "title": "What is the Databricks File System (DBFS)? - Databricks",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "DBFS root locations - Databricks",
+        "url": "https://docs.databricks.com/aws/en/dbfs/root-locations"
+      },
+      {
+        "title": "Work with files on Databricks",
+        "url": "https://docs.databricks.com/aws/en/files/"
+      },
+      {
+        "title": "Databricks Utilities reference",
+        "url": "https://docs.databricks.com/aws/en/dev-tools/databricks-utils"
       }
     ]
   },
   {
     "id": 66,
     "topic": 1,
-    "question": "The following code has been migrated to a **Databricks** notebook from a legacy workload:\nThe code executes successfully and provides the logically correct results, however, it takes over 20 minutes to extract and load around 1 GB of data. Which statement is a possible explanation for this behavior?",
+    "question": "A legacy ETL job was copied into a **Databricks** notebook. The script uses ordinary local Python/file I/O and does not create or use a Spark DataFrame:\n```sh\n%sh\ngit clone https://github.com/foo/data_loader\npython ./data_loader/run.py\nmv ./output /dbfs/mnt/new_data\n```\nIt produces logically correct results, but processing about 1 GB takes more than 20 minutes. Which is a plausible explanation?",
     "options": {
-      "A": "`%sh` triggers a cluster restart to collect and install Git. Most of the latency is related to cluster startup time.",
-      "B": "Instead of cloning, the code should use `%sh pip install` so that the Python code can get executed in parallel across all nodes in a cluster.",
-      "C": "`%sh` does not distribute file moving operations; the final line of code should be updated to use `%fs` instead.",
-      "D": "Python will always execute slower than **Scala** on **Databricks**. The `run.py` script should be refactored to **Scala**.",
-      "E": "`%sh` executes shell code on the driver node. The code does not take advantage of the worker nodes or **Databricks** optimized **Spark**."
+      "A": "`%sh` restarts the cluster to install Git, so almost all the time is cluster startup.",
+      "B": "Using `%sh pip install` would automatically distribute this Python script across all cluster nodes.",
+      "C": "The `mv` operation is not distributed, so replacing it with `%fs` would distribute the ETL computation.",
+      "D": "Python is always slower than Scala on Databricks, so the script must be rewritten in Scala.",
+      "E": "`%sh` runs on the driver; ordinary local Python work in this script is not automatically distributed to Spark workers."
     },
     "answer": "E",
-    "question_vi": "Một notebook di chuyển từ workload cũ, dùng `%sh` để clone repo và chạy script; chạy đúng nhưng 1 GB dữ liệu mất >20 phút. Giải thích khả dĩ?",
+    "question_vi": "Một ETL cũ được chép vào notebook **Databricks**. Script dùng Python/file I/O thông thường trên máy cục bộ, không tạo hay dùng Spark DataFrame:\n```sh\n%sh\ngit clone https://github.com/foo/data_loader\npython ./data_loader/run.py\nmv ./output /dbfs/mnt/new_data\n```\nKết quả đúng về logic nhưng xử lý khoảng 1 GB mất hơn 20 phút. Nguyên nhân nào có thể giải thích?",
     "options_vi": {
-      "A": "`%sh` kích hoạt khởi động lại cluster để cài Git, gây trễ lớn.",
-      "B": "Nên dùng `%sh pip install` để Python chạy song song trên mọi node.",
-      "C": "`%sh` không phân tán thao tác di chuyển file; dòng cuối nên đổi sang `%fs`.",
-      "D": "Python luôn chậm hơn **Scala** trên **Databricks**; nên viết lại `run.py` bằng **Scala**.",
-      "E": "`%sh` chạy trên driver nên không tận dụng worker hay **Spark** tối ưu của **Databricks**."
+      "A": "`%sh` khởi động lại cluster để cài Git, nên gần như toàn bộ thời gian là chờ cluster khởi động.",
+      "B": "Dùng `%sh pip install` sẽ tự động phân tán script Python này trên mọi node của cluster.",
+      "C": "Lệnh `mv` không được phân tán, nên đổi sang `%fs` sẽ phân tán cả phép ETL.",
+      "D": "Python luôn chậm hơn Scala trên Databricks, vì vậy bắt buộc phải viết lại script bằng Scala.",
+      "E": "`%sh` chạy trên driver; Python cục bộ thông thường trong script không tự động được phân tán sang các Spark worker."
     },
-    "explanation_vi": "Đáp án đúng: E. Lệnh magic `%sh` thực thi mã shell (chẳng hạn như `git clone`, sao chép tệp tin bằng lệnh `cp` hay chạy script Python cục bộ) trực tiếp trên Driver node của cụm tính toán (cluster). Vì lệnh shell này chỉ chạy trên Driver và không thể phân tán công việc xuống các Worker nodes, hệ thống hoàn toàn không tận dụng được kiến trúc tính toán phân tán của **Spark**, dẫn đến việc xử lý 1 GB dữ liệu diễn ra đơn luồng trên Driver và mất tới hơn 20 phút để hoàn thành.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án E.** `%sh` chạy shell trên **driver node**, không tự chia lệnh thành các tác vụ Spark gửi tới worker. Với điều kiện đề bài nêu rõ script chỉ dùng Python/file I/O cục bộ, phần ETL chạy như một tiến trình cục bộ trên driver. Vì vậy, việc cluster có nhiều worker không làm phần xử lý đó tự nhanh lên; I/O qua mạng tới storage còn có thể trở thành nút thắt. Để phân tán xử lý, cần diễn đạt phép biến đổi bằng Spark (ví dụ đọc dữ liệu thành DataFrame, biến đổi và ghi bằng Spark) hoặc dùng một cách xử lý song song phù hợp.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **A**: `%sh` chạy lệnh shell trên driver; nó không tự khởi động lại cluster chỉ để chạy `git clone`. Clone có thể tốn thời gian mạng, nhưng đó không phải cơ chế bắt buộc gây restart.\n- **B**: Cài package không làm chương trình tự phân tán. Phân tán là đặc tính của cách viết/chạy workload, không phải hệ quả của `%sh pip install`.\n- **C**: `mv` là thao tác file; `%fs` là cú pháp tiện ích file-system, không tự biến phép ETL trong `run.py` thành các tác vụ song song. Nếu script xử lý dữ liệu cục bộ, thay lệnh di chuyển file không giải quyết nút thắt tính toán.\n- **D**: Không có quy tắc rằng Python luôn chậm hơn Scala trong mọi workload. Viết lại ngôn ngữ mà vẫn chạy trên một driver không tự tạo ra phân tán.\n\n**Giới hạn của kết luận:** `%sh` tự nó không chứng minh toàn bộ script chạy đơn luồng—script Python vẫn có thể gọi Spark hoặc thư viện đa luồng. Câu hỏi đã loại trừ trường hợp đó để chỉ ra nguyên nhân khả dĩ: công việc cục bộ trên driver không sử dụng Spark workers.",
     "page": null,
-    "image": "img/q_66.jpg",
     "references": [
       {
-        "title": "Develop code in Databricks notebooks - Databricks",
-        "url": "https://docs.databricks.com/en/notebooks/notebooks-code"
+        "title": "Develop code in Databricks notebooks",
+        "url": "https://docs.databricks.com/aws/en/notebooks/notebooks-code"
+      },
+      {
+        "title": "Work with files on Databricks",
+        "url": "https://docs.databricks.com/aws/en/files/"
       }
     ]
   },
   {
     "id": 67,
     "topic": 1,
-    "question": "The data science team has requested assistance in accelerating queries on free form text from user reviews. The data is currently stored in `Parquet` with the below schema:\n`item_id INT, user_id INT, review_id INT, rating FLOAT, review STRING`\nThe `review` column contains the full text of the review left by the user. Specifically, the data science team is looking to identify if any of 30 key words exist in this field.\nA junior data engineer suggests converting this data to **Delta Lake** will improve query performance.\nWhich response to the junior data engineer's suggestion is correct?",
+    "question": "A team stores user reviews in Parquet with schema `item_id INT, user_id INT, review_id INT, rating FLOAT, review STRING`. Queries need to find rows where `review` contains any of 30 keywords (for example, substring matches such as `review LIKE '%delivery%'`). A junior engineer proposes converting the files to **Delta Lake** as the only change. Which response is most accurate?",
     "options": {
-      "A": "**Delta Lake** statistics are not optimized for free text fields with high cardinality.",
-      "B": "Text data cannot be stored with **Delta Lake**.",
-      "C": "`ZORDER ON review` will need to be run to see performance gains.",
-      "D": "The **Delta** transaction log creates a term matrix for free text fields to support selective filtering.",
-      "E": "**Delta Lake** statistics are only collected on the first 4 columns in a table."
+      "A": "Converting to Delta adds ordinary file-level statistics, not a full-text index; by itself it does not guarantee faster substring searches inside review text.",
+      "B": "Delta Lake cannot store `STRING` columns.",
+      "C": "Running `ZORDER BY (review)` automatically creates an inverted index for every keyword.",
+      "D": "The Delta transaction log automatically builds a term-frequency matrix for every text column.",
+      "E": "Delta Lake collects statistics only for the first four columns, so the `review` column can never have statistics."
     },
     "answer": "A",
-    "question_vi": "Team data science muốn tăng tốc truy vấn văn bản tự do (cột `review`). Một kỹ sư đề xuất chuyển sang **Delta Lake**. Đáp án nào đúng?",
+    "question_vi": "Một nhóm lưu review người dùng trong Parquet với schema `item_id INT, user_id INT, review_id INT, rating FLOAT, review STRING`. Truy vấn cần tìm các dòng mà `review` chứa một trong 30 từ khóa (ví dụ tìm chuỗi con như `review LIKE '%delivery%'`). Một kỹ sư đề xuất chỉ chuyển file sang **Delta Lake**. Nhận xét nào chính xác nhất?",
     "options_vi": {
-      "A": "Thống kê **Delta Lake** không tối ưu cho trường văn bản có độ phân tán cao.",
-      "B": "**Delta Lake** không lưu được dữ liệu văn bản.",
-      "C": "Cần chạy `ZORDER ON review` mới có cải thiện.",
-      "D": "**Delta** transaction log tạo ma trận thuật ngữ cho free text để lọc chọn lọc.",
-      "E": "Thống kê **Delta Lake** chỉ thu thập trên 4 cột đầu của bảng."
+      "A": "Chuyển sang Delta bổ sung thống kê ở cấp file, không phải full-text index; chỉ chuyển đổi không bảo đảm tìm chuỗi con trong review sẽ nhanh hơn.",
+      "B": "Delta Lake không lưu được cột kiểu `STRING`.",
+      "C": "Chạy `ZORDER BY (review)` sẽ tự tạo inverted index cho mọi từ khóa.",
+      "D": "Delta transaction log tự tạo ma trận tần suất từ cho mọi cột văn bản.",
+      "E": "Delta Lake chỉ thu thập thống kê cho bốn cột đầu, nên cột `review` không thể có thống kê."
     },
-    "explanation_vi": "Thống kê lưu trữ của **Delta Lake** (như `min`/`max`) được thu thập tự động để hỗ trợ cơ chế **data skipping** (nhảy dữ liệu). Cơ chế này hoạt động rất hiệu quả đối với các trường có độ phân tán thấp (**low cardinality**). Tuy nhiên, đối với các trường văn bản tự do (**free-form text**) có độ phân tán cao (**high cardinality**) như nhận xét của người dùng (`user reviews`), thống kê `min`/`max` không giúp ích được gì cho việc tìm kiếm từ khóa chọn lọc. Do đó, việc chuyển đổi định dạng từ `Parquet` sang **Delta Lake** đơn thuần sẽ không mang lại hiệu năng cải thiện đáng kể cho các truy vấn dạng này.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** Chuyển Parquet thành Delta có thể bổ sung thống kê theo file như min/max, số giá trị null và số dòng. Optimizer dùng các thống kê đó để bỏ qua những file chắc chắn không khớp một bộ lọc mà min/max có thể chứng minh. Nhưng biểu thức tìm chuỗi con như `LIKE '%delivery%'` không phải điều kiện khoảng đơn giản để min/max của cả câu review loại được file một cách hữu ích. Delta log cũng không tự phân tích từng review thành inverted index chỉ vì đổi định dạng, nên chỉ chuyển đổi không hứa hẹn cải thiện đáng kể cho workload này.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **B**: Delta hỗ trợ cột `STRING`; vấn đề là tăng tốc tìm toàn văn, không phải khả năng lưu text.\n- **C**: `ZORDER` sắp xếp/đặt dữ liệu gần nhau để data skipping có thể hiệu quả hơn với một số predicate. Nó không tạo inverted index và không biến arbitrary substring lookup thành full-text search. Với bảng mới, Databricks hiện khuyến nghị xem xét liquid clustering thay cho Z-order khi phù hợp.\n- **D**: Transaction log lưu trạng thái bảng và metadata/statistics; nó không tự sinh term-frequency matrix cho mọi cột.\n- **E**: Con số “4 cột” là sai. UC external tables mặc định có thống kê cho 32 cột đầu; UC managed tables có thể dùng predictive optimization để chọn cột theo workload. Quy tắc thống kê cụ thể tùy loại bảng/cấu hình, nhưng không tạo full-text index.\n\n**Cách làm nếu tìm kiếm review là workload quan trọng:** Trên Databricks Runtime 18.2+ với Unity Catalog managed table và workspace bật tính năng Beta, có thể tạo full-text search index riêng rồi dùng `search`/`isearch`. Index này hỗ trợ substring/word matching và giúp bỏ qua file không có kết quả; nó phải được tạo và duy trì riêng, không xuất hiện chỉ nhờ `CONVERT TO DELTA`. Hãy xác nhận runtime, loại bảng, giới hạn tính năng và chi phí trước khi chọn.",
     "page": null,
-    "image": "img/q_67.jpg",
     "references": [
       {
-        "title": "Delta Lake Data Skipping",
-        "url": "https://docs.databricks.com/en/tables/data-skipping"
+        "title": "Data skipping - Databricks",
+        "url": "https://docs.databricks.com/aws/en/tables/data-skipping"
       },
       {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q67",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82436-question-67-topic-1/"
+        "title": "Full-text search indexes on Unity Catalog managed tables - Databricks",
+        "url": "https://docs.databricks.com/aws/en/optimizations/full-text-search-indexes"
+      },
+      {
+        "title": "search function - Databricks SQL Language Manual",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/functions/search"
       }
     ]
   },
