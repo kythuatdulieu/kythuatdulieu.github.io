@@ -3224,30 +3224,37 @@
   {
     "id": 99,
     "topic": 1,
-    "question": "The data governance team is reviewing code used for deleting records for compliance with GDPR. The following logic has been implemented to propagate delete requests from the `user_lookup` table to the `user_aggregates` table.\nAssuming that `user_id` is a unique identifying key and that all users that have requested deletion have been removed from the `user_lookup` table,\nwhich statement describes whether successfully executing the above logic guarantees that the records to be deleted from the `user_aggregates`\ntable are no longer accessible and why?",
+    "question": "The data governance team is reviewing code used for deleting records for GDPR compliance. It reads the change data feed from `user_lookup` for a time range, then deletes matching keys from `user_aggregates`:\n```python\n(spark.read\n  .format(\"delta\")\n  .option(\"readChangeData\", True)\n  .option(\"startingTimestamp\", \"2021-08-22 00:00:00\")\n  .option(\"endingTimestamp\", \"2021-08-29 00:00:00\")\n  .table(\"user_lookup\")\n  .createOrReplaceTempView(\"changes\")\n)\n\nspark.sql(\"\"\"\n  DELETE FROM user_aggregates\n  WHERE user_id IN (\n    SELECT user_id\n    FROM changes\n    WHERE _change_type = 'delete'\n  )\n\"\"\")\n```\nAssume Change Data Feed is enabled, `user_id` uniquely identifies a user, and every user who requested erasure has been removed from `user_lookup`. Does successfully executing this logic guarantee that the deleted records are no longer accessible? Why or why not?",
     "options": {
       "A": "No; the Delta Lake DELETE command only provides ACID guarantees when combined with the MERGE INTO command.",
-      "B": "No; files containing deleted records may still be accessible with time travel until a VACUUM command is used to remove invalidated data files.",
+      "B": "No; the latest table version hides deleted rows, but old data files can remain accessible with time travel until retention-safe maintenance such as `VACUUM` physically removes them.",
       "C": "Yes; the change data feed uses foreign keys to ensure delete consistency throughout the Lakehouse.",
       "D": "Yes; Delta Lake ACID guarantees provide assurance that the DELETE command succeeded fully and permanently purged these records.",
       "E": "No; the change data feed only tracks inserts and updates, not deleted records."
     },
     "answer": "B",
-    "question_vi": "Logic xoá theo GDPR: DELETE từ `user_aggregates` với `user_id` không còn trong `user_lookup`. Điều này có đảm bảo dữ liệu không còn truy cập được không?",
+    "question_vi": "Nhóm quản trị dữ liệu rà soát logic xóa dữ liệu theo GDPR. Mã đọc Change Data Feed của `user_lookup` trong một khoảng thời gian rồi xóa khóa tương ứng khỏi `user_aggregates`:\n```python\n(spark.read\n  .format(\"delta\")\n  .option(\"readChangeData\", True)\n  .option(\"startingTimestamp\", \"2021-08-22 00:00:00\")\n  .option(\"endingTimestamp\", \"2021-08-29 00:00:00\")\n  .table(\"user_lookup\")\n  .createOrReplaceTempView(\"changes\")\n)\n\nspark.sql(\"\"\"\n  DELETE FROM user_aggregates\n  WHERE user_id IN (\n    SELECT user_id\n    FROM changes\n    WHERE _change_type = 'delete'\n  )\n\"\"\")\n```\nGiả sử Change Data Feed đã bật, `user_id` là khóa duy nhất và mọi người yêu cầu xóa đã bị xóa khỏi `user_lookup`. Chạy thành công logic này có đảm bảo các bản ghi đã xóa không còn truy cập được không? Vì sao?",
     "options_vi": {
       "A": "Không; DELETE chỉ ACID khi đi cùng MERGE",
-      "B": "Không; file chứa bản ghi xoá vẫn truy cập bằng time travel cho tới khi VACUUM dọn",
+      "B": "Không; version hiện tại ẩn dòng đã xóa nhưng file cũ vẫn có thể truy cập qua time travel cho đến khi tác vụ bảo trì đúng retention như `VACUUM` xóa file vật lý.",
       "C": "Có; change data feed dùng FK đảm bảo nhất quán xoá",
       "D": "Có; ACID Delta đảm bảo xoá vĩnh viễn",
       "E": "Không; change data feed chỉ theo dõi insert/update"
     },
-    "explanation_vi": "Lệnh ``DELETE`` trong **Delta Lake** chỉ đánh dấu logic các dòng bị xóa bằng cách tạo phiên bản mới của bảng và loại bỏ chúng khỏi danh sách file của phiên bản mới. Tuy nhiên, các file dữ liệu vật lý chứa các dòng bị xóa đó vẫn tồn tại trong hệ thống lưu trữ đám mây và có thể được truy cập thông qua tính năng `Time Travel` (truy vấn lịch sử). Để tuân thủ GDPR và đảm bảo dữ liệu bị xóa hoàn toàn không thể truy cập được, cần chạy thêm lệnh ``VACUUM`` để dọn dẹp các file cũ hết hạn lưu giữ khỏi vùng lưu trữ vật lý.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** Đoạn đầu đọc Change Data Feed của `user_lookup`, rồi chọn các dòng có `_change_type = 'delete'`; đoạn sau dùng các `user_id` đó để chạy `DELETE` trên `user_aggregates`. Khi transaction `DELETE` thành công, snapshot mới không còn trả các dòng này trong truy vấn thông thường. Tuy nhiên, thao tác đó không đồng nghĩa byte chứa dữ liệu đã bị xóa vật lý khỏi object storage. Những file cũ có thể vẫn cần cho phiên bản lịch sử và vì vậy dữ liệu có thể còn truy vấn qua Delta time travel trong thời gian retention.\n\nĐể xóa dữ liệu vật lý, cần thực hiện bảo trì phù hợp như `VACUUM` sau ngưỡng retention an toàn; không nên hạ retention tùy tiện vì có thể làm hỏng concurrent readers/writers hoặc khả năng phục hồi. Nếu bảng dùng deletion vectors, tài liệu hiện hành yêu cầu thêm `REORG TABLE ... APPLY (PURGE)` để materialize việc xóa trước khi `VACUUM` loại file cũ. Quy trình GDPR còn phải xóa PII ở upstream/cloud files, bảng downstream và các bản sao khác; xóa một bảng aggregate chưa chứng minh toàn hệ thống đã quên dữ liệu.\n\n- **A**: `DELETE` của Delta có transaction ACID riêng; không cần ghép với `MERGE` mới được bảo đảm nguyên tử. Vấn đề của câu hỏi là file lịch sử còn tồn tại sau commit.\n- **C**: CDF ghi nhận thay đổi hàng, không dùng foreign key để tự lan truyền/xác nhận xóa trên mọi bảng. Code phải áp dụng delete vào từng bảng liên quan.\n- **D**: ACID bảo đảm transaction ghi thành công hoặc thất bại và snapshot nhất quán; nó không có nghĩa file vật lý cũ được purge ngay khi commit.\n- **E**: Change Data Feed có thể ghi nhận loại thay đổi `delete` (khi CDF được bật); điều kiện lọc `_change_type='delete'` trong đoạn mã chính là đọc những thay đổi đó.\n- **B**: đúng vì xóa logic ở version mới và xóa vật lý lịch sử là hai bước/vòng đời khác nhau.\n\nTài liệu GDPR của Databricks phân biệt rõ DELETE khỏi snapshot hiện tại với VACUUM để xóa file không còn được tham chiếu. Lập lịch purge, giữ retention đúng quy định và ghi nhận xác nhận xóa ở mọi lớp dữ liệu.",
     "page": null,
-    "image": "img/q_99.jpg",
     "references": [
       {
-        "title": "Delta Lake Vacuum and GDPR Compliance",
-        "url": "https://docs.databricks.com/en/sql/language-manual/delta-vacuum"
+        "title": "Prepare Databricks data for GDPR compliance",
+        "url": "https://docs.databricks.com/aws/en/ldp/gdpr"
+      },
+      {
+        "title": "Work with Delta table history and time travel",
+        "url": "https://docs.databricks.com/aws/en/tables/history"
+      },
+      {
+        "title": "Use Change Data Feed",
+        "url": "https://docs.databricks.com/aws/en/delta/delta-change-data-feed"
       }
     ]
   },
@@ -3269,16 +3276,15 @@
       "C": "Cấp quyền `READ` cho `secret scope` chỉ chứa credential mà nhóm sẽ sử dụng.",
       "D": "Cấp quyền `MANAGE` cho `secret scope` chỉ chứa credential của nhóm. Không cần cấu hình thêm nếu tất cả người dùng đều là quản trị viên của workspace chứa các secret."
     },
-    "explanation_vi": "**Đề đang hỏi gì?** Cơ sở dữ liệu bên ngoài đã phân quyền theo nhóm và mỗi nhóm có credential riêng. Ta cần cho đúng nhóm sử dụng credential của mình từ Databricks, nhưng không cấp thêm quyền quản trị hoặc quyền đọc credential của nhóm khác. Đây là bài toán chọn đúng phạm vi đặt secret và mức ACL tối thiểu.\n\n**Đáp án C — cấp `READ` trên `secret scope` riêng của nhóm.** Databricks Secrets áp dụng ACL ở cấp scope, không ở cấp từng secret key. Vì vậy hãy đặt credential của một nhóm trong scope dành cho nhóm đó, rồi cấp `READ` cho Databricks group tương ứng. Quyền `READ` cho phép thành viên đọc secret trong scope để mở kết nối; nó không cho ghi secret mới hay thay đổi ACL. Credential mà nhóm dùng vẫn chịu giới hạn của tài khoản đã tạo ở cơ sở dữ liệu bên ngoài.\n\n**Vì sao các phương án khác không phù hợp?**\n- **A sai:** không thể đặt quyền `MANAGE` riêng trên một secret key. ACL của Secrets được gắn với scope. Hơn nữa, `MANAGE` rộng hơn nhu cầu sử dụng credential.\n- **B sai:** cũng không có ACL `READ` ở cấp key; quyền phải được cấp trên scope. Nếu nhiều nhóm cùng dùng một scope, thành viên có quyền đọc scope có thể đọc mọi secret trong scope đó, nên cần tách scope theo nhóm/ứng dụng khi họ có credential khác nhau.\n- **C đúng:** kết hợp scope riêng với `READ` cho đúng group, đủ dùng secret và không trao quyền ghi hoặc quản lý quyền.\n- **D sai:** `MANAGE` cho phép đọc, ghi và thay đổi quyền trên scope, vượt quá mức tối thiểu. Quyền quản trị workspace vốn là một phạm vi quyền rộng; không nên biến mọi thành viên nhóm thành admin để giải quyết truy cập secret.\n\n**Lưu ý bảo mật:** người có `READ` có thể lấy giá trị secret qua code được phép chạy. Cơ chế che secret khỏi một số đầu ra notebook không thay thế ACL. Hãy giữ credential của các nhóm trong scope riêng và chỉ cấp `READ` cho principal cần dùng chúng.",
+    "explanation_vi": "**Đáp án C — cấp `READ` trên một `secret scope` riêng cho từng nhóm.** Secret scope là phạm vi áp dụng ACL của Databricks Secrets; ACL không được gán riêng cho từng secret key. Vì mỗi team có login credential khác nhau ở database ngoài, hãy đặt các credential của team vào scope riêng, ánh xạ scope đó với nhóm Databricks tương ứng và cấp `READ`. Thành viên nhóm có thể gọi secret để mở kết nối, còn quyền đọc secret của nhóm khác không được cấp qua scope này. Credential vẫn bị giới hạn theo principal/nhóm ở database nguồn.\n\nNên chọn tên scope thể hiện môi trường và team; tránh đặt credential production vào scope được chia sẻ rộng. Secret là biện pháp che giá trị trong UI/log, không phải ranh giới mã hóa tuyệt đối: người có quyền chạy notebook có thể dùng credential để truy cập hệ thống ngoài theo quyền của credential ấy. Cấp đúng ACL và quyền database tối thiểu, không nhúng secret trực tiếp vào source code.\n\n- **A**: Databricks không cấp `MANAGE` trên một secret key đơn lẻ; quyền được quản lý ở cấp scope. `MANAGE` cũng rộng hơn quyền cần để đọc credential.\n- **B**: `READ` là mức quyền đúng cho việc dùng secret, nhưng nó không được đặt trên key; ACL đặt ở scope.\n- **D**: `MANAGE` trên scope cho phép quản lý nội dung/quyền và vượt quá nhu cầu chỉ sử dụng credential. Cụm “mọi user là workspace admin” không phải cấu hình least-privilege và cũng không cần để cấp ACL cho group.\n- **C**: đúng cả mức quyền (`READ`) lẫn phạm vi (`secret scope`), đồng thời cho phép tách credential theo team.\n\nKhi nhiều secret được đặt trong cùng scope, người có `READ` trên scope có thể đọc mọi secret trong đó; do đó việc tách scope theo quyền truy cập là điều kiện quan trọng để đạt least privilege.",
     "page": null,
-    "image": "img/q_100.jpg",
     "references": [
       {
-        "title": "Secret management — Databricks",
+        "title": "Databricks secret management",
         "url": "https://docs.databricks.com/aws/en/security/secrets"
       },
       {
-        "title": "Secret ACLs — Databricks access control lists",
+        "title": "Databricks access control lists: secret ACLs",
         "url": "https://docs.databricks.com/aws/en/security/auth/access-control/"
       }
     ]
@@ -3294,7 +3300,7 @@
       "D": "The number of `Cached Partitions` > the number of `Spark Partitions`",
       "E": "`On Heap Memory` Usage is within 75% of `Off Heap Memory` Usage"
     },
-    "answer": "C",
+    "answer": "B",
     "question_vi": "Trong tab **Storage** của **Spark UI**, dấu hiệu nào cho thấy một bảng được lưu cache không hoạt động tối ưu? Giả sử bạn đang sử dụng mức lưu trữ cache là `MEMORY_ONLY` của **Spark**.",
     "options_vi": {
       "A": "`Size on Disk` nhỏ hơn `Size in Memory`",
@@ -3303,20 +3309,23 @@
       "D": "Số lượng `Cached Partitions` lớn hơn số lượng `Spark Partitions`",
       "E": "`On-Heap Memory` sử dụng trong khoảng 75% so với `Off-Heap Memory`"
     },
-    "explanation_vi": "Khi cấu hình mức lưu trữ cache là `MEMORY_ONLY`, **Spark** chỉ lưu trữ dữ liệu hoàn toàn trên bộ nhớ `RAM`. Nếu dữ liệu không đủ bộ nhớ `RAM` để chứa, một số phân vùng sẽ bị loại bỏ và phải tính toán lại khi cần, hoặc nếu cấu hình/hệ thống có sự cố/tự động chuyển đổi và bạn quan sát thấy chỉ số '`Size on Disk`' (kích thước trên đĩa) lớn hơn 0 trong tab Storage của **Spark UI**, điều này chứng tỏ hiệu năng lưu cache đang không tối ưu vì hệ thống phải truy cập hoặc ghi đĩa ghi nhận sự cố bộ nhớ.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** Với `MEMORY_ONLY`, Spark lưu cache trong RAM; nếu một partition không vừa bộ nhớ, Spark không ghi partition cache đó ra đĩa theo storage level này mà bỏ cache partition và tính lại khi cần. Dấu `*` cạnh tên RDD block trong chỉ báo của câu hỏi đánh dấu trường hợp block/partition không được cache thành công. Khi bảng được dùng lại nhiều lần, partition bị tính lại làm mất lợi ích tăng tốc của cache và khiến thời gian chạy không ổn định.\n\nKhông nhầm **storage cache** với **shuffle spill**. Shuffle/sort/aggregation có thể spill dữ liệu trung gian xuống đĩa, nhưng đó là metric khác; nó không có nghĩa `MEMORY_ONLY` đã lưu block cache xuống disk. Tab Storage có thể hiển thị `Size on Disk` cho các storage level có disk; với `MEMORY_ONLY`, giá trị lớn hơn 0 không phải chỉ báo đúng cho tình huống cache thiếu bộ nhớ như câu này.\n\n- **A**: `Size on Disk < Size in Memory` không chứng minh cache tối ưu hay thất bại; storage-level và số partition được cache mới giải thích các kích thước này.\n- **C**: `Size on Disk > 0` không phải tín hiệu của cache `MEMORY_ONLY`; level này không dùng disk để giữ partition không vừa RAM.\n- **D**: Số cached partitions không thể lớn hơn tổng số Spark partitions của cùng RDD; điều kiện này không phải dấu hiệu thiếu cache.\n- **E**: `MEMORY_ONLY` không yêu cầu off-heap storage; so sánh tỉ lệ on-heap/off-heap 75% không nói được partition cache có thành công hay không.\n- **B**: đúng theo chỉ báo tên block được câu hỏi nêu; dấu `*` cho biết partition không được cache như mong đợi.\n\nNếu cache chưa đầy, kiểm tra kích thước working set, số partition, heap pressure và tần suất tái tính; cân nhắc giảm dữ liệu cache, tăng tài nguyên phù hợp hoặc chọn storage level khác khi đánh đổi disk với recomputation.",
     "page": null,
-    "image": "img/q_101.jpg",
     "references": [
       {
-        "title": "Spark Storage Levels and Spark UI Storage Tab",
+        "title": "Apache Spark RDD persistence and MEMORY_ONLY semantics",
         "url": "https://spark.apache.org/docs/latest/rdd-programming-guide.html#rdd-persistence"
+      },
+      {
+        "title": "Apache Spark Web UI: Storage tab",
+        "url": "https://spark.apache.org/docs/latest/web-ui.html#storage-tab"
       }
     ]
   },
   {
     "id": 102,
     "topic": 1,
-    "question": "What is the first line of a **Databricks** **Python** notebook when viewed in a text editor?",
+    "question": "When a Databricks Python notebook is exported or stored in Databricks source format as a `.py` file and opened in a text editor, what is the first line?",
     "options": {
       "A": "`%python`",
       "B": "`// **Databricks** notebook source`",
@@ -3325,7 +3334,7 @@
       "E": "# MAGIC `%python`"
     },
     "answer": "C",
-    "question_vi": "Dòng đầu tiên của notebook **Python** **Databricks** khi mở bằng trình soạn thảo văn bản (text editor) là gì?",
+    "question_vi": "Khi notebook Python Databricks được lưu/xuất ở source format thành file `.py` và mở bằng trình soạn thảo văn bản, dòng đầu tiên là gì?",
     "options_vi": {
       "A": "`%python`",
       "B": "`// **Databricks** notebook source`",
@@ -3333,13 +3342,16 @@
       "D": "`-- **Databricks** notebook source`",
       "E": "# MAGIC `%python`"
     },
-    "explanation_vi": "Khi một notebook **Databricks** được xuất (export) hoặc lưu trữ dưới dạng file mã nguồn thô và mở bằng trình soạn thảo văn bản, dòng đầu tiên sẽ chứa chú thích định danh nguồn của **Databricks**. Do **Python** sử dụng ký tự `#` để viết ghi chú (comment), dòng đầu tiên của notebook **Python** sẽ là `# Databricks notebook source`. (Tương tự, **Scala** sẽ dùng `//` và **SQL** sẽ dùng `--`).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C — `# Databricks notebook source`.** Khi Python notebook ở source format được lưu dưới dạng `.py`, Databricks thêm một dòng comment này ở đầu file để nhận diện file là notebook source thay vì script Python thông thường. Ký tự `#` là comment marker của Python. Databricks dùng marker tương tự theo ngôn ngữ: `// Databricks notebook source` cho Scala và `-- Databricks notebook source` cho SQL.\n\nPhạm vi cần chú ý: câu hỏi nói về notebook được xuất/lưu ở Databricks source format. Notebook `.ipynb` là JSON nên dòng đầu tiên của nó sẽ là một trường JSON, không phải marker này. Marker cũng giúp Git folders/workspace nhận diện script `.py` là notebook khi cần.\n\n- **A**: `%python` là magic command để chọn ngôn ngữ trong một số ngữ cảnh notebook; nó không phải header của file Python source.\n- **B**: `//` là comment marker của Scala/Java-like syntax, không hợp lệ để làm comment đầu file Python.\n- **D**: `--` là comment marker SQL, không phải cú pháp comment của Python.\n- **E**: `# MAGIC` được dùng làm marker xuất cho một số magic command/cell trong source format; nó không phải dòng nhận diện notebook.\n- **C**: đúng vì nó vừa dùng cú pháp comment Python vừa chứa chuỗi marker Databricks ở đầu source file.\n\nKhi chuyển đổi file thành notebook, đuôi file và dòng marker đều tham gia nhận diện; chỉ đổi tên file tùy tiện có thể làm thay đổi cách workspace diễn giải nội dung.",
     "page": null,
-    "image": "img/q_102.jpg",
     "references": [
       {
-        "title": "Export and Import Databricks Notebooks as Source Code",
-        "url": "https://docs.databricks.com/en/notebooks/notebook-export-import"
+        "title": "Manage Databricks notebook format",
+        "url": "https://docs.databricks.com/aws/en/notebooks/notebook-format"
+      },
+      {
+        "title": "Import and export Databricks notebooks",
+        "url": "https://docs.databricks.com/aws/en/notebooks/notebook-export-import"
       }
     ]
   },
@@ -3363,13 +3375,16 @@
       "D": "Mô phỏng sát nhất cách sử dụng thực tế của ứng dụng trong đời thực",
       "E": "Đảm bảo mã nguồn được tối ưu hóa cho quy trình làm việc thực tế"
     },
-    "explanation_vi": "Kiểm thử đầu-cuối (End-to-End test hoặc E2E test) được thiết kế nhằm mục đích kiểm tra luồng hoạt động của toàn bộ ứng dụng từ điểm bắt đầu đến điểm kết thúc, bao gồm cả các tích hợp hệ thống bên ngoài. Lợi ích then chốt của phương pháp này là mô phỏng sát nhất các tình huống sử dụng và hành vi của người dùng trong môi trường thực tế, giúp đảm bảo toàn bộ hệ thống hoạt động ổn định khi kết nối với nhau.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** End-to-end (E2E) test chạy một luồng hoàn chỉnh qua nhiều phần của ứng dụng theo cách gần với hành vi sử dụng thực tế: đầu vào đi từ điểm tiếp nhận qua logic, tích hợp và đầu ra cần kiểm tra. Giá trị chính của nó là phát hiện lỗi ở ranh giới giữa các thành phần — ví dụ cấu hình, schema, quyền truy cập hay serialization — vốn có thể không xuất hiện khi test từng hàm tách rời.\n\nE2E không phải kiểm tra mọi nhánh của mọi hàm và cũng không chứng minh hiệu năng đã tối ưu. Nó thường chậm, tốn tài nguyên và khó khoanh vùng lỗi hơn unit test; vì vậy nên dùng một số luồng quan trọng cho hành vi người dùng/nghiệp vụ, kết hợp với nhiều unit/integration test nhanh hơn.\n\n- **A**: Có thể tự động hóa E2E, nhưng tự động hóa không phải lợi ích riêng hay định nghĩa cốt lõi của loại test này. Unit và integration test cũng tự động hóa được.\n- **B**: Unit test cô lập và xác định lỗi ở building block thường tốt hơn cho việc pinpoint; E2E báo lỗi ở mức luồng hệ thống và có thể khó tìm nguồn gốc.\n- **C**: Không test nào bảo đảm bao phủ mọi code path/branch chỉ vì nó chạy end-to-end. Coverage phụ thuộc các scenario được chọn.\n- **E**: Tối ưu hiệu năng cần benchmark/performance test và phân tích tài nguyên; E2E functional test không tự tối ưu code.\n- **D**: mô tả đúng ưu thế của E2E — mô phỏng sát cách các phần của ứng dụng được dùng cùng nhau ngoài thực tế.\n\nHãy chọn các journey có ý nghĩa với người dùng, dùng dữ liệu kiểm thử kiểm soát được và giữ môi trường chạy ổn định để giảm flaky tests.",
     "page": null,
-    "image": "img/q_103.jpg",
     "references": [
       {
-        "title": "Software Testing Overview and End-to-End Testing",
-        "url": "https://docs.databricks.com/en/notebooks/testing"
+        "title": "Test Databricks notebooks",
+        "url": "https://docs.databricks.com/aws/en/notebooks/test-notebooks"
+      },
+      {
+        "title": "Unit testing for Databricks notebooks",
+        "url": "https://docs.databricks.com/aws/en/notebooks/testing"
       }
     ]
   },
@@ -3393,24 +3408,23 @@
       "D": "Chính là giá trị `job_id`",
       "E": "Mã định danh duy nhất toàn cục (globally unique ID) của lượt chạy mới được kích hoạt"
     },
-    "explanation_vi": "**Đáp án E.** `job_id` xác định định nghĩa job; `run_id` xác định một lần chạy cụ thể được tạo khi job được kích hoạt. API `run-now` trả `run_id` để client tra cứu trạng thái/chi tiết đúng lượt chạy đó. Đây không phải bộ đếm số lần chạy và không thay thế `job_id`.\n\nA sai vì hai ID không được ghép thành chuỗi. B và C sai vì `run_id` không phải tổng số job hay số lượt chạy tích lũy. D sai vì `job_id` nằm trong yêu cầu, còn `run_id` là định danh riêng trả về cho lượt chạy mới. Nhận được `run_id` chỉ cho biết yêu cầu tạo run đã được chấp nhận; muốn biết thành công hay thất bại vẫn phải đọc trạng thái/result state của run.",
+    "explanation_vi": "**Đáp án E.** Trong phản hồi của Jobs `run-now`, `job_id` là ID của định nghĩa job đã có, còn `run_id` là ID duy nhất của lần chạy mới được tạo. API trả `run_id` để client dùng endpoint get-run, xem trạng thái, thời gian, task và URL của chính lần chạy đó. Tài liệu API mô tả trường này là ID toàn cục duy nhất của run; một job có thể có rất nhiều run với các `run_id` khác nhau.\n\nViệc `run-now` trả về `run_id` chỉ xác nhận request khởi chạy đã được tiếp nhận/tạo run; nó không chứng minh các task đã hoàn tất thành công. Cần poll hoặc truy vấn run details để đọc lifecycle state và result state. Nếu cần chống gửi trùng request khi retry, Jobs API còn có `idempotency_token`; đó là cơ chế khác với `run_id`.\n\n- **A**: API không ghép `job_id` với số lần chạy để tạo `run_id`; đây là trường ID riêng.\n- **B**: `run_id` không phải tổng số jobs đã chạy trong workspace.\n- **C**: Số thứ tự run trong một job là trường `number_in_job`, không phải `run_id`.\n- **D**: `job_id` xác định định nghĩa job và đã được gửi trong request; phản hồi trả thêm ID lần chạy.\n- **E**: đúng — đây là định danh của lần chạy vừa được kích hoạt, phân biệt với định danh job.\n\nGiữ `job_id` để kích hoạt/tra cứu định nghĩa job; lưu `run_id` trong log điều phối để theo dõi kết quả cụ thể.",
     "page": null,
-    "image": "img/q_104.jpg",
     "references": [
       {
-        "title": "Databricks Jobs API: run now",
-        "url": "https://docs.databricks.com/api/workspace/jobs/runNow"
+        "title": "Jobs API 2.0: Run now response fields",
+        "url": "https://docs.databricks.com/aws/en/reference/jobs-2.0-api"
       },
       {
-        "title": "Databricks CLI jobs command reference",
-        "url": "https://docs.databricks.com/aws/en/dev-tools/cli/reference/jobs-commands"
+        "title": "Get identifiers for workspace objects and job runs",
+        "url": "https://docs.databricks.com/aws/en/workspace/workspace-details"
       }
     ]
   },
   {
     "id": 105,
     "topic": 1,
-    "question": "The data science team has created and logged a production `model` using **MLflow**. The `model` accepts a list of column names and returns a new column of type `DOUBLE`. The following code correctly imports the production `model`, loads the customers table containing the `customer_id` key column into a DataFrame, and defines the feature `columns` needed for the `model`. Which code block will output a DataFrame with the schema \"`customer_id` `LONG`, `predictions` `DOUBLE`\"?",
+    "question": "The data science team has created and logged a production model with MLflow. The model accepts a list of feature columns and returns a `DOUBLE` prediction. The following setup imports the production model, loads `customers` (which has a `customer_id` key), and defines the feature columns:\n```python\nmodel = mlflow.pyfunc.spark_udf(spark, model_uri=\"models:/churn/prod\")\ndf = spark.table(\"customers\")\ncolumns = [\"account_age\", \"time_since_last_seen\", \"app_rating\"]\n```\nWhich expression returns a DataFrame with schema `customer_id LONG, predictions DOUBLE`?",
     "options": {
       "A": "`df.map(lambda x:model(x[columns])).select(\"customer_id, predictions\")`",
       "B": "`df.select(\"customer_id\", model(*columns).alias(\"predictions\"))`",
@@ -3419,7 +3433,7 @@
       "E": "`df.apply(model, columns).select(\"customer_id, predictions\")`"
     },
     "answer": "B",
-    "question_vi": "Đội ngũ khoa học dữ liệu đã tạo và log một production model bằng **MLflow**. Model này nhận đầu vào là danh sách tên cột và trả về một cột mới kiểu `DOUBLE`.\n\nĐoạn mã dưới đây import model, load bảng `customers` chứa cột khóa `customer_id` vào một `DataFrame`, và định nghĩa các cột thuộc tính (features) cần thiết cho model.\n\nĐoạn mã nào sẽ trả về một `DataFrame` với schema `customer_id LONG, predictions DOUBLE`?",
+    "question_vi": "Đội khoa học dữ liệu đã log model production bằng MLflow. Model nhận danh sách cột đặc trưng và trả về dự đoán kiểu `DOUBLE`. Phần setup nạp model, đọc bảng `customers` (có khóa `customer_id`) và khai báo features:\n```python\nmodel = mlflow.pyfunc.spark_udf(spark, model_uri=\"models:/churn/prod\")\ndf = spark.table(\"customers\")\ncolumns = [\"account_age\", \"time_since_last_seen\", \"app_rating\"]\n```\nBiểu thức nào trả về DataFrame có schema `customer_id LONG, predictions DOUBLE`?",
     "options_vi": {
       "A": "`df.map(lambda x:model(x[columns])).select(\"customer_id, predictions\")`",
       "B": "`df.select(\"customer_id\", model(*columns).alias(\"predictions\"))`",
@@ -3427,13 +3441,12 @@
       "D": "`df.select(\"customer_id\", pandas_udf(model, columns).alias(\"predictions\"))`",
       "E": "`df.apply(model, columns).select(\"customer_id, predictions\")`"
     },
-    "explanation_vi": "Khi một mô hình học máy được nạp từ **MLflow** dưới dạng hàm định nghĩa bởi người dùng (**Spark** `UDF`) trong **PySpark**, ta có thể áp dụng mô hình đó trực tiếp lên các cột đặc trưng (features) bằng cách giải nén danh sách tên cột `model(*columns)`. Kết hợp với phương thức `.select()` và `.alias('predictions')`, ta sẽ tạo ra một DataFrame mới chỉ chứa cột `customer_id` và cột dự đoán `predictions` kiểu `DOUBLE`.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** `mlflow.pyfunc.spark_udf(...)` tạo một Spark UDF cho model. Khi gọi `model(*columns)`, dấu `*` giải nén danh sách Python thành ba đối số Spark Column theo đúng thứ tự feature; UDF áp dụng model cho từng hàng phân tán. `df.select(\"customer_id\", ...)` giữ khóa gốc, còn `.alias(\"predictions\")` đặt tên cột kết quả. Theo giả định đề bài/model signature, cột dự đoán có kiểu `DOUBLE`, nên schema đầu ra là `customer_id LONG, predictions DOUBLE`.\n\nThứ tự và kiểu của feature phải khớp với signature của model đã log; trong mã production nên kiểm tra signature/input example, schema bảng và null handling. UDF không tự bảo đảm rằng ba cột được chọn đúng về mặt nghiệp vụ chỉ vì tên truyền vào tồn tại.\n\n- **A**: PySpark DataFrame không có `map` theo cách nhận Python lambda trên từng Row như RDD; ngoài ra chuỗi `\"customer_id, predictions\"` là một đối số tên cột, không phải hai cột được chọn.\n- **C**: `model` trong đề là Spark UDF callable, không phải object `PyFuncModel` được gọi bằng `.predict(df, columns)`. `.predict` còn trả kiểu kết quả PyFunc, không tự tạo đúng DataFrame dựa trên biểu thức này.\n- **D**: `pandas_udf` dùng để khai báo một UDF từ Python function với schema; không bọc một Spark UDF đã được `mlflow.pyfunc.spark_udf` tạo sẵn theo cú pháp đó.\n- **E**: PySpark DataFrame không có phương thức `apply` kiểu pandas để ánh xạ trực tiếp model lên các feature columns.\n- **B**: gọi Spark UDF với từng Column, chọn cột khóa và alias kết quả — đúng API/cấu trúc cần có.\n\nVới output cần nhiều cột hoặc tensor, kiểm tra result type/signature của Spark UDF và dùng `struct`/cấu trúc đầu ra tương ứng; ví dụ hiện tại chỉ cần một cột score.",
     "page": null,
-    "image": "img/q_105.jpg",
     "references": [
       {
-        "title": "mlflow.pyfunc.spark_udf - Batch Inference in PySpark",
-        "url": "https://mlflow.org/docs/latest/models.html#batch-inference-in-apache-spark"
+        "title": "MLflow pyfunc Spark UDF API",
+        "url": "https://mlflow.org/docs/latest/api_reference/python_api/mlflow.pyfunc.html"
       }
     ]
   },
@@ -3443,7 +3456,7 @@
     "question": "A nightly batch job is configured to ingest all data files from a cloud object storage container where records are stored in a nested directory structure YYYY/MM/DD. The data for each `date` represents all records that were processed by the source system on that `date`, noting that some records may be delayed as they await moderator approval. Each entry represents a user `review` of a product and has the following schema:\n`user_id` `STRING`, `review_id` `BIGINT`, `product_id` `BIGINT`, `review_timestamp` `TIMESTAMP`, `review_text` `STRING` The ingestion job is configured to append all data for the previous `date` to a target table `reviews_raw` with an identical schema to the source system. The next step in the pipeline is a batch write to propagate all new records inserted into `reviews_raw` to a table where data is fully deduplicated, validated, and enriched. Which solution minimizes the compute costs to propagate this batch of data?",
     "options": {
       "A": "Perform a batch read on the `reviews_raw` table and perform an insert-only merge using the natural composite key `user_id`, `review_id`, `product_id`, `review_timestamp`.",
-      "B": "Configure a **Structured Streaming** read against the `reviews_raw` table using the trigger once execution mode to process new records as a batch job.",
+      "B": "Configure a Structured Streaming read from `reviews_raw` and use `Trigger.AvailableNow` with a stable checkpoint to process newly appended records as a scheduled incremental batch.",
       "C": "Use **Delta Lake** version history to get the difference between the latest version of `reviews_raw` and one version prior, then write these records to the next table.",
       "D": "Filter all records in the `reviews_raw` table based on the `review_timestamp`; batch append those records produced in the last 48 hours.",
       "E": "Reprocess all records in `reviews_raw` and overwrite the next table in the pipeline."
@@ -3452,18 +3465,25 @@
     "question_vi": "Một job batch chạy hàng đêm được cấu hình để ingest tất cả các tệp dữ liệu từ cloud object storage với cấu trúc thư mục lồng nhau `YYYY/MM/DD`. Dữ liệu cho mỗi ngày đại diện cho tất cả các bản ghi được xử lý bởi hệ thống nguồn vào ngày đó (lưu ý một số bản ghi có thể bị trễ do chờ phê duyệt). Mỗi bản ghi đại diện cho đánh giá của người dùng về sản phẩm với schema:\n\n`user_id STRING, review_id BIGINT, product_id BIGINT, review_timestamp TIMESTAMP, review_text STRING`\n\nJob ingestion được cấu hình để append dữ liệu của ngày hôm trước vào bảng đích `reviews_raw` có schema giống hệt hệ thống nguồn. Bước tiếp theo trong pipeline là ghi batch để propagate tất cả các bản ghi mới từ `reviews_raw` sang một bảng nơi dữ liệu đã được loại bỏ trùng lặp, xác thực và làm giàu dữ liệu một cách đầy đủ.\n\nGiải pháp nào giúp giảm thiểu chi phí tính toán nhất để truyền tiếp batch dữ liệu này?",
     "options_vi": {
       "A": "Thực hiện đọc batch trên bảng `reviews_raw` và thực hiện merge insert-only sử dụng khóa tự nhiên composite key `user_id`, `review_id`, `product_id`, `review_timestamp`",
-      "B": "Cấu hình một lượt đọc **Structured Streaming** đối với bảng `reviews_raw` sử dụng chế độ thực thi `Trigger.Once` để xử lý các bản ghi mới dưới dạng một job batch",
+      "B": "Đọc `reviews_raw` bằng Structured Streaming, dùng `Trigger.AvailableNow` và checkpoint ổn định để xử lý các dòng append mới như một batch theo lịch.",
       "C": "Sử dụng lịch sử phiên bản của **Delta Lake** để lấy sự khác biệt giữa phiên bản mới nhất của `reviews_raw` và phiên bản ngay trước đó, sau đó ghi các bản ghi này vào bảng tiếp theo",
       "D": "Lọc tất cả các bản ghi trong bảng `reviews_raw` dựa trên `review_timestamp`; append batch các bản ghi được tạo ra trong 48 giờ qua",
       "E": "Xử lý lại toàn bộ các bản ghi trong `reviews_raw` và ghi đè (overwrite) bảng tiếp theo trong pipeline"
     },
-    "explanation_vi": "Để giảm thiểu chi phí tính toán khi chỉ chuyển đổi các bản ghi mới từ bảng `reviews_raw` sang bảng tiếp theo, giải pháp tối ưu nhất là sử dụng **Structured Streaming** để đọc bảng dưới dạng một nguồn stream kết hợp với chế độ thực thi `Trigger.Once` (hoặc `AvailableNow`). Chế độ này sẽ chạy luồng xử lý như một job batch thông thường nhưng chỉ xử lý các file/bản ghi mới gia tăng kể từ lần chạy trước, tránh việc quét và xử lý lại toàn bộ lịch sử dữ liệu một cách lãng phí.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** `reviews_raw` là Delta table được append theo ngày. Structured Streaming đọc transaction log của Delta, và checkpoint lưu version/offset đã xử lý; mỗi lần job theo lịch dùng `Trigger.AvailableNow` sẽ xử lý hết dữ liệu mới chưa đọc rồi dừng. Như vậy các bước dedup, validation và enrichment chỉ chạy trên phần mới thay vì quét toàn bộ lịch sử `reviews_raw`. Giữ nguyên một checkpoint bền vững giữa các lần chạy là điều kiện quan trọng; nếu tạo checkpoint mới mỗi ngày, stream có thể đọc lại từ đầu và lợi ích incremental biến mất.\n\nTrong đề cũ có `Trigger.Once`; chế độ đó đã bị deprecated trên các Databricks Runtime mới. `AvailableNow` là lựa chọn hiện hành cho pipeline định kỳ muốn xử lý dữ liệu có sẵn rồi kết thúc. Cần đảm bảo upstream chỉ append vào bảng nguồn; nếu có UPDATE/DELETE thì phải dùng Change Data Feed hoặc cách xử lý thay đổi phù hợp, vì streaming read append-only không tự áp dụng mọi chỉnh sửa lịch sử.\n\n- **A**: Batch read toàn bộ `reviews_raw` rồi MERGE có thể phải quét nhiều lịch sử mỗi đêm; natural key hỗ trợ idempotency nhưng tự nó không làm đầu vào incremental.\n- **C**: So sánh version N và N−1 phụ thuộc commit/version cụ thể, có thể bỏ sót hoặc lấy sai phạm vi khi có nhiều writer/commit; time travel cũng phụ thuộc retention. CDF là lựa chọn change-aware khi cần cả update/delete, không phải đọc “một version trước” một cách thủ công.\n- **D**: `review_timestamp` có thể cũ hơn ngày ingestion vì moderation delay; cửa sổ 48 giờ có thể bỏ sót record mới vừa được append nhưng mang timestamp cũ, hoặc đọc lặp dữ liệu.\n- **E**: Reprocess/overwrite toàn bộ bảng làm tăng compute và có thể làm lại mọi enrichment dù chỉ có batch mới.\n- **B**: checkpoint + AvailableNow theo dõi offset của Delta source và chạy như incremental scheduled batch, phù hợp chi phí thấp nhất trong lựa chọn.\n\nNếu pipeline cần đảm bảo exactly-once end-to-end, thiết kế sink/idempotency và checkpoint cùng nhau; checkpoint không thay thế khóa nghiệp vụ hoặc chất lượng dữ liệu.",
     "page": null,
-    "image": "img/q_106.jpg",
     "references": [
       {
-        "title": "Structured Streaming Triggers and Incrementally Processing Data",
-        "url": "https://docs.databricks.com/en/structured-streaming/triggers"
+        "title": "Delta Lake table streaming reads and writes",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/delta-lake"
+      },
+      {
+        "title": "Structured Streaming checkpoints",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/checkpoints"
+      },
+      {
+        "title": "Use AvailableNow for scheduled incremental processing",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/tutorial"
       }
     ]
   },
@@ -3476,7 +3496,7 @@
       "B": "An asynchronous job runs after the write completes to detect if files could be further compacted; if yes, an `OPTIMIZE` job is executed toward a default of 1 GB.",
       "C": "Data is queued in a messaging bus instead of committing data directly to memory; all data is committed from the messaging bus in one batch once the job is complete.",
       "D": "Optimized writes use logical partitions instead of directory partitions; because partition boundaries are only represented in metadata, fewer small files are written.",
-      "E": "A shuffle occurs prior to writing to try to group similar data together resulting in fewer files instead of each executor writing multiple files based on directory partitions."
+      "E": "A shuffle/repartition step runs before the write to reduce small files and produce fewer, better-sized output files, especially across table partitions."
     },
     "answer": "E",
     "question_vi": "Phát biểu nào mô tả tính năng ghi tối ưu (optimized writes) của **Delta Lake**?",
@@ -3485,15 +3505,18 @@
       "B": "Một job bất đồng bộ chạy sau khi ghi để kiểm tra xem file có thể nén thêm không; nếu có, chạy job `OPTIMIZE` về kích thước mặc định 1 GB",
       "C": "Dữ liệu được xếp hàng đợi trong một messaging bus thay vì commit trực tiếp vào bộ nhớ; tất cả dữ liệu được commit từ messaging bus thành một batch khi job hoàn thành",
       "D": "Ghi tối ưu sử dụng các phân vùng logic thay vì phân vùng thư mục; do ranh giới phân vùng chỉ được thể hiện trong metadata nên ít file nhỏ được ghi hơn",
-      "E": "Thực hiện shuffle trước khi ghi để nhóm các dữ liệu tương tự lại với nhau, giúp ghi ít file hơn thay vì mỗi executor ghi nhiều file dựa trên phân vùng thư mục"
+      "E": "Trước khi ghi có bước shuffle/repartition để giảm file nhỏ, tạo ít file đầu ra hơn với kích thước phù hợp hơn, nhất là trên bảng có partition."
     },
-    "explanation_vi": "Tính năng ghi tối ưu (optimized writes) của **Delta Lake** giải quyết vấn đề 'nhiều file nhỏ' bằng cách tự động thực hiện một thao tác trộn dữ liệu (shuffle) ngay trước khi ghi. Quá trình này nhóm các dòng dữ liệu có cùng khóa phân vùng về cùng một executor, giúp mỗi executor ghi ra ít file hơn nhưng với kích thước lớn hơn và tối ưu hơn, thay vì mỗi executor phải ghi ra nhiều file nhỏ tương ứng với từng phân vùng khác nhau.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án E.** Optimized writes sắp xếp lại/phân phối dữ liệu trước bước ghi để giảm số file nhỏ và tạo các file đầu ra có kích thước phù hợp hơn. Tác dụng rõ nhất ở bảng partitioned: thay vì nhiều task ghi các file nhỏ rải vào nhiều partition thư mục, Spark thực hiện shuffle để tổ chức các hàng trước khi writer ghi. Điều này thường cải thiện việc đọc sau đó, nhưng có thể tăng latency/compute ghi vì phải shuffle.\n\nOptimized writes khác với `OPTIMIZE`: optimized writes hoạt động trong quá trình write để hạn chế file nhỏ ngay từ đầu; `OPTIMIZE` là thao tác bảo trì/rewrite dữ liệu đã có để gom/reorganize files. Auto compaction cũng là cơ chế sau ghi khác. Một số thao tác Databricks như MERGE/UPDATE/DELETE tự bật optimized writes/auto compaction, nhưng điều đó không có nghĩa `OPTIMIZE` chạy lúc cluster kết thúc.\n\n- **A**: Databricks không tự chạy `OPTIMIZE` trên mọi bảng vừa sửa trước khi Jobs cluster dừng. Nếu cần, lịch bảo trì/predictive optimization được quản lý riêng.\n- **B**: Đây mô tả sai cơ chế auto compaction/OPTIMIZE nền và đưa ra target 1 GB mặc định không đúng cho optimized writes. Kích thước file được tune theo cấu hình/bảng/runtime.\n- **C**: Optimized writes không gửi dữ liệu vào messaging bus rồi commit cuối job; writer vẫn ghi transaction Delta theo cơ chế thông thường.\n- **D**: Tính năng không thay directory partitions bằng “logical partitions” chỉ có trong metadata; partitioning và clustering là khái niệm layout riêng.\n- **E**: mô tả đúng bước shuffle trước ghi để giảm file nhỏ, đặc biệt ở bảng partitioned.\n\nKhông nên thêm `repartition()`/`coalesce()` ngay trước write chỉ để ép số file nếu optimized writes đã bật; Databricks khuyến nghị để tính năng tự tổ chức layout rồi đo hiệu năng thực tế.",
     "page": null,
-    "image": "img/q_107.jpg",
     "references": [
       {
-        "title": "Delta Lake Optimized Writes and Auto Compaction",
-        "url": "https://docs.databricks.com/en/tables/operations/optimize#optimized-writes"
+        "title": "Control data file size and optimized writes",
+        "url": "https://docs.databricks.com/aws/en/tables/tune-file-size"
+      },
+      {
+        "title": "Delta Lake optimization best practices",
+        "url": "https://docs.databricks.com/aws/en/delta/best-practices"
       }
     ]
   },
@@ -3509,7 +3532,7 @@
       "E": "Cloud vendor-specific queue storage and notification services are configured to track newly arriving files; new files are incrementally and idempotently loaded into the target **Delta Lake** table."
     },
     "answer": "D",
-    "question_vi": "Phát biểu nào mô tả đúng chế độ hoạt động mặc định của **Databricks Auto Loader**?",
+    "question_vi": "Chế độ phát hiện file mặc định của **Databricks Auto Loader** là gì, và dữ liệu mới được nạp tăng dần vào Delta như thế nào?",
     "options_vi": {
       "A": "Cấu hình dịch vụ hàng đợi và thông báo của nhà cung cấp cloud để theo dõi file mới; bảng đích được cụ thể hóa bằng cách truy vấn trực tiếp tất cả các file hợp lệ trong thư mục nguồn",
       "B": "Xác định các file mới bằng cách liệt kê thư mục đầu vào; bảng đích được cụ thể hóa bằng cách truy vấn trực tiếp tất cả các file hợp lệ trong thư mục nguồn",
@@ -3517,13 +3540,20 @@
       "D": "Xác định các file mới bằng cách liệt kê thư mục đầu vào (Directory Listing); các file mới được nạp tăng trưởng (incrementally) và đảm bảo tính bất biến (idempotently) vào bảng **Delta Lake** mục tiêu",
       "E": "Cấu hình dịch vụ hàng đợi và thông báo của nhà cung cấp cloud để theo dõi file mới; các file mới được nạp tăng trưởng và đảm bảo tính bất biến vào bảng **Delta Lake** mục tiêu"
     },
-    "explanation_vi": "**Databricks** **Auto Loader** hỗ trợ hai chế độ phát hiện file mới: Liệt kê thư mục (Directory Listing) và Thông báo file (File Notification). Chế độ mặc định là Directory Listing, trong đó **Auto Loader** quét trực tiếp thư mục đầu vào để xác định các file mới xuất hiện, sau đó nạp chúng một cách gia tăng (incrementally) và đảm bảo tính bất biến/idempotent (idempotently) vào bảng **Delta Lake** mục tiêu mà không cần cấu hình dịch vụ hàng đợi hay thông báo trên đám mây.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** Mặc định, Auto Loader dùng **directory listing mode**: nó liệt kê thư mục đầu vào để khám phá file mới. Sau đó stream đọc các file chưa xử lý và ghi chúng tăng dần vào sink mà pipeline cấu hình, thường là Delta table. Với checkpoint ổn định và file nguồn bất biến (mặc định `cloudFiles.allowOverwrites=false`), Auto Loader ghi nhận file đã xử lý để tránh nạp lặp khi query restart. Đây là mô tả đúng trong các lựa chọn.\n\nHai phần cần phân biệt: “directory listing” là cách source phát hiện file, còn ghi vào Delta là sink/pipeline do người dùng cấu hình; Auto Loader không tự suy luận quy tắc merge hay materialize bảng chỉ từ việc phát hiện file. Directory listing là mặc định nhưng không luôn tối ưu chi phí khi thư mục rất lớn hoặc trigger liên tục. Databricks hiện khuyến nghị file notification mode dùng file events cho nhiều workload để discovery hiệu quả hơn; muốn dùng chế độ đó cần cấu hình phù hợp.\n\n- **A**: Kết hợp notification services với việc query trực tiếp tất cả source files không mô tả default discovery và incremental checkpointing. File notifications là một mode có cấu hình, không phải mặc định.\n- **B**: Liệt kê thư mục đúng phần discovery, nhưng “truy vấn trực tiếp tất cả file hợp lệ” bỏ qua mô hình incremental tracking/Delta sink; chỉ đọc lại toàn bộ source mỗi lần thì không phải lời mô tả chính xác.\n- **C**: Auto Loader không tự tạo webhook để khởi chạy job rồi đoán MERGE rules từ dữ liệu. Job trigger, transform và MERGE phải được người triển khai định nghĩa.\n- **E**: Cloud queue/event notification là file notification mode; đó không phải mặc định cơ bản.\n- **D**: đúng: listing để tìm file mới, rồi stream nạp file mới theo checkpoint vào Delta sink.\n\nVới file mutable/overwrite hoặc thay checkpoint, semantics có thể thay đổi; thiết kế source bất biến, checkpoint riêng cho mỗi query và sink idempotent để giữ kết quả đúng.",
     "page": null,
-    "image": "img/q_108.jpg",
     "references": [
       {
-        "title": "What is Databricks Auto Loader?",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "What is Auto Loader?",
+        "url": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader"
+      },
+      {
+        "title": "Configure Auto Loader directory listing mode",
+        "url": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/directory-listing-mode"
+      },
+      {
+        "title": "Auto Loader file notification mode",
+        "url": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/file-notification-mode"
       }
     ]
   },
