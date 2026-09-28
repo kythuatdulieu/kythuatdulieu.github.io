@@ -3902,27 +3902,26 @@
       "D": "**Spark** configuration properties set for an interactive cluster with the Clusters UI will impact all notebooks attached to that cluster."
     },
     "answer": "D",
-    "question_vi": "Phát biểu nào sau đây về cấu hình **Spark** trên nền tảng **Databricks** là đúng?",
+    "question_vi": "Phát biểu nào sau đây về phạm vi cấu hình **Spark** trên nền tảng **Databricks** là đúng?",
     "options_vi": {
-      "A": "**Databricks REST API** có thể được sử dụng để sửa đổi các thuộc tính cấu hình **Spark** cho một cụm tương tác (interactive cluster) mà không làm gián đoạn các job đang chạy trên cụm đó",
-      "B": "Cấu hình **Spark** được thiết lập trong một notebook sẽ ảnh hưởng đến tất cả các `SparkSession` được gắn vào cùng một cụm tương tác",
-      "C": "Khi cùng một thuộc tính cấu hình **Spark** được đặt cho một cụm tương tác và một notebook được gắn vào cụm đó, thiết lập trong notebook sẽ luôn bị bỏ qua",
-      "D": "Các thuộc tính cấu hình **Spark** được đặt cho một cụm tương tác bằng **Clusters UI** sẽ ảnh hưởng đến tất cả các notebook được gắn vào cụm đó"
+      "A": "Có thể dùng **Databricks REST API** để đổi cấu hình **Spark** của interactive cluster và bảo đảm job đang chạy không bị gián đoạn",
+      "B": "Cấu hình **Spark** đặt trong một notebook sẽ áp dụng cho mọi `SparkSession` đang dùng cùng interactive cluster",
+      "C": "Nếu cùng một thuộc tính cấu hình **Spark** được đặt ở cấp cluster và notebook, thiết lập của notebook luôn bị bỏ qua",
+      "D": "Cấu hình **Spark** đặt ở cấp interactive cluster trong **Clusters UI** áp dụng cho các notebook và job chạy trên compute đó"
     },
-    "explanation_vi": "Các cấu hình **Spark** được thiết lập ở cấp độ cụm (cluster) thông qua Clusters UI của **Databricks** sẽ tự động áp dụng và ảnh hưởng đến toàn bộ các notebook được gắn (attach) vào cụm đó.\n\nNgược lại, cấu hình **Spark** được set bên trong một notebook cụ thể chỉ có phạm vi ảnh hưởng trong `SparkSession` của riêng notebook đó chứ không ảnh hưởng đến các notebook khác chạy trên cùng cụm.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** Phạm vi của một Spark configuration phụ thuộc nơi bạn đặt nó. Cấu hình khai báo ở compute áp dụng cho các notebook và job chạy trên compute đó; cấu hình đặt bên trong notebook chỉ áp dụng cho `SparkSession` của notebook hiện tại. Vì vậy cấu hình ở cấp compute có thể ảnh hưởng đến nhiều notebook cùng gắn vào compute, đúng như phương án D.\n\n**Các phương án còn lại:**\n- **A sai vì nói “bảo đảm không gián đoạn”.** Việc cập nhật cấu hình compute qua API không đồng nghĩa cấu hình đang chạy được thay nóng an toàn. Đề không nêu loại thay đổi hay trạng thái compute nên không thể khẳng định mọi thay đổi đều giữ nguyên các job đang chạy.\n- **B sai vì nhầm phạm vi notebook với phạm vi compute.** Cấu hình Spark đặt trong notebook không tự lan sang Spark session của notebook khác chỉ vì chúng dùng chung compute.\n- **C sai vì quá tuyệt đối.** Hai thiết lập có phạm vi khác nhau; không có quy tắc chung rằng notebook-level setting “luôn bị bỏ qua”. Một số thuộc tính còn bị giới hạn hoặc không được hỗ trợ, nên phải kiểm tra thuộc tính cụ thể.\n\nTrong thực tế, đặt cấu hình dùng chung ở compute khi thuộc tính được Databricks hỗ trợ ở cấp đó; chỉ đặt trong notebook khi muốn giới hạn ảnh hưởng cho session hiện tại. Databricks cũng khuyến nghị tránh phụ thuộc vào các Spark property legacy vì chúng có thể ghi đè hành vi tối ưu mặc định của runtime.\n\n📚 **Tham khảo:** [Databricks — Set Spark configuration properties](https://docs.databricks.com/aws/en/spark/conf)",
     "page": null,
-    "image": "img/q_119.jpg",
     "references": [
       {
-        "title": "Databricks Documentation - Spark configuration on Databricks",
-        "url": "https://docs.databricks.com/en/integrations/jdbc/configure#spark-configuration"
+        "title": "Databricks — Set Spark configuration properties",
+        "url": "https://docs.databricks.com/aws/en/spark/conf"
       }
     ]
   },
   {
     "id": 120,
     "topic": 1,
-    "question": "The business reporting team requires that data for their dashboards be updated every hour. The total processing time for the pipeline that extracts, transforms, and loads the data for their pipeline runs in 10 minutes. Assuming normal operating conditions, which configuration will meet their service-level agreement requirements with the lowest cost?",
+    "question": "The business reporting team needs dashboard data refreshed every hour. The source can land multiple small files during each hour, and the ETL pipeline takes 10 minutes to process one batch. Among the **classic compute** choices below, which configuration meets the hourly schedule at the lowest expected compute cost under normal operating conditions? Assume option D keeps its interactive cluster running between scheduled runs.",
     "options": {
       "A": "Configure a job that executes every time new data lands in a given directory",
       "B": "Schedule a job to execute the pipeline once an hour on a new job cluster",
@@ -3930,50 +3929,57 @@
       "D": "Schedule a job to execute the pipeline once an hour on a dedicated interactive cluster"
     },
     "answer": "B",
-    "question_vi": "Đội ngũ báo cáo kinh doanh yêu cầu dữ liệu cho dashboard của họ phải được cập nhật mỗi giờ. Tổng thời gian xử lý cho pipeline thực hiện trích xuất, biến đổi và nạp dữ liệu (ETL) là 10 phút.\n\nTrong điều kiện hoạt động bình thường, cấu hình nào sẽ đáp ứng các yêu cầu về cam kết chất lượng dịch vụ (SLA) của họ với chi phí thấp nhất?",
+    "question_vi": "Nhóm báo cáo cần dữ liệu dashboard được cập nhật mỗi giờ. Nguồn có thể đưa vào nhiều file nhỏ trong mỗi giờ và pipeline ETL xử lý một batch mất 10 phút. Trong các lựa chọn **classic compute** dưới đây, cấu hình nào đáp ứng lịch cập nhật theo giờ với chi phí compute dự kiến thấp nhất trong điều kiện hoạt động bình thường? Giả sử lựa chọn D giữ interactive cluster chạy giữa các lần theo lịch.",
     "options_vi": {
-      "A": "Cấu hình một job thực thi mỗi khi có dữ liệu mới xuất hiện trong một thư mục nhất định",
-      "B": "Lên lịch chạy một job để thực thi pipeline mỗi giờ một lần trên một job cluster mới",
-      "C": "Thiết lập một job **Structured Streaming** với khoảng thời gian trigger là 60 phút",
-      "D": "Lên lịch chạy một job để thực thi pipeline mỗi giờ một lần trên một cụm tương tác (interactive cluster) chuyên dụng"
+      "A": "Cấu hình job chạy mỗi khi có dữ liệu mới xuất hiện trong một thư mục",
+      "B": "Lên lịch chạy job mỗi giờ một lần bằng một job compute mới cho lần chạy đó",
+      "C": "Lên lịch một job **Structured Streaming** với trigger interval 60 phút",
+      "D": "Lên lịch chạy pipeline mỗi giờ một lần trên một interactive cluster chuyên dụng"
     },
-    "explanation_vi": "Để cập nhật dữ liệu mỗi giờ với thời gian chạy là 10 phút, việc lên lịch một job chạy trên một Job Cluster mới (transient/ephemeral cluster) là giải pháp tiết kiệm chi phí nhất.\n\nJob cluster chỉ được khởi chạy khi job bắt đầu và tự động tắt ngay sau khi job hoàn thành (chỉ tính tiền cho 10 phút chạy mỗi giờ). Việc sử dụng một Interactive Cluster chuyên dụng hoặc chạy **Structured Streaming** liên tục với trigger 60 phút sẽ khiến cluster phải chạy 24/7, phát sinh chi phí rất lớn khi cụm ở trạng thái rỗi.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B**, với giả định các lựa chọn đang so sánh classic compute. Batch chạy 10 phút trong chu kỳ 60 phút, nên job compute riêng cho lần chạy có thể khởi động khi job bắt đầu và kết thúc sau khi task xong. Chi phí vẫn gồm thời gian khởi động và thời gian compute thực sự chạy; không nên tính chính xác chỉ 10 phút. Tuy vậy, compute không phải nằm chờ phần lớn thời gian giữa hai lần chạy.\n\n- **A không khớp yêu cầu và có thể chạy quá nhiều lần.** Nếu có nhiều file nhỏ, mỗi lần đến file lại kích hoạt pipeline, tăng overhead mà không tạo lịch làm mới theo giờ ổn định.\n- **B phù hợp nhất trong nhóm classic compute.** Job compute được tạo cho job run và kết thúc sau khi task hoàn tất. Databricks hiện khuyến nghị serverless jobs cho nhiều tác vụ notebook/Python, nhưng serverless không nằm trong các lựa chọn.\n- **C không tối ưu cho batch 10 phút.** Structured Streaming là mô hình xử lý luồng chạy dài; trigger 60 phút không biến nó thành compute dùng một lần và có thể cộng thêm độ trễ chờ trigger.\n- **D giữ interactive compute sẵn sàng nhưng có thể tính phí phần lớn thời gian nhàn rỗi** (trừ khi được dừng hoặc tự terminate). Với một lần chạy 10 phút mỗi giờ, phần chờ xấp xỉ 50 phút mỗi chu kỳ thường làm lựa chọn này tốn hơn.\n\nKết luận dựa trên mức sử dụng mô tả trong đề; nếu có serverless, compute pool hoặc yêu cầu khởi động rất thấp thì cần so sánh chi phí và SLA thực tế riêng.\n\n📚 **Tham khảo:** [Databricks — Configure compute for jobs](https://docs.databricks.com/aws/en/jobs/compute), [Manage classic compute](https://docs.databricks.com/aws/en/compute/clusters-manage)",
     "page": null,
-    "image": "img/q_120.jpg",
-    "references": []
+    "references": [
+      {
+        "title": "Databricks — Configure compute for jobs",
+        "url": "https://docs.databricks.com/aws/en/jobs/compute"
+      },
+      {
+        "title": "Databricks — Manage classic compute",
+        "url": "https://docs.databricks.com/aws/en/compute/clusters-manage"
+      }
+    ]
   },
   {
     "id": 121,
     "topic": 1,
-    "question": "A **Databricks SQL** dashboard has been configured to monitor the total number of records present in a collection of **Delta Lake** tables using the following query pattern:\n`SELECT COUNT (*)` FROM table - Which of the following describes how results are generated each time the dashboard is updated?",
+    "question": "A **Databricks SQL** dashboard monitors the row count of a Delta table with this query:\n\n```sql\nSELECT COUNT(*) FROM table_name;\n```\n\nAssume the dashboard result cache is not serving this refresh, the query has no filter, and the Databricks runtime supports Delta Lake metadata-only `COUNT(*)` optimization. Which statement describes how the count can be computed?",
     "options": {
-      "A": "The total count of rows is calculated by scanning all data files",
-      "B": "The total count of rows will be returned from cached results unless REFRESH is run",
-      "C": "The total count of records is calculated from the Delta transaction logs",
-      "D": "The total count of records is calculated from the parquet file metadata"
+      "A": "The engine must scan every row in every data file for this eligible query.",
+      "B": "The dashboard always returns a cached result unless a user runs `REFRESH`.",
+      "C": "The engine can sum per-file `numRecords` statistics from the active Delta transaction-log snapshot.",
+      "D": "The engine reads a row count directly from each Parquet file footer; the Delta transaction log is not involved."
     },
     "answer": "C",
-    "question_vi": "Một dashboard **Databricks SQL** đã được cấu hình để theo dõi tổng số lượng bản ghi có trong một tập hợp các bảng **Delta Lake** bằng cách sử dụng mẫu truy vấn sau:\n\n`SELECT COUNT(*) FROM table`\n\nPhát biểu nào sau đây mô tả cách kết quả được tạo ra mỗi khi dashboard được cập nhật?",
+    "question_vi": "Một dashboard **Databricks SQL** theo dõi số dòng của một bảng Delta bằng truy vấn:\n\n```sql\nSELECT COUNT(*) FROM table_name;\n```\n\nGiả sử refresh hiện tại không được trả từ dashboard result cache, truy vấn không có điều kiện lọc, và runtime **Databricks** hỗ trợ tối ưu `COUNT(*)` chỉ dùng metadata của **Delta Lake**. Phát biểu nào mô tả đúng cách tính count?",
     "options_vi": {
-      "A": "Tổng số hàng được tính bằng cách quét tất cả các file dữ liệu",
-      "B": "Tổng số hàng sẽ được trả về từ kết quả lưu cache trừ khi chạy `REFRESH`",
-      "C": "Tổng số lượng bản ghi được tính toán từ các transaction log của **Delta**",
-      "D": "Tổng số lượng bản ghi được tính toán từ metadata của tệp **Parquet**"
+      "A": "Với truy vấn đủ điều kiện này, engine bắt buộc quét mọi dòng trong tất cả data file",
+      "B": "Dashboard luôn trả kết quả đã cache cho đến khi người dùng chạy `REFRESH`",
+      "C": "Engine có thể cộng thống kê `numRecords` của các file đang hoạt động từ snapshot Delta transaction log",
+      "D": "Engine đọc số dòng trực tiếp từ footer của từng file Parquet; Delta transaction log không tham gia"
     },
-    "explanation_vi": "**Delta Lake** duy trì một transaction log (`_delta_log`) cực kỳ chi tiết, trong đó lưu trữ metadata của từng data file bao gồm cả số lượng bản ghi (`numRecords`).\n\nKhi thực hiện câu lệnh `SELECT COUNT(*) FROM table` trên bảng Delta, công cụ truy vấn của **Databricks** sẽ đọc trực tiếp số lượng bản ghi từ transaction log metadata mà không cần phải quét qua bất kỳ file dữ liệu thực tế nào. Điều này giúp câu lệnh COUNT(*) hoàn thành gần như ngay lập tức và rất tiết kiệm chi phí.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** Với truy vấn `COUNT(*)` không có filter và runtime hỗ trợ tối ưu metadata-only, Delta có thể lấy số bản ghi từng file đang thuộc snapshot bảng từ thống kê trong transaction log (`_delta_log`) rồi cộng các số `numRecords`. Đường chạy này tránh đọc toàn bộ các dòng Parquet chỉ để đếm.\n\n- **A sai trong điều kiện đề đã nêu.** Quét dữ liệu có thể xảy ra nếu truy vấn không đủ điều kiện tối ưu, runtime cũ hoặc kế hoạch thực thi cần đọc dữ liệu; nhưng không bắt buộc trong trường hợp metadata-only này.\n- **B sai vì cache là cơ chế riêng.** Query result cache có thể phục vụ một lần chạy khi cache hợp lệ, nhưng đề đã loại trừ cache cho refresh hiện tại. `REFRESH` không phải điều kiện bắt buộc để mọi `COUNT(*)` được tính lại.\n- **C đúng.** Transaction log đại diện cho snapshot hiện tại, gồm các file active và statistics per-file. File đã bị loại khỏi snapshot không được cộng vào count.\n- **D sai ở chỗ loại Delta log khỏi quá trình.** Thống kê `numRecords` được ghi trong log Delta cùng metadata của file; tối ưu này không cần đọc footer của từng Parquet file khi đã dùng metadata log.\n\nKhông nên khái quát rằng mọi `COUNT(*)` trên mọi phiên bản Delta đều miễn đọc dữ liệu. Filter, loại bảng, runtime và kế hoạch thực thi có thể khiến engine phải đọc file; hãy xem query profile khi tối ưu dashboard thực tế.\n\n📚 **Tham khảo:** [Delta Lake — How metadata accelerates aggregations](https://delta.io/blog/2023-04-19-faster-aggregations-metadata/)",
     "page": null,
-    "image": "img/q_121.jpg",
     "references": [
       {
-        "title": "Databricks Documentation - Delta Lake transaction log specifications",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "Delta Lake — How metadata accelerates aggregations",
+        "url": "https://delta.io/blog/2023-04-19-faster-aggregations-metadata/"
       }
     ]
   },
   {
     "id": 122,
     "topic": 1,
-    "question": "A **Delta Lake** table was created with the below query:\nConsider the following query:\n`DROP TABLE` `prod.sales_by_store` - If this statement is executed by a `workspace` admin, which result will occur?",
+    "question": "Assume `prod` is a schema in the **legacy Hive metastore**, the caller has permission to drop the table, and the following CTAS creates a managed Delta table (no `EXTERNAL` keyword or `LOCATION` is specified):\n\n```sql\nCREATE TABLE prod.sales_by_store AS\nSELECT a.*\nFROM prod.sales AS a\nINNER JOIN prod.store AS b\n  ON a.store_id = b.store_id;\n```\n\nWhat happens when the caller executes `DROP TABLE prod.sales_by_store`?",
     "options": {
       "A": "Data will be marked as deleted but still recoverable with Time Travel.",
       "B": "The table will be removed from the catalog but the data will remain in storage.",
@@ -3981,27 +3987,30 @@
       "D": "An error will occur because **Delta Lake** prevents the deletion of production data."
     },
     "answer": "C",
-    "question_vi": "Bảng Delta tạo bằng lệnh cho sẵn. Nếu admin chạy `DROP TABLE` `prod.sales_by_store` thì kết quả?",
+    "question_vi": "Giả sử `prod` là schema trong **legacy Hive metastore**, người chạy có quyền xóa bảng, và lệnh CTAS sau tạo một managed Delta table (không có từ khóa `EXTERNAL` hoặc `LOCATION`):\n\n```sql\nCREATE TABLE prod.sales_by_store AS\nSELECT a.*\nFROM prod.sales AS a\nINNER JOIN prod.store AS b\n  ON a.store_id = b.store_id;\n```\n\nĐiều gì xảy ra khi chạy `DROP TABLE prod.sales_by_store`?",
     "options_vi": {
-      "A": "Dữ liệu sẽ được đánh dấu là đã xóa nhưng vẫn có thể khôi phục bằng `time travel`",
-      "B": "Bảng sẽ bị xóa khỏi catalog nhưng dữ liệu vẫn còn trong storage",
-      "C": "Bảng sẽ bị xóa khỏi catalog và dữ liệu sẽ bị xóa hoàn toàn",
-      "D": "Lỗi sẽ xảy ra vì **Delta Lake** ngăn chặn việc xóa dữ liệu production"
+      "A": "Bảng bị đánh dấu xóa nhưng vẫn khôi phục được bằng Delta time travel",
+      "B": "Chỉ metadata của bảng bị gỡ khỏi metastore; các file dữ liệu vẫn còn nguyên",
+      "C": "Bảng bị gỡ khỏi metastore và các file dữ liệu của managed table bị xóa",
+      "D": "Lệnh báo lỗi vì **Delta Lake** cấm xóa dữ liệu production"
     },
-    "explanation_vi": "Vì bảng `prod.sales_by_store` được tạo mà không có từ khóa `EXTERNAL` hay chỉ định `LOCATION` cụ thể ngoài metastore mặc định, nó được coi là một **Managed Table** (bảng được quản lý).\n\nKhi chạy lệnh `DROP TABLE` đối với một **Managed Table**, **Databricks** sẽ thực hiện xóa cả định nghĩa metadata trong catalog và xóa hoàn toàn dữ liệu thực tế được lưu trữ trong storage. (Ngược lại, đối với Unmanaged/**External Table**, lệnh `DROP TABLE` chỉ xóa định nghĩa trong catalog và giữ nguyên dữ liệu trong storage).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C trong đúng phạm vi đề: managed table thuộc legacy Hive metastore.** Vì câu lệnh không khai báo `EXTERNAL` hoặc `LOCATION` riêng, CTAS tạo bảng được quản lý trong schema. Khi `DROP TABLE` một managed table ở Hive metastore, Databricks gỡ metadata khỏi metastore và xóa các file dữ liệu nền.\n\n- **A sai vì nhầm `DROP TABLE` với `DELETE`/`UPDATE` trên một phiên bản Delta.** Time travel dựa trên file và transaction-log history còn được giữ; việc drop bảng Hive không đồng nghĩa bảng cũ vẫn được đăng ký để truy vấn lịch sử.\n- **B mô tả hành vi điển hình của external table, không phải managed table trong bối cảnh này.** Với external table, drop metadata thường không xóa dữ liệu bên ngoài do người dùng quản lý.\n- **C đúng** vì đề đã nêu rõ legacy Hive metastore và managed-table semantics.\n- **D sai.** Delta Lake không tự cấm lệnh drop; quyền của người gọi và loại metastore/table quyết định khả năng chạy và hệ quả.\n\n**Lưu ý cho Databricks hiện nay:** không áp dụng kết luận của Hive metastore cho mọi bảng. Unity Catalog cho phép `UNDROP` managed table trong thời gian khôi phục mặc định 7 ngày; các file dữ liệu được purge theo lifecycle sau đó. Vì thế hãy xác định metastore trước khi dự đoán tác động hoặc dùng `DROP` trên production.\n\n📚 **Tham khảo:** [Databricks — Legacy Hive metastore objects](https://docs.databricks.com/aws/en/database-objects/hive-metastore), [Databricks — DROP TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-table)",
     "page": null,
-    "image": "img/q_122.jpg",
     "references": [
       {
-        "title": "Databricks Documentation - Database objects in the Databricks Lakehouse - Tables",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index#tables"
+        "title": "Databricks — Legacy Hive metastore objects",
+        "url": "https://docs.databricks.com/aws/en/database-objects/hive-metastore"
+      },
+      {
+        "title": "Databricks — DROP TABLE",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-table"
       }
     ]
   },
   {
     "id": 123,
     "topic": 1,
-    "question": "A developer has successfully configured their credentials for **Databricks Repos** and cloned a remote **Git** repository. They do not have privileges to make changes to the main branch, which is the only branch currently visible in their `workspace`. Which approach allows this user to share their code updates without the risk of overwriting the work of their teammates?",
+    "question": "A developer cloned a remote repository into **Databricks Git folders**. The repository's `main` branch is protected: the developer cannot push directly to `main`, but does have permission to create and push branches in the same remote repository. Which approach lets them share code without overwriting teammates' work?",
     "options": {
       "A": "Use Repos to create a new branch, commit all changes, and push changes to the remote **Git** repository.",
       "B": "Use Repos to create a fork of the remote repository, commit all changes, and make a pull request on the source repository.",
@@ -4009,55 +4018,53 @@
       "D": "Use Repos to merge all differences and make a pull request back to the remote repository."
     },
     "answer": "A",
-    "question_vi": "Một lập trình viên đã cấu hình thành công thông tin xác thực cho **Databricks Repos** và sao chép (clone) một kho chứa Git từ xa. Họ không có quyền thực hiện các thay đổi trên nhánh `main`, vốn là nhánh duy nhất hiện đang hiển thị trong workspace của họ.\n\nCách tiếp cận nào cho phép người dùng này chia sẻ các cập nhật mã nguồn của họ mà không có nguy cơ ghi đè lên công việc của các thành viên khác trong đội?",
+    "question_vi": "Một lập trình viên đã clone repository từ xa vào **Databricks Git folders**. Nhánh `main` được bảo vệ: lập trình viên không thể push thẳng lên `main`, nhưng có quyền tạo và push branch trong cùng repository từ xa. Cách nào giúp họ chia sẻ code mà không ghi đè công việc của đồng đội?",
     "options_vi": {
-      "A": "Sử dụng **Repos** để tạo một nhánh (branch) mới, commit tất cả các thay đổi và push các thay đổi đó lên Git repository từ xa",
-      "B": "Sử dụng **Repos** để tạo một bản sao (fork) của kho chứa từ xa, commit tất cả các thay đổi và tạo một `pull request` trên kho chứa nguồn",
-      "C": "Sử dụng **Repos** để pull các thay đổi từ Git repository từ xa; commit và push các thay đổi vào một nhánh xuất hiện khi các thay đổi được pull về",
-      "D": "Sử dụng **Repos** để merge tất cả các khác biệt và tạo một `pull request` quay lại kho chứa từ xa"
+      "A": "Tạo branch mới, commit các thay đổi và push branch đó lên repository từ xa",
+      "B": "Chỉ tạo fork, commit thay đổi rồi tạo pull request về repository nguồn; không dùng branch của repository hiện tại",
+      "C": "Pull từ `main` rồi push các thay đổi chưa commit trực tiếp lên `main`",
+      "D": "Merge thay đổi vào `main` trong workspace rồi tạo pull request sau đó"
     },
-    "explanation_vi": "Khi một nhà phát triển không có quyền đẩy trực tiếp thay đổi lên nhánh main (nhánh chính được bảo vệ), thực hành chuẩn của **Git** và **Databricks Repos** là tạo một nhánh tính năng mới (new branch) từ `workspace` của họ.\n\nNhà phát triển sẽ tiến hành commit các thay đổi trên nhánh mới này và push nhánh đó lên remote **Git** repository. Sau đó, họ có thể tạo một Pull Request trên **Git** provider để kiểm tra và merge code vào main mà không có nguy cơ ghi đè trực tiếp lên công việc của đồng nghiệp.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** Tạo branch tính năng dựa trên `main`, commit thay đổi vào branch đó rồi push branch lên remote. Sau đó mở pull request trên Git provider để đồng đội review và merge. Các commit mới nằm trên branch riêng, không ghi đè trực tiếp nội dung `main`.\n\n- **A đúng với điều kiện quyền đã nêu.** Databricks Git folders cho phép tạo branch, commit và push branch; quyền push vào `main` có thể bị chặn riêng bởi branch protection.\n- **B không phải bước bắt buộc.** Fork hữu ích khi người dùng không có quyền ghi vào repository nguồn; đề đã nói họ có thể push branch vào chính remote repository.\n- **C sai** vì pull chỉ cập nhật bản làm việc, không cấp quyền ghi vào `main`. Nếu `main` được bảo vệ, push trực tiếp vẫn bị từ chối.\n- **D đảo ngược quy trình.** Không merge vào `main` trước khi được review; pull request là nơi đề xuất và kiểm tra thay đổi, không phải bước hợp thức hóa một lần ghi trực tiếp trước đó.\n\nBranch riêng giảm xung đột trực tiếp nhưng không tự đảm bảo code an toàn: vẫn cần cập nhật theo `main`, giải quyết conflict, chạy CI và review pull request.\n\n📚 **Tham khảo:** [Databricks — Create and manage Git folders](https://docs.databricks.com/aws/en/repos/git-operations-with-repos)",
     "page": null,
-    "image": "img/q_123.jpg",
     "references": [
       {
-        "title": "Databricks Documentation - Git integration with Databricks Repos",
-        "url": "https://docs.databricks.com/en/repos/git-operations-with-repos"
+        "title": "Databricks — Create and manage Git folders",
+        "url": "https://docs.databricks.com/aws/en/repos/git-operations-with-repos"
       }
     ]
   },
   {
     "id": 124,
     "topic": 1,
-    "question": "The security team is exploring whether or not the **Databricks** secrets module can be leveraged for connecting to an external database. After testing the code with all **Python** variables being defined with strings, they upload the password to the secrets module and `configure` the correct permissions for the currently active user. They then modify their code to the following (leaving all other variables unchanged). Which statement describes what will happen when the above code is executed?",
+    "question": "The security team stores a JDBC password in a Databricks secret scope and grants the active user permission to read it. The original JDBC connection works when all variables are ordinary strings. They replace the password assignment with the code below; the host, table, username, driver, network access, and other settings are valid. What happens?\n\n```python\npassword = dbutils.secrets.get(scope=\"db_creds\", key=\"jdbc_password\")\nprint(password)\n\ndf = (spark.read\n  .format(\"jdbc\")\n  .option(\"url\", connection)\n  .option(\"dbtable\", tablename)\n  .option(\"user\", username)\n  .option(\"password\", password)\n  .load()\n)\n\n# Trigger a read so the JDBC source is actually queried.\ndf.limit(1).collect()\n```",
     "options": {
-      "A": "The connection to the external table will succeed; the string \"REDACTED\" will be printed.",
-      "B": "An interactive input box will appear in the notebook; if the right password is provided, the connection will succeed and the encoded password will be saved to `DBFS`.",
-      "C": "An interactive input box will appear in the notebook; if the right password is provided, the connection will succeed and the password will be printed in plain text.",
-      "D": "The connection to the external table will succeed; the string value of password will be printed in plain text."
+      "A": "The JDBC read can succeed, and printing the literal secret value displays `[REDACTED]` in the notebook output.",
+      "B": "An interactive password prompt appears, and Databricks writes an encoded copy of the secret to DBFS.",
+      "C": "An interactive password prompt appears, and the supplied password is printed in plain text.",
+      "D": "The JDBC read can succeed, and `print(password)` displays the secret in plain text."
     },
     "answer": "A",
-    "question_vi": "Đội ngũ bảo mật đang tìm hiểu xem liệu module secrets của **Databricks** có thể được tận dụng để kết nối với cơ sở dữ liệu bên ngoài hay không. Sau khi thử nghiệm mã nguồn với tất cả các biến Python được định nghĩa bằng chuỗi (string), họ tải mật khẩu lên module secrets và cấu hình quyền chính xác cho người dùng hiện đang hoạt động. Sau đó, họ sửa đổi mã nguồn của mình thành như sau (giữ nguyên tất cả các biến khác).\n\nPhát biểu nào mô tả điều gì sẽ xảy ra khi đoạn mã trên được thực thi?",
+    "question_vi": "Đội bảo mật lưu mật khẩu JDBC trong secret scope của Databricks và cấp quyền đọc secret cho người dùng hiện tại. Kết nối JDBC ban đầu chạy được khi mọi biến là chuỗi thông thường. Họ thay phần gán mật khẩu bằng code sau; host, bảng, username, driver, quyền mạng và các cấu hình khác đều hợp lệ. Điều gì xảy ra?\n\n```python\npassword = dbutils.secrets.get(scope=\"db_creds\", key=\"jdbc_password\")\nprint(password)\n\ndf = (spark.read\n  .format(\"jdbc\")\n  .option(\"url\", connection)\n  .option(\"dbtable\", tablename)\n  .option(\"user\", username)\n  .option(\"password\", password)\n  .load()\n)\n\n# Buộc truy vấn thực sự đọc dữ liệu JDBC.\ndf.limit(1).collect()\n```",
     "options_vi": {
-      "A": "Kết nối đến bảng ngoài sẽ thành công; chuỗi `\"REDACTED\"`sẽ được in ra",
-      "B": "Một hộp nhập liệu tương tác sẽ xuất hiện trong notebook; nếu cung cấp đúng mật khẩu, kết nối sẽ thành công và mật khẩu đã mã hóa sẽ được lưu vào `DBFS`",
-      "C": "Một hộp nhập liệu tương tác sẽ xuất hiện trong notebook; nếu cung cấp đúng mật khẩu, kết nối sẽ thành công và mật khẩu sẽ được in ra dưới dạng plain text",
-      "D": "Kết nối đến bảng ngoài sẽ thành công; giá trị chuỗi của mật khẩu sẽ được in dưới dạng plain text"
+      "A": "Đọc JDBC có thể thành công; khi in giá trị secret literal, notebook hiển thị `[REDACTED]`",
+      "B": "Notebook hiện hộp nhập mật khẩu tương tác và Databricks ghi bản mã hóa của secret vào DBFS",
+      "C": "Notebook hiện hộp nhập mật khẩu tương tác và in mật khẩu người dùng nhập ở dạng văn bản thuần",
+      "D": "Đọc JDBC có thể thành công và `print(password)` hiển thị mật khẩu ở dạng văn bản thuần"
     },
-    "explanation_vi": "**Databricks** Secrets được tích hợp tính năng bảo mật tự động ghi đè/ẩn (redaction).\n\nKhi bạn lấy mật khẩu bằng `dbutils.secrets.get()` và sử dụng nó, kết nối đến cơ sở dữ liệu bên ngoài vẫn thành công vì giá trị thực tế vẫn được truyền ẩn cho driver. Tuy nhiên, nếu bạn cố gắng print giá trị của biến mật khẩu này ra màn hình notebook hoặc ghi vào log, **Databricks** sẽ tự động chặn và hiển thị chuỗi `[REDACTED]` để tránh lộ thông tin nhạy cảm.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** `dbutils.secrets.get()` trả về giá trị secret cho chương trình để JDBC dùng xác thực. Khi giá trị literal đó được in ra notebook, Databricks redaction thay nội dung hiển thị bằng `[REDACTED]`; việc ẩn ở output không biến mật khẩu thành giá trị khác, nên JDBC vẫn nhận credential thật.\n\n- **A đúng.** Đề đã giả định user có quyền đọc secret và các thành phần kết nối khác hợp lệ. `.load()` tạo DataFrame JDBC; `limit(1).collect()` buộc Spark thực sự lấy dữ liệu để kiểm tra đường kết nối.\n- **B sai.** `dbutils.secrets.get()` đọc giá trị đã lưu trong secret scope; nó không bật hộp thoại nhập liệu và cũng không tự ghi password vào DBFS.\n- **C sai** vì đây không phải API nhập mật khẩu tương tác, và giá trị literal đọc từ secret được redaction khi hiển thị.\n- **D sai** vì nhầm giá trị chương trình sử dụng với giá trị được phép hiển thị trong output.\n\nRedaction giảm rủi ro rò rỉ nhưng không bảo vệ khỏi mọi cách làm lộ secret: Databricks chỉ redacts literal secret value, không ngăn người dùng cố tình biến đổi rồi in dữ liệu. Hãy giới hạn ACL của scope, tránh log credential và không chia sẻ notebook context cho người không tin cậy.\n\n📚 **Tham khảo:** [Databricks — Secret management and redaction](https://docs.databricks.com/aws/en/security/secrets)",
     "page": null,
-    "image": "img/q_124.jpg",
     "references": [
       {
-        "title": "Databricks Documentation - Secret redaction",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index#secret-redaction"
+        "title": "Databricks — Secret management and redaction",
+        "url": "https://docs.databricks.com/aws/en/security/secrets"
       }
     ]
   },
   {
     "id": 125,
     "topic": 1,
-    "question": "The data science team has created and logged a production `model` using **MLflow**. The `model` accepts a list of column names and returns a new column of type `DOUBLE`. The following code correctly imports the production `model`, loads the customers table containing the `customer_id` key column into a DataFrame, and defines the feature `columns` needed for the `model`. Which code block will output a DataFrame with the schema \"`customer_id` `LONG`, `predictions` `DOUBLE`\"?",
+    "question": "The data science team has logged a production model with **MLflow**. The model accepts the listed feature columns and returns one `DOUBLE` prediction per row. Given the following setup, which expression returns a DataFrame with schema `customer_id LONG, predictions DOUBLE`?\n\n```python\nimport mlflow\n\nmodel = mlflow.pyfunc.spark_udf(\n    spark,\n    model_uri=\"models:/churn/prod\",\n    result_type=\"double\"\n)\ndf = spark.table(\"customers\")\ncolumns = [\"account_age\", \"time_since_last_seen\", \"app_rating\"]\n```",
     "options": {
       "A": "`df.map(lambda x:model(x[columns])).select(\"customer_id, predictions\")`",
       "B": "`df.select(\"customer_id\", model(*columns).alias(\"predictions\"))`",
@@ -4065,27 +4072,26 @@
       "D": "`df.apply(model, columns).select(\"customer_id, predictions\")`"
     },
     "answer": "B",
-    "question_vi": "Đội ngũ khoa học dữ liệu đã tạo và log một production model bằng **MLflow**. Model này nhận đầu vào là danh sách tên cột và trả về một cột mới kiểu `DOUBLE`.\n\nĐoạn mã dưới đây import model, load bảng `customers` chứa cột khóa `customer_id` vào một `DataFrame`, và định nghĩa các cột thuộc tính (features) cần thiết cho model.\n\nĐoạn mã nào sẽ trả về một `DataFrame` với schema `customer_id LONG, predictions DOUBLE`?",
+    "question_vi": "Nhóm khoa học dữ liệu đã log một production model bằng **MLflow**. Model nhận các cột feature được liệt kê và trả về một giá trị dự đoán kiểu `DOUBLE` cho mỗi dòng. Với phần khởi tạo sau, biểu thức nào trả về DataFrame có schema `customer_id LONG, predictions DOUBLE`?\n\n```python\nimport mlflow\n\nmodel = mlflow.pyfunc.spark_udf(\n    spark,\n    model_uri=\"models:/churn/prod\",\n    result_type=\"double\"\n)\ndf = spark.table(\"customers\")\ncolumns = [\"account_age\", \"time_since_last_seen\", \"app_rating\"]\n```",
     "options_vi": {
-      "A": "`df.map(lambda x:model(x[columns])).select(\"customer_id, predictions\")`",
+      "A": "`df.map(lambda row: model(row[columns])).select(\"customer_id, predictions\")`",
       "B": "`df.select(\"customer_id\", model(*columns).alias(\"predictions\"))`",
       "C": "`model.predict(df, columns)`",
       "D": "`df.apply(model, columns).select(\"customer_id, predictions\")`"
     },
-    "explanation_vi": "Để áp dụng mô hình **MLflow** dưới dạng một `UDF` trong **Spark** DataFrame nhằm tạo ra schema đầu ra mong muốn:\n\nChúng ta dùng cú pháp `df.select()` để giữ lại cột `customer_id`, đồng thời truyền các cột đặc trưng làm đối số cho `model`: `model(*columns)`. Sau đó, sử dụng phương thức `.alias(\"predictions\")` để đổi tên cột đầu ra của mô hình thành `predictions`. Do mô hình trả về kiểu `DOUBLE`, cột `predictions` mới tạo ra sẽ tự động có kiểu `DOUBLE`, tạo ra schema chính xác: `customer_id LONG, predictions DOUBLE`.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** `mlflow.pyfunc.spark_udf(...)` tạo một Spark UDF có thể gọi trong biểu thức DataFrame. Danh sách `columns` chứa tên ba cột feature; toán tử `*` unpack danh sách thành ba positional arguments theo đúng thứ tự: `model(\"account_age\", \"time_since_last_seen\", \"app_rating\")`. Spark hiểu các chuỗi này là tên cột đầu vào của UDF. `df.select` giữ `customer_id` và tạo cột dự đoán; `.alias(\"predictions\")` đặt tên cho cột mới. `result_type=\"double\"` khai báo kiểu trả về để schema khớp yêu cầu.\n\n- **A sai** vì Spark DataFrame không có `map` kiểu pandas với `row[columns]` như biểu thức này; danh sách tên cột cũng không được chọn theo cách đó. `select(\"customer_id, predictions\")` còn truyền một chuỗi chứa dấu phẩy như một tên cột, không phải hai biểu thức.\n- **B đúng** vì gọi Spark UDF ở cấp biểu thức cột và giữ lại khóa khách hàng.\n- **C sai** vì `model.predict` không nhận DataFrame Spark cùng danh sách tên cột theo chữ ký đang dùng; đây không phải cách gắn một dự đoán vào từng hàng của Spark DataFrame.\n- **D sai** vì Spark DataFrame không cung cấp phương thức `apply` kiểu pandas để áp UDF lên danh sách cột.\n\nTrong pipeline thật, bảo đảm tên và thứ tự feature trùng với chữ ký model đã log; xác nhận model URI/alias tồn tại và `customer_id` nguồn có kiểu `LONG`. Nếu model trả về cấu trúc nhiều trường thay vì scalar, cần khai báo `result_type` tương ứng và xử lý schema khác.\n\n📚 **Tham khảo:** [MLflow — `mlflow.pyfunc.spark_udf` API](https://mlflow.org/docs/latest/api_reference/python_api/mlflow.pyfunc.html)",
     "page": null,
-    "image": "img/q_125.jpg",
     "references": [
       {
-        "title": "MLflow Documentation - Model Evaluation and Inference",
-        "url": "https://mlflow.org/docs/latest/models.html"
+        "title": "MLflow — `mlflow.pyfunc.spark_udf` API",
+        "url": "https://mlflow.org/docs/latest/api_reference/python_api/mlflow.pyfunc.html"
       }
     ]
   },
   {
     "id": 126,
     "topic": 1,
-    "question": "A junior member of the data engineering team is exploring the language interoperability of **Databricks** notebooks. The intended outcome of the below code is to register a view of all `sales` that occurred in countries on the continent of Africa that appear in the `geo_lookup` table. Before executing the code, running `SHOW TABLES` on the current database indicates the database contains only two tables: `geo_lookup` and `sales`. What will be the outcome of executing these command cells in order in an interactive notebook?",
+    "question": "A junior engineer wants to create a temporary view of sales from African countries listed in `geo_lookup`. The current database contains only `geo_lookup` and `sales`; `sales` has a `country` column and no column named `countries_af`. What happens when the following cells run in order in an interactive Databricks notebook?\n\n**Cmd 1 — Python**\n```python\ncountries_af = [\n    row[\"country\"]\n    for row in (\n        spark.table(\"geo_lookup\")\n        .where(\"continent = 'AF'\")\n        .select(\"country\")\n        .collect()\n    )\n]\n```\n\n**Cmd 2 — SQL**\n```sql\nCREATE OR REPLACE TEMP VIEW sales_af AS\nSELECT s.*\nFROM sales AS s\nWHERE s.country IN (countries_af);\n```",
     "options": {
       "A": "Both commands will succeed. Executing `SHOW TABLES` will show that `countries_af` and `sales_af` have been registered as views.",
       "B": "Cmd 1 will succeed. Cmd 2 will search all accessible databases for a table or view named `countries_af`: if this entity exists, Cmd 2 will succeed.",
@@ -4093,55 +4099,57 @@
       "D": "Cmd 1 will succeed and Cmd 2 will fail. `countries_af` will be a **Python** variable containing a list of strings."
     },
     "answer": "D",
-    "question_vi": "Thử tương tác đa ngôn ngữ notebook. Cmd 1 tạo `countries_af` bằng **Spark** **SQL**; Cmd 2 cố đăng ký `sales_af` bằng **Python**. Kết quả thế nào?",
+    "question_vi": "Một kỹ sư muốn tạo temporary view chứa các giao dịch ở những quốc gia châu Phi có trong `geo_lookup`. Database hiện tại chỉ có hai bảng `geo_lookup` và `sales`; bảng `sales` có cột `country` và không có cột tên `countries_af`. Điều gì xảy ra khi chạy lần lượt hai cell sau trong notebook Databricks?\n\n**Cmd 1 — Python**\n```python\ncountries_af = [\n    row[\"country\"]\n    for row in (\n        spark.table(\"geo_lookup\")\n        .where(\"continent = 'AF'\")\n        .select(\"country\")\n        .collect()\n    )\n]\n```\n\n**Cmd 2 — SQL**\n```sql\nCREATE OR REPLACE TEMP VIEW sales_af AS\nSELECT s.*\nFROM sales AS s\nWHERE s.country IN (countries_af);\n```",
     "options_vi": {
-      "A": "Cả hai lệnh thành công; `SHOW TABLES` thấy `countries_af` và `sales_af` view.",
-      "B": "Cmd1 thành công; Cmd2 sẽ tìm ở mọi database một bảng/view tên `countries_af`, nếu có thì thành công.",
-      "C": "Cmd1 thành công, Cmd2 thất bại; `countries_af` là biến **PySpark** DataFrame.",
-      "D": "Cmd1 thành công, Cmd2 thất bại; `countries_af` là biến **Python** chứa danh sách chuỗi."
+      "A": "Cả hai cell thành công; `SHOW TABLES` sẽ liệt kê `countries_af` và `sales_af` như hai view",
+      "B": "Cmd 1 thành công; Cmd 2 tự tìm bảng/view tên `countries_af` trong mọi database và chạy nếu tìm thấy",
+      "C": "Cmd 1 thành công, Cmd 2 thất bại; `countries_af` là biến Python chứa một PySpark DataFrame",
+      "D": "Cmd 1 thành công, Cmd 2 thất bại; `countries_af` là biến Python chứa danh sách chuỗi"
     },
-    "explanation_vi": "Trong **Databricks** notebooks, các ngôn ngữ có tính tương hợp nhưng không chia sẻ biến trực tiếp qua các cell chạy ngôn ngữ khác nhau mà không thông qua context của **Spark**.\n\nCmd 1 chạy bằng **Python** thực hiện collect dữ liệu các quốc gia ở châu Phi, do đó biến `countries_af` trong **Python** sẽ là một danh sách các chuỗi (list of strings). Khi chuyển sang Cmd 2 chạy bằng **SQL**, **SQL** cell không thể nhận dạng trực tiếp biến local **Python** `countries_af` này và sẽ báo lỗi do không tìm thấy thực thể tương ứng, trừ khi biến đó được đăng ký dưới dạng một Temporary View.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** Cell Python lọc `geo_lookup`, chỉ chọn cột `country`, gọi `collect()` để đưa các giá trị về driver, rồi list comprehension lấy giá trị từng hàng. Vì vậy `countries_af` là list Python gồm các chuỗi tên quốc gia, không phải DataFrame hay view.\n\nCell SQL không chia sẻ namespace biến cục bộ của Python. Trong biểu thức `s.country IN (countries_af)`, SQL phân tích `countries_af` như một biểu thức/identifier SQL; đề đã xác nhận bảng `sales` không có cột đó và database không có bảng/view tương ứng, nên câu lệnh không thể tạo view như dự định. Notebook cho phép trộn ngôn ngữ nhưng không tự nội suy mọi biến Python vào SQL.\n\n- **A sai:** Cmd 1 chỉ tạo biến Python, không đăng ký nó thành SQL view. Cmd 2 lỗi nên `sales_af` cũng không được tạo.\n- **B sai:** SQL không tự duyệt mọi database để tìm tên biến Python. Tham chiếu quan hệ phải là table/view SQL hợp lệ trong catalog/schema.\n- **C sai:** biến được tạo bằng list comprehension sau `collect()`, nên là danh sách chuỗi.\n- **D đúng** vì mô tả chính xác kiểu biến và ranh giới Python–SQL.\n\nCách sửa: tiếp tục bằng Python DataFrame với `sales_df.filter(col(\"country\").isin(countries_af))`, rồi gọi `createOrReplaceTempView(\"sales_af\")`; hoặc tạo một DataFrame/view SQL từ danh sách quốc gia trước khi truy vấn. Với danh sách lớn, tránh `collect()` vì toàn bộ giá trị bị kéo về driver.\n\n📚 **Tham khảo:** [Databricks — Develop code in notebooks and mix languages](https://docs.databricks.com/aws/en/notebooks/notebooks-code)",
     "page": null,
-    "image": "img/q_126.jpg",
     "references": [
       {
-        "title": "Databricks Documentation - Mix languages in Databricks notebooks",
-        "url": "https://docs.databricks.com/en/notebooks/notebooks-code#mix-languages"
+        "title": "Databricks — Develop code in notebooks and mix languages",
+        "url": "https://docs.databricks.com/aws/en/notebooks/notebooks-code"
       }
     ]
   },
   {
     "id": 127,
     "topic": 1,
-    "question": "The data science team has requested assistance in accelerating queries on free-form text from user reviews. The data is currently stored in Parquet with the below schema:\n`item_id` `INT`, `user_id` `INT`, `review_id` `INT`, `rating` `FLOAT`, `review` `STRING` The `review` column contains the full text of the `review` left by the user. Specifically, the data science team is looking to identify if any of 30 key words exist in this field. A junior data engineer suggests converting this data to **Delta Lake** will improve query performance. Which response to the junior data engineer’s suggestion is correct?",
+    "question": "The data science team searches free-form user reviews for the presence of any of 30 keywords. The data is currently Parquet with schema `item_id INT, user_id INT, review_id INT, rating FLOAT, review STRING`. A junior engineer proposes converting it to **Delta Lake**, expecting the conversion alone to make arbitrary keyword or substring searches efficient. Which response is most accurate?",
     "options": {
-      "A": "**Delta Lake** statistics are not optimized for free text fields with high cardinality.",
-      "B": "**Delta Lake** statistics are only collected on the first 4 `columns` in a table.",
-      "C": "`ZORDER ON review` will need to be run to see performance gains.",
-      "D": "The Delta log creates a term matrix for free text fields to support selective filtering."
+      "A": "Delta file-level min/max statistics do not create a full-text index for arbitrary keyword or substring matching in free-form text.",
+      "B": "Delta collects statistics only for the first four columns, so it never collects statistics for `review`.",
+      "C": "Running `ZORDER BY (review)` automatically creates an inverted index for all review terms.",
+      "D": "The Delta transaction log automatically creates a term matrix for free-form text and uses it for selective filtering."
     },
     "answer": "A",
-    "question_vi": "Đội ngũ khoa học dữ liệu đã yêu cầu hỗ trợ tăng tốc các truy vấn tìm kiếm văn bản tự do (free-form text) từ các đánh giá của người dùng. Dữ liệu hiện đang được lưu trữ dưới dạng **Parquet** với schema dưới đây:\n\n`item_id INT, user_id INT, review_id INT, rating FLOAT, review STRING`\n\nCột `review` chứa toàn bộ văn bản của bài đánh giá do người dùng để lại. Cụ thể, đội ngũ khoa học dữ liệu đang tìm cách xác định xem liệu có từ nào trong số 30 từ khóa xuất hiện trong trường này hay không.\n\nMột kỹ sư dữ liệu cấp dưới đề xuất rằng việc chuyển đổi dữ liệu này sang **Delta Lake** sẽ cải thiện hiệu suất truy vấn.\n\nPhản hồi nào đối với đề xuất của kỹ sư dữ liệu cấp dưới là chính xác?",
+    "question_vi": "Nhóm khoa học dữ liệu cần tìm xem mỗi review dạng văn bản tự do có chứa từ nào trong 30 từ khóa hay không. Dữ liệu hiện ở Parquet với schema `item_id INT, user_id INT, review_id INT, rating FLOAT, review STRING`. Một kỹ sư đề xuất chuyển sang **Delta Lake** và cho rằng chỉ riêng việc chuyển đổi sẽ giúp tìm từ khóa hoặc chuỗi con tùy ý hiệu quả hơn. Phản hồi nào chính xác nhất?",
     "options_vi": {
-      "A": "Thống kê của **Delta Lake** không được tối ưu hóa cho các trường văn bản tự do có độ phân biệt (cardinality) cao",
-      "B": "Thống kê của **Delta Lake** chỉ được thu thập trên 4 cột đầu tiên trong một bảng",
-      "C": "Cần phải chạy lệnh `ZORDER ON review` để thấy được hiệu suất cải thiện",
-      "D": "Transaction log của **Delta** tạo ra một term matrix cho các trường văn bản tự do để hỗ trợ lọc có chọn lọc"
+      "A": "Thống kê min/max theo file của Delta không tạo full-text index để tìm từ khóa hoặc chuỗi con tùy ý trong văn bản tự do",
+      "B": "Delta chỉ thu thập thống kê cho bốn cột đầu nên không bao giờ thu thập thống kê cho `review`",
+      "C": "Chạy `ZORDER BY (review)` tự động tạo inverted index cho mọi từ trong review",
+      "D": "Delta transaction log tự tạo term matrix cho văn bản tự do và dùng nó để lọc chọn lọc"
     },
-    "explanation_vi": "Các tính năng tối ưu hóa của **Delta Lake** như Data Skipping dựa trên việc thu thập thống kê (statistics) bao gồm giá trị min, max cho các cột.\n\nĐối với các cột chứa văn bản tự do (free-form text) có độ phân biệt cao (high cardinality) như `review` của người dùng, các giá trị min và max không có nhiều ý nghĩa và không giúp ích cho việc bỏ qua file dữ liệu (data skipping) khi lọc tìm kiếm từ khóa. Do đó, việc chuyển đổi thuần túy sang **Delta Lake** không giúp tăng tốc các truy vấn tìm kiếm từ khóa tự do này.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** Chuyển Parquet sang Delta tự nó không xây dựng chỉ mục toàn văn. Data skipping truyền thống của Delta dựa trên thống kê cấp file như min/max và null count để loại file khi predicate có thể suy ra từ các thống kê đó. Với truy vấn tìm từ tùy ý hoặc substring trong một đoạn review dài, min/max không cho biết một từ khóa cụ thể có nằm bên trong văn bản hay không; vì vậy không nên kỳ vọng conversion đơn thuần loại được nhiều file.\n\n- **A đúng** vì mô tả giới hạn của metadata min/max so với full-text index. Vấn đề không đơn giản là cardinality cao, mà là loại predicate và việc không có chỉ mục toàn văn.\n- **B sai.** Số cột được thu thập thống kê không phải lúc nào cũng cố định ở bốn; hơn nữa câu “không bao giờ” là quá mạnh.\n- **C sai.** Z-ordering sắp xếp/nhóm dữ liệu vật lý để data skipping có thể hữu ích với một số predicate; nó không tự tạo inverted index và không biến mọi substring search thành lookup rẻ.\n- **D sai.** Delta transaction log lưu snapshot, metadata và file statistics; nó không tự sinh term matrix cho nội dung review.\n\n**Cách làm hiện đại:** Databricks có full-text search index cho managed Delta/Iceberg tables trong Unity Catalog (Beta; yêu cầu Databricks Runtime 18.2+ và bật preview). Chỉ mục hỗ trợ word hoặc substring search qua `search`/`isearch`. Nếu môi trường chưa đáp ứng, cân nhắc tokenize/precompute từ khóa, dùng hệ thống search chuyên dụng, hoặc đo hiệu quả sau khi điều chỉnh layout.\n\n📚 **Tham khảo:** [Databricks — Full-text search indexes](https://docs.databricks.com/aws/en/optimizations/full-text-search-indexes), [Databricks — Data skipping](https://docs.databricks.com/aws/en/tables/data-skipping)",
     "page": null,
-    "image": "img/q_127.jpg",
     "references": [
       {
-        "title": "Databricks Documentation - Data skipping for Delta Lake",
-        "url": "https://docs.databricks.com/en/tables/data-skipping"
+        "title": "Databricks — Full-text search indexes",
+        "url": "https://docs.databricks.com/aws/en/optimizations/full-text-search-indexes"
+      },
+      {
+        "title": "Databricks — Data skipping",
+        "url": "https://docs.databricks.com/aws/en/tables/data-skipping"
       }
     ]
   },
   {
     "id": 128,
     "topic": 1,
-    "question": "The data engineering team has configured a job to process customer requests to be forgotten (have their data deleted). All user data that needs to be deleted is stored in **Delta Lake** tables using default table settings. The team has decided to process all deletions from the previous week as a batch job at 1am each Sunday. The total duration of this job is less than one hour. Every Monday at 3am, a batch job executes a series of `VACUUM` commands on all **Delta Lake** tables throughout the organization. The compliance officer has recently learned about **Delta Lake**'s time travel functionality. They are concerned that this might allow continued access to deleted data. Assuming all delete logic is correctly implemented, which statement correctly addresses this concern?",
+    "question": "A team processes data-erasure requests in a batch that starts at 1:00 AM every Sunday and completes within one hour. Each Monday at 3:00 AM, another job runs `VACUUM` on all Delta tables. Assume the delete rewrites affected data files (no deletion vectors or other metadata-only soft deletes), tables use the default deleted-file retention, and no other purge mechanism runs. When can files containing the deleted rows first become eligible to be physically removed, and what does that mean for time travel?",
     "options": {
       "A": "Because the `VACUUM` command permanently deletes all files containing deleted records, deleted records may be accessible with time travel for around 24 hours.",
       "B": "Because the default data retention threshold is 24 hours, data files containing deleted records will be retained until the `VACUUM` job is run the following day.",
@@ -4149,20 +4157,23 @@
       "D": "Because **Delta Lake**'s delete statements have **ACID** guarantees, deleted records will be permanently purged from all storage systems as soon as a delete job completes."
     },
     "answer": "C",
-    "question_vi": "Đội ngũ data engineering đã cấu hình một job để xử lý các yêu cầu được xóa thông tin (yêu cầu bị lãng quên) của khách hàng. Tất cả dữ liệu người dùng cần xóa được lưu trữ trong các bảng **Delta Lake** sử dụng thiết lập mặc định của bảng.\n\nĐội ngũ quyết định xử lý tất cả các yêu cầu xóa của tuần trước dưới dạng một job batch vào lúc 1:00 AM mỗi Chủ Nhật. Tổng thời gian chạy của job này chưa đầy một giờ. Mỗi thứ Hai lúc 3:00 AM, một job batch thực thi một loạt lệnh `VACUUM` trên tất cả các bảng **Delta Lake** trong toàn tổ chức.\n\nNhân viên tuân thủ (compliance officer) gần đây đã tìm hiểu về tính năng `time travel` của **Delta Lake**. Họ lo ngại rằng điều này có thể cho phép tiếp tục truy cập vào dữ liệu đã xóa.\n\nGiả sử tất cả logic xóa đã được triển khai chính xác, phát biểu nào giải quyết đúng mối lo ngại này?",
+    "question_vi": "Một nhóm xử lý yêu cầu xóa dữ liệu bằng batch bắt đầu lúc 1:00 sáng Chủ Nhật và hoàn tất trong vòng một giờ. Mỗi thứ Hai lúc 3:00 sáng, một job khác chạy `VACUUM` trên mọi bảng Delta. Giả sử thao tác xóa ghi lại các data file bị ảnh hưởng (không dùng deletion vector hoặc cơ chế soft-delete chỉ cập nhật metadata), các bảng dùng retention mặc định cho file đã xóa và không có purge nào khác. Khi nào các file chứa dòng đã xóa sớm nhất đủ điều kiện bị xóa vật lý, và điều đó có ý nghĩa gì với time travel?",
     "options_vi": {
-      "A": "Vì lệnh `VACUUM` xóa vĩnh viễn tất cả các tệp chứa bản ghi đã xóa, các bản ghi đã xóa có thể được truy cập thông qua `time travel` trong khoảng 24 giờ",
-      "B": "Vì ngưỡng thời gian giữ lại dữ liệu mặc định là 24 giờ, các tệp dữ liệu chứa bản ghi đã xóa sẽ được giữ lại cho đến khi job `VACUUM` chạy vào ngày hôm sau",
-      "C": "Vì ngưỡng thời gian giữ lại dữ liệu mặc định là 7 ngày, các tệp dữ liệu chứa bản ghi đã xóa sẽ được giữ lại cho đến khi job `VACUUM` chạy sau đó 8 ngày",
-      "D": "Vì các câu lệnh xóa của **Delta Lake** có bảo đảm tính chất **ACID**, các bản ghi đã xóa sẽ bị xóa vĩnh viễn khỏi tất cả các hệ thống lưu trữ ngay khi job xóa hoàn tất"
+      "A": "Khoảng 24 giờ sau thao tác xóa; `VACUUM` kế tiếp luôn xóa file vì nó chạy ngày hôm sau",
+      "B": "Sau đúng 7 ngày, bất kể lịch chạy; chỉ cần file đủ tuổi là nó tự bị xóa mà không cần `VACUUM`",
+      "C": "Lần `VACUUM` thứ Hai ngay sau khi xóa còn quá sớm; file thường chỉ đủ tuổi ở lần chạy thứ Hai tuần kế tiếp, khoảng 8 ngày sau batch Chủ Nhật",
+      "D": "Ngay khi lệnh `DELETE` hoàn tất, do tính ACID các file lịch sử bị xóa khỏi mọi storage và time travel không thể truy cập"
     },
-    "explanation_vi": "Mặc định, **Delta Lake** có ngưỡng thời gian giữ lại dữ liệu lịch sử (data retention threshold) cho lệnh `VACUUM` là 7 ngày (168 giờ).\n\nKhi job xóa dữ liệu chạy lúc 1am Chủ Nhật, dữ liệu cũ bị loại bỏ khỏi trạng thái hiện tại nhưng các file chứa dữ liệu này vẫn nằm trong storage phục vụ Time Travel. Khi lệnh `VACUUM` chạy lúc 3am Thứ Hai (chỉ 26 giờ sau khi xóa), nó sẽ không xóa các file này vì chúng chưa vượt quá ngưỡng 7 ngày. Các file này chỉ bị xóa hoàn toàn khỏi storage bởi lệnh `VACUUM` chạy vào Thứ Hai của tuần tiếp theo (tức là 8 ngày sau khi xóa).\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** Retention mặc định của Delta cho file đã bị loại khỏi snapshot là 7 ngày. `DELETE` loại hàng khỏi phiên bản hiện tại nhưng, theo giả định đề bài, data file cũ vẫn ở storage để phục vụ time travel cho tới khi đủ tuổi và một lệnh `VACUUM` thực sự dọn chúng.\n\nXét batch bắt đầu Chủ Nhật lúc 1:00 và hoàn tất trước 2:00:\n1. `VACUUM` đầu tiên chạy Thứ Hai lúc 3:00, chỉ khoảng 25–26 giờ sau các thao tác xóa. File chưa đủ 168 giờ nên phải được giữ lại.\n2. Lần `VACUUM` kế tiếp là Thứ Hai tuần sau lúc 3:00, khoảng 8 ngày sau khi batch bắt đầu; khi đó file đã vượt retention mặc định và có thể bị xóa vật lý.\n3. Lịch `VACUUM` hàng tuần khiến thời gian giữ file thực tế dài hơn mức tối thiểu 7 ngày. File không tự biến mất đúng lúc đủ tuổi; cần đợi lần `VACUUM` tiếp theo.\n\n- **A sai** vì 24–26 giờ ngắn hơn retention mặc định.\n- **B sai** vì đủ tuổi chỉ khiến file *đủ điều kiện* bị dọn ở lần VACUUM tiếp theo; nó không tự xóa.\n- **C đúng** theo lịch đề bài.\n- **D sai** vì ACID bảo đảm tính nhất quán giao dịch, không đồng nghĩa xóa byte cũ khỏi storage ngay lập tức.\n\nTime travel không thể đọc một phiên bản nếu data file cần thiết đã bị purge, nhưng retention của transaction log và data file là hai khái niệm riêng. **Caveat:** nếu bảng dùng deletion vectors hoặc thao tác soft-delete chỉ sửa metadata, `VACUUM` một mình có thể chưa xóa byte cũ trong data file. Cần `REORG TABLE ... APPLY (PURGE)` để ghi lại file chứa soft-deleted rows, rồi mới để `VACUUM` dọn file cũ sau retention. Với yêu cầu GDPR, cần kiểm tra loại xóa, replica, log và retention trên toàn hệ thống.\n\n📚 **Tham khảo:** [Databricks — VACUUM and retention](https://docs.databricks.com/aws/en/tables/operations/vacuum), [Purge metadata-only deletes](https://docs.databricks.com/aws/en/tables/operations/vacuum#purge-metadata-only-deletes-to-force-data-rewrite)",
     "page": null,
-    "image": "img/q_128.jpg",
     "references": [
       {
-        "title": "Databricks Documentation - Remove unused data files with vacuum",
-        "url": "https://docs.databricks.com/en/sql/language-manual/delta-vacuum"
+        "title": "Databricks — VACUUM and retention",
+        "url": "https://docs.databricks.com/aws/en/tables/operations/vacuum"
+      },
+      {
+        "title": "Databricks — Purge metadata-only deletes",
+        "url": "https://docs.databricks.com/aws/en/tables/operations/vacuum#purge-metadata-only-deletes-to-force-data-rewrite"
       }
     ]
   },
