@@ -2334,7 +2334,7 @@
       "D": "Đăng ký `/item_agg` trong Hive metastore vì streaming bắt buộc phải ghi qua bảng đã đăng ký.",
       "E": "Gỡ `mergeSchema`; schema evolution tự làm checkpoint trạng thái cũ tương thích."
     },
-    "explanation_vi": "**Đáp án A.** Checkpoint lưu tiến độ nguồn và trạng thái đã tích lũy của phép `groupBy`. Khi thêm `new_member_promo`, schema trạng thái thay đổi; checkpoint cũ được tạo cho trạng thái khác nên không thể khôi phục an toàn vào truy vấn mới. Hãy chạy truy vấn mới với một `checkpointLocation` riêng. Lưu ý checkpoint mới bắt đầu tiến độ mới: cần lên kế hoạch replay dữ liệu nguồn và cập nhật/đối soát bảng đích.\n\n`mergeSchema` xử lý việc thêm cột vào schema **bảng Delta đầu ra**, không chuyển đổi state trong checkpoint. Vì vậy E không giải quyết lỗi tương thích. Tăng shuffle partitions (B) là tinh chỉnh hiệu năng, không phải yêu cầu để sửa state. `REFRESH TABLE` (C) chỉ làm mới metadata của bảng đã đăng ký, không migrate trạng thái streaming. Ghi vào path bằng `start(path)` (D) không đòi hỏi đăng ký Hive table.\n\nCách đếm điều kiện trong ví dụ được viết rõ bằng `sum(when(condition, 1).otherwise(0))`. Biểu thức bị sao chép từ câu hỏi cũ `count(\"promo_code = ...\")` có thể bị hiểu là tên cột, không phải boolean condition để đếm.",
+    "explanation_vi": "**Đáp án A.** Truy vấn có aggregation trạng thái (`groupBy(\"item\")` ở chế độ `complete`), nên checkpoint chứa tiến độ đọc cùng schema/state của phép tổng hợp. Thêm `new_member_promo` làm thay đổi cấu trúc state đang lưu. Chạy truy vấn đã đổi với checkpoint cũ có thể lỗi khôi phục hoặc tạo ngữ nghĩa không xác định; cần dùng checkpointLocation mới. Vì checkpoint mới không có offset/state cũ, phải lên kế hoạch đọc lại nguồn và đồng bộ kết quả vào bảng đích trước khi chuyển production.\n\n`mergeSchema` chỉ giúp schema của bảng Delta đầu ra tiếp nhận cột mới; nó không biến đổi state store bên trong checkpoint. Trước khi chạy lại, hãy xác nhận cách replay không nhân đôi dữ liệu và bảng output được cập nhật đúng, đặc biệt vì chế độ `complete` ghi toàn bộ kết quả tổng hợp hiện tại.\n\n- **B**: Tăng `spark.sql.shuffle.partitions` có thể thay đổi độ song song/hiệu năng, nhưng không sửa schema state cũ.\n- **C**: `REFRESH TABLE` làm mới metadata hoặc cache của bảng đã đăng ký; nó không reset hay migrate checkpoint streaming.\n- **D**: `start(path)` ghi trực tiếp ra đường dẫn Delta; đăng ký path thành Hive metastore table không phải điều kiện để Spark lưu checkpoint mới.\n- **E**: `mergeSchema` giải quyết schema evolution ở sink, không làm checkpoint cũ tương thích với state schema mới.\n\n- **A** là bước cần làm: chọn checkpointLocation mới cho query đã thay đổi, rồi chủ động thiết kế replay/đối soát.",
     "page": null,
     "references": [
       {
@@ -2408,17 +2408,16 @@
       "D": "Đánh dấu `DataFrame` đủ nhỏ để lưu bộ nhớ trên tất cả executor, cho phép broadcast join.",
       "E": "Cache bản sao bảng trên mọi node của cluster cho mọi truy vấn sau đó trong vòng đời cluster."
     },
-    "explanation_vi": "**Đáp án D.** `broadcast(df)` trả về DataFrame được gắn broadcast hint để Spark cân nhắc gửi bản sao tới các executor làm phía build của join. Phía còn lại có thể được nối mà không shuffle toàn bộ dữ liệu của cả hai phía như sort-merge join thường cần. Đây là hint chiến lược join, không phải lệnh cache lâu dài và cũng không bảo đảm DataFrame thực sự đủ nhỏ: ép broadcast bảng lớn vẫn tiêu tốn mạng/bộ nhớ và có thể gây OOM.\n\nA và B sai vì API nhận **DataFrame**, không đánh dấu một cột có cardinality hay kích thước nhỏ. C sai vì broadcast hint không ghi bản sao lên storage dùng chung cho mọi cluster trong workspace. E mô tả caching để tái sử dụng ở truy vấn sau; đó không phải tác dụng của `broadcast`.",
+    "explanation_vi": "**Đáp án D.** `pyspark.sql.functions.broadcast(df)` trả về một DataFrame có broadcast hint để optimizer cân nhắc dùng DataFrame đó làm phía broadcast của join. Spark gửi dữ liệu nhỏ sang các executor; khi phù hợp, executor có thể join cục bộ với partition dữ liệu lớn mà không phải shuffle cả hai phía. Đây là gợi ý chiến lược cho một DataFrame trong một kế hoạch truy vấn, không phải cách đánh dấu riêng một cột và cũng không phải cơ chế cache lâu dài.\n\n“Nhỏ” cần được đánh giá theo kích thước sau lọc/chọn cột, số partition, bộ nhớ executor và concurrency. Ép broadcast DataFrame lớn có thể tăng network transfer, memory pressure hoặc gây lỗi out-of-memory. Hint ảnh hưởng lựa chọn join nhưng không phải lời hứa rằng mọi loại join/plan đều thực thi broadcast; hãy kiểm tra physical plan và runtime metrics sau khi áp dụng.\n\n- **A**: Cardinality của một cột (số giá trị phân biệt) không phải DataFrame cần broadcast; cột ít giá trị duy nhất không chứng minh toàn bộ phía join nhỏ.\n- **B**: Hàm nhận DataFrame, không nhận một column. Kích thước cả relation sau các phép lọc mới là yếu tố liên quan đến broadcast.\n- **C**: Broadcast hint không ghi bảng lên attached volumes hoặc chia sẻ bản sao persistent cho mọi cluster trong workspace.\n- **E**: Mô tả gần với cache/persist để tái sử dụng dữ liệu qua các action/query trong phạm vi ứng dụng; broadcast join là lựa chọn truyền dữ liệu cho một join cụ thể.\n- **D**: Chính xác nhất: hint gắn vào DataFrame để Spark xem nó là ứng viên cho broadcast join.\n\nSau khi dùng, kiểm tra `EXPLAIN`/Spark UI để xác nhận kiểu join thực tế; bỏ hint nếu nó làm tăng bộ nhớ hoặc thời gian chạy.",
     "page": null,
-    "image": "img/q_74.jpg",
     "references": [
       {
-        "title": "PySpark `broadcast` function API",
+        "title": "pyspark.sql.functions.broadcast API",
         "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.broadcast.html"
       },
       {
-        "title": "Spark SQL join hints",
-        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html#join-strategy-hints-for-sql-queries"
+        "title": "Spark SQL performance tuning: join strategy hints",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html"
       }
     ]
   },
@@ -2565,29 +2564,33 @@
   {
     "id": 79,
     "topic": 1,
-    "question": "A data architect requires every Lakehouse table to be an external (unmanaged) **Delta Lake** table. Which table-creation approach explicitly registers each table as external and identifies its storage location?",
+    "question": "A data architect requires every table in a Unity Catalog schema to be an external (unmanaged) **Delta Lake** table. An authorized external location is available. Which table-creation approach registers each named table and identifies its own storage location?",
     "options": {
       "A": "Set a `LOCATION` only when creating the database/schema; that automatically makes every table external.",
       "B": "Configure an external data warehouse and use Databricks for all ELT.",
       "C": "Write files in Delta format to a path; this alone registers every output as a named external table.",
-      "D": "Create each table with `CREATE EXTERNAL TABLE ... USING DELTA LOCATION <path>`.",
+      "D": "Create each table with `CREATE TABLE ... USING DELTA LOCATION '<path>'`, using a path governed by the authorized external location.",
       "E": "Mount external cloud storage in the workspace; every table created afterward is automatically external."
     },
     "answer": "D",
-    "question_vi": "Kiến trúc sư yêu cầu mọi bảng trong Lakehouse là bảng **Delta Lake** external (unmanaged). Khi tạo từng bảng, cách nào đăng ký rõ loại bảng và vị trí lưu trữ?",
+    "question_vi": "Kiến trúc sư yêu cầu mọi bảng trong schema Unity Catalog là bảng **Delta Lake** external (unmanaged); đã có external location được cấp quyền. Cách nào đăng ký tên từng bảng và xác định vị trí lưu trữ riêng của nó?",
     "options_vi": {
       "A": "Chỉ đặt `LOCATION` khi tạo database/schema; thao tác đó tự biến mọi bảng thành external.",
       "B": "Cấu hình data warehouse ngoài và dùng Databricks cho toàn bộ ELT.",
       "C": "Ghi file Delta vào một path; chỉ thao tác đó đã đăng ký đầu ra thành bảng external có tên.",
-      "D": "Tạo từng bảng bằng `CREATE EXTERNAL TABLE ... USING DELTA LOCATION <path>`.",
+      "D": "Tạo từng bảng bằng `CREATE TABLE ... USING DELTA LOCATION '<path>'`, với path nằm trong external location đã được cấp quyền.",
       "E": "Mount object storage vào workspace; mọi bảng tạo sau đó tự động là external."
     },
-    "explanation_vi": "**Đáp án D.** Câu lệnh tạo bảng cần đăng ký bảng với vị trí dữ liệu bên ngoài vùng lưu trữ managed, chẳng hạn `CREATE EXTERNAL TABLE ... USING DELTA LOCATION 's3://...'` (điều chỉnh path theo cloud và external location đã cấp quyền). Với bảng external, `DROP TABLE` xóa metadata đăng ký nhưng không tự xóa các data file tại path ngoài.\n\nA chỉ đặt vị trí mặc định cho schema/database; nó không bảo đảm từng bảng là external. C ghi dữ liệu ra path nhưng chưa nhất thiết đăng ký tên bảng để truy vấn. E nói về mount storage, không quyết định loại bảng của từng lệnh `CREATE TABLE`; B không phải cú pháp đăng ký bảng.\n\nTrong Unity Catalog hiện nay, điểm cốt lõi vẫn là tạo bảng với `LOCATION` trỏ đến external location người dùng được cấp quyền. Cần phân biệt vị trí dữ liệu với metadata đăng ký bảng.",
+    "explanation_vi": "**Đáp án D.** Trong Unity Catalog, khai báo một `LOCATION` cho bảng Delta trỏ tới đường dẫn cloud bên ngoài vùng lưu trữ managed khiến bảng được đăng ký là external. Ví dụ: `CREATE TABLE catalog.schema.events (...) USING DELTA LOCATION 's3://bucket/schema/events'` (hoặc URI cloud tương ứng). Đường dẫn cần thuộc một external location đã cấu hình và người tạo phải có các quyền cần thiết như `CREATE EXTERNAL TABLE` trên external location, cùng quyền tạo bảng và sử dụng catalog/schema. Mỗi bảng nên có thư mục riêng để tránh chồng lấn đường dẫn.\n\nExternal table tách vòng đời metadata khỏi vòng đời file: `DROP TABLE` trong Unity Catalog xóa đăng ký bảng nhưng không xóa data files ở storage. Vì vậy cần có quy trình riêng nếu muốn xóa vật lý dữ liệu, và phải tránh để nhiều bảng khai báo cùng một path. Câu trả lời dùng `LOCATION` theo cú pháp Unity Catalog hiện hành; môi trường Hive metastore cũ có cú pháp `CREATE EXTERNAL TABLE` khác, nên không nên bê nguyên cú pháp legacy sang mọi catalog.\n\n- **A**: Vị trí mặc định của schema/database không biến tự động mọi bảng thành external; từng bảng vẫn có thể là managed hoặc dùng một `LOCATION` khác.\n- **B**: Dùng warehouse ngoài để chạy ELT không đăng ký bảng Delta external trong Unity Catalog.\n- **C**: Ghi file Delta ra path tạo dữ liệu ở filesystem nhưng không tự đảm bảo có tên bảng và metadata bảng trong catalog. Muốn truy vấn theo tên cần đăng ký bảng.\n- **E**: Mount storage không quyết định loại từng bảng. Một bảng tạo không có `LOCATION` vẫn có thể là managed. Mount cũng không thay thế external location/privilege model của Unity Catalog.\n- **D**: Vừa tạo metadata bảng, vừa khai báo format Delta và vị trí external cụ thể.\n\nSau khi tạo, kiểm tra `DESCRIBE DETAIL`/Catalog Explorer để xác nhận `table_type` và location đúng trước khi cấp quyền cho người dùng.",
     "page": null,
     "references": [
       {
-        "title": "Databricks SQL `CREATE TABLE` syntax",
-        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using"
+        "title": "Work with external tables in Unity Catalog",
+        "url": "https://docs.databricks.com/aws/en/tables/external"
+      },
+      {
+        "title": "Manage external locations and grant table creation privileges",
+        "url": "https://docs.databricks.com/aws/en/connect/unity-catalog/cloud-storage/manage-external-locations"
       }
     ]
   },
@@ -2677,12 +2680,15 @@
       "D": "Chỉ chuyển quyền cho nhóm nếu người chuyển là thành viên nhóm đó.",
       "E": "Chỉ admin workspace mới có thể cấp Owner cho nhóm."
     },
-    "explanation_vi": "**Đáp án A.** Trong mô hình quyền job mà câu hỏi đang kiểm tra, `IS OWNER` là quyền sở hữu job và chỉ có thể có một owner; một group không được gán trực tiếp quyền `IS OWNER`. Vì vậy, việc cố chuyển quyền owner sang `DevOps` bị từ chối. Quyền owner khác với quyền quản lý thông thường: có thể cấp `CAN MANAGE` cho group để các thành viên chỉnh cấu hình, task và permission mà không biến cả group thành owner.\n\nCần tách **job owner** khỏi **Run as**. Owner quản trị job; Run as là danh tính mà các task dùng khi truy cập dữ liệu/tài nguyên. Theo tài liệu hiện tại, khả năng chọn group làm Run as có trạng thái Preview và có quy tắc riêng; nó không làm cho `CAN MANAGE` đồng nghĩa với `IS OWNER`.\n\n- **B sai** vì người tạo được đặt làm owner mặc định, nhưng owner có thể được workspace admin thay đổi; người tạo không giữ quyền bất biến.\n- **C sai** vì job ACL có thể cấp quyền cho user, group hoặc service principal; không chỉ admin mới có thể cấp `CAN MANAGE`.\n- **D sai** vì tư cách thành viên group không phải điều kiện biến group thành chủ sở hữu. Quy tắc gán `Run as` cho group, nếu dùng tính năng Preview, là khái niệm khác.\n- **E sai** vì admin có thể đổi owner, nhưng giới hạn nêu trong câu là loại principal được gán `IS OWNER`, không đơn thuần là ai có quyền bấm nút.\n\nKhi vận hành production, cách phổ biến là giao quyền quản lý cho group và chọn service principal ổn định làm danh tính `Run as`.",
+    "explanation_vi": "**Đáp án A.** Trong ACL của Lakeflow/Databricks Jobs, một job có tối đa một principal mang quyền `IS OWNER`, và group không thể được gán quyền owner đó. Vì vậy không thể chuyển `Owner` trực tiếp sang nhóm `DevOps`. Nhóm có thể được cấp `CAN MANAGE` để cùng chỉnh sửa cấu hình, task và quyền của job mà không trở thành owner.\n\nPhân biệt quyền sở hữu với danh tính `Run as`: owner quản lý job; `Run as` là principal mà job dùng khi chạy để truy cập dữ liệu/tài nguyên. Tài liệu hiện tại có hỗ trợ chọn group làm `Run as` trong Public Preview với yêu cầu riêng, nhưng điều đó không biến group thành `IS OWNER`. Với job production, thường nên có một owner là user/service principal theo chính sách workspace và cấp quyền manage cho nhóm; dùng service principal ổn định cho `Run as` để job không phụ thuộc vòng đời tài khoản cá nhân.\n\n- **B**: Creator là owner mặc định, nhưng điều đó không có nghĩa chủ sở hữu bất biến; admin có thể thay đổi owner theo quyền/chính sách workspace.\n- **C**: Job ACL có thể chia sẻ quyền quản lý cho group; điều bị hạn chế ở đây là quyền `IS OWNER` cho group.\n- **D**: Là thành viên `DevOps` không làm cho group đủ điều kiện nhận quyền owner; điều kiện này không gỡ giới hạn principal của `IS OWNER`.\n- **E**: Workspace admin có thể quản lý/chuyển quyền owner theo chính sách, nhưng vẫn không thể gán `IS OWNER` trực tiếp cho group.\n\nKhi phân quyền, hãy cấp quyền quản lý vừa đủ cho nhóm và chọn danh tính `Run as` riêng. Tránh nhầm “ai sở hữu job” với “job chạy dưới danh tính nào”.",
     "page": null,
-    "image": "img/q_82.jpg",
     "references": [
       {
-        "title": "Manage identities, permissions, and privileges for Lakeflow Jobs",
+        "title": "Databricks access control lists: Job ACLs",
+        "url": "https://docs.databricks.com/aws/en/security/auth/access-control/"
+      },
+      {
+        "title": "Manage identities and permissions for Lakeflow Jobs",
         "url": "https://docs.databricks.com/aws/en/jobs/privileges"
       }
     ]
@@ -2851,11 +2857,11 @@
       "D": "Scala Datasets",
       "E": "C++"
     },
-    "explanation_vi": "**Đáp án A — Regular expressions (Regex).** Regex mô tả mẫu ký tự để tìm hoặc trích xuất những đoạn như timestamp, log level (`WARN`, `ERROR`), tên class, request ID hay mã lỗi từ dòng log văn bản. Ví dụ, có thể dùng nhóm bắt để tách timestamp và severity khỏi một dòng theo định dạng cố định; sau đó kiểm tra trên log thực tế vì định dạng có thể khác giữa phiên bản/thư viện. Regex là kỹ thuật xử lý văn bản, không tự hiểu ngữ nghĩa của lỗi và cũng không thay thế việc dùng log có cấu trúc khi hệ thống hỗ trợ.\n\n**Vì sao các lựa chọn khác không phù hợp?**\n\n- **B — Julia**: là ngôn ngữ lập trình; chỉ riêng tên ngôn ngữ không phải kỹ thuật khớp mẫu log.\n- **C — `pyspark.ml.feature`**: thư viện feature engineering/machine learning cho dữ liệu Spark, không phải bộ trích xuất pattern thông thường cho dòng Log4j.\n- **D — Scala Datasets**: API biểu diễn dữ liệu có cấu trúc; có thể dùng để đọc và biến đổi log, nhưng đề hỏi kỹ thuật nhận diện pattern trong text.\n- **E — C++**: là ngôn ngữ tổng quát, không phải cơ chế pattern matching chuyên biệt trong lựa chọn.\n\nNếu log đã ở JSON/structured logging, nên parse theo schema thay vì viết regex dễ vỡ. Regex phù hợp khi đầu vào là text và mẫu tương đối ổn định.",
+    "explanation_vi": "**Đáp án A — Regex (biểu thức chính quy).** Regex mô tả mẫu ký tự để tìm hoặc trích xuất các đoạn như timestamp, log level (`WARN`, `ERROR`), tên class, request ID hay mã lỗi từ dòng Log4j chưa có cấu trúc. Nhóm bắt (capture group) có thể tách các trường theo định dạng ổn định; sau đó nên xác thực kết quả vì format có thể thay đổi theo Runtime hoặc thư viện. Regex xử lý cú pháp text, không tự hiểu nguyên nhân ngữ nghĩa của lỗi.\n\n- **B**: Julia là một ngôn ngữ lập trình, không phải kỹ thuật khớp mẫu được hỏi.\n- **C**: `pyspark.ml.feature` cung cấp biến đổi/feature cho machine learning, không phải parser thông dụng để tách trường từ Log4j text.\n- **D**: Scala Datasets là API làm việc với dữ liệu có schema; có thể đọc log sau khi parse, nhưng không phải tên kỹ thuật pattern matching.\n- **E**: C++ là ngôn ngữ tổng quát, không phải bộ quy tắc trích xuất chuỗi trong danh sách.\n- **A**: Regex là lựa chọn mô tả chính xác việc nhận diện các mẫu ký tự trong log thô.\n\nNếu có thể chọn định dạng log, structured logging/JSON và parse theo schema thường bền hơn regex. Regex hữu ích khi đầu vào chỉ là text và format đủ nhất quán.",
     "page": null,
     "references": [
       {
-        "title": "Pattern (Java Platform SE) - Oracle",
+        "title": "Java Pattern API: regular expression patterns",
         "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/regex/Pattern.html"
       }
     ]
@@ -2880,24 +2886,19 @@
       "D": "Integration",
       "E": "End-to-end"
     },
-    "explanation_vi": "Kiểm thử đơn vị (Unit Testing) nhằm mục đích kiểm tra tính đúng đắn của một phần nhỏ mã nguồn, thường là một hàm đơn lẻ, độc lập với các thành phần khác. Dòng mã sử dụng `assert` để truyền các tham số đầu vào giả định và kiểm tra trực tiếp kết quả trả về của hàm `myIntegrate` là ví dụ điển hình của Unit test.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A — Unit test (kiểm thử đơn vị).** Dòng `assert` gọi trực tiếp một hàm toán học (`myIntegrate`) với đầu vào nhỏ, biết trước kết quả, rồi kiểm tra giá trị trả về có bằng `9` hay không. Bài kiểm thử tập trung vào một đơn vị logic có ranh giới rõ ràng; nó không cần khởi động ứng dụng, kết nối dịch vụ ngoài hay phối hợp nhiều thành phần. Với hàm tích phân này, ∫₀³ x² dx = [x³/3]₀³ = 9. So sánh số thực chính xác (`==`) có thể mong manh do sai số dấu phẩy động; trong test thực tế nên dùng tolerance như `math.isclose` và kiểm thử thêm các cận/đầu vào biên. Điều đó không đổi phân loại: ví dụ đang kiểm tra một hàm riêng lẻ.\n\n- **B**: Manual mô tả người kiểm thử chạy/đánh giá bằng tay, không phải cấp độ của test; dòng `assert` là kiểm tra trong mã.\n- **C**: Functional test đánh giá một tính năng theo yêu cầu. Một unit test có thể xác minh hành vi chức năng nhỏ, nhưng ví dụ cô lập một hàm cụ thể nên nhãn chính xác hơn là unit test.\n- **D**: Integration test kiểm tra phối hợp giữa nhiều module/dịch vụ; đoạn mã không có ranh giới tích hợp hay thành phần bên ngoài.\n- **E**: End-to-end test đi qua chuỗi ứng dụng gần với luồng người dùng thật; một lời gọi hàm không kiểm tra toàn bộ hệ thống.\n- **A**: Một hàm được gọi với input xác định và kết quả được assert là ví dụ điển hình của unit test.\n\nDự án thường kết hợp nhiều cấp độ: unit test nhanh và khoanh vùng lỗi; integration, functional và end-to-end xác nhận các tương tác rộng hơn.",
     "page": null,
-    "image": "img/q_88.jpg",
     "references": [
       {
-        "title": "Python unittest library",
+        "title": "Python unittest: test cases and assertions",
         "url": "https://docs.python.org/3/library/unittest.html"
-      },
-      {
-        "title": "ExamTopics Databricks Certified Data Engineer Professional Q88",
-        "url": "https://www.examtopics.com/discussions/databricks/view/82675-question-88-topic-1/"
       }
     ]
   },
   {
     "id": 89,
     "topic": 1,
-    "question": "A Databricks job has been configured with 3 tasks, each of which is a Databricks notebook. Task A does not depend on other tasks. Tasks B and C run in parallel, with each having a serial dependency on Task A.",
+    "question": "A Databricks job has been configured with 3 tasks, each of which is a Databricks notebook. Task A does not depend on other tasks. Tasks B and C run in parallel, with each having a serial dependency on Task A. If task A fails during a scheduled run, which statement describes the results of this run?",
     "options": {
       "A": "Because all tasks are managed as a dependency graph, no changes will be committed to the Lakehouse until all tasks have successfully been completed.",
       "B": "Tasks B and C will attempt to run as configured; any changes made in task A will be rolled back due to task failure.",
@@ -2906,7 +2907,7 @@
       "E": "Tasks B and C will be skipped; task A will not commit any changes because of stage failure."
     },
     "answer": "D",
-    "question_vi": "Job Databricks có 3 notebook; A chạy trước, B và C phụ thuộc A và chạy song song. Task A thất bại, điều gì xảy ra?",
+    "question_vi": "Job Databricks có 3 notebook: A chạy trước, B và C phụ thuộc A và chạy song song. Nếu A thất bại trong một lượt chạy theo lịch, điều gì mô tả đúng kết quả?",
     "options_vi": {
       "A": "Tất cả thay đổi chỉ commit khi mọi task xong",
       "B": "B,C vẫn chạy; thay đổi của A sẽ rollback do lỗi",
@@ -2914,13 +2915,16 @@
       "D": "B,C sẽ bị bỏ qua; một số logic A có thể đã commit trước khi lỗi",
       "E": "B,C sẽ bị bỏ qua; A không commit gì vì lỗi stage"
     },
-    "explanation_vi": "Khi `Task A` thất bại, các task hạ nguồn phụ thuộc trực tiếp vào nó (B và C) sẽ bị bỏ qua (skipped). Do **Databricks Jobs** không có cơ chế tự động rollback toàn bộ các thay đổi trước đó khi một task bị lỗi, một số logic đã thực thi thành công trong `Task A` trước thời điểm phát sinh lỗi vẫn có thể được lưu (committed) vào Lakehouse.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** Mặc định, mỗi task downstream chỉ được chạy khi điều kiện `Run if` của nó thỏa mãn; với điều kiện thông dụng “All succeeded”, task A thất bại khiến B và C bị bỏ qua. Hai nhánh B/C vẫn song song nếu A thành công, nhưng chúng không tự chạy sau khi dependency thất bại trừ khi người cấu hình đổi điều kiện chạy, chẳng hạn để thực hiện cleanup hoặc thông báo lỗi.\n\nJob là đồ thị phụ thuộc để điều phối thứ tự và trạng thái task, không phải một transaction bao trùm mọi thao tác dữ liệu trong toàn job. Nếu A đã ghi thành công một bảng Delta rồi mới lỗi ở bước sau, commit của bảng có thể vẫn còn. Nếu A chưa commit một transaction Delta vì lỗi trong chính lần ghi, transaction đó có thể thất bại nguyên tử; điều đó không đồng nghĩa Databricks tự rollback các commit đã hoàn tất trước đó hoặc commit ở bảng khác. Muốn khôi phục dữ liệu sau một job lỗi, cần thiết kế retry/idempotency, staging rồi publish, hoặc logic bù trừ phù hợp với nghiệp vụ.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **A**: DAG không gom tất cả thay đổi của notebook vào một commit cuối cùng; một task có thể ghi dữ liệu ngay khi nó chạy.\n- **B**: Mặc định B/C không chạy sau khi A lỗi. Việc B/C được cấu hình phụ thuộc A không làm chúng tự chạy để hoàn tất công việc.\n- **C**: Không có rollback toàn cục tự động cho mọi bảng khi một task bất kỳ thất bại. Transaction của một lần ghi không phải transaction của cả job.\n- **E**: Task A có thể đã commit một số thao tác trước khi lỗi; nguyên nhân thất bại cũng không nhất thiết là lỗi stage Spark.\n\nNếu cần một task xử lý lỗi, cấu hình `Run if` rõ ràng cho nhánh cleanup/alert thay vì dựa vào hành vi mặc định.",
     "page": null,
-    "image": "img/q_89.jpg",
     "references": [
       {
-        "title": "Create and run Databricks Jobs - Task failure and dependencies",
-        "url": "https://docs.databricks.com/en/jobs/how-to/create-recurring-job"
+        "title": "Configure task dependencies and Run if conditions",
+        "url": "https://docs.databricks.com/aws/en/jobs/run-if"
+      },
+      {
+        "title": "What are ACID guarantees on Databricks?",
+        "url": "https://docs.databricks.com/aws/en/lakehouse/acid"
       }
     ]
   },
@@ -2944,9 +2948,8 @@
       "D": "Cấu hình đặt trong giao diện **Clusters UI** áp dụng cho mọi notebook gắn vào cluster đó",
       "E": "Nếu cùng đặt cấu hình ở cluster và notebook thì notebook luôn bị bỏ qua"
     },
-    "explanation_vi": "**Đáp án D.** Spark properties khai báo trong cấu hình interactive cluster qua Clusters UI là cấu hình cấp compute. Vì vậy chúng áp dụng cho các notebook/workload chạy trên cluster đó, không chỉ một notebook riêng lẻ.\n\nA sai vì thay đổi cấu hình compute thường cần áp dụng/restart compute; không thể coi đó là thay đổi tức thời không gián đoạn mọi job đang chạy. B sai vì cấu hình ở phạm vi notebook/SparkSession không lan sang mọi SparkSession khác trên cluster. C sai vì init script không phải cách duy nhất: cấu hình có thể đặt ở compute hoặc notebook tùy property. E sai vì cấu hình notebook không phải lúc nào cũng bị bỏ qua; một số Spark properties hỗ trợ phạm vi session/notebook, nhưng quyền ghi đè phụ thuộc property, access mode và runtime. Hãy kiểm tra danh sách property được hỗ trợ thay vì giả định mọi khóa đều ghi đè được.",
+    "explanation_vi": "**Đáp án D.** Khi Spark conf được đặt ở cấu hình của compute/cluster, giá trị đó áp dụng cho các notebook và job dùng compute ấy. Đây là phạm vi phù hợp với câu hỏi nói về cài đặt từ giao diện **Clusters**. Thay đổi cấu hình cluster có thể cần khởi động lại compute và không phải mọi thuộc tính đều có thể đổi sau khi SparkContext đã chạy; câu hỏi hỏi phạm vi áp dụng, không khẳng định rằng mọi chỉnh sửa có hiệu lực nóng.\n\nPhân biệt ba phạm vi thường gặp: cấu hình tại compute là mặc định chung cho workload trên compute đó; `spark.conf.set(...)` trong notebook chỉ ảnh hưởng SparkSession của notebook hiện tại; còn cấu hình workspace/global init script không phải cách duy nhất để đặt Spark conf. Với Databricks SQL hoặc serverless, danh sách conf được hỗ trợ còn giới hạn hơn, nên phải kiểm tra tài liệu theo loại compute và Runtime.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **A**: Không thể giả định REST API thay đổi Spark conf đang hoạt động mà không làm gián đoạn job. Nhiều thuộc tính cần restart compute; cấu hình áp dụng sau khi cluster được cập nhật/khởi động.\n- **B**: Cấu hình đặt trong một notebook không tự lan sang mọi SparkSession trên cluster; phạm vi là session của notebook đó.\n- **C**: Có thể cấu hình bằng nhiều cách, gồm compute configuration và notebook/job configuration; global init script không phải lựa chọn duy nhất.\n- **E**: Thiết lập trong notebook không “luôn bị bỏ qua”. Notebook có thể ghi đè một số giá trị có thể cấu hình ở cấp session, nhưng còn phụ thuộc loại thuộc tính và chính sách nền tảng.\n\nKhi debug, hãy đọc lại giá trị bằng `spark.conf.get(...)` trong chính session cần kiểm tra, đồng thời xác nhận loại compute và thời điểm restart.",
     "page": null,
-    "image": "img/q_90.jpg",
     "references": [
       {
         "title": "Set Spark configuration properties on Databricks",
@@ -2957,7 +2960,7 @@
   {
     "id": 91,
     "topic": 1,
-    "question": "A developer has successfully configured their credentials for **Databricks Repos** and cloned a remote **Git** repository. They do not have privileges to make changes to the main branch, which is the only branch currently visible in their workspace.\nWhich approach allows this user to share their code updates without the risk of overwriting the work of their teammates?",
+    "question": "A developer has successfully configured their credentials for **Databricks Repos** and cloned a remote **Git** repository. The remote repository allows this developer to create and push non-protected branches, but the `main` branch is protected and cannot be updated directly. Only `main` is currently visible in the workspace. Which approach allows the developer to share code updates without risking overwriting teammates’ work?",
     "options": {
       "A": "Use Repos to checkout all changes and send the git diff log to the team.",
       "B": "Use Repos to create a fork of the remote repository, commit all changes, and make a pull request on the source repository.",
@@ -2966,7 +2969,7 @@
       "E": "Use Repos to create a new branch, commit all changes, and push changes to the remote **Git** repository."
     },
     "answer": "E",
-    "question_vi": "Dev đã clone repo qua **Databricks Repos**, không có quyền ghi main (branch duy nhất). Cách nào chia sẻ code mà không ghi đè đồng nghiệp?",
+    "question_vi": "Dev đã cấu hình credentials và clone repo bằng **Databricks Git folders**. Repo cho phép tạo/push branch không bị bảo vệ, nhưng `main` được bảo vệ và không thể cập nhật trực tiếp; workspace hiện chỉ thấy `main`. Cách nào chia sẻ code mà không ghi đè công việc của đồng đội?",
     "options_vi": {
       "A": "Checkout tất cả thay đổi và gửi git diff cho team",
       "B": "Fork repo, commit rồi mở pull request",
@@ -2974,43 +2977,45 @@
       "D": "Merge tất cả khác biệt rồi mở pull request",
       "E": "Tạo branch mới trong Repos, commit và push lên remote"
     },
-    "explanation_vi": "Để chia sẻ code mà không ảnh hưởng trực tiếp tới nhánh chính (`main`) hoặc ghi đè lên công việc của đồng nghiệp, quy trình chuẩn trong Git và **Databricks Repos** là tạo một nhánh mới từ nhánh hiện tại, thực hiện các commit trên nhánh mới đó và push nhánh mới này lên remote **Git** repository. Sau đó, nhà phát triển có thể tạo một Pull Request (PR) để đội ngũ review trước khi merge vào main.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án E.** Tạo một branch mới từ `main`, thực hiện thay đổi, commit và push branch đó lên remote. Vì `main` được bảo vệ, commit phát triển nằm ở nhánh riêng nên không ghi trực tiếp đè lên nhánh chung. Sau đó mở pull request trên Git provider để đồng đội review và hợp nhất. Việc đề bài nói rõ người dùng có quyền tạo/push nhánh không bị bảo vệ là điều kiện quan trọng: nếu họ không có bất kỳ quyền ghi remote nào, phương án fork mới có thể cần thiết.\n\nTrong Databricks Git folders, “chỉ thấy `main` trong workspace” không có nghĩa là không thể tạo branch. Người dùng có thể tạo branch mới từ branch đang checkout rồi commit/push. Trước khi đẩy, nên pull/rebase hoặc xử lý conflict nếu nhánh cơ sở đã thay đổi; review diff để tránh vô tình đưa vào file/output không mong muốn. Không dùng chung một working branch cho nhiều người cùng thao tác.\n\n**Vì sao các lựa chọn khác không phù hợp?**\n\n- **A**: Gửi `git diff` cho nhóm giúp trao đổi bản vá nhưng không đưa code lên remote theo workflow có lịch sử và review đầy đủ; nó cũng không giải quyết việc cộng tác theo nhánh.\n- **B**: Fork hữu ích khi không có quyền ghi vào repository gốc hoặc khi contributor bên ngoài cần làm việc qua fork. Trong tình huống này, người dùng có quyền push branch vào repo gốc nên fork không cần thiết.\n- **C**: Pull chỉ đồng bộ thay đổi từ remote; nó không tự sinh một branch phát triển để commit. Pull cũng không cấp quyền ghi lên nhánh mới.\n- **D**: “Merge all differences” không xác định nhánh nguồn/đích và có thể đưa thay đổi trực tiếp vào nhánh làm việc; PR được mở từ một branch chứa commit cụ thể sau khi push.\n\nTách nhánh, commit nhỏ có thông điệp rõ, push branch và mở PR là luồng dễ review, truy vết và phối hợp an toàn.",
     "page": null,
-    "image": "img/q_91.jpg",
     "references": [
       {
-        "title": "Git operations with Databricks Repos",
-        "url": "https://docs.databricks.com/en/repos/git-operations-with-repos"
+        "title": "Create and manage Git folders: branching, committing, and pushing",
+        "url": "https://docs.databricks.com/aws/en/repos/git-operations-with-repos"
       }
     ]
   },
   {
     "id": 92,
     "topic": 1,
-    "question": "In order to prevent accidental commits to production data, a senior data engineer has instituted a policy that all development work will reference clones of **Delta Lake** tables. After testing both `DEEP CLONE` and ``SHALLOW CLONE``, development tables are created using `SHALLOW CLONE`.\nA few weeks after initial table creation, the cloned versions of several tables implemented as Type 1 Slowly Changing Dimension (SCD) stop working. The transaction logs for the source tables show that `VACUUM` was run the day before.\nWhich statement describes why the cloned tables are no longer working?",
+    "question": "A senior data engineer creates development tables with `SHALLOW CLONE`, which references the source table’s data files instead of copying them. Several weeks later, `VACUUM` runs on the source table with a retention period that permits removal of some files still referenced by the clone. Queries against the shallow clones then fail. Which statement explains why?",
     "options": {
       "A": "Because Type 1 changes overwrite existing records, Delta Lake cannot guarantee data consistency for cloned tables.",
-      "B": "Running `VACUUM` automatically invalidates any shallow clones of a table; `DEEP CLONE` should always be used when a cloned table will be repeatedly queried.",
-      "C": "Tables created with `SHALLOW CLONE` are automatically deleted after their default retention threshold of 7 days.",
-      "D": "The metadata created by the CLONE operation is referencing data files that were purged as invalid by the VACUUM command.",
+      "B": "Running `VACUUM` always invalidates every shallow clone, regardless of which files are removed.",
+      "C": "Shallow clones are automatically deleted after seven days.",
+      "D": "The clone metadata still references source data files that `VACUUM` physically removed.",
       "E": "The data files compacted by VACUUM are not tracked by the cloned metadata; running REFRESH on the cloned table will pull in recent\nchanges."
     },
     "answer": "D",
-    "question_vi": "Dùng `SHALLOW CLONE` cho bảng SCD Type 1; sau vài tuần chạy `VACUUM` trên bảng gốc, clone ngừng hoạt động. Vì sao?",
+    "question_vi": "Kỹ sư tạo bảng dev bằng `SHALLOW CLONE`, tức clone tham chiếu file dữ liệu của bảng gốc thay vì sao chép. Vài tuần sau, `VACUUM` trên bảng gốc xóa một số file mà clone vẫn đang tham chiếu. Vì sao truy vấn shallow clone thất bại?",
     "options_vi": {
       "A": "Type 1 ghi đè nên Delta không đảm bảo nhất quán cho clone",
-      "B": "`VACUUM` tự vô hiệu mọi shallow clone; luôn phải dùng `DEEP CLONE`",
-      "C": "Bảng `SHALLOW CLONE` tự xoá sau 7 ngày",
-      "D": "Metadata clone trỏ tới file dữ liệu đã bị VACUUM xóa, nên clone mất tham chiếu",
+      "B": "Chạy `VACUUM` luôn làm hỏng mọi shallow clone, bất kể file nào bị xóa.",
+      "C": "Shallow clone tự động bị xóa sau bảy ngày.",
+      "D": "Metadata của clone vẫn trỏ tới file dữ liệu ở nguồn mà `VACUUM` đã xóa vật lý.",
       "E": "Chỉ cần REFRESH clone để lấy thay đổi"
     },
-    "explanation_vi": "`Shallow clone` (bản sao nông) chỉ sao chép siêu dữ liệu (metadata) của bảng mà không sao chép các file dữ liệu vật lý thực tế, do đó nó trực tiếp trỏ đến các file dữ liệu của bảng gốc. Khi lệnh `VACUUM` được chạy trên bảng gốc, nó sẽ xóa các file dữ liệu cũ không còn được tham chiếu bởi trạng thái hiện tại của bảng gốc (sau khoảng thời gian lưu trữ mặc định). Điều này dẫn đến việc các metadata trong `shallow clone` trỏ vào các file dữ liệu đã bị xóa vật lý, làm cho bảng clone bị lỗi khi truy vấn.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** `SHALLOW CLONE` tạo metadata/bản ghi Delta mới nhưng tiếp tục dùng các file dữ liệu hiện có của bảng nguồn; nó không tạo bản sao độc lập của toàn bộ nội dung. Nếu một file vẫn cần để đọc phiên bản clone bị `VACUUM` xóa vật lý ở nguồn, clone không còn đọc được file đó và truy vấn có thể lỗi. Trong đề này, điều kiện nói rõ `VACUUM` đã xóa file mà clone còn tham chiếu, nên đây là nguyên nhân trực tiếp.\n\nKhông nên suy ra rằng chỉ cần chạy `VACUUM` là mọi shallow clone lập tức hỏng. `VACUUM` chỉ xóa file không còn được bảng nguồn tham chiếu và đã vượt qua ngưỡng retention; clone chỉ bị ảnh hưởng nếu file cần cho phiên bản clone bị xóa. Cần giữ retention phù hợp với thời gian dùng clone, hiểu các giới hạn an toàn về retention, hoặc dùng `DEEP CLONE` khi môi trường dev cần bản sao dữ liệu độc lập. `REFRESH` chỉ làm mới metadata/cached metadata; nó không thể phục hồi file vật lý đã xóa.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **A**: SCD Type 1 cập nhật giá trị hiện hành, nhưng bản thân mô hình Type 1 không làm Delta mất tính nhất quán cho clone. Vấn đề ở đây là vòng đời file dùng chung.\n- **B**: Khẳng định “mọi lần VACUUM đều làm hỏng mọi clone” là quá rộng. Chỉ các file được dọn và vẫn cần bởi clone mới gây lỗi.\n- **C**: Bảy ngày là giá trị retention mặc định thường gặp cho file dữ liệu, không phải bộ hẹn giờ tự xóa shallow clone. Clone vẫn tồn tại; file nguồn có thể bị dọn theo retention.\n- **E**: `VACUUM` không đơn giản “compact” file để clone tự nạp thay đổi mới. `REFRESH` không sao chép lại dữ liệu và không thay đổi snapshot mà clone đã tạo.\n\nNếu cần cách ly dữ liệu dev lâu dài, dùng deep clone/copy hoặc tạo bản sao được quản lý riêng; với shallow clone, lập kế hoạch retention nguồn và thời gian sử dụng clone.",
     "page": null,
-    "image": "img/q_92.jpg",
     "references": [
       {
-        "title": "Delta Lake Shallow and Deep Clone",
-        "url": "https://docs.databricks.com/en/tables/operations/clone"
+        "title": "Clone a table on Databricks",
+        "url": "https://docs.databricks.com/aws/en/tables/operations/clone"
+      },
+      {
+        "title": "Vacuum unreferenced data files",
+        "url": "https://docs.databricks.com/aws/en/delta/vacuum"
       }
     ]
   },
@@ -3034,11 +3039,11 @@
       "D": "`streamingDF.join(userLookup, [\"user_id\"], how=\"inner\")`",
       "E": "`userLookup.join(streamingDF, [\"user_id\"], how=\"right\")`"
     },
-    "explanation_vi": "**Đáp án B.** Với stream bên trái và bảng tĩnh bên phải, Spark hỗ trợ inner join và left outer join nhưng không hỗ trợ full outer join; `how=\"outer\"` là bí danh của full outer. Dòng streaming liên tục cập nhật nên engine không thể xác định một cách hữu hạn rằng đã tìm được mọi dòng chưa khớp ở cả hai phía như full outer cần.\n\nC là left outer với stream ở trái nên hợp lệ. A và D là inner join, hợp lệ ở cả thứ tự stream-static và static-stream. E đặt bảng tĩnh bên trái, stream bên phải và dùng right outer; chiều join này được hỗ trợ. Đề đã xác nhận hai DataFrame đều có `user_id`, do đó các distractor không thất bại vì sai tên cột.",
+    "explanation_vi": "**Đáp án B.** Với stream-static join, Spark hỗ trợ một số kiểu join nhưng có phụ thuộc thứ tự trái/phải. Ở đây `streamingDF` đứng bên trái, `userLookup` tĩnh đứng bên phải, còn `how=\"outer\"` có nghĩa full outer. Full outer stream-static không được hỗ trợ trong ma trận hỗ trợ của Structured Streaming. Vì vậy đoạn B là lựa chọn không hợp lệ.\n\n**Đánh giá từng lựa chọn:**\n\n- **A**: `userLookup` tĩnh bên trái và `streamingDF` bên phải với inner join được hỗ trợ. Inner join không cần giữ state stream-stream vì chỉ một phía là stream.\n- **B**: `streamingDF` bên trái và static bên phải nhưng dùng full outer (`outer`); loại stream-static này không được hỗ trợ. Đây là đáp án.\n- **C**: Stream bên trái, static bên phải, left outer giữ mọi dòng stream và điền null khi lookup không khớp; kiểu này được hỗ trợ.\n- **D**: Inner join giữa stream bên trái và bảng lookup tĩnh bên phải là trường hợp phổ biến, được hỗ trợ và không stateful.\n- **E**: Static bên trái và stream bên phải với right outer giữ mọi dòng stream; về ý nghĩa nó tương đương hướng giữ phía streaming và được hỗ trợ. Đừng nhầm hướng `right` trong mã với “right outer trên phía stream” sau khi đổi thứ tự hai đầu vào.\n\nBảng lookup tĩnh thường được đọc như snapshot tại lúc query khởi chạy; nếu cần áp dụng cập nhật lookup liên tục, cần thiết kế refresh/restart phù hợp. Hãy phân biệt câu hỏi này với stream-stream join: join hai stream có state và thường cần watermark/time constraint để giới hạn state, còn stream-static không cần state join.",
     "page": null,
     "references": [
       {
-        "title": "Spark Structured Streaming join support matrix",
+        "title": "Structured Streaming Programming Guide: support matrix for joins",
         "url": "https://spark.apache.org/docs/3.5.6/structured-streaming-programming-guide.html#support-matrix-for-joins-in-streaming-queries"
       }
     ]
@@ -3063,38 +3068,53 @@
       "D": "Trang chi tiết Executor và log Executor",
       "E": "Trang chi tiết Stage và Query"
     },
-    "explanation_vi": "Khi dữ liệu vượt quá dung lượng RAM được phân bổ cho mỗi phân vùng trong các phép biến đổi wide transformation, dữ liệu sẽ bị ghi tạm xuống đĩa (disk spill). Hai nơi chủ yếu để kiểm tra điều này trong Spark UI là: trang chi tiết của Stage (Stage detail screen - hiển thị thông số `Spill Memory` và `Spill Disk` trực quan) và file log của các Executor (chứa các thông báo ghi đĩa như 'Spilling to disk').\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** Trong Spark UI, trang chi tiết **Stage** tổng hợp các chỉ số spill của stage, gồm dữ liệu spill trong bộ nhớ (`Spill (Memory)`) và dữ liệu đã đẩy ra đĩa (`Spill (Disk)`). Đây là nơi nên kiểm tra đầu tiên để xác nhận stage có spill, xem quy mô và so sánh các task. Executor logs bổ sung dấu vết ở phía worker/executor khi cần điều tra task hoặc lỗi cụ thể. Vì vậy cặp “Stage detail và Executor logs” là phù hợp nhất trong các lựa chọn.\n\nSpill xảy ra khi các phép tính cần execution memory như shuffle, join, sort hoặc aggregation thiếu bộ nhớ khả dụng và phải chuyển dữ liệu trung gian sang đĩa. Spill không mặc định có nghĩa code sai; nó có thể là đánh đổi bình thường, nhưng lượng spill lớn thường làm stage chậm hơn do I/O. Hãy đọc cùng thời gian task, shuffle read/write, peak execution memory, phân bố thời lượng giữa các partition và loại transformation. Nếu chỉ một vài task spill lâu hơn nhiều, kiểm tra data skew; nếu cả stage spill lớn, xem kích thước dữ liệu/shuffle và tài nguyên/partitioning.\n\n**Vì sao các lựa chọn khác không phù hợp?**\n\n- **A**: Query/Job detail hữu ích để định vị công việc chậm, nhưng các chỉ số spill theo stage được xem trực tiếp ở chi tiết stage.\n- **C**: Driver logs không phải màn hình tổng hợp spill theo stage; chỉ xem logs của cả driver và executor sẽ bỏ qua biểu đồ/metric chính trong Spark UI.\n- **D**: Trang Executor có metric tổng quan theo executor, nhưng câu hỏi hỏi chỉ báo spill theo partition/stage; stage detail là vị trí trực tiếp hơn.\n- **E**: Stage detail đúng một nửa, nhưng Query detail không thay thế executor-side logs cho dấu vết ở worker.\n\nLog có thể thay đổi theo Runtime và mức logging, nên dùng metric Spark UI để định lượng trước; sau đó mở log executor của task liên quan để bổ sung bối cảnh.",
     "page": null,
-    "image": "img/q_94.jpg",
-    "references": []
+    "references": [
+      {
+        "title": "Diagnose skew and spill in the Spark UI",
+        "url": "https://docs.databricks.com/aws/en/optimizations/spark-ui-guide/long-spark-stage-page"
+      },
+      {
+        "title": "Debugging with the Spark UI",
+        "url": "https://docs.databricks.com/aws/en/compute/troubleshooting/debugging-spark-ui"
+      }
+    ]
   },
   {
     "id": 95,
     "topic": 1,
-    "question": "A task orchestrator has been configured to run two hourly tasks. First, an outside system writes Parquet data to a directory mounted at `/mnt/raw_orders/`. After this data is written, a Databricks job containing the following code is executed:\nAssume that the fields `customer_id` and `order_id` serve as a composite key to uniquely identify each order, and that the time field indicates when the record was queued in the source system.\nIf the upstream system is known to occasionally enqueue duplicate entries for a single order hours apart, which statement is correct?",
+    "question": "A scheduled orchestrator starts this incremental Structured Streaming job hourly after an upstream system writes Parquet files to `/mnt/raw_orders/`. Assume `time` is the source enqueue timestamp, the same order can be enqueued again hours later with a newer timestamp, and the job reuses one stable checkpoint directory across runs. The composite key `customer_id`, `order_id` uniquely identifies an order.\n```python\n(spark.readStream\n  .format(\"parquet\")\n  .load(\"/mnt/raw_orders/\")\n  .withWatermark(\"time\", \"2 hours\")\n  .dropDuplicates([\"customer_id\", \"order_id\"])\n  .writeStream\n  .trigger(availableNow=True)\n  .option(\"checkpointLocation\", \"/mnt/checkpoints/orders\")\n  .toTable(\"orders\")\n)\n```\nIf the upstream system sometimes enqueues a duplicate order more than two event-time hours after the original, which statement is correct?",
     "options": {
-      "A": "Duplicate records enqueued more than 2 hours apart may be retained and the orders table may contain duplicate records with the same\n`customer_id` and `order_id`.",
+      "A": "Duplicate records enqueued more than two event-time hours apart may be retained after the watermark evicts old deduplication state, so `orders` may contain the same composite key more than once.",
       "B": "All records will be held in the state store for 2 hours before being deduplicated and committed to the orders table.",
       "C": "The orders table will contain only the most recent 2 hours of records and no duplicates will be present.",
       "D": "Duplicate records arriving more than 2 hours apart will be dropped, but duplicates that arrive in the same batch may both be written to the `orders` table.",
       "E": "The orders table will not contain duplicates, but records arriving more than 2 hours late will be ignored and missing from the table."
     },
     "answer": "A",
-    "question_vi": "Job mỗi giờ đọc Parquet ở `/mnt/raw_orders` rồi ghi Delta với watermark 2h và dedup theo `customer_id`, `order_id`. Nếu hệ thống thượng nguồn đôi khi đẩy bản ghi trùng cách nhau vài giờ, điều gì đúng?",
+    "question_vi": "Job chạy mỗi giờ sau khi upstream ghi Parquet vào `/mnt/raw_orders/`. Giả sử `time` là thời điểm enqueue, cùng một đơn có thể được enqueue lại sau vài giờ với timestamp mới hơn; job luôn dùng lại một checkpoint ổn định. Khóa ghép `customer_id`, `order_id` nhận diện duy nhất đơn hàng. Đoạn Structured Streaming bên dưới dùng watermark 2 giờ, khử trùng lặp theo khóa, chạy `availableNow` rồi dừng.\n```python\n(spark.readStream\n  .format(\"parquet\")\n  .load(\"/mnt/raw_orders/\")\n  .withWatermark(\"time\", \"2 hours\")\n  .dropDuplicates([\"customer_id\", \"order_id\"])\n  .writeStream\n  .trigger(availableNow=True)\n  .option(\"checkpointLocation\", \"/mnt/checkpoints/orders\")\n  .toTable(\"orders\")\n)\n```\nNếu upstream đôi khi enqueue trùng một đơn cách nhau hơn hai giờ theo event time, phát biểu nào đúng?",
     "options_vi": {
-      "A": "Bản ghi trùng cách nhau hơn 2 giờ có thể vẫn giữ lại, bảng `orders` có thể có trùng",
+      "A": "Bản ghi enqueue trùng cách nhau hơn hai giờ event time có thể được giữ lại sau khi watermark loại state dedup cũ; bảng `orders` vì vậy có thể trùng khóa ghép.",
       "B": "Mọi bản ghi giữ trong state 2 giờ rồi mới dedup và ghi",
       "C": "Bảng chỉ chứa dữ liệu 2 giờ gần nhất, không có trùng",
       "D": "Bản trùng cách nhau >2h bị drop, nhưng trùng trong cùng batch có thể cùng được ghi",
       "E": "Không có trùng nhưng bản đến trễ >2h sẽ bị bỏ"
     },
-    "explanation_vi": "Khi thực hiện loại bỏ trùng lặp trong Structured Streaming bằng cách kết hợp watermark với ``dropDuplicates``, Spark chỉ lưu giữ trạng thái (state) của các khoá (keys) trong khoảng thời gian quy định bởi watermark (ở đây là 2 giờ). Nếu hai bản ghi trùng lặp được gửi cách nhau nhiều hơn 2 giờ, thông tin về bản ghi đầu tiên đã bị giải phóng khỏi state store khi watermark trôi qua, do đó Spark không thể nhận diện bản ghi thứ hai là trùng lặp và vẫn lưu cả hai vào bảng `orders`.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** `withWatermark(\"time\", \"2 hours\")` cho phép Structured Streaming giới hạn state mà phép khử trùng lặp cần giữ. Khi watermark tiến lên, state của các khóa đã cũ được dọn để query không phải ghi nhớ mọi đơn hàng mãi mãi. Nếu cùng `customer_id`/`order_id` xuất hiện lại với enqueue timestamp mới sau khi state của lần trước đã bị loại, hệ thống không còn đủ state để nhận ra đó là khóa đã thấy và bản ghi trùng có thể đi vào bảng `orders`. Hai giờ là giới hạn quản lý độ trễ/state, không phải thời gian chờ trước khi mọi bản ghi được commit hay cửa sổ giữ lại hai giờ dữ liệu đầu ra.\n\nĐề bài giả định bản trùng có timestamp mới và đến theo trật tự thời gian; nếu một bản ghi đến quá trễ so với watermark, Spark có thể bỏ nó, nhưng việc bỏ bản ghi quá trễ không biến dedup thành bảo đảm vĩnh viễn. Với API `dropDuplicates` có watermark, bảo đảm khử trùng lặp phụ thuộc vào state còn được giữ. `dropDuplicatesWithinWatermark` trên Runtime hỗ trợ là API diễn đạt rõ hơn yêu cầu “loại bản trùng trong ngưỡng event-time”; ngoài ngưỡng thì không đảm bảo loại trùng.\n\nCheckpoint cố định trong ví dụ cũng rất quan trọng: nó lưu offset file đã xử lý, state dedup và tiến độ commit qua các lần job `availableNow` khởi động rồi dừng. Nếu mỗi lần chạy tạo checkpoint mới, query sẽ bắt đầu như một luồng mới; vừa có thể đọc lại dữ liệu, vừa mất state đã tích lũy. Không được xóa/đổi checkpoint tùy tiện nếu muốn tiếp tục cùng một query.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **B**: Watermark không giữ mọi dòng đúng hai giờ rồi mới ghi; nó quản lý độ trễ và thu hồi state. Dữ liệu thường được xử lý/ghi trong các micro-batch của lần chạy.\n- **C**: Watermark không biến bảng đích thành cửa sổ rolling chỉ chứa hai giờ gần nhất; `orders` vẫn giữ dữ liệu đã ghi trừ khi có logic xóa riêng.\n- **D**: Không có quy tắc rằng mọi bản trùng cách nhau trên hai giờ chắc chắn bị drop; ngược lại state cũ có thể đã bị xóa. Các bản trùng trong cùng phạm vi state thường được đối chiếu theo khóa, không mặc định cùng được ghi.\n- **E**: Không thể bảo đảm bảng không có bản trùng nếu bản trùng xuất hiện sau khi state đã hết hạn. Dữ liệu trễ có thể bị drop, nhưng đó là xử lý lateness chứ không phải bảo đảm duy nhất toàn cục.\n\nNếu nghiệp vụ cần khóa duy nhất dài hạn, hãy áp dụng upsert/MERGE theo khóa vào Delta hoặc duy trì kiểm tra chất lượng riêng; đừng dùng watermark như constraint duy nhất.",
     "page": null,
-    "image": "img/q_95.jpg",
     "references": [
       {
-        "title": "Structured Streaming Deduplication with Watermarks",
-        "url": "https://docs.databricks.com/en/structured-streaming/watermarks#deduplication"
+        "title": "Structured Streaming checkpoints",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/checkpoints"
+      },
+      {
+        "title": "Structured Streaming deduplication and watermarks",
+        "url": "https://docs.databricks.com/gcp/en/structured-streaming/watermarks"
+      },
+      {
+        "title": "Run incremental Structured Streaming jobs with AvailableNow",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/tutorial"
       }
     ]
   },
@@ -3106,7 +3126,7 @@
       "A": "Databricks only allows foreign key constraints on hashed identifiers, which avoid collisions in highly-parallel writes.",
       "B": "Databricks supports Spark SQL and JDBC; all logic can be directly migrated from the source system without refactoring.",
       "C": "Committing to multiple tables simultaneously requires taking out multiple table locks and can lead to a state of deadlock.",
-      "D": "All **Delta Lake** transactions are ACID compliant against a single table, and Databricks does not enforce foreign key constraints.",
+      "D": "Ordinary Delta writes are ACID for each table, while primary and foreign key constraints are informational and are not enforced. Multi-table atomic transactions require the supported catalog-commit transaction feature and eligible tables.",
       "E": "Foreign keys must reference a primary key field; multi-table inserts must leverage **Delta Lake**'s upsert functionality."
     },
     "answer": "D",
@@ -3115,16 +3135,23 @@
       "A": "Databricks chỉ cho phép khoá ngoại trên mã băm",
       "B": "Hỗ trợ Spark SQL/JDBC nên có thể migrate nguyên xi",
       "C": "Ghi nhiều bảng cùng lúc cần khoá nhiều bảng dễ deadlock",
-      "D": "Giao dịch **Delta Lake** ACID áp dụng cho từng bảng, Databricks không enforce khoá ngoại",
+      "D": "Ghi Delta thông thường có ACID ở phạm vi từng bảng; khóa chính/khóa ngoại chỉ mang tính thông tin, không được enforce. Giao dịch nguyên tử nhiều bảng cần tính năng transaction catalog-commit được hỗ trợ và các bảng đủ điều kiện.",
       "E": "Khoá ngoại phải trỏ primary key; multi-table insert phải dùng upsert"
     },
-    "explanation_vi": "Khi chuyển đổi từ hệ thống cơ sở dữ liệu quan hệ (RDBMS) sang **Databricks Lakehouse**, kỹ sư dữ liệu cần lưu ý rằng các ràng buộc khóa ngoại (foreign key constraints) không được cưỡng chế (enforced) bởi Databricks (chúng chỉ mang tính chất khai báo thông tin). Đồng thời, các giao dịch **Delta Lake** đảm bảo tuân thủ tính **ACID** trên phạm vi từng bảng đơn lẻ (against a single table), do đó nhà phát triển phải chủ động xây dựng logic kiểm tra và duy trì toàn vẹn dữ liệu trong pipeline ETL.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D, với phạm vi được nêu chính xác.** Delta cung cấp giao dịch ACID cho thao tác trên bảng Delta, vì vậy một lần ghi bảng có thể thành công hoặc thất bại nguyên tử. Nhưng khóa chính và khóa ngoại khai báo trên Databricks chỉ mang tính thông tin: nền tảng không tự kiểm tra mọi lần ghi để bảo đảm tính duy nhất hoặc tính toàn vẹn tham chiếu. Khi di trú workload dựa vào các kiểm tra quan hệ của RDBMS, nhóm phải thiết kế kiểm tra chất lượng/đối soát rõ ràng thay vì giả định constraint sẽ tự chặn bản ghi sai.\n\nCần đọc kỹ giới hạn “mọi transaction chỉ một bảng” trong câu hỏi cũ: đó không còn là phát biểu đúng cho mọi cấu hình Databricks hiện nay. Databricks có hỗ trợ transaction nhiều statement/nhiều bảng cho các bảng phù hợp khi bật catalog commits (các điều kiện về Unity Catalog, loại bảng và trạng thái tính năng áp dụng). Do đó option D đã được viết lại để nói rõ mô hình ghi Delta thông thường và ngoại lệ có điều kiện. Trước khi chọn kiến trúc, hãy kiểm tra tính năng đang khả dụng trong workspace/region/Runtime của dự án.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **A**: Không có quy tắc chung rằng foreign key chỉ dùng được với identifier đã hash. Hash không tự đảm bảo không va chạm và không thay constraint nghiệp vụ.\n- **B**: Có Spark SQL và JDBC không có nghĩa logic RDBMS chuyển nguyên xi; semantics transaction, khóa, constraint, kiểu dữ liệu và xử lý đồng thời có thể khác.\n- **C**: Mô tả deadlock do phải khóa nhiều bảng không phải cơ chế chung của Delta. Với tính năng transaction nhiều bảng được hỗ trợ, tính nguyên tử được điều phối qua catalog commits, không nên suy diễn từ mô hình khóa RDBMS.\n- **E**: Upsert/MERGE có thể hữu ích để ghi theo khóa, nhưng không phải yêu cầu tổng quát thay cho mọi multi-table insert; mệnh đề về khóa ngoại cũng không mô tả đầy đủ giới hạn enforce của Databricks.\n\nKhi migrate, lập danh sách invariant của nguồn: uniqueness, referential integrity và atomicity liên bảng. Chọn transaction catalog-commit nếu workload đủ điều kiện; nếu không, có thể dùng staging, kiểm tra trước/sau ghi, idempotent writes và quy trình publish/compensation.",
     "page": null,
-    "image": "img/q_96.jpg",
     "references": [
       {
-        "title": "Constraints on Databricks Delta Tables",
-        "url": "https://docs.databricks.com/en/tables/constraints"
+        "title": "Constraints on Databricks",
+        "url": "https://docs.databricks.com/aws/en/tables/constraints"
+      },
+      {
+        "title": "Coordinate transactions across tables",
+        "url": "https://docs.databricks.com/aws/en/transactions/tutorial"
+      },
+      {
+        "title": "ACID guarantees on Databricks",
+        "url": "https://docs.databricks.com/aws/en/lakehouse/acid"
       }
     ]
   },
@@ -3136,7 +3163,7 @@
       "A": "Data corruption can occur if a query fails in a partially completed state because Type 2 tables require setting multiple fields in a single update.",
       "B": "Shallow clones can be combined with Type 1 tables to accelerate historic queries for long-term versioning.",
       "C": "Delta Lake time travel cannot be used to query previous versions of these tables because Type 1 changes modify data files in place.",
-      "D": "Delta Lake time travel does not scale well in cost or latency to provide a long-term versioning solution.",
+      "D": "Delta time travel is retention-bound and is not, by itself, a durable long-term row-level audit; files or logs needed for older versions can be removed under retention and VACUUM policies.",
       "E": "Delta Lake only supports Type 0 tables; once records are inserted to a Delta Lake table, they cannot be modified."
     },
     "answer": "D",
@@ -3145,46 +3172,52 @@
       "A": "Type 2 cần cập nhật nhiều trường dễ gây lỗi nếu query fail",
       "B": "Có thể kết hợp shallow clone với Type 1 để tăng tốc lịch sử",
       "C": "Time travel không truy vấn được bảng Type 1 vì cập nhật tại chỗ",
-      "D": "Time travel về lâu dài tốn chi phí/độ trễ, khó cho versioning dài hạn",
+      "D": "Time travel của Delta bị giới hạn bởi retention; tự nó không phải audit row-level dài hạn bền vững vì file/log của phiên bản cũ có thể bị dọn theo retention và `VACUUM`.",
       "E": "Delta chỉ hỗ trợ Type 0, không sửa dữ liệu"
     },
-    "explanation_vi": "Mặc dù **Delta Lake** hỗ trợ tính năng `time travel` giúp truy cập lịch sử các phiên bản cũ của bảng, tính năng này không được thiết kế cho việc lưu trữ và truy vấn lịch sử dài hạn (ví dụ: nhiều tháng hoặc nhiều năm) do chi phí lưu trữ dữ liệu tăng cao (vì không thể chạy `VACUUM` để dọn dẹp các file cũ) và độ trễ truy vấn (latency) lớn khi phải quét qua quá nhiều phiên bản log giao dịch. Do đó, việc thiết kế bảng `SCD Type 2` lưu trữ lịch sử rõ ràng bằng các cột mốc thời gian là giải pháp tối ưu và có khả năng mở rộng tốt hơn.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** Time travel cho phép truy vấn snapshot Delta trước đây bằng version hoặc timestamp, nhưng khả năng truy vấn phụ thuộc việc transaction log và file dữ liệu cần thiết còn được giữ. Cấu hình retention, thao tác `VACUUM`, chính sách quản trị và khối lượng ghi mới quyết định khoảng lịch sử thực tế có thể khôi phục. Mặc định thường dùng cho file dữ liệu và log khác nhau; không nên xem các mặc định này là cam kết lưu trữ dài hạn. Databricks khuyến nghị không dùng table history như bản sao lưu hoặc kho lưu trữ lâu dài.\n\nNếu yêu cầu là duy trì mọi địa chỉ hợp lệ từng xuất hiện để kiểm toán, Type 2 SCD mô hình hóa lịch sử thành các dòng riêng, thường có `valid_from`, `valid_to`/`is_current` và khóa nghiệp vụ. Lịch sử đó là dữ liệu hàng ở bảng, do nhóm thiết kế retention và quyền truy cập; nó không phụ thuộc hoàn toàn vào một snapshot Delta cũ. Type 2 làm tăng số dòng và đòi hỏi logic đóng/mở phiên bản đúng, nên không mặc nhiên nhanh hơn Type 1. Lựa chọn dựa trên yêu cầu truy vấn và lưu trữ, nhưng time travel một mình không đáp ứng cam kết audit vô thời hạn.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **A**: Cập nhật nhiều cột trong một transaction Delta không khiến Type 2 tự gây corruption; transaction bảo vệ commit bảng. Logic SCD2 vẫn cần xử lý khóa và bản ghi đồng thời đúng cách.\n- **B**: Shallow clone tái sử dụng file dữ liệu hiện có và cũng bị giới hạn bởi retention nguồn; nó không tạo kho lịch sử dài hạn độc lập.\n- **C**: Delta không sửa file Parquet “tại chỗ” theo cách làm mất mọi lịch sử. Mỗi thay đổi tạo version mới trong log, và có thể time travel khi tài nguyên lịch sử còn được giữ.\n- **E**: Delta hỗ trợ `UPDATE`, `DELETE`, `MERGE` và các thao tác thay đổi dữ liệu; nó không bị giới hạn ở Type 0.\n\nPhân biệt ba nhu cầu: khôi phục/debug ngắn hạn (time travel), lịch sử nghiệp vụ từng dòng (SCD2/CDC) và disaster recovery/backup (bản sao được quản lý riêng).",
     "page": null,
-    "image": "img/q_97.jpg",
     "references": [
       {
-        "title": "Delta Lake Time Travel Best Practices",
-        "url": "https://docs.databricks.com/en/tables/history"
+        "title": "Work with table history and time travel",
+        "url": "https://docs.databricks.com/aws/en/tables/history"
+      },
+      {
+        "title": "Implement SCD Type 2 patterns",
+        "url": "https://docs.databricks.com/aws/en/delta/merge"
       }
     ]
   },
   {
     "id": 98,
     "topic": 1,
-    "question": "A table named user_ltv is being used to create a view that will be used by data analysts on various teams. Users in the workspace are configured into groups, which are used for setting up data access using ACLs.\nThe `user_ltv` table has the following schema:\n`email STRING, age INT, ltv INT`\nThe following view definition is executed:\nAn analyst who is not a member of the auditing group executes the following query:\n`SELECT * FROM user_ltv_no_minors`\nWhich statement describes the results returned by this query?",
+    "question": "A table named `user_ltv` has schema `email STRING, age INT, ltv INT`. The following legacy Hive-metastore dynamic view is created for workspace-level groups:\n```sql\nCREATE VIEW user_ltv_no_minors AS\nSELECT email, age, ltv\nFROM user_ltv\nWHERE CASE\n  WHEN is_member('auditing') THEN TRUE\n  ELSE age >= 18\nEND\n```\nAn analyst who is not a member of the `auditing` group runs `SELECT * FROM user_ltv_no_minors`. Which statement describes the result?",
     "options": {
-      "A": "All columns will be displayed normally for those records that have an age greater than 17; records not meeting this condition will be omitted.",
+      "A": "All columns are returned normally for rows where `age >= 18`; rows that do not meet the condition are omitted.",
       "B": "All age values less than 18 will be returned as null values, all other columns will be returned with the values in user_ltv.",
       "C": "All values for the age column will be returned as null values, all other columns will be returned with the values in user_ltv.",
       "D": "All records from all columns will be displayed with the values in user_ltv.",
-      "E": "All columns will be displayed normally for those records that have an age greater than 18; records not meeting this condition will be omitted."
+      "E": "All columns are returned normally for rows where `age > 18`; rows that do not meet the condition are omitted."
     },
     "answer": "A",
-    "question_vi": "Bảng `user_ltv` và view `user_ltv`_no_minors kiểm soát truy cập theo group auditing. Người không thuộc auditing truy vấn view, kết quả thế nào?",
+    "question_vi": "Bảng `user_ltv` có schema `email STRING, age INT, ltv INT`. Dynamic view kiểu Hive metastore bên dưới dùng group cấp workspace:\n```sql\nCREATE VIEW user_ltv_no_minors AS\nSELECT email, age, ltv\nFROM user_ltv\nWHERE CASE\n  WHEN is_member('auditing') THEN TRUE\n  ELSE age >= 18\nEND\n```\nMột analyst không thuộc nhóm `auditing` chạy `SELECT * FROM user_ltv_no_minors`. Kết quả là gì?",
     "options_vi": {
-      "A": "Chỉ hiển thị các bản ghi age > 17, các bản khác bị loại",
+      "A": "Trả về bình thường mọi cột của các dòng `age >= 18`; loại các dòng không đạt điều kiện.",
       "B": "Các tuổi <18 trả về null, cột khác giữ nguyên",
       "C": "Toàn bộ cột age trả về null, cột khác giữ nguyên",
       "D": "Hiển thị toàn bộ bản ghi như bảng gốc",
-      "E": "Chỉ hiển thị bản ghi age > 18"
+      "E": "Trả về bình thường mọi cột của các dòng `age > 18`; loại các dòng còn lại."
     },
-    "explanation_vi": "View ``user_ltv_no_minors`` sử dụng hàm kiểm tra quyền thành viên nhóm ``is_member('auditing')`` để quyết định bộ lọc. Nếu người dùng thuộc nhóm `auditing`, họ sẽ thấy toàn bộ dữ liệu. Nếu người dùng (ở đây là analyst) không thuộc nhóm `auditing`, điều kiện lọc ``age > 17`` sẽ được áp dụng. Kết quả là tất cả các cột của các bản ghi có tuổi lớn hơn 17 sẽ được hiển thị bình thường, còn các bản ghi không thỏa mãn điều kiện này (từ 17 tuổi trở xuống) sẽ bị lọc bỏ.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** Analyst không thuộc `auditing`, nên nhánh `ELSE age >= 18` được dùng. Điều kiện của `WHERE` giữ các hàng có biểu thức là `TRUE`; vì vậy người dùng thấy đủ ba cột `email`, `age`, `ltv` cho người từ 18 tuổi trở lên, còn hàng dưới 18 bị loại hoàn toàn. View này lọc hàng, không mask riêng cột `age`.\n\nNếu `age` là `NULL`, phép so sánh `age >= 18` cho kết quả `NULL` (unknown), và `WHERE` không giữ hàng đó; người dùng thường không thấy hàng có tuổi chưa biết. Thành viên `auditing` đi vào nhánh `THEN TRUE`, nên điều kiện cho phép xem tất cả hàng, kể cả người dưới 18 hoặc tuổi NULL. Đây là quyền theo nhóm ở tầng view; analyst cần được cấp quyền đọc view nhưng không nên được cấp quyền đọc trực tiếp bảng gốc nếu chính sách lọc phải được bảo đảm.\n\n**Vì sao các lựa chọn khác sai?**\n\n- **B**: SQL không chuyển giá trị `age` thành `NULL`; biểu thức nằm trong `WHERE` lọc cả hàng. Masking cần biểu thức riêng ở danh sách `SELECT`.\n- **C**: Không có phép biến đổi nào thay toàn bộ `age` bằng NULL; `email`, `age`, `ltv` được chọn nguyên trạng nếu hàng qua điều kiện.\n- **D**: Người hỏi không thuộc `auditing`, nên không đi vào nhánh `THEN TRUE`; họ không nhìn thấy tất cả hàng.\n- **E**: Với `age INT`, ngưỡng trong SQL là `>= 18`, bao gồm người đúng 18 tuổi. `> 18` sẽ loại nhầm nhóm 18 tuổi.\n\nLưu ý phạm vi nền tảng: `is_member()` kiểm tra workspace-level group và phù hợp ví dụ Hive metastore/legacy. Với view Unity Catalog trong triển khai mới, Databricks khuyến nghị dùng `is_account_group_member()` cho account-level group; hãy cấp quyền view và hạn chế quyền trên bảng nguồn để không thể đi vòng qua chính sách.",
     "page": null,
-    "image": "img/q_98.jpg",
     "references": [
       {
-        "title": "Dynamic Views with Table Access Control Lists",
-        "url": "https://docs.databricks.com/en/data-governance/unity-catalog/access-control/table-acls/object-privileges#dynamic-views"
+        "title": "Create a dynamic view: row filters and group membership",
+        "url": "https://docs.databricks.com/aws/en/views/dynamic"
+      },
+      {
+        "title": "Legacy Hive metastore table privileges",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges-hms"
       }
     ]
   },
