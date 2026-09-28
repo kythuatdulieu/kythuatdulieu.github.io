@@ -4197,7 +4197,6 @@
     },
     "explanation_vi": "**Đáp án B — `fs`.** Dùng nhóm `fs` để thao tác tệp trên DBFS; thao tác sao chép cụ thể là `databricks fs cp <nguồn-local> <đích>`. Ví dụ: `databricks fs cp ./custom.whl dbfs:/FileStore/wheels/custom.whl`. CLI không tự cài wheel vào job: sau khi upload, hãy thêm artifact làm dependency cho task/job và cấp quyền đọc cho identity chạy job.\n\nLưu ý về bối cảnh production: câu hỏi dùng cách gọi object storage “mount bằng DBFS”, tức mô hình DBFS mounts cũ. DBFS root và mounts có thể bị tắt và không nên chọn cho thiết kế mới; một Unity Catalog Volume thường phù hợp hơn cho artifact cần quản trị truy cập. Nhóm `fs` cũng hỗ trợ Volume, với đích dạng `dbfs:/Volumes/<catalog>/<schema>/<volume>/...`.\n\n- **A `configure`** cấu hình xác thực CLI, không tải tệp.\n- **C `workspace`** quản lý workspace files/notebooks, không phải đường dẫn DBFS.\n- **D `libraries`** cài/gỡ hoặc xem trạng thái library trên compute; nó không copy tệp từ laptop lên storage.\n\nVì vậy, trong các lựa chọn, chọn tên command group `fs`; không nhầm nó với bước gắn library vào job.",
     "page": null,
-    "image": "img/q_129.jpg",
     "references": [
       {
         "title": "Databricks CLI commands",
@@ -4212,147 +4211,160 @@
   {
     "id": 130,
     "topic": 1,
-    "question": "The following table consists of items found in user carts within an e-commerce website. The following `MERGE` statement is used to update this table using an updates view, with schema evolution enabled on this table. How would the following update be handled?",
+    "question": "The following Delta table stores shopping carts. Schema evolution is enabled for the `MERGE` statement:\n\n```text\ncarts (\n  id LONG,\n  items ARRAY<STRUCT<id: STRING, count: INT>>,\n  email STRING\n)\n\nid    items                                             email\n1001  [{id: \"DESK65\", count: 1}]                       u1@domain.com\n1002  [{id: \"KYBD45\", count: 1}, {id: \"M27\", count: 2}] u2@domain.com\n1003  [{id: \"M27\", count: 1}]                          u3@domain.com\n```\n\nThe updates view contains a new nested field, `coupon`, for cart 1001:\n\n```text\nid    items\n1001  [{id: \"DESK65\", count: 2, coupon: \"BOGO50\"}]\n```\n\n```sql\nMERGE INTO carts AS c\nUSING updates AS u\nON c.id = u.id\nWHEN MATCHED THEN UPDATE SET *\n```\n\nWhat happens to the table schema and the older rows?",
     "options": {
-      "A": "The update throws an error because changes to existing `columns` in the target schema are not supported.",
-      "B": "The new nested Field is added to the target schema, and dynamically read as NULL for existing unmatched records.",
-      "C": "The update is moved to a separate \"rescued\" column because it is missing a column expected in the target schema.",
-      "D": "The new nested field is added to the target schema, and files underlying existing records are updated to include NULL values for the new field."
+      "A": "The merge fails because Delta cannot add a nested field during schema evolution.",
+      "B": "The nested `coupon` field is added to the target schema; older rows without that field read as `NULL` and their data files are not rewritten just to backfill it.",
+      "C": "The `coupon` value is silently moved to a rescued-data column because the target schema does not contain it.",
+      "D": "The nested field is added and every old data file is rewritten to physically store a `NULL` value for `coupon`."
     },
     "answer": "B",
-    "question_vi": "Bảng dưới đây bao gồm các mặt hàng được tìm thấy trong giỏ hàng của người dùng trên một website thương mại điện tử. Lệnh `MERGE` sau đây được sử dụng để cập nhật bảng này bằng cách sử dụng một updates view, với tính năng tự động tiến hóa schema (schema evolution) được bật trên bảng này.\n\nBản cập nhật này sẽ được xử lý như thế nào?",
+    "question_vi": "Bảng Delta sau lưu giỏ hàng. Schema evolution được bật cho câu lệnh `MERGE`:\n\n```text\ncarts (\n  id LONG,\n  items ARRAY<STRUCT<id: STRING, count: INT>>,\n  email STRING\n)\n\nid    items                                             email\n1001  [{id: \"DESK65\", count: 1}]                       u1@domain.com\n1002  [{id: \"KYBD45\", count: 1}, {id: \"M27\", count: 2}] u2@domain.com\n1003  [{id: \"M27\", count: 1}]                          u3@domain.com\n```\n\nUpdates view có trường lồng mới `coupon` cho giỏ hàng 1001:\n\n```text\nid    items\n1001  [{id: \"DESK65\", count: 2, coupon: \"BOGO50\"}]\n```\n\n```sql\nMERGE INTO carts AS c\nUSING updates AS u\nON c.id = u.id\nWHEN MATCHED THEN UPDATE SET *\n```\n\nĐiều gì xảy ra với schema bảng và các dòng cũ?",
     "options_vi": {
-      "A": "Bản cập nhật sẽ báo lỗi vì việc thay đổi các cột hiện có trong schema đích không được hỗ trợ",
-      "B": "Trường lồng mới (new nested field) sẽ được thêm vào schema đích và được đọc động dưới dạng `NULL` đối với các bản ghi không khớp hiện có",
-      "C": "Bản cập nhật được chuyển sang một cột `rescued` riêng biệt vì nó thiếu một cột được mong đợi trong schema đích",
-      "D": "Trường lồng mới sẽ được thêm vào schema đích và các tệp làm nền tảng cho các bản ghi hiện có sẽ được cập nhật để bao gồm các giá trị `NULL` cho trường mới"
+      "A": "`MERGE` thất bại vì Delta không thể thêm trường lồng khi schema evolution được bật",
+      "B": "Trường lồng `coupon` được thêm vào schema đích; dòng cũ không có trường này sẽ đọc thành `NULL`, không cần ghi lại các data file chỉ để backfill trường mới",
+      "C": "Giá trị `coupon` bị chuyển âm thầm sang rescued-data column vì schema đích chưa có trường đó",
+      "D": "Trường lồng được thêm và tất cả data file cũ đều được ghi lại để lưu vật lý giá trị `NULL` cho `coupon`"
     },
-    "explanation_vi": "Khi tính năng tự động tiến hóa schema (schema evolution) được bật trong **Delta Lake** (`spark.databricks.delta.schema.autoMerge.enabled = true`) và thực hiện lệnh `MERGE INTO` có chứa một trường lồng mới (new nested field):\n\n**Delta Lake** sẽ tự động thêm trường lồng mới này vào cấu trúc schema của bảng đích. Đối với các bản ghi cũ hiện có trong bảng (không khớp với dữ liệu cập nhật mới), trường này sẽ tự động được đọc ra giá trị `NULL` mà không cần phải thực hiện ghi đè hay thay đổi vật lý các tệp dữ liệu cũ.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** Với schema evolution được bật cho `MERGE`, Delta nhận ra `coupon` là trường mới bên trong struct của phần tử `items` và cập nhật schema đích. `UPDATE SET *` cập nhật cart 1001 cùng giá trị mới. Các file cũ của cart 1002 và 1003 không chứa trường `coupon`; khi đọc theo schema mới, Spark trả `NULL` cho trường chưa tồn tại trong những file đó. Thêm một trường không buộc Delta phải quét và ghi lại mọi file cũ.\n\n- **A sai:** thêm field là một dạng schema evolution được hỗ trợ cho Delta `MERGE` khi bật đúng chế độ.\n- **B đúng:** thay đổi schema metadata và giá trị của hàng được match; các hàng/file cũ được đọc tương thích với schema mới.\n- **C sai:** `rescuedDataColumn` là cơ chế thường gặp khi Auto Loader không thể ánh xạ dữ liệu nguồn theo schema; nó không phải hành vi của `MERGE` Delta có schema evolution.\n- **D sai:** schema evolution không tự rewrite toàn bộ dữ liệu lịch sử. Chỉ những file có thay đổi trong giao dịch `MERGE` cần được ghi theo cập nhật đó.\n\nCần phân biệt `NULL` logic khi đọc với việc ghi các byte `NULL` vào từng file Parquet. Nếu ứng dụng cần giá trị mặc định khác `NULL` cho dữ liệu cũ, phải backfill có chủ đích; thêm cột không tự suy ra giá trị nghiệp vụ.\n\n📚 **Tham khảo:** [Databricks — Schema evolution](https://docs.databricks.com/aws/en/data-engineering/schema-evolution); [Delta Lake — schema evolution for arrays of structs](https://docs.delta.io/delta-update/#special-considerations-for-schemas-that-contain-arrays-of-structs)",
     "page": null,
-    "image": "img/q_130.jpg",
     "references": [
       {
-        "title": "Databricks Documentation - Delta Lake schema evolution",
-        "url": "https://docs.databricks.com/en/tables/update-schema#automatic-schema-evolution"
+        "title": "Databricks — Schema evolution",
+        "url": "https://docs.databricks.com/aws/en/data-engineering/schema-evolution"
+      },
+      {
+        "title": "Delta Lake — Schema evolution for arrays of structs",
+        "url": "https://docs.delta.io/delta-update/#special-considerations-for-schemas-that-contain-arrays-of-structs"
       }
     ]
   },
   {
     "id": 131,
     "topic": 1,
-    "question": "An upstream system is emitting change data capture (CDC) logs that are being written to a cloud object storage directory. Each record in the log indicates the change type (insert, update, or delete) and the values for each field after the change. The source table has a primary key identified by the field `pk_id`. For auditing purposes, the data governance team wishes to maintain a full record of all values that have ever been valid in the source system. For analytical purposes, only the most recent value for each record needs to be recorded. The **Databricks** job to ingest these records occurs once per hour, but each individual record may have changed multiple times over the course of an hour. Which solution meets these requirements?",
+    "question": "An upstream system writes CDC events to cloud object storage. Each event contains an operation (`insert`, `update`, or `delete`), the post-change field values, the primary key `pk_id`, and a source sequence/timestamp that deterministically orders changes for each key. Governance needs a complete audit history of every value that was valid; analytics needs only the latest state per key. The Databricks ingestion job runs hourly, and a key can change several times within an hour. Which design meets both needs?",
     "options": {
-      "A": "Iterate through an ordered set of changes to the table, applying each in turn to create the current state of the table, (insert, update, delete), timestamp of change, and the values.",
-      "B": "Use merge into to insert, update, or delete the most recent entry for each `pk_id` into a table, then propagate all changes throughout the system.",
-      "C": "Deduplicate records in each batch by `pk_id` and overwrite the target table.",
-      "D": "Use **Delta Lake**’s change data feed to automatically process CDC data from an external system, propagating all changes to all dependent tables in the **Lakehouse**."
+      "A": "Apply each ordered event to one current-state table, replacing the prior row and storing only the latest event timestamp and values.",
+      "B": "Use `MERGE` to store only the newest event for each `pk_id`; this is sufficient for both current-state analytics and a complete audit history.",
+      "C": "Deduplicate each hourly batch by `pk_id` and overwrite the destination table with the remaining events.",
+      "D": "Enable Delta Change Data Feed on the destination; it automatically ingests the upstream object-storage CDC files and archives their full history.",
+      "E": "Append every source event to an immutable CDC/audit table; in the same batch, order events by source sequence, retain the latest event per `pk_id`, and `MERGE` that event into a separate Type 1 current-state table, applying deletes."
     },
-    "answer": "B",
-    "question_vi": "Một hệ thống nguồn (upstream) đang phát ra các log change data capture (`CDC`) được ghi vào thư mục cloud object storage. Mỗi bản ghi trong log cho biết loại thay đổi (`insert`, `update`, hoặc `delete`) và giá trị của từng trường sau khi thay đổi. Bảng nguồn có khóa chính được xác định bởi trường `pk_id`.\n\nVì mục đích kiểm toán (auditing), đội ngũ quản trị dữ liệu (data governance) mong muốn duy trì một bản ghi đầy đủ của tất cả các giá trị đã từng hợp lệ trong hệ thống nguồn. Vì mục đích phân tích, chỉ cần ghi lại giá trị gần đây nhất của mỗi bản ghi. Job **Databricks** để ingest các bản ghi này chạy một giờ một lần, nhưng mỗi bản ghi riêng lẻ có thể đã thay đổi nhiều lần trong khoảng thời gian một giờ đó.\n\nGiải pháp nào đáp ứng các yêu cầu này?",
+    "answer": "E",
+    "question_vi": "Hệ thống nguồn ghi các sự kiện CDC vào cloud object storage. Mỗi sự kiện có thao tác (`insert`, `update`, hoặc `delete`), giá trị sau thay đổi, khóa chính `pk_id` và sequence/timestamp từ nguồn để sắp thứ tự thay đổi một cách xác định theo từng khóa. Bộ phận governance cần lưu đầy đủ lịch sử kiểm toán của mọi giá trị từng hợp lệ; analytics chỉ cần trạng thái mới nhất theo khóa. Job Databricks ingest mỗi giờ và một khóa có thể đổi nhiều lần trong một giờ. Thiết kế nào đáp ứng cả hai nhu cầu?",
     "options_vi": {
-      "A": "Lặp qua một tập hợp các thay đổi được sắp xếp theo thứ tự thời gian đối với bảng, áp dụng lần lượt từng thay đổi để tạo trạng thái hiện tại của bảng (bao gồm loại thay đổi `insert`, `update`, `delete`), timestamp của thay đổi, và các giá trị",
-      "B": "Sử dụng lệnh `MERGE INTO` để chèn, cập nhật hoặc xóa bản ghi mới nhất cho mỗi `pk_id` vào một bảng, sau đó truyền tất cả các thay đổi đó trong toàn bộ hệ thống",
-      "C": "Loại bỏ trùng lặp (deduplicate) các bản ghi trong mỗi batch theo `pk_id` và ghi đè (overwrite) lên bảng đích",
-      "D": "Sử dụng tính năng **Change Data Feed** của **Delta Lake** để tự động xử lý dữ liệu **CDC** từ hệ thống bên ngoài, truyền tất cả các thay đổi đến tất cả các bảng phụ thuộc trong **Lakehouse**"
+      "A": "Áp dụng từng sự kiện theo thứ tự vào một bảng current-state, ghi đè dòng trước và chỉ lưu timestamp cùng giá trị mới nhất",
+      "B": "Dùng `MERGE` chỉ lưu sự kiện mới nhất cho mỗi `pk_id`; như vậy vừa đủ cho analytics trạng thái hiện tại vừa đủ làm lịch sử kiểm toán",
+      "C": "Deduplicate từng batch theo `pk_id` rồi overwrite bảng đích bằng các sự kiện còn lại",
+      "D": "Bật Delta Change Data Feed trên bảng đích; tính năng này tự ingest file CDC từ object storage và lưu trữ toàn bộ lịch sử",
+      "E": "Append mọi sự kiện nguồn vào bảng CDC/audit bất biến; trong cùng batch, sắp theo source sequence, lấy sự kiện mới nhất theo `pk_id`, rồi `MERGE` vào một bảng Type 1 riêng để giữ trạng thái hiện tại và áp dụng cả sự kiện xóa"
     },
-    "explanation_vi": "Để đáp ứng đồng thời cả hai yêu cầu:\n1. Yêu cầu của data governance về việc duy trì lịch sử đầy đủ của mọi giá trị từng hợp lệ (audit trail): Toàn bộ dữ liệu CDC logs thô nhận được sẽ được lưu trữ (append-only) vào một bảng Bronze.\n2. Yêu cầu phân tích chỉ cần giá trị mới nhất của mỗi bản ghi: Sử dụng câu lệnh `MERGE INTO` để chèn, cập nhật hoặc xóa giá trị mới nhất cho mỗi `pk_id` từ bảng Bronze sang bảng Silver (bảng **Type 1** đại diện cho trạng thái hiện tại), sau đó lan truyền thay đổi từ bảng này đi.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án E.** Hai mục tiêu đòi hỏi hai cách biểu diễn dữ liệu khác nhau. Lưu bất biến mọi CDC event vào một bảng Bronze/audit dạng append-only để giữ đầy đủ từng giá trị, thao tác và thứ tự nguồn. Riêng bảng `current` dạng Type 1 chỉ chứa trạng thái mới nhất: trong mỗi batch, sắp theo sequence/timestamp của nguồn, chọn event cuối cùng theo `pk_id`, rồi `MERGE` vào bảng hiện tại. Nếu event cuối là `delete`, xóa khóa khỏi current table nhưng vẫn giữ event xóa trong audit.\n\n- **A thiếu nơi lưu lịch sử đầy đủ.** Cập nhật một hàng current-state lần lượt theo event vẫn làm mất các giá trị trước đó nếu không ghi thêm từng event vào một bảng audit riêng.\n- **B chỉ giữ trạng thái cuối**, nên không thể khôi phục đầy đủ giá trị và thứ tự các lần thay đổi để kiểm toán.\n- **C làm mất lịch sử khi deduplicate/overwrite**, và nếu không dùng sequence còn có thể chọn nhầm một event khi cùng khóa thay đổi nhiều lần.\n- **D nhầm Delta CDF với CDC của hệ thống nguồn.** CDF phát hiện thay đổi giữa các phiên bản của chính Delta table đã ghi; nó không tự đọc file ngoài hay tạo kho audit cho upstream.\n- **E đúng** vì tách rõ event history và current state, đồng thời dùng thứ tự nguồn để xử lý nhiều thay đổi trong cùng batch.\n\nCác CDC pipeline production cần idempotency theo event ID/sequence, xử lý event đến trễ, checkpoint/watermark phù hợp và quy tắc retention cho audit. CDF có thể bổ sung khi cần truyền thay đổi từ bảng Delta sang downstream, nhưng không thay thế việc ingest upstream event.\n\n📚 **Tham khảo:** [Databricks — Change data capture and SCD](https://docs.databricks.com/aws/en/ldp/what-is-change-data-capture), [Use change data feed](https://docs.databricks.com/gcp/en/tables/features/change-data-feed)",
     "page": null,
-    "image": "img/q_131.jpg",
     "references": [
       {
-        "title": "Databricks Documentation - Medallion Architecture and CDC processing",
-        "url": "https://docs.databricks.com/en/lakehouse-architecture/well-architected"
+        "title": "Databricks — Change data capture and SCD",
+        "url": "https://docs.databricks.com/aws/en/ldp/what-is-change-data-capture"
+      },
+      {
+        "title": "Databricks — Use change data feed",
+        "url": "https://docs.databricks.com/gcp/en/tables/features/change-data-feed"
       }
     ]
   },
   {
     "id": 132,
     "topic": 1,
-    "question": "An hourly batch job is configured to ingest data files from a cloud object storage container where each batch represent all records produced by the source system in a given hour. The batch job to process these records into the **Lakehouse** is sufficiently delayed to ensure no late-arriving data is missed. The `user_id` field represents a unique key for the data, which has the following schema:\n`user_id` `BIGINT`, `username` `STRING`, `user_utc` `STRING`, `user_region` `STRING`, `last_login` `BIGINT`, `auto_pay` `BOOLEAN`, `last_updated` `BIGINT` New records are all ingested into a table named `account_history` which maintains a full record of all data in the same schema as the source. The next table in the system is named `account_current` and is implemented as a **Type 1** table representing the most recent value for each unique `user_id`. Which implementation can be used to efficiently update the described `account_current` table as part of each hourly batch job assuming there are millions of user accounts and tens of thousands of records processed hourly?",
+    "question": "An hourly batch job is configured to ingest data files from a cloud object storage container where each batch represent all records produced by the source system in a given hour. The batch job to process these records into the **Lakehouse** is sufficiently delayed to ensure no late-arriving data is missed. The `user_id` field represents a unique key, and `last_updated` is the source update time used to order versions for that key. The schema is:\n`user_id` `BIGINT`, `username` `STRING`, `user_utc` `STRING`, `user_region` `STRING`, `last_login` `BIGINT`, `auto_pay` `BOOLEAN`, `last_updated` `BIGINT` New records are all ingested into a table named `account_history` which maintains a full record of all data in the same schema as the source. The next table in the system is named `account_current` and is implemented as a **Type 1** table representing the most recent value for each unique `user_id`. Which implementation can be used to efficiently update the described `account_current` table as part of each hourly batch job assuming there are millions of user accounts and tens of thousands of records processed hourly?",
     "options": {
-      "A": "Filter records in `account_history` using the `last_updated` field and the most recent hour processed, making sure to deduplicate on `username`;\nwrite a merge statement to update or insert the most recent value for each `username`.",
-      "B": "Use **Auto Loader** to subscribe to new files in the `account_history` directory; `configure` a **Structured Streaming** trigger available job to batch update newly detected files into the `account_current` table.",
-      "C": "Overwrite the `account_current` table with each batch using the results of a query against the `account_history` table grouping by `user_id` and filtering for the max value of `last_updated`.",
-      "D": "Filter records in `account_history` using the `last_updated` field and the most recent hour processed, as well as the max `last_login` by `user_id` write a merge statement to update or insert the most recent value for each `user_id`."
+      "A": "Filter `account_history` by the most recently processed hour, deduplicate on `username`, and `MERGE` the newest value for each `username`.",
+      "B": "Use Auto Loader to watch the `account_history` directory and write every detected file directly into `account_current` without selecting the latest event per key.",
+      "C": "Overwrite `account_current` every hour by scanning all of `account_history` and selecting the row with maximum `last_updated` for each `user_id`.",
+      "D": "Filter `account_history` to the newly processed hour, select the row with maximum `last_updated` per `user_id`, and `MERGE` those rows into `account_current` on `user_id`."
     },
     "answer": "D",
-    "question_vi": "Một job batch chạy hàng giờ được cấu hình để ingest các tệp dữ liệu từ cloud object storage container, trong đó mỗi batch đại diện cho tất cả các bản ghi do hệ thống nguồn tạo ra trong một giờ nhất định. Job batch xử lý các bản ghi này vào **Lakehouse** được trì hoãn đủ lâu để đảm bảo không bỏ sót dữ liệu đến trễ. Trường `user_id` đại diện cho một khóa duy nhất cho dữ liệu, có schema như sau:\n\n`user_id BIGINT, username STRING, user_utc STRING, user_region STRING, last_login BIGINT, auto_pay BOOLEAN, last_updated BIGINT`\n\nTất cả các bản ghi mới được ingest vào một bảng tên là `account_history` nhằm duy trì bản ghi đầy đủ của tất cả dữ liệu có cùng schema với nguồn. Bảng tiếp theo trong hệ thống có tên là `account_current` và được triển khai dưới dạng bảng **Type 1** thể hiện giá trị gần đây nhất cho mỗi `user_id` duy nhất.\n\nTriển khai nào có thể được sử dụng để cập nhật bảng `account_current` đã mô tả một cách hiệu quả như một phần của mỗi job batch hàng giờ, giả định rằng có hàng triệu tài khoản người dùng và hàng chục nghìn bản ghi được xử lý hàng giờ?",
+    "question_vi": "Một job batch chạy hàng giờ được cấu hình để ingest các tệp dữ liệu từ cloud object storage container, trong đó mỗi batch đại diện cho tất cả các bản ghi do hệ thống nguồn tạo ra trong một giờ nhất định. Job batch xử lý các bản ghi này vào **Lakehouse** được trì hoãn đủ lâu để đảm bảo không bỏ sót dữ liệu đến trễ. Trường `user_id` là khóa duy nhất; `last_updated` là thời điểm cập nhật từ nguồn dùng để sắp phiên bản của mỗi khóa. Schema như sau:\n\n`user_id BIGINT, username STRING, user_utc STRING, user_region STRING, last_login BIGINT, auto_pay BOOLEAN, last_updated BIGINT`\n\nTất cả các bản ghi mới được ingest vào một bảng tên là `account_history` nhằm duy trì bản ghi đầy đủ của tất cả dữ liệu có cùng schema với nguồn. Bảng tiếp theo trong hệ thống có tên là `account_current` và được triển khai dưới dạng bảng **Type 1** thể hiện giá trị gần đây nhất cho mỗi `user_id` duy nhất.\n\nTriển khai nào có thể được sử dụng để cập nhật bảng `account_current` đã mô tả một cách hiệu quả như một phần của mỗi job batch hàng giờ, giả định rằng có hàng triệu tài khoản người dùng và hàng chục nghìn bản ghi được xử lý hàng giờ?",
     "options_vi": {
-      "A": "Lọc các bản ghi trong `account_history` bằng trường `last_updated` và giờ gần đây nhất được xử lý, đảm bảo loại bỏ trùng lặp trên `username`; viết một câu lệnh `MERGE` để cập nhật hoặc chèn giá trị mới nhất cho mỗi `username`",
-      "B": "Sử dụng **Auto Loader** để đăng ký các file mới trong thư mục `account_history`; cấu hình một job trigger có sẵn của **Structured Streaming** để cập nhật batch các tệp mới phát hiện vào bảng `account_current`",
-      "C": "Ghi đè (overwrite) bảng `account_current` với mỗi batch bằng cách sử dụng kết quả của một truy vấn đối với bảng `account_history` gom nhóm theo `user_id` và lọc tìm giá trị lớn nhất của `last_updated`",
-      "D": "Lọc các bản ghi trong `account_history` bằng trường `last_updated` và giờ xử lý gần đây nhất, cũng như `last_login` lớn nhất theo `user_id`; viết một câu lệnh `MERGE` để cập nhật hoặc chèn giá trị mới nhất cho mỗi `user_id`"
+      "A": "Lọc `account_history` theo giờ mới nhất đã xử lý, deduplicate theo `username`, rồi `MERGE` giá trị mới nhất theo `username`",
+      "B": "Dùng Auto Loader theo dõi thư mục `account_history` và ghi mọi file phát hiện trực tiếp vào `account_current` mà không chọn event mới nhất theo khóa",
+      "C": "Mỗi giờ overwrite `account_current` bằng cách quét toàn bộ `account_history` và chọn dòng có `last_updated` lớn nhất theo `user_id`",
+      "D": "Lọc `account_history` trong giờ mới xử lý, chọn dòng có `last_updated` lớn nhất theo `user_id`, rồi `MERGE` vào `account_current` theo khóa `user_id`"
     },
-    "explanation_vi": "Để cập nhật bảng trạng thái hiện tại `account_current` (**Type 1**) từ bảng lịch sử `account_history` một cách hiệu quả trong một job chạy hàng giờ:\n\nChúng ta nên thực hiện tải tăng trưởng (incremental load). Bằng cách lọc các bản ghi mới trong `account_history` dựa trên cột `last_updated` của giờ vừa được xử lý gần nhất, đồng thời lấy ra bản ghi có `last_login` mới nhất cho mỗi `user_id` để khử trùng lặp. Sau đó, viết một câu lệnh `MERGE INTO` để cập nhật hoặc chèn các bản ghi này vào `account_current`. Cách này tối ưu hơn nhiều so với việc ghi đè (overwrite) toàn bộ bảng chứa hàng triệu user.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** `account_current` là bảng Type 1, nên mỗi khóa `user_id` chỉ giữ một phiên bản. Lọc `account_history` theo watermark/batch window vừa ingest để tránh quét toàn bộ lịch sử; nếu một user xuất hiện nhiều lần trong giờ, xếp hạng theo `last_updated` và chỉ giữ event mới nhất. Sau đó `MERGE` theo `user_id`: cập nhật hàng đã có và chèn hàng mới. Bảng `account_history` vẫn giữ các bản ghi cũ để phục vụ lịch sử.\n\n- **A sai** vì `username` không phải khóa duy nhất được đề xác định; username có thể đổi hoặc trùng. Khử trùng lặp phải theo `user_id`.\n- **B sai** vì ghi mọi event vào Type 1 có thể đưa nhiều thay đổi cho cùng khóa vào một `MERGE`, gây kết quả không xác định hoặc lỗi nhiều source row match; cần deduplicate trước. Auto Loader chủ yếu phát hiện file mới, không tự chọn phiên bản cuối theo nghiệp vụ.\n- **C có thể cho trạng thái đúng nhưng tốn kém.** Quét toàn bộ lịch sử hàng giờ rồi overwrite cả bảng hàng triệu user là công việc tăng theo toàn bộ dữ liệu, dù chỉ có vài chục nghìn cập nhật mới.\n- **D đúng** nếu watermark/batch window không bỏ sót event và `last_updated` đủ để sắp thứ tự. Nếu timestamp bị trùng, thêm source sequence làm tie-breaker để chọn duy nhất một hàng.\n\nKhông dùng `last_login` làm tiêu chí cập nhật: người dùng đăng nhập gần đây hơn không có nghĩa hồ sơ dữ liệu được cập nhật sau hơn. `last_updated` mô tả thứ tự thay đổi hồ sơ; hai trường mang ý nghĩa nghiệp vụ khác nhau.\n\n📚 **Tham khảo:** [Databricks — Delta Lake MERGE/upsert tutorial](https://docs.databricks.com/aws/en/delta/tutorial)",
     "page": null,
-    "image": "img/q_132.jpg",
     "references": [
       {
-        "title": "Databricks Documentation - Merge into a Delta Lake table using upsert",
-        "url": "https://docs.databricks.com/en/tables/update-schema"
+        "title": "Databricks — Delta Lake MERGE/upsert tutorial",
+        "url": "https://docs.databricks.com/aws/en/delta/tutorial"
       }
     ]
   },
   {
     "id": 133,
     "topic": 1,
-    "question": "The **Business Intelligence** team has a dashboard configured to track various summary metrics for retail stores. This includes total sales for the previous day alongside totals and averages for a variety of time periods. The fields required to populate this dashboard have the following schema:\nFor demand forecasting, the **Lakehouse** contains a validated table of all itemized sales updated incrementally in near real-time. This table, named `products_per_order`, includes the following fields:\nBecause reporting on long-term sales trends is less volatile, analysts using the new dashboard only require data to be refreshed once daily.\nBecause the dashboard will be queried interactively by many users throughout a normal business day, it should return results quickly and reduce total compute associated with each materialization.\nWhich solution meets the expectations of the end users while controlling and limiting possible costs?",
+    "question": "The BI team needs a retail-store summary dashboard with these output fields:\n\n```text\nstore_id INT,\ntotal_sales_qtd FLOAT, avg_daily_sales_qtd FLOAT,\ntotal_sales_ytd FLOAT, avg_daily_sales_ytd FLOAT,\nprevious_day_sales FLOAT,\ntotal_sales_7d FLOAT, avg_daily_sales_7d FLOAT,\nupdated TIMESTAMP\n```\n\nThe Lakehouse has a validated, near-real-time `products_per_order` table:\n\n```text\nstore_id INT, order_id INT, product_id INT, quantity INT,\nprice FLOAT, order_timestamp TIMESTAMP\n```\n\nLong-term trend data only needs to refresh daily. Many analysts will query the dashboard throughout the day, so reads should be fast and repeated queries should avoid recomputing the same aggregates. Which solution best matches the choices below while controlling compute cost?",
     "options": {
-      "A": "Populate the dashboard by configuring a nightly batch job to save the required values as a table overwritten with each update.",
-      "B": "Use **Structured Streaming** to configure a live dashboard against the `products_per_order` table within a **Databricks** notebook.",
-      "C": "Define a view against the `products_per_order` table and define the dashboard against this view.",
-      "D": "Use the Delta Cache to persist the `products_per_order` table in memory to quickly update the dashboard with each query."
+      "A": "Run a nightly batch that computes the required store-level aggregates and overwrites a compact summary table once per day.",
+      "B": "Run Structured Streaming continuously and query the near-real-time `products_per_order` table directly from a notebook dashboard.",
+      "C": "Create a standard view over `products_per_order` and point the dashboard at the view.",
+      "D": "Keep the entire `products_per_order` source table in a cache and recompute each dashboard aggregate on every query."
     },
     "answer": "A",
-    "question_vi": "Dashboard BI cần số liệu tổng hợp bán lẻ, chỉ cần làm mới mỗi ngày; nhiều người truy vấn tương tác nên cần nhanh và tiết kiệm compute. Giải pháp nào phù hợp?",
+    "question_vi": "Nhóm BI cần dashboard tổng hợp theo cửa hàng với các cột:\n\n```text\nstore_id INT,\ntotal_sales_qtd FLOAT, avg_daily_sales_qtd FLOAT,\ntotal_sales_ytd FLOAT, avg_daily_sales_ytd FLOAT,\nprevious_day_sales FLOAT,\ntotal_sales_7d FLOAT, avg_daily_sales_7d FLOAT,\nupdated TIMESTAMP\n```\n\nLakehouse có bảng `products_per_order` đã được xác thực và cập nhật gần thời gian thực:\n\n```text\nstore_id INT, order_id INT, product_id INT, quantity INT,\nprice FLOAT, order_timestamp TIMESTAMP\n```\n\nBáo cáo xu hướng dài hạn chỉ cần làm mới mỗi ngày. Nhiều analyst sẽ truy vấn dashboard trong ngày nên kết quả cần nhanh và các lượt truy vấn lặp lại không nên tính lại cùng phép tổng hợp. Trong các lựa chọn sau, giải pháp nào phù hợp nhất đồng thời kiểm soát chi phí compute?",
     "options_vi": {
-      "A": "Cấu hình job nightly lưu kết quả thành bảng và overwrite mỗi lần cập nhật.",
-      "B": "Dùng **Structured Streaming** làm dashboard trực tiếp từ `products_per_order`.",
-      "C": "Định nghĩa view trên `products_per_order` và để dashboard truy vấn view.",
-      "D": "Dùng Delta Cache giữ `products_per_order` trong bộ nhớ để dashboard chạy nhanh."
+      "A": "Chạy batch ban đêm để tính tổng hợp theo cửa hàng rồi overwrite một summary table gọn mỗi ngày",
+      "B": "Chạy Structured Streaming liên tục và để dashboard notebook truy vấn trực tiếp bảng near-real-time `products_per_order`",
+      "C": "Tạo standard view trên `products_per_order` rồi cho dashboard truy vấn view đó",
+      "D": "Giữ toàn bộ bảng nguồn `products_per_order` trong cache nhưng tính lại các tổng hợp cho mỗi truy vấn dashboard"
     },
-    "explanation_vi": "Đối với phân tích xu hướng bán hàng dài hạn, người dùng chỉ yêu cầu làm mới dữ liệu một lần mỗi ngày. Vì vậy, giải pháp tối ưu nhất về mặt chi phí và hiệu năng truy vấn tương tác là cấu hình một job batch chạy ban đêm (nightly batch job) để tính toán các số liệu tổng hợp cần thiết và ghi đè (overwrite) vào một bảng đích. Khi người dùng truy vấn dashboard, họ sẽ đọc trực tiếp từ bảng đích đã được tính toán sẵn này, giúp trả về kết quả nhanh chóng và giảm thiểu tối đa chi phí compute so với việc liên tục truy vấn trực tiếp bảng sản phẩm thời gian thực hoặc dùng cache/streaming.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A trong các lựa chọn đã cho.** Dashboard chỉ cần số liệu một lần mỗi ngày, nên batch ban đêm có thể tính tổng doanh thu (`quantity * price`) và các chỉ số QTD/YTD/7 ngày theo `store_id`, rồi ghi một bảng summary nhỏ. Nhiều lượt truy vấn trong ngày đọc trực tiếp vài dòng đã tổng hợp thay vì quét bảng giao dịch và chạy lại cùng group-by. Chi phí tính toán tập trung vào lần refresh theo yêu cầu freshness.\n\n- **A đúng với SLA làm mới mỗi ngày.** Bảng đích chỉ lưu trường cần cho dashboard; cần xác định timezone, biên ngày/quý/năm và xử lý ngày không có giao dịch để số liệu trung bình/ngày đúng.\n- **B sai với nhu cầu đã nêu.** Streaming liên tục giữ pipeline hoạt động và độ mới theo thời gian thực không đem lại giá trị nếu người dùng chỉ cần snapshot mỗi ngày.\n- **C sai vì standard view chỉ lưu định nghĩa truy vấn.** Mỗi lần đọc vẫn có thể chạy phép join/tổng hợp trên bảng chi tiết; nó không tự tạo kết quả vật lý đã tính trước.\n- **D không giải quyết phần tính toán.** Cache nguồn có thể giảm I/O trong một số workload nhưng không đồng nghĩa các phép aggregate đã được vật hóa; giữ toàn bộ dữ liệu nóng còn tốn bộ nhớ/cache.\n\nTrong Databricks hiện nay, một scheduled materialized view cũng có thể tiền tính và refresh summary hằng ngày; lựa chọn đó không xuất hiện trong bộ đáp án gốc. Với các phương án đang có, nightly batch ghi summary table là lựa chọn rõ ràng nhất.\n\n📚 **Tham khảo:** [Databricks — Standalone materialized views](https://docs.databricks.com/aws/en/ldp/dbsql/materialized), [Databricks — Dashboard refresh and caching](https://docs.databricks.com/aws/en/dashboards/caching)",
     "page": null,
-    "image": "img/q_133.jpg",
     "references": [
       {
-        "title": "Databricks Certified Data Engineer Professional Exam - Question 69",
-        "url": "https://www.examtopics.com/discussions/databricks/view/104642-exam-databricks-certified-data-engineer-professional/"
+        "title": "Databricks — Standalone materialized views",
+        "url": "https://docs.databricks.com/aws/en/ldp/dbsql/materialized"
+      },
+      {
+        "title": "Databricks — Dashboard refresh and caching",
+        "url": "https://docs.databricks.com/aws/en/dashboards/caching"
       }
     ]
   },
   {
     "id": 134,
     "topic": 1,
-    "question": "A **Delta Lake** table with CDF enabled table in the **Lakehouse** named `customer_churn_params` is used in churn prediction by the machine learning team. The table contains information about customers derived from a number of upstream sources. Currently, the data engineering team populates this table nightly by overwriting the table with the current valid values derived from upstream data sources.\nThe churn prediction model used by the ML team is fairly stable in production. The team is only interested in making predictions on records that have changed in the past 24 hours.\nWhich approach would simplify the identification of these changed records?",
+    "question": "A Delta table named `customer_churn_params` has Change Data Feed enabled and supplies features for a production churn model. The table is currently rebuilt nightly by overwriting it with the latest values from upstream sources. The model is stable, and the ML team only needs to score records whose feature values changed during the last 24 hours. Which change to the pipeline makes those records easiest to identify without rescoring the full table?",
     "options": {
-      "A": "Apply the churn model to all rows in the `customer_churn_params` table, but implement logic to perform an upsert into the predictions table that ignores rows where predictions have not changed.",
-      "B": "Convert the batch job to a **Structured Streaming** job using the complete output mode; configure a **Structured Streaming** job to read from the `customer_churn_params` table and incrementally predict against the churn model.",
-      "C": "Replace the current overwrite logic with a `MERGE` statement to modify only those records that have changed; write logic to make predictions on the changed records identified by the **Change Data Feed**.",
-      "D": "Modify the overwrite logic to include a field populated by calling `spark.sql`.functions.`current_timestamp`() as data are being written; use this field to identify records written on a particular date."
+      "A": "Run the model on every row nightly and upsert predictions, skipping writes when the prediction is unchanged.",
+      "B": "Convert the job to a continuous Structured Streaming query in complete mode and score the full `customer_churn_params` table on each trigger.",
+      "C": "Replace the full overwrite with a `MERGE` that updates rows only when source values differ, then read the table CDF and score the changed post-images (and handle deletes) from the last 24 hours.",
+      "D": "Add `current_timestamp()` while overwriting the full table and use that write timestamp to identify upstream records that changed during the last 24 hours."
     },
     "answer": "C",
-    "question_vi": "Bảng `customer_churn_params` bật CDF, ghi đè hàng đêm. Mô hình churn chỉ cần dự đoán trên bản ghi thay đổi 24h qua. Cách đơn giản để xác định bản ghi thay đổi?",
+    "question_vi": "Bảng Delta `customer_churn_params` đã bật Change Data Feed (CDF) và cung cấp feature cho mô hình churn production. Hiện bảng được dựng lại mỗi đêm bằng cách overwrite với giá trị mới nhất từ các nguồn upstream. Model ổn định; nhóm ML chỉ cần chấm điểm những bản ghi có feature thay đổi trong 24 giờ gần nhất. Thay đổi nào giúp xác định các bản ghi này dễ nhất mà không phải chấm điểm lại toàn bảng?",
     "options_vi": {
-      "A": "Chạy model trên toàn bảng rồi upsert kết quả, bỏ qua bản ghi không đổi.",
-      "B": "Chuyển sang **Structured Streaming** complete mode và dự đoán liên tục.",
-      "C": "Thay overwrite bằng `MERGE` chỉ cập nhật bản ghi thay đổi; dùng **Change Data Feed** để lấy các bản thay đổi và dự đoán trên đó.",
-      "D": "Thêm cột `current_timestamp` khi ghi đè và lọc theo ngày ghi."
+      "A": "Chạy model trên mọi dòng mỗi đêm và upsert kết quả, bỏ qua ghi nếu prediction không đổi",
+      "B": "Chuyển job thành Structured Streaming liên tục ở complete mode và chấm điểm toàn bảng `customer_churn_params` mỗi trigger",
+      "C": "Thay overwrite toàn bảng bằng `MERGE` chỉ cập nhật khi giá trị nguồn khác; đọc CDF và chấm điểm các post-image đã đổi (đồng thời xử lý delete) trong 24 giờ",
+      "D": "Thêm `current_timestamp()` khi overwrite toàn bảng rồi dùng timestamp ghi để tìm bản ghi upstream đã thay đổi trong 24 giờ"
     },
-    "explanation_vi": "Để xác định các bản ghi đã thay đổi trong vòng 24 giờ qua một cách đơn giản và hiệu quả, giải pháp tốt nhất là thay thế logic ghi đè (overwrite) hiện tại bằng lệnh `MERGE` (upsert) để chỉ cập nhật các bản ghi thay đổi vào bảng. Nhờ **Change Data Feed** (CDF) đã được kích hoạt trên bảng, đội ngũ ML có thể dễ dàng truy vấn các thay đổi này (inserts và updates) trực tiếp từ CDF của 24 giờ qua để chạy mô hình dự đoán churn, tránh việc phải quét toàn bộ bảng.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** CDF phản ánh các thay đổi được ghi vào chính bảng Delta. Để nó giúp giảm lượng dự đoán, pipeline trước tiên phải tránh thay toàn bộ bảng mỗi đêm: so sánh dữ liệu upstream, dùng `MERGE` chỉ cập nhật hàng có giá trị thật sự khác và chèn hàng mới. Sau đó đọc CDF trong khoảng version/time tương ứng 24 giờ, dùng các `insert` và `update_postimage` để chấm điểm; nếu có `delete` thì xóa hoặc vô hiệu hóa prediction tương ứng. Bảng đã bật CDF nên có thể cung cấp metadata loại thay đổi cùng giá trị hàng.\n\n- **A sai về compute.** Model vẫn chạy trên mọi hàng; chỉ bỏ qua thao tác ghi prediction không tiết kiệm phần inferencing đã thực hiện.\n- **B sai vì complete mode chạy lại/toàn bộ kết quả của bảng ở mỗi trigger**, trái yêu cầu chỉ score phần thay đổi. Structured Streaming phù hợp hơn khi đọc một feed thay đổi đúng cách.\n- **C đúng** vì thay đổi có điều kiện làm CDF phân biệt được rows thực sự đổi, rồi inference chỉ áp dụng cho change records.\n- **D sai** vì full overwrite đóng dấu timestamp mới cho mọi hàng, kể cả feature không đổi; timestamp của lần ghi không phải thời điểm upstream sửa từng bản ghi.\n\nNếu tiếp tục overwrite tất cả hàng, CDF có thể chứa lượng lớn delete/insert hoặc dữ liệu thay đổi tương đương cả bảng, nên không đạt mục tiêu tiết kiệm. Cần chọn checkpoint/version range liên tục, không bỏ qua retention của CDF, và lọc đúng post-image để không chấm cả `update_preimage` lẫn giá trị mới.\n\n📚 **Tham khảo:** [Databricks — Use change data feed](https://docs.databricks.com/gcp/en/tables/features/change-data-feed), [Delta Lake streaming reads and writes](https://docs.databricks.com/aws/en/structured-streaming/delta-lake)",
     "page": null,
-    "image": "img/q_134.jpg",
     "references": [
       {
-        "title": "Delta Lake - Change Data Feed (CDF) on Databricks",
-        "url": "https://docs.databricks.com/en/tables/features/change-data-feed"
+        "title": "Databricks — Use change data feed",
+        "url": "https://docs.databricks.com/gcp/en/tables/features/change-data-feed"
+      },
+      {
+        "title": "Databricks — Delta Lake streaming reads and writes",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/delta-lake"
       }
     ]
   },
   {
     "id": 135,
     "topic": 1,
-    "question": "A view is registered with the following code:\nBoth users and orders are **Delta Lake** tables.\nWhich statement describes the results of querying `recent_orders`?",
+    "question": "A standard view is registered with this SQL. Both `users` and `orders` are Delta Lake tables:\n\n```sql\nCREATE VIEW recent_orders AS\nSELECT a.user_id, a.email, b.order_id, b.order_date\nFROM (\n  SELECT user_id, email\n  FROM users\n) AS a\nINNER JOIN (\n  SELECT user_id, order_id, order_date\n  FROM orders\n  WHERE order_date >= date_sub(current_date(), 7)\n) AS b\n  ON a.user_id = b.user_id;\n```\n\nWhich statement describes querying `recent_orders`?",
     "options": {
       "A": "All logic will execute when the view is defined and store the result of joining tables to the DBFS; this stored data will be returned when the view is queried.",
       "B": "Results will be computed and cached when the view is defined; these cached results will incrementally update as new records are inserted into source tables.",
@@ -4360,78 +4372,84 @@
       "D": "All logic will execute at query time and return the result of joining the valid versions of the source tables at the time the query began."
     },
     "answer": "D",
-    "question_vi": "View `recent_orders` được định nghĩa bằng câu lệnh join giữa users và orders (Delta). Kết quả truy vấn view sẽ như thế nào?",
+    "question_vi": "Một standard view được đăng ký bằng SQL sau. Cả `users` và `orders` đều là bảng Delta Lake:\n\n```sql\nCREATE VIEW recent_orders AS\nSELECT a.user_id, a.email, b.order_id, b.order_date\nFROM (\n  SELECT user_id, email\n  FROM users\n) AS a\nINNER JOIN (\n  SELECT user_id, order_id, order_date\n  FROM orders\n  WHERE order_date >= date_sub(current_date(), 7)\n) AS b\n  ON a.user_id = b.user_id;\n```\n\nPhát biểu nào mô tả đúng khi truy vấn `recent_orders`?",
     "options_vi": {
-      "A": "Logic chạy khi định nghĩa view và lưu kết quả join vào DBFS; truy vấn sẽ trả dữ liệu đã lưu.",
-      "B": "Kết quả được tính và cache khi định nghĩa view; cache cập nhật dần khi thêm bản ghi mới.",
-      "C": "Logic chạy lúc truy vấn và trả kết quả join các phiên bản hợp lệ tại thời điểm truy vấn kết thúc.",
-      "D": "Logic chạy lúc truy vấn và trả kết quả join các phiên bản hợp lệ tại thời điểm truy vấn bắt đầu."
+      "A": "Logic chạy khi định nghĩa view và kết quả join được lưu vào DBFS để các lần truy vấn sau đọc lại",
+      "B": "Kết quả được tính và cache ngay khi định nghĩa view; cache tự cập nhật tăng dần khi có dòng mới",
+      "C": "Logic chạy lúc query và join các snapshot Delta hợp lệ tại thời điểm query kết thúc",
+      "D": "View lưu định nghĩa truy vấn; khi được query, logic join chạy lúc đó trên snapshot hợp lệ của các bảng nguồn được phân giải khi query bắt đầu"
     },
-    "explanation_vi": "Một view thông thường trong Spark SQL chỉ là một định nghĩa truy vấn logic chứ không lưu trữ hay vật hóa dữ liệu. Khi truy vấn view, Spark sẽ thực thi logic join tại thời điểm truy vấn chạy. Nhờ tính năng cô lập snapshot (snapshot isolation) của **Delta Lake**, kết quả join sẽ phản ánh phiên bản dữ liệu hợp lệ của các bảng nguồn tại thời điểm truy vấn bắt đầu thực thi (query began), đảm bảo tính nhất quán của dữ liệu.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** Standard view là metadata chứa câu truy vấn, không phải bản sao vật lý của kết quả. Khi người dùng query `recent_orders`, optimizer mở rộng định nghĩa view, áp dụng điều kiện bảy ngày, rồi thực hiện join `users` và `orders` tại thời điểm đó. Delta đọc mỗi bảng theo một snapshot nhất quán mà query đã phân giải khi bắt đầu; dữ liệu được commit trong lúc query đang chạy không làm query đang thực thi chuyển sang phiên bản mới giữa chừng.\n\n- **A sai:** tạo view không thực thi join để lưu kết quả vào DBFS. Muốn lưu kết quả, cần tạo bảng hoặc materialized view.\n- **B sai:** standard view không tự cache hay refresh incrementally. Cache là tính năng riêng và chỉ tồn tại khi được cấu hình/áp dụng.\n- **C sai:** query không chờ tới thời điểm kết thúc mới chọn snapshot. Nó đọc snapshot đã phân giải cho quá trình thực thi.\n- **D đúng** vì phân biệt thời điểm định nghĩa view với lúc query chạy.\n\nLưu ý: mỗi Delta table có transaction log/snapshot riêng. Snapshot isolation của từng bảng không tạo một distributed transaction duy nhất giữa `users` và `orders`; nếu nghiệp vụ cần một mốc nhất quán chung giữa nhiều bảng, phải thiết kế versioning/commit boundary rõ ràng. Điều đó không thay đổi đáp án về việc standard view được tính lúc truy vấn.\n\n📚 **Tham khảo:** [Databricks — Create and manage views](https://docs.databricks.com/aws/en/views/create-views), [Databricks — CREATE VIEW syntax](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view)",
     "page": null,
-    "image": "img/q_135.jpg",
     "references": [
       {
-        "title": "Views in Databricks",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-view"
+        "title": "Databricks — Create and manage views",
+        "url": "https://docs.databricks.com/aws/en/views/create-views"
+      },
+      {
+        "title": "Databricks — CREATE VIEW syntax",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view"
       }
     ]
   },
   {
     "id": 136,
     "topic": 1,
-    "question": "A data ingestion task requires a one-TB JSON dataset to be written out to Parquet with a target part-file size of 512 MB. Because Parquet is being used instead of **Delta Lake**, built-in file-sizing features such as Auto-Optimize & Auto-Compaction cannot be used.\nWhich strategy will yield the best performance without shuffling data?",
+    "question": "A pipeline must read one splittable, uncompressed 1-TiB JSON file and write Parquet. The desired target is approximately 512 MiB of input-equivalent rows per output task (not an exact compressed on-disk file size). Assume narrow, size-preserving transformations, no `partitionBy`, and no shuffle. Which strategy best matches that target without adding a shuffle?",
     "options": {
-      "A": "Set `spark.sql.files.maxPartitionBytes` to 512 MB, ingest the data, execute the narrow transformations, and then write to parquet.",
-      "B": "Set `spark.sql.shuffle.partitions` to 2,048 partitions (1TB*1024*1024/512), ingest the data, execute the narrow transformations, optimize the data by sorting it (which automatically repartitions the data), and then write to parquet.",
-      "C": "Set `spark.sql.adaptive.advisoryPartitionSizeInBytes` to 512 MB bytes, ingest the data, execute the narrow transformations, coalesce to 2,048 partitions (1TB*1024*1024/512), and then write to parquet.",
-      "D": "Ingest the data, execute the narrow transformations, repartition to 2,048 partitions (1TB* 1024*1024/512), and then write to parquet."
+      "A": "Set `spark.sql.files.maxPartitionBytes` to 512 MiB before reading the JSON; preserve those input partitions through the narrow transformations and write Parquet.",
+      "B": "Set `spark.sql.shuffle.partitions` to 2,048 and sort the rows, causing a shuffle before writing.",
+      "C": "Set `spark.sql.adaptive.advisoryPartitionSizeInBytes` to 512 MiB and write directly, with no shuffle or explicit repartition/coalesce.",
+      "D": "Call `repartition(2048)` before writing Parquet."
     },
     "answer": "A",
-    "question_vi": "Ingest 1 TB JSON viết ra Parquet, mục tiêu kích thước file 512 MB, không dùng Auto-Optimize/Compaction. Chiến lược tốt nhất, không shuffle?",
+    "question_vi": "Pipeline cần đọc một file JSON không nén, có thể split, dung lượng 1 TiB rồi ghi ra Parquet. Mục tiêu xấp xỉ 512 MiB dữ liệu đầu vào tương đương cho mỗi output task (không yêu cầu đúng chính xác kích thước file sau nén). Giả sử phép biến đổi là narrow và giữ kích thước dữ liệu gần như nguyên trạng, không dùng `partitionBy` và không shuffle. Chiến lược nào phù hợp nhất mà không thêm shuffle?",
     "options_vi": {
-      "A": "Đặt `spark.sql.files.maxPartitionBytes` = 512 MB, ingest, thực hiện các narrow transform rồi ghi Parquet.",
-      "B": "Đặt `spark.sql.shuffle.partitions` = 2.048, ingest, sort (tự repartition) rồi ghi Parquet.",
-      "C": "Đặt `spark.sql.adaptive.advisoryPartitionSizeInBytes` = 512 MB, ingest, coalesce 2.048 partitions rồi ghi Parquet.",
-      "D": "Ingest, narrow transforms, repartition 2.048 partitions rồi ghi Parquet."
+      "A": "Đặt `spark.sql.files.maxPartitionBytes` thành 512 MiB trước khi đọc JSON; giữ các input partition qua narrow transformation rồi ghi Parquet",
+      "B": "Đặt `spark.sql.shuffle.partitions` thành 2.048 và sort, tạo shuffle trước khi ghi",
+      "C": "Đặt `spark.sql.adaptive.advisoryPartitionSizeInBytes` thành 512 MiB rồi ghi trực tiếp, không shuffle hoặc repartition/coalesce tường minh",
+      "D": "Gọi `repartition(2048)` trước khi ghi Parquet"
     },
-    "explanation_vi": "Trong trường hợp không thể sử dụng các tính năng tự động tối ưu của **Delta Lake** (như Auto-Optimize & Auto-Compaction) do phải ghi ra định dạng Parquet thông thường, ta có thể đặt tham số `spark.sql.files.maxPartitionBytes` thành 512 MB. Khi nạp dữ liệu JSON, Spark sẽ tự động chia nhỏ dữ liệu thành các partition có kích thước tối đa 512 MB. Tiếp theo, việc thực hiện các phép biến đổi hẹp (narrow transformations) như map hoặc filter sẽ không gây ra hiện tượng xáo trộn dữ liệu (shuffle), giữ nguyên kích thước phân vùng để ghi ra các file Parquet có kích thước mục tiêu 512 MB với hiệu năng tối ưu nhất.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A, với các giả định đã được ghi rõ trong đề.** `spark.sql.files.maxPartitionBytes` quy định giới hạn xấp xỉ số byte nguồn được đóng gói vào một input partition khi Spark đọc file-based source như JSON; nó không phải thuộc tính trực tiếp đặt kích thước file output. Với một file 1 TiB có thể split, đặt 512 MiB tạo khoảng 2.048 input partitions. Các narrow transformations giữ phân vùng đó, nên mỗi task ghi một phần Parquet tương ứng mà không cần exchange/shuffle.\n\n- **A phù hợp vì điều khiển số byte lúc đọc** và giữ nguyên các partitions tới bước ghi. Kích thước file thực tế sau Parquet compression vẫn có thể nhỏ hơn và lệch theo nội dung; đây là mục tiêu xấp xỉ, không phải bảo đảm đúng 512 MiB trên đĩa.\n- **B sai vì `spark.sql.shuffle.partitions` chỉ cấu hình số partition cho các stage có shuffle**, còn `sort` thường tạo shuffle và thêm chi phí không cần thiết.\n- **C sai trong kế hoạch chỉ có narrow operations.** `advisoryPartitionSizeInBytes` điều khiển kích thước partition mục tiêu trong các shuffle stage do AQE tối ưu; nếu không có shuffle thì setting này không tự điều chỉnh số writer partitions.\n- **D có thể kiểm soát số partition đầu ra nhưng `repartition` tạo shuffle**, trái điều kiện của đề.\n\nNếu yêu cầu thực tế là mỗi file Parquet có chính xác một kích thước byte sau compression, không thể suy ra từ input split size đơn thuần; cần đo compression/skew và chấp nhận repartition/coalesce hoặc hậu xử lý file. `maxPartitionBytes` hữu ích cho cách tiếp cận không shuffle, nhưng luôn là giới hạn/ước lượng cho đọc đầu vào.\n\n📚 **Tham khảo:** [Apache Spark — Performance tuning and file partition settings](https://spark.apache.org/docs/latest/sql-performance-tuning)",
     "page": null,
-    "image": "img/q_136.jpg",
-    "references": []
+    "references": [
+      {
+        "title": "Apache Spark — Performance tuning and file partition settings",
+        "url": "https://spark.apache.org/docs/latest/sql-performance-tuning"
+      }
+    ]
   },
   {
     "id": 137,
     "topic": 1,
     "question": "Which statement regarding stream-static joins and static Delta tables is correct?",
     "options": {
-      "A": "The checkpoint directory will be used to track updates to the static Delta table.",
-      "B": "Each microbatch of a stream-static join will use the most recent version of the static Delta table as of the job's initialization.",
-      "C": "The checkpoint directory will be used to track state information for the unique keys present in the join.",
+      "A": "The checkpoint directory tracks updates to the static Delta table.",
+      "B": "Each microbatch uses the latest valid version of the static Delta table when that microbatch is processed.",
+      "C": "The checkpoint stores state for the unique keys in a stream-static join.",
       "D": "Stream-static joins cannot use static Delta tables because of consistency issues."
     },
     "answer": "B",
     "question_vi": "Phát biểu đúng về join stream-static với bảng Delta tĩnh là gì?",
     "options_vi": {
-      "A": "Checkpoint dùng để theo dõi cập nhật bảng Delta tĩnh.",
-      "B": "Mỗi microbatch dùng phiên bản mới nhất của bảng tĩnh tại thời điểm job khởi tạo.",
-      "C": "Checkpoint theo dõi trạng thái key duy nhất trong join.",
-      "D": "Stream-static join không dùng được bảng Delta tĩnh vì vấn đề nhất quán."
+      "A": "Checkpoint theo dõi các cập nhật của bảng Delta tĩnh",
+      "B": "Mỗi microbatch dùng phiên bản hợp lệ mới nhất của bảng Delta tĩnh tại lúc microbatch đó được xử lý",
+      "C": "Checkpoint lưu state của các khóa duy nhất trong stream-static join",
+      "D": "Stream-static join không thể dùng bảng Delta tĩnh vì vấn đề nhất quán"
     },
-    "explanation_vi": "Trong mô hình join stream-static (liên kết một luồng dữ liệu động với một bảng Delta tĩnh), **Delta Lake** hỗ trợ đọc phiên bản mới nhất của bảng tĩnh cho mỗi microbatch. Tuy nhiên, trong cấu hình mặc định của một số phiên bản Spark hoặc theo nội dung thi chứng chỉ, mỗi microbatch của phép join stream-static sẽ sử dụng phiên bản mới nhất của bảng Delta tĩnh tại thời điểm khởi tạo job (job's initialization). Checkpoint của **Structured Streaming** chỉ được dùng để theo dõi vị trí offset và trạng thái của luồng stream chứ không theo dõi bảng tĩnh.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** Stream-static join dùng dữ liệu mới của stream trong mỗi microbatch để join với phiên bản hợp lệ mới nhất của bảng Delta tĩnh tại thời điểm microbatch được xử lý. Đây là phép join stateless: engine không cần duy trì state của khóa ở cả hai phía như stream-stream join, và checkpoint của streaming query không theo dõi thay đổi của bảng tĩnh.\n\n- **A sai:** checkpoint lưu tiến độ và trạng thái của streaming query để có thể tiếp tục sau restart; nó không làm subscription/change tracking cho static Delta table.\n- **B đúng:** snapshot phía static được đọc lại theo microbatch, không cố định ở thời điểm job khởi chạy. Nếu static table thay đổi giữa hai batch, batch sau có thể dùng version mới.\n- **C sai:** stream-static join không giữ state key-to-key như join giữa hai stream; các hàng của microbatch được join với bảng dimension static.\n- **D sai:** stream-static join được hỗ trợ và là cách phổ biến để enrich luồng bằng bảng dimension Delta ít thay đổi.\n\nCó một hệ quả cần lưu ý: nếu bảng tĩnh đổi, việc replay cùng một microbatch sau đó có thể join với snapshot khác và sinh output khác. Khi cần tính tái lập tuyệt đối, hãy quản lý version của bảng dimension hoặc lưu lại version/mốc sử dụng; checkpoint một mình không đóng băng snapshot static.\n\n📚 **Tham khảo:** [Databricks — Stream-static joins](https://docs.databricks.com/aws/en/transform/join)",
     "page": null,
-    "image": "img/q_137.jpg",
     "references": [
       {
-        "title": "Structured Streaming - Stream-static joins",
-        "url": "https://docs.databricks.com/en/business-semantics/metric-views/joins#stream-static-joins"
+        "title": "Databricks — Stream-static joins",
+        "url": "https://docs.databricks.com/aws/en/transform/join"
       }
     ]
   },
   {
     "id": 138,
     "topic": 1,
-    "question": "A streaming pipeline must calculate average humidity and temperature for each non-overlapping five-minute interval and device. Events arrive once per minute per device. DataFrame `df` has schema `device_id INT, event_time TIMESTAMP, temp FLOAT, humidity FLOAT`.\n\nWhich expression fills the blank in this code?\n```python\ndf.withWatermark(\"event_time\", \"10 minutes\") \\\n  .groupBy(\n      [BLANK],\n      \"device_id\"\n  ) \\\n  .agg(\n      avg(\"temp\").alias(\"avg_temp\"),\n      avg(\"humidity\").alias(\"avg_humidity\")\n  ) \\\n  .writeStream.format(\"delta\").saveAsTable(\"sensor_avg\")\n```",
+    "question": "A streaming pipeline must calculate average humidity and temperature for each device in non-overlapping five-minute event-time windows. Events arrive once per minute per device. DataFrame `df` has schema `device_id INT, event_time TIMESTAMP, temp FLOAT, humidity FLOAT`. Which expression fills the blank?\n\n```python\nfrom pyspark.sql.functions import avg, window\n\ndf.withWatermark(\"event_time\", \"10 minutes\") \\\n  .groupBy(\n      [BLANK],\n      \"device_id\"\n  ) \\\n  .agg(\n      avg(\"temp\").alias(\"avg_temp\"),\n      avg(\"humidity\").alias(\"avg_humidity\")\n  ) \\\n  .writeStream.format(\"delta\").saveAsTable(\"sensor_avg\")\n```",
     "options": {
       "A": "to_interval(\"event_time\", \"5 minutes\").alias(\"time\")",
       "B": "window(\"event_time\", \"5 minutes\").alias(\"time\")",
@@ -4439,23 +4457,22 @@
       "D": "lag(\"event_time\", \"10 minutes\").alias(\"time\")"
     },
     "answer": "B",
-    "question_vi": "Pipeline streaming cần tính nhiệt độ và độ ẩm trung bình cho từng thiết bị trong các khoảng 5 phút **không chồng lắp**. Mỗi thiết bị phát sự kiện một lần mỗi phút; `df` có schema `device_id INT, event_time TIMESTAMP, temp FLOAT, humidity FLOAT`.\n\nBiểu thức nào điền vào chỗ trống?\n```python\ndf.withWatermark(\"event_time\", \"10 minutes\") \\\n  .groupBy(\n      [BLANK],\n      \"device_id\"\n  ) \\\n  .agg(\n      avg(\"temp\").alias(\"avg_temp\"),\n      avg(\"humidity\").alias(\"avg_humidity\")\n  ) \\\n  .writeStream.format(\"delta\").saveAsTable(\"sensor_avg\")\n```",
+    "question_vi": "Pipeline streaming cần tính nhiệt độ và độ ẩm trung bình cho từng thiết bị trong các cửa sổ event-time 5 phút không chồng lắp. Mỗi thiết bị phát một sự kiện mỗi phút. DataFrame `df` có schema `device_id INT, event_time TIMESTAMP, temp FLOAT, humidity FLOAT`. Biểu thức nào điền vào chỗ trống?\n\n```python\nfrom pyspark.sql.functions import avg, window\n\ndf.withWatermark(\"event_time\", \"10 minutes\") \\\n  .groupBy(\n      [BLANK],\n      \"device_id\"\n  ) \\\n  .agg(\n      avg(\"temp\").alias(\"avg_temp\"),\n      avg(\"humidity\").alias(\"avg_humidity\")\n  ) \\\n  .writeStream.format(\"delta\").saveAsTable(\"sensor_avg\")\n```",
     "options_vi": {
       "A": "to_interval(\"event_time\", \"5 minutes\").alias(\"time\")",
       "B": "window(\"event_time\", \"5 minutes\").alias(\"time\")",
       "C": "\"event_time\"",
       "D": "lag(\"event_time\", \"10 minutes\").alias(\"time\")"
     },
-    "explanation_vi": "**Đáp án B: `window(\"event_time\", \"5 minutes\").alias(\"time\")`.** Hàm `window` tạo giá trị cửa sổ có biên bắt đầu/kết thúc để dùng làm khóa nhóm thời gian. Khi không truyền slide duration, slide bằng window duration: 5 phút; vì vậy các cửa sổ không chồng lắp. Kết hợp với `device_id`, mỗi nhóm tương ứng một thiết bị và một khoảng thời gian.\n\n`withWatermark(\"event_time\", \"10 minutes\")` làm việc khác: nó xác định độ trễ hệ thống sẵn sàng chấp nhận và giúp giới hạn state của aggregation; nó không tự chia thời gian thành cửa sổ. A `to_interval` không phải API PySpark để group streaming theo event-time window. C chỉ nhóm theo từng timestamp chính xác, không gom thành khoảng 5 phút. D `lag` là hàm phân tích trên các dòng đã sắp xếp, không tạo nhóm cửa sổ thời gian cho aggregation streaming.",
+    "explanation_vi": "**Đáp án B: `window(\"event_time\", \"5 minutes\").alias(\"time\")`.** Hàm `window` chuyển timestamp sự kiện thành một khóa thời gian gồm `start` và `end`. Khi chỉ truyền duration 5 phút mà không truyền `slideDuration`, khoảng trượt mặc định bằng duration; do đó tạo các tumbling window liên tiếp, không chồng lắp. Kết hợp khóa window với `device_id`, mỗi nhóm chỉ gồm sự kiện của một thiết bị trong một bucket năm phút; hai `avg` được tính riêng trong từng nhóm.\n\n- **A sai:** `to_interval(...)` không phải biểu thức PySpark tương đương với grouping window event-time.\n- **B đúng:** `window` là hàm PySpark để tạo event-time window trong `groupBy` của Structured Streaming.\n- **C sai:** nhóm trực tiếp theo `event_time` thường tạo nhóm theo từng timestamp chính xác, không gom các phút thành bucket năm phút.\n- **D sai:** `lag` là hàm phân tích dùng trên các dòng đã sắp thứ tự để đọc giá trị dòng trước; nó không tạo window cho phép aggregation streaming.\n\nWatermark 10 phút có vai trò khác duration của cửa sổ: nó khai báo giới hạn độ trễ mà engine sẵn sàng chờ cho event-time và cho phép dọn state cũ sau khi watermark vượt qua cửa sổ. Nó không làm bucket thành 10 phút. Trong production, cần cấu hình checkpoint ổn định cho query và chọn output mode/retention phù hợp; câu hỏi này chỉ hỏi biểu thức tạo nhóm thời gian.\n\n📚 **Tham khảo:** [PySpark — `window` function](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.window.html), [Apache Spark — Structured Streaming window operations](https://spark.apache.org/docs/3.5.6/structured-streaming-programming-guide.html#window-operations-on-event-time)",
     "page": null,
-    "image": "img/q_138.jpg",
     "references": [
       {
-        "title": "PySpark `window` function API",
+        "title": "PySpark — `window` function API",
         "url": "https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.window.html"
       },
       {
-        "title": "Structured Streaming programming guide: window operations",
+        "title": "Apache Spark — Structured Streaming window operations",
         "url": "https://spark.apache.org/docs/3.5.6/structured-streaming-programming-guide.html#window-operations-on-event-time"
       }
     ]
