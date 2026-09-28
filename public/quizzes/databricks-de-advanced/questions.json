@@ -3208,21 +3208,24 @@
       "D": "`MANAGE` permissions should be set on a `secret scope` containing only those credentials that will be used by a given team. No additional configuration is necessary as long as all users are configured as administrators in the `workspace` where secrets have been added."
     },
     "answer": "C",
-    "question_vi": "Cấu hình kết nối cơ sở dữ liệu ngoài qua **Databricks Secrets** cho từng nhóm. Phương pháp nào giúp cấp quyền tối thiểu cần thiết để sử dụng các thông tin xác thực (credentials) này?",
+    "question_vi": "Nhóm kỹ thuật dữ liệu cần kết nối Databricks với một cơ sở dữ liệu bên ngoài không có connector native được hỗ trợ. Cơ sở dữ liệu đó phân quyền theo nhóm; các nhóm này đã được ánh xạ với những nhóm người dùng trong Databricks và mỗi nhóm có thông tin đăng nhập riêng. Nhóm sẽ lưu các credential này bằng Databricks Utilities Secrets. Giả sử credential và thành viên nhóm đều đã được cấu hình đúng, cách nào cấp cho mỗi nhóm quyền tối thiểu cần thiết để dùng credential của mình?",
     "options_vi": {
-      "A": "Cấp quyền `MANAGE` cho từng `secret key` được sử dụng bởi nhóm tương ứng",
-      "B": "Cấp quyền `READ` cho từng `secret key` chứa thông tin xác thực của nhóm",
-      "C": "Cấp quyền `READ` cho `secret scope` chứa các thông tin xác thực của nhóm",
-      "D": "Cấp quyền `MANAGE` cho `secret scope` chứa thông tin xác thực. Không cần cấu hình thêm nếu tất cả người dùng là quản trị viên trong workspace",
-      "E": "Không cần cấu hình thêm nếu mọi người là admin"
+      "A": "Cấp quyền `MANAGE` cho từng `secret key` chứa credential mà nhóm sẽ sử dụng.",
+      "B": "Cấp quyền `READ` cho từng `secret key` chứa credential mà nhóm sẽ sử dụng.",
+      "C": "Cấp quyền `READ` cho `secret scope` chỉ chứa credential mà nhóm sẽ sử dụng.",
+      "D": "Cấp quyền `MANAGE` cho `secret scope` chỉ chứa credential của nhóm. Không cần cấu hình thêm nếu tất cả người dùng đều là quản trị viên của workspace chứa các secret."
     },
-    "explanation_vi": "Trong **Databricks** Secrets, việc phân quyền (`ACLs`) chỉ có thể được thiết lập ở cấp độ Secret Scope (phạm vi bí mật) chứ không thể phân quyền chi tiết cho từng Secret Key riêng lẻ. Do đó, để cấp quyền tối thiểu cần thiết cho mỗi nhóm, ta cần tạo các secret scope riêng biệt chỉ chứa các secret key của nhóm đó, rồi cấp quyền 'Read' trên scope đó cho nhóm tương ứng.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đề đang hỏi gì?** Cơ sở dữ liệu bên ngoài đã phân quyền theo nhóm và mỗi nhóm có credential riêng. Ta cần cho đúng nhóm sử dụng credential của mình từ Databricks, nhưng không cấp thêm quyền quản trị hoặc quyền đọc credential của nhóm khác. Đây là bài toán chọn đúng phạm vi đặt secret và mức ACL tối thiểu.\n\n**Đáp án C — cấp `READ` trên `secret scope` riêng của nhóm.** Databricks Secrets áp dụng ACL ở cấp scope, không ở cấp từng secret key. Vì vậy hãy đặt credential của một nhóm trong scope dành cho nhóm đó, rồi cấp `READ` cho Databricks group tương ứng. Quyền `READ` cho phép thành viên đọc secret trong scope để mở kết nối; nó không cho ghi secret mới hay thay đổi ACL. Credential mà nhóm dùng vẫn chịu giới hạn của tài khoản đã tạo ở cơ sở dữ liệu bên ngoài.\n\n**Vì sao các phương án khác không phù hợp?**\n- **A sai:** không thể đặt quyền `MANAGE` riêng trên một secret key. ACL của Secrets được gắn với scope. Hơn nữa, `MANAGE` rộng hơn nhu cầu sử dụng credential.\n- **B sai:** cũng không có ACL `READ` ở cấp key; quyền phải được cấp trên scope. Nếu nhiều nhóm cùng dùng một scope, thành viên có quyền đọc scope có thể đọc mọi secret trong scope đó, nên cần tách scope theo nhóm/ứng dụng khi họ có credential khác nhau.\n- **C đúng:** kết hợp scope riêng với `READ` cho đúng group, đủ dùng secret và không trao quyền ghi hoặc quản lý quyền.\n- **D sai:** `MANAGE` cho phép đọc, ghi và thay đổi quyền trên scope, vượt quá mức tối thiểu. Quyền quản trị workspace vốn là một phạm vi quyền rộng; không nên biến mọi thành viên nhóm thành admin để giải quyết truy cập secret.\n\n**Lưu ý bảo mật:** người có `READ` có thể lấy giá trị secret qua code được phép chạy. Cơ chế che secret khỏi một số đầu ra notebook không thay thế ACL. Hãy giữ credential của các nhóm trong scope riêng và chỉ cấp `READ` cho principal cần dùng chúng.",
     "page": null,
     "image": "img/q_100.jpg",
     "references": [
       {
-        "title": "Secret Access Control in Databricks",
-        "url": "https://docs.databricks.com/en/dev-tools/databricks-apps/secrets#secret-access-control"
+        "title": "Secret management — Databricks",
+        "url": "https://docs.databricks.com/aws/en/security/secrets"
+      },
+      {
+        "title": "Secret ACLs — Databricks access control lists",
+        "url": "https://docs.databricks.com/aws/en/security/auth/access-control/"
       }
     ]
   },

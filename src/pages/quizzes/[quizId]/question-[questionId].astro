@@ -126,8 +126,8 @@ function parseMarkdown(markdownText) {
     escaped = escaped.replace(/`(.*?)`/g, '<code>$1</code>');
     escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     escaped = escaped.replace(/\*(.*?)\*/g, '<em>$1</em>');
-    escaped = escaped.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="markdown-link">$1</a>');
     escaped = escaped.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" class="markdown-img" style="max-width:100%; display:block; margin:10px 0;" />');
+    escaped = escaped.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="markdown-link">$1</a>');
 
     return escaped;
   };
@@ -393,9 +393,9 @@ function parseMarkdown(markdownText) {
           <div class="option-item" data-letter={letter} style="cursor: pointer;">
             <div class="option-letter">{letter}</div>
             <div class="option-content">
-              <div class="option-text">{text}</div>
+              <div class="option-text" set:html={parseMarkdown(String(text ?? ''))} />
               {question.options_vi && question.options_vi[letter] && (
-                <div class="option-text-vi" style="display: none;">{question.options_vi[letter]}</div>
+                <div class="option-text-vi" style="display: none;" set:html={parseMarkdown(String(question.options_vi[letter] ?? ''))} />
               )}
             </div>
           </div>
