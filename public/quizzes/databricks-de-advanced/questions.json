@@ -3560,7 +3560,7 @@
   {
     "id": 109,
     "topic": 1,
-    "question": "A **Delta Lake** table representing metadata about content posts from users has the following schema:\n`user_id` `LONG`, `post_text` `STRING`, `post_id` `STRING`, `longitude` `FLOAT`, `latitude` `FLOAT`, `post_time` `TIMESTAMP`, `date` `DATE` Based on the above schema, which column is a good candidate for partitioning the **Delta Table**?",
+    "question": "A **Delta Lake** table containing user-content metadata has this schema:\n\n| Column | Type |\n|---|---|\n| `user_id` | `LONG` |\n| `post_text` | `STRING` |\n| `post_id` | `STRING` |\n| `longitude` | `FLOAT` |\n| `latitude` | `FLOAT` |\n| `post_time` | `TIMESTAMP` |\n| `date` | `DATE` |\n\nAssume this is a large table, queries commonly filter by calendar date, and each date contains enough data to form a useful partition. If a traditional partition column must be selected from the choices, which is the best candidate?",
     "options": {
       "A": "`post_time`",
       "B": "`latitude`",
@@ -3569,7 +3569,7 @@
       "E": "`date`"
     },
     "answer": "E",
-    "question_vi": "Một bảng **Delta Lake** chứa siêu dữ liệu (metadata) về các bài đăng của người dùng có schema như sau:\n\n`user_id LONG, post_text STRING, post_id STRING, longitude FLOAT, latitude FLOAT, post_time TIMESTAMP, date DATE`\n\nDựa trên schema trên, cột nào là ứng cử viên tốt để phân vùng (partitioning) bảng **Delta Table**?",
+    "question_vi": "Một bảng **Delta Lake** lưu siêu dữ liệu bài đăng của người dùng có schema:\n\n| Cột | Kiểu |\n|---|---|\n| `user_id` | `LONG` |\n| `post_text` | `STRING` |\n| `post_id` | `STRING` |\n| `longitude` | `FLOAT` |\n| `latitude` | `FLOAT` |\n| `post_time` | `TIMESTAMP` |\n| `date` | `DATE` |\n\nGiả sử đây là bảng lớn, truy vấn thường lọc theo ngày lịch và mỗi ngày có đủ dữ liệu để tạo partition hữu ích. Nếu bắt buộc chọn một cột để phân vùng kiểu truyền thống, cột nào là ứng viên tốt nhất?",
     "options_vi": {
       "A": "`post_time`",
       "B": "`latitude`",
@@ -3577,43 +3577,53 @@
       "D": "`user_id`",
       "E": "`date`"
     },
-    "explanation_vi": "Quy tắc phân vùng (partitioning) trong **Delta Lake** khuyến nghị chỉ phân vùng trên các cột có số lượng giá trị duy nhất (cardinality) vừa phải và thường xuyên được sử dụng trong các điều kiện lọc của truy vấn. Cột `date` là ứng viên hoàn hảo vì nó chia nhỏ dữ liệu theo từng ngày một cách hợp lý. Phân vùng theo các cột có độ phân tán cao như `post_id` (mỗi bài viết một ID khác nhau), `user_id` hoặc cột thời gian có độ chính xác cao `post_time` sẽ dẫn đến vấn đề phân mảnh quá nhiều thư mục và tạo ra quá nhiều file nhỏ, làm giảm hiệu năng hệ thống nghiêm trọng.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án E — `date`.** Câu hỏi đã bổ sung hai giả định quan trọng: truy vấn thường lọc theo ngày và mỗi partition theo ngày đủ lớn. Khi đó, `date` tạo ra số lượng nhóm có giới hạn, khớp với điều kiện lọc phổ biến và tránh tạo thư mục riêng cho từng bài đăng. Chỉ dựa vào kiểu dữ liệu trong schema thì chưa thể kết luận một cột nên được partition; còn phải biết kích thước bảng, phân bố dữ liệu và mẫu truy vấn. Vì vậy không nên hiểu đây là quy tắc “cứ có cột ngày thì partition”.\n\n- **A**: `post_time` có độ phân giải timestamp nên thường có cardinality cao hơn `date`; partition theo từng thời điểm dễ tạo quá nhiều partition nhỏ.\n- **B**: `latitude` là số thực có thể có rất nhiều giá trị khác nhau, lại không đại diện cho điều kiện lọc chính đã nêu.\n- **C**: `post_id` gần như định danh từng dòng; dùng khóa có cardinality rất cao làm partition key thường gây phân mảnh và file nhỏ.\n- **D**: `user_id` có thể lặp lại nhưng thường vẫn có rất nhiều giá trị, có thể lệch dữ liệu theo người dùng và không phải bộ lọc được nêu.\n- **E**: `date` là lựa chọn tốt nhất trong các đáp án với giả định truy vấn và dung lượng đã cho; partition ngày cũng dễ giới hạn phạm vi dữ liệu cần đọc.\n\nCó một lưu ý theo Databricks hiện nay: hầu hết bảng dưới 1 TB không nên partition tĩnh; với bảng lớn, Databricks thường khuyến nghị liquid clustering và yêu cầu đánh giá hiệu năng trước khi tự thiết kế partition. Nếu vẫn chọn partition truyền thống, cần đủ dữ liệu trên mỗi partition (tài liệu khuyến nghị ít nhất khoảng 1 GB) và đo bằng truy vấn thật. Liquid clustering linh hoạt hơn vì có thể thay đổi khóa mà không bị ranh giới partition cố định. Do đó, E là đáp án theo tình huống đã nêu, không phải khuyến nghị partition mọi bảng theo ngày.",
     "page": null,
-    "image": "img/q_109.jpg",
     "references": [
       {
-        "title": "When to Partition Tables on Databricks",
-        "url": "https://docs.databricks.com/en/error-messages/invalid-partition-operation-error-class"
+        "title": "When to partition tables on Databricks",
+        "url": "https://docs.databricks.com/aws/en/tables/partitions"
+      },
+      {
+        "title": "Use liquid clustering for tables",
+        "url": "https://docs.databricks.com/aws/en/delta/clustering"
       }
     ]
   },
   {
     "id": 110,
     "topic": 1,
-    "question": "A large company seeks to implement a near real-time solution involving hundreds of pipelines with parallel updates of many tables with extremely high volume and high velocity data. Which of the following solutions would you implement to achieve this requirement?",
+    "question": "A company has hundreds of pipelines that concurrently update the same high-volume Delta Lake ingestion tables. Each pipeline owns a distinct, non-overlapping time window, and each window contains enough data to avoid tiny partitions. Under a traditional partitioned-table design, which option can let these writers target separate data ranges and reduce avoidable write conflicts?",
     "options": {
       "A": "Use **Databricks** **High Concurrency** clusters, which leverage optimized cloud storage connections to maximize data throughput.",
-      "B": "Partition ingestion tables by a small time duration to allow for many data files to be written in parallel.",
+      "B": "Partition each ingestion table by an appropriate time window, and have each writer update only its own partition.",
       "C": "Configure **Databricks** to save all data to attached SSD volumes instead of object storage, increasing file I/O significantly.",
       "D": "Isolate **Delta Lake** tables in their own storage containers to avoid API limits imposed by cloud vendors.",
       "E": "Store all tables in a single database to ensure that the **Databricks** Catalyst Metastore can load balance overall throughput."
     },
     "answer": "B",
-    "question_vi": "Một công ty lớn muốn triển khai một giải pháp gần như thời gian thực (near real-time) liên quan đến hàng trăm pipeline với các bản cập nhật song song của nhiều bảng có khối lượng và tốc độ dữ liệu cực kỳ lớn.\n\nGiải pháp nào sau đây bạn sẽ triển khai để đáp ứng yêu cầu này?",
+    "question_vi": "Một công ty có hàng trăm pipeline đồng thời cập nhật các bảng ingestion Delta Lake có khối lượng lớn. Mỗi pipeline phụ trách một khoảng thời gian riêng, không chồng lấn với pipeline khác; mỗi khoảng cũng có đủ dữ liệu để tránh partition quá nhỏ. Với thiết kế bảng phân vùng truyền thống, lựa chọn nào cho phép các writer nhắm tới những vùng dữ liệu riêng và giảm xung đột ghi không cần thiết?",
     "options_vi": {
       "A": "Sử dụng các cụm **Databricks High Concurrency**, tận dụng các kết nối cloud storage được tối ưu hóa để tối đa hóa thông lượng dữ liệu",
-      "B": "Phân vùng (partition) các bảng ingestion theo khoảng thời gian ngắn để cho phép nhiều file dữ liệu được ghi song song",
+      "B": "Phân vùng mỗi bảng ingestion theo khoảng thời gian phù hợp và để mỗi writer chỉ cập nhật partition của mình.",
       "C": "Cấu hình **Databricks** để lưu tất cả dữ liệu vào các ổ đĩa SSD đính kèm thay vì object storage để tăng đáng kể I/O file",
       "D": "Cô lập các bảng **Delta Lake** trong các storage container riêng của chúng để tránh giới hạn API do nhà cung cấp cloud áp đặt",
       "E": "Lưu tất cả các bảng trong một cơ sở dữ liệu duy nhất để đảm bảo **Databricks Catalyst Metastore** có thể cân bằng tải thông lượng tổng thể"
     },
-    "explanation_vi": "Để xử lý khối lượng dữ liệu khổng lồ với tốc độ cao và nhiều pipeline cập nhật song song gần như theo thời gian thực (near real-time), giải pháp tối ưu là phân vùng (partition) các bảng ingestion theo khoảng thời gian nhỏ (ví dụ: theo giờ hoặc theo phút). Việc này giúp chia tách dữ liệu ghi vào các thư mục phân vùng độc lập, cho phép nhiều file dữ liệu được ghi song song bởi các task/pipeline khác nhau mà không gặp xung đột ghi (write contention) hoặc nghẽn băng thông hệ thống.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B, trong đúng giả định của câu hỏi.** Khi nhiều writer cập nhật cùng một bảng, việc giới hạn mỗi writer vào một khoảng dữ liệu riêng giúp transaction đọc/ghi phạm vi nhỏ và tránh đụng cùng dữ liệu. Với bảng partition theo thời gian, các khoảng không giao nhau có thể ánh xạ tới các partition tách biệt; điều đó giảm xác suất xung đột và giúp mỗi lần ghi xử lý phần dữ liệu cần thiết thay vì rà soát toàn bảng. Delta Lake vẫn điều phối transaction bằng transaction log và bảo đảm thứ tự commit; partitioning không biến một bảng thành nhiều hệ thống ghi độc lập, cũng không đảm bảo mọi xung đột biến mất.\n\n- **A**: High Concurrency compute không phải cơ chế tạo ranh giới dữ liệu giữa các writer; tên compute cũng không tự loại bỏ conflict của các transaction cùng sửa bảng.\n- **B**: đúng khi cửa sổ thời gian của các writer thực sự không chồng lấn và mỗi partition có đủ dữ liệu. Đây là điều kiện đã được nêu trong stem để tránh lời khuyên “chia theo phút” một cách máy móc.\n- **C**: SSD cục bộ là tài nguyên tạm của compute, không thay object storage làm nơi lưu bền vững cho Delta table; nó cũng không thiết lập tính nhất quán giao dịch.\n- **D**: tạo container riêng cho từng bảng không giải quyết xung đột transaction trên bảng chung và không phải cách tổng quát để né giới hạn API của cloud.\n- **E**: Catalyst là bộ tối ưu hóa truy vấn Spark, không phải metastore hay bộ cân bằng tải cho các lần ghi.\n\nKhông nên suy ra rằng chia partition càng nhỏ thì throughput càng cao. Quá nhiều partition nhỏ làm tăng số thư mục/file và chi phí metadata. Với bảng mới trên Databricks, liquid clustering thường được khuyến nghị hơn partition tĩnh; nếu dùng partition để cách ly phạm vi ghi, hãy kiểm chứng xung đột, kích thước mỗi partition và hiệu năng truy vấn bằng workload thực tế. Row-level concurrency/liquid clustering có thể phù hợp hơn cho các cập nhật đồng thời mà phạm vi dữ liệu chồng lấn.",
     "page": null,
-    "image": "img/q_110.jpg",
     "references": [
       {
-        "title": "Delta Lake Partitioning Best Practices",
-        "url": "https://docs.databricks.com/en/error-messages/invalid-partition-operation-error-class"
+        "title": "Isolation levels and write conflicts",
+        "url": "https://docs.databricks.com/aws/en/optimizations/isolation"
+      },
+      {
+        "title": "When to partition tables on Databricks",
+        "url": "https://docs.databricks.com/aws/en/tables/partitions"
+      },
+      {
+        "title": "Use liquid clustering for tables",
+        "url": "https://docs.databricks.com/aws/en/delta/clustering"
       }
     ]
   },
@@ -3623,7 +3633,7 @@
     "question": "Which describes a method of installing a **Python** package scoped at the notebook level to all nodes in the currently active cluster?",
     "options": {
       "A": "Run source env/bin/activate in a notebook setup script",
-      "B": "Use b in a notebook cell",
+      "B": "Run `!pip install` in a notebook cell.",
       "C": "Use `%pip install` in a notebook cell",
       "D": "Use `%sh pip install` in a notebook cell",
       "E": "Install `libraries` from `PyPI` using the cluster UI"
@@ -3632,25 +3642,28 @@
     "question_vi": "Phương pháp nào mô tả cách cài đặt một gói **Python** trong phạm vi notebook cho tất cả các node trong cụm (cluster) đang hoạt động?",
     "options_vi": {
       "A": "Chạy `source env/bin/activate` trong một setup script của notebook",
-      "B": "Sử dụng `%b` trong một ô (cell) của notebook",
+      "B": "Chạy `!pip install` trong một ô notebook.",
       "C": "Sử dụng `%pip install` trong một ô của notebook",
       "D": "Sử dụng `%sh pip install` trong một ô của notebook",
       "E": "Cài đặt các thư viện từ **PyPI** bằng cách sử dụng **UI** của cụm (cluster)"
     },
-    "explanation_vi": "Để cài đặt thư viện **Python** ở phạm vi notebook cho tất cả các node (cả driver và worker) trong cluster đang hoạt động, **Databricks** khuyên dùng lệnh magic `%pip install`.\n\nKhi sử dụng `%pip install`, **Databricks** tự động cài đặt thư viện trên tất cả các executor nodes, điều này cực kỳ quan trọng cho các tác vụ phân tán như **Spark** `UDF`. Ngược lại, `%sh pip install` chỉ chạy shell trên driver node, khiến các worker node không có thư viện và dẫn đến lỗi.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C — dùng `%pip install` trong notebook.** Đây là lệnh magic dành cho thư viện có phạm vi notebook (notebook-scoped): gói được cài trong môi trường Python gắn với notebook và có thể được notebook sử dụng khi chạy các tác vụ phân tán trên cluster. Phạm vi này hữu ích khi một notebook cần phiên bản thư viện riêng, không muốn thay đổi cấu hình thư viện dùng chung của mọi notebook trên cluster. Sau khi cài hoặc nâng cấp gói, tiến trình Python hiện tại có thể cần khởi động lại bằng `dbutils.library.restartPython()` để import phiên bản mới.\n\n- **A**: `source env/bin/activate` chỉ đổi môi trường của tiến trình shell đang chạy setup; bản thân lệnh này không cài gói notebook-scoped lên môi trường Python của notebook.\n- **B**: `!pip install` chạy shell command từ notebook/IPython và không phải interface notebook-scoped được Databricks hỗ trợ để đồng bộ môi trường Python cho notebook; trên Databricks, dùng magic `%pip`.\n- **C**: đúng — `%pip` tương đương giao diện pip trong môi trường notebook-scoped, thay vì chỉ chạy một shell trên driver.\n- **D**: `%sh` chạy lệnh shell trên driver node. Cài gói theo cách này không thiết lập thư viện cho Python worker như môi trường notebook-scoped.\n- **E**: cài từ PyPI bằng giao diện cluster tạo cấu hình thư viện ở phạm vi cluster, khác với yêu cầu cài riêng trong notebook.\n\nNếu package cần có mặt ổn định trong nhiều notebook/job hoặc cần tái lập theo thời gian, hãy khai báo dependency trong cấu hình môi trường phù hợp thay vì cài thủ công mỗi lần tương tác. Cũng cần khóa phiên bản và kiểm tra dependency conflicts; cài một gói không đồng nghĩa mọi phiên bản thư viện tương thích với Databricks Runtime.",
     "page": null,
-    "image": "img/q_111.jpg",
     "references": [
       {
-        "title": "Databricks Documentation - Notebook-scoped Python libraries",
-        "url": "https://docs.databricks.com/en/libraries/notebooks-python-libraries"
+        "title": "Notebook-scoped Python libraries",
+        "url": "https://docs.databricks.com/aws/en/libraries/notebooks-python-libraries"
+      },
+      {
+        "title": "Develop code in Databricks notebooks",
+        "url": "https://docs.databricks.com/aws/en/notebooks/notebooks-code"
       }
     ]
   },
   {
     "id": 112,
     "topic": 1,
-    "question": "Each configuration below is identical to the extent that each cluster has 400 GB total of `RAM` 160 total cores and only one Executor per `VM`. Given an extremely long-running job for which completion must be guaranteed, which cluster configuration will be able to guarantee completion of the job in light of one or more `VM` failures?",
+    "question": "Each configuration has the same total of 400 GB RAM and 160 cores, with one executor per worker VM. A long-running Spark job must tolerate an occasional worker-VM failure; assume the driver remains available and Spark can retry lost tasks when resources remain. Which configuration loses the smallest fraction of executor capacity from a single worker-VM failure? No finite worker layout can guarantee completion after arbitrary failures.",
     "options": {
       "A": "• Total `VMs`: 8\n• 50 GB per Executor\n• 20 Cores / Executor",
       "B": "• Total `VMs`: 16\n• 25 GB per Executor\n• 10 Cores / Executor",
@@ -3659,7 +3672,7 @@
       "E": "• Total `VMs`: 2\n• 200 GB per Executor\n• 80 Cores / Executor"
     },
     "answer": "B",
-    "question_vi": "Bốn cấu hình cụm dưới đây giống nhau về việc mỗi cụm có tổng cộng 400 GB `RAM`, 160 core và chỉ có một executor trên mỗi `VM`. Với một job chạy cực kỳ dài cần được đảm bảo hoàn thành, cấu hình cụm nào có thể đảm bảo hoàn thành job khi xảy ra lỗi một hoặc nhiều `VM`?",
+    "question_vi": "Mỗi cấu hình có tổng cộng 400 GB RAM và 160 core, với một executor trên mỗi worker VM. Một Spark job chạy lâu cần chịu được lỗi thỉnh thoảng xảy ra ở worker VM; giả sử driver vẫn hoạt động và Spark có thể chạy lại task bị mất khi còn tài nguyên. Cấu hình nào mất ít năng lực executor nhất nếu một worker VM bị lỗi? Không cấu hình hữu hạn nào có thể bảo đảm job hoàn tất khi số lỗi bất kỳ xảy ra.",
     "options_vi": {
       "A": "• Tổng số VMs: 8\n• 50 GB mỗi executor\n• 20 cores / executor",
       "B": "• Tổng số VMs: 16\n• 25 GB mỗi executor\n• 10 cores / executor",
@@ -3667,71 +3680,80 @@
       "D": "• Tổng số VMs: 4\n• 100 GB mỗi executor\n• 40 cores / executor",
       "E": "• Tổng số VMs: 2\n• 200 GB mỗi executor\n• 80 cores / executor"
     },
-    "explanation_vi": "Trong **Spark** và hệ thống phân tán, khả năng chịu lỗi (fault tolerance) được tăng lên khi phân tán công việc trên nhiều máy ảo (`VM`) nhỏ hơn thay vì tập trung vào một hoặc hai máy lớn.\n\nVới cấu hình 16 `VM` (mỗi `VM` chạy 1 Executor), nếu một hoặc vài `VM` bị lỗi, phần trăm công suất của cụm bị mất đi sẽ là nhỏ nhất (chỉ 1/16 hoặc 6.25% mỗi `VM`), giúp **Spark** dễ dàng khôi phục các tác vụ bị mất và tiếp tục chạy mà không làm hỏng toàn bộ job. Trong các cấu hình ít `VM` hơn (ví dụ 1, 2 hoặc 4 `VM`), việc mất đi một `VM` sẽ làm giảm năng lượng xử lý cực kỳ lớn, dễ dẫn đến việc job bị thất bại hoàn toàn.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B — 16 VM, mỗi executor có 25 GB RAM và 10 core.** Vì tổng tài nguyên được giữ cố định, câu hỏi so sánh mức độ ảnh hưởng khi mất một worker VM, không so sánh tổng năng lực tính toán ban đầu. Mất một trong 16 worker làm mất 1/16 executor capacity; với 8, 4, 2 hoặc 1 VM, mỗi VM chứa tỷ lệ lớn hơn của tổng tài nguyên. Spark có thể lập lịch lại task chưa hoàn tất và tái tính partition bị mất từ dữ liệu nguồn/lineage, miễn là driver còn hoạt động, còn worker thay thế hoặc tài nguyên khả dụng và dữ liệu đầu vào vẫn đọc được.\n\n- **A**: mất một VM làm giảm khoảng 1/8 tổng executor capacity, lớn hơn tỷ lệ mất của cấu hình B.\n- **B**: đúng — mỗi worker chỉ mang 1/16 tổng tài nguyên, nên một lỗi đơn lẻ gây mức suy giảm tương đối nhỏ nhất trong các lựa chọn.\n- **C**: chỉ có một VM nên lỗi worker duy nhất lấy đi toàn bộ executor; giả định driver còn sống cũng không giúp nếu không còn executor để chạy task.\n- **D**: mất một trong bốn VM tương đương mất khoảng một phần tư tổng executor capacity.\n- **E**: mất một trong hai VM tương đương mất khoảng một nửa tổng executor capacity.\n\nCụm nhiều VM nhỏ hơn chỉ giảm blast radius của một lỗi worker; nó không “bảo đảm hoàn thành”. Nhiều VM lỗi có thể làm cạn tài nguyên, driver hoặc cluster manager vẫn có thể hỏng, và retry có giới hạn. Thiết kế bền vững còn cần dữ liệu bền vững bên ngoài compute, retry phù hợp, checkpoint cho streaming và giám sát; lựa chọn VM cũng phải cân nhắc overhead, mạng và giới hạn mỗi node.",
     "page": null,
-    "image": "img/q_112.jpg",
     "references": [
       {
-        "title": "Databricks Documentation - Compute configuration best practices",
-        "url": "https://docs.databricks.com/en/compute/pool-best-practices"
+        "title": "RDD Programming Guide — persistence and fault tolerance",
+        "url": "https://spark.apache.org/docs/latest/rdd-programming-guide.html"
+      },
+      {
+        "title": "Cluster Mode Overview",
+        "url": "https://spark.apache.org/docs/latest/cluster-overview.html"
       }
     ]
   },
   {
     "id": 113,
     "topic": 1,
-    "question": "A **Delta Lake** table in the **Lakehouse** named `customer_churn_params` is used in churn prediction by the machine learning team. The table contains information about customers derived from a number of upstream sources. Currently, the data engineering team populates this table nightly by overwriting the table with the current valid values derived from upstream data sources. Immediately after each update succeeds, the data engineering team would like to determine the difference between the new version and the previous version of the table. Given the current implementation, which method can be used?",
+    "question": "A **Delta Lake** table named `customer_churn_params` is overwritten nightly with the current valid customer values from upstream sources. The team wants to identify row-level differences immediately after an overwrite succeeds. Change Data Feed is not enabled, and the team can add a comparison step after the overwrite. Which method works with the current implementation?",
     "options": {
-      "A": "Execute a query to calculate the difference between the new version and the previous version using **Delta Lake**’s built-in versioning and lime travel functionality.",
+      "A": "Use Delta Lake time travel to read the previous and current table versions, then calculate their row-level difference.",
       "B": "Parse the **Delta Lake** transaction log to identify all newly written data files.",
       "C": "Parse the **Spark** event logs to identify those rows that were updated, inserted, or deleted.",
       "D": "Execute DESCRIBE HISTORY `customer_churn_params` to obtain the full operation metrics for the update, including a log of all records that have been added or modified.",
-      "E": "Use **Delta Lake**’s change data feed to identify those records that have been updated, inserted, or deleted."
+      "E": "Use Change Data Feed to identify the changes from the overwrite, even though Change Data Feed was not enabled."
     },
     "answer": "A",
-    "question_vi": "Một bảng **Delta Lake** trong **Lakehouse** tên là `customer_churn_params` được sử dụng để dự đoán rời bỏ khách hàng bởi đội ngũ machine learning. Bảng chứa thông tin về khách hàng được lấy từ một số nguồn upstream. Hiện tại, đội ngũ data engineering cập nhật bảng này hàng đêm bằng cách ghi đè (overwrite) bảng bằng các giá trị hợp lệ hiện tại từ các nguồn dữ liệu upstream.\n\nNgay sau khi mỗi lần cập nhật thành công, đội ngũ data engineering muốn xác định sự khác biệt giữa phiên bản mới và phiên bản trước đó của bảng.\n\nVới triển khai hiện tại, phương pháp nào có thể được sử dụng?",
+    "question_vi": "Một bảng **Delta Lake** tên `customer_churn_params` được ghi đè mỗi đêm bằng các giá trị khách hàng còn hiệu lực lấy từ nguồn upstream. Nhóm muốn tìm các khác biệt ở cấp dòng ngay sau khi thao tác overwrite thành công. Change Data Feed hiện chưa được bật; nhóm có thể thêm bước so sánh sau khi overwrite. Cách nào dùng được với triển khai hiện tại?",
     "options_vi": {
-      "A": "Chạy truy vấn so sánh sự khác biệt giữa phiên bản mới và phiên bản trước đó bằng tính năng quản lý phiên bản (versioning) và `time travel` tích hợp sẵn của **Delta Lake**",
+      "A": "Dùng time travel của Delta Lake để đọc phiên bản bảng trước và sau, rồi tính phần khác nhau ở cấp dòng.",
       "B": "Phân tích transaction log của **Delta Lake** để xác định tất cả các tệp dữ liệu mới được ghi",
       "C": "Phân tích **Spark** event logs để xác định các dòng được cập nhật, chèn hoặc xóa",
       "D": "Chạy `DESCRIBE HISTORY customer_churn_params` để lấy đầy đủ các số liệu hoạt động của bản cập nhật, bao gồm log của tất cả các bản ghi đã được thêm hoặc sửa đổi",
-      "E": "Sử dụng tính năng **Change Data Feed** của **Delta Lake** để xác định các bản ghi đã được cập nhật, chèn hoặc xóa"
+      "E": "Dùng Change Data Feed để tìm thay đổi của lần overwrite dù Change Data Feed chưa được bật."
     },
-    "explanation_vi": "Do bảng **Delta Lake** `customer_churn_params` đang được cập nhật hàng đêm bằng cách ghi đè toàn bộ (overwrite), cách để xác định sự khác biệt giữa phiên bản mới và phiên bản trước đó là sử dụng tính năng Time Travel (du hành thời gian) tích hợp sẵn của **Delta Lake**.\n\nBạn có thể thực hiện truy vấn so sánh dữ liệu hiện tại với dữ liệu của phiên bản cũ bằng các cú pháp như `VERSION AS OF` hoặc `TIMESTAMP AS OF` kết hợp với toán tử `EXCEPT` hoặc `ANTI JOIN`. Lệnh `DESCRIBE HISTORY` chỉ cung cấp metadata hoạt động chứ không cung cấp sự khác biệt chi tiết của các bản ghi dữ liệu.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** Transaction log của Delta Lake giữ các phiên bản bảng, vì vậy sau khi biết version vừa commit (từ `DESCRIBE HISTORY`), có thể đọc snapshot hiện tại và snapshot trước đó bằng time travel, rồi so sánh dữ liệu theo khóa. Ví dụ, với schema giống nhau, lấy các dòng mới bằng `current EXCEPT previous` và các dòng đã biến mất bằng `previous EXCEPT current`; ghép hai tập sẽ tách được thêm/xóa, sau đó join theo khóa để tìm các dòng đổi giá trị. Nếu bảng có khóa tự nhiên, join hai snapshot theo khóa thường cho biết rõ giá trị cũ và mới hơn là chỉ so sánh toàn bộ dòng.\n\n- **A**: đúng — time travel cho phép dựng lại hai snapshot đã commit để nhóm tự tính row diff ngay sau lần overwrite.\n- **B**: transaction log ghi hành động và file được thêm/bỏ, không phải danh sách từng dòng thay đổi. Một file mới có thể chứa nhiều dòng cũ được ghi lại lẫn với dòng mới.\n- **C**: Spark event log mô tả stage/task và hoạt động thực thi; nó không phải CDC log ở cấp bản ghi.\n- **D**: `DESCRIBE HISTORY` hữu ích để tìm version, thời gian, operation và metrics; nó không chứa toàn bộ giá trị các dòng đã thêm/sửa.\n- **E**: CDF cung cấp metadata `insert`, `delete`, `update_preimage`, `update_postimage`, nhưng chỉ ghi change feed sau khi tính năng được bật. Không thể bật sau một commit rồi khôi phục feed cho commit vừa qua; nếu cấu hình từ trước thì đây có thể là cách tốt hơn cho các lần cập nhật tiếp theo.\n\nTime travel cũng có giới hạn retention: nếu version hoặc file cũ đã hết hạn và bị dọn, không thể dùng nó để so sánh nữa. Với nhu cầu CDC liên tục, hãy bật CDF trước khi thay đổi dữ liệu; với batch overwrite hiện tại, cần bảo đảm snapshot cũ còn trong retention cho tới khi bước diff chạy xong.",
     "page": null,
-    "image": "img/q_113.jpg",
     "references": [
       {
-        "title": "Databricks Documentation - Work with Delta Lake table history",
-        "url": "https://docs.databricks.com/en/tables/history"
+        "title": "Work with table history and time travel",
+        "url": "https://docs.databricks.com/aws/en/tables/history"
+      },
+      {
+        "title": "Use change data feed on Databricks",
+        "url": "https://docs.databricks.com/aws/en/tables/features/change-data-feed"
       }
     ]
   },
   {
     "id": 114,
     "topic": 1,
-    "question": "A data team’s **Structured Streaming** job is configured to calculate running aggregates for item `sales` to update a downstream marketing dashboard. The marketing team has introduced a new promotion, and they would like to add a new field to track the number of times this promotion code is used for each item. A junior data engineer suggests updating the existing query as follows. Note that proposed changes are in bold. Original query:\nProposed query:\nWhich step must also be completed to put the proposed query into production?",
+    "question": "A data team’s **Structured Streaming** job calculates running aggregates for item sales for a marketing dashboard. The team wants to add a count of uses of the `NEW_MEMBER` promotion code per item. The current and proposed queries are shown below. Assume `count`, `mean`, `sum`, `when`, and `col` are imported from PySpark.\n\n**Original query**\n```python\n(df.groupBy(\"item\")\n  .agg(count(\"item\").alias(\"total_count\"),\n       mean(\"sale_price\").alias(\"avg_price\"))\n  .writeStream\n  .outputMode(\"complete\")\n  .option(\"checkpointLocation\", \"/item_agg/__checkpoint\")\n  .start(\"/item_agg\"))\n```\n\n**Proposed query**\n```python\n(df.groupBy(\"item\")\n  .agg(count(\"item\").alias(\"total_count\"),\n       mean(\"sale_price\").alias(\"avg_price\"),\n       sum(when(col(\"promo_code\") == \"NEW_MEMBER\", 1).otherwise(0))\n         .alias(\"new_member_promo\"))\n  .writeStream\n  .outputMode(\"complete\")\n  .option(\"mergeSchema\", \"true\")\n  .option(\"checkpointLocation\", \"/item_agg/__checkpoint\")\n  .start(\"/item_agg\"))\n```\n\nWhich additional step is required before deploying the proposed query?",
     "options": {
-      "A": "Specify a new `checkpointLocation`",
-      "B": "Remove .option('`mergeSchema`', 'true') from the streaming write",
+      "A": "Stop the old query and use a new checkpoint location; plan how to rebuild or migrate the existing aggregate state.",
+      "B": "Remove the mergeSchema option; changing the sink schema makes the query invalid.",
       "C": "Increase the shuffle partitions to account for additional aggregates",
       "D": "Run REFRESH TABLE delta.‛/`item_agg`‛"
     },
     "answer": "A",
-    "question_vi": "Job **Structured Streaming** của một đội ngũ dữ liệu được cấu hình để tính toán lượng cộng dồn bán hàng nhằm cập nhật dashboard marketing downstream. Đội ngũ marketing đã giới thiệu một chương trình khuyến mãi mới và họ muốn thêm một trường mới để theo dõi số lần mã khuyến mãi này được sử dụng cho mỗi mặt hàng. Một kỹ sư dữ liệu cấp dưới đề xuất cập nhật truy vấn hiện có như sau. Lưu ý rằng các thay đổi đề xuất được in đậm.\n\nOriginal query:\nProposed query:\n\nĐể triển khai truy vấn đề xuất vào production, bước nào sau đây cũng phải được hoàn thành?",
+    "question_vi": "Job **Structured Streaming** của nhóm data đang tính các aggregate cộng dồn theo mặt hàng để cập nhật dashboard marketing. Nhóm muốn thêm số lần mã khuyến mãi `NEW_MEMBER` được dùng cho từng mặt hàng. Truy vấn hiện tại và truy vấn đề xuất:\n\n**Truy vấn hiện tại**\n```python\n(df.groupBy(\"item\")\n  .agg(count(\"item\").alias(\"total_count\"),\n       mean(\"sale_price\").alias(\"avg_price\"))\n  .writeStream\n  .outputMode(\"complete\")\n  .option(\"checkpointLocation\", \"/item_agg/__checkpoint\")\n  .start(\"/item_agg\"))\n```\n\n**Truy vấn đề xuất**\n```python\n(df.groupBy(\"item\")\n  .agg(count(\"item\").alias(\"total_count\"),\n       mean(\"sale_price\").alias(\"avg_price\"),\n       sum(when(col(\"promo_code\") == \"NEW_MEMBER\", 1).otherwise(0))\n         .alias(\"new_member_promo\"))\n  .writeStream\n  .outputMode(\"complete\")\n  .option(\"mergeSchema\", \"true\")\n  .option(\"checkpointLocation\", \"/item_agg/__checkpoint\")\n  .start(\"/item_agg\"))\n```\n\nGiả sử các hàm `count`, `mean`, `sum`, `when` và `col` đã được import từ PySpark. Cần làm thêm bước nào trước khi triển khai truy vấn mới?",
     "options_vi": {
-      "A": "Chỉ định một `checkpointLocation` mới",
-      "B": "Loại bỏ `.option('mergeSchema', 'true')` khỏi streaming write",
+      "A": "Dừng query cũ và dùng checkpoint location mới; lập kế hoạch dựng lại hoặc di chuyển state aggregate hiện có.",
+      "B": "Xóa tùy chọn `mergeSchema` vì mọi thay đổi schema của sink đều làm query không hợp lệ.",
       "C": "Tăng số lượng shuffle partition để đáp ứng các phép gộp bổ sung",
       "D": "Chạy `REFRESH TABLE delta.'/item_agg'`"
     },
-    "explanation_vi": "Khi thay đổi cấu trúc schema hoặc logic tính toán của một truy vấn **Structured Streaming** đang chạy (như thêm cột tính toán mới), trạng thái (state) được lưu trữ trong thư mục checkpoint cũ sẽ không còn tương thích với mã nguồn mới.\n\nĐể chạy phiên bản mới trong môi trường production, bạn bắt buộc phải chỉ định một đường dẫn checkpoint mới (`checkpointLocation`). Việc này buộc stream phải khởi tạo lại checkpoint trống khớp với schema mới, tránh các lỗi xung đột schema và bất tương thích trạng thái.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án A.** Truy vấn mới thay đổi cấu trúc stateful aggregation: state trước đó chỉ lưu `total_count` và `avg_price`, còn state mới phải lưu thêm bộ đếm điều kiện `new_member_promo`. Checkpoint không chỉ là vị trí lưu file; nó chứa offset đã xử lý và trạng thái trung gian của phép aggregate. Khôi phục state cũ bằng schema/operator mới có thể gây lỗi tương thích hoặc khôi phục sai kết quả. Vì vậy cần dừng query, tạo checkpoint path riêng cho phiên bản query mới và triển khai kế hoạch xử lý state/đích: thường là dựng lại aggregate từ dữ liệu nguồn hoặc tạo bảng đích mới rồi chuyển đổi có kiểm soát. Không xóa checkpoint cũ trước khi xác định khả năng rollback.\n\nĐoạn code cũng đã được sửa để tính đúng số lần khuyến mãi: `count(\"promo_code = 'NEW_MEMBER'\")` không phải phép đếm điều kiện PySpark đáng tin cậy; `sum(when(col(...) == ..., 1).otherwise(0))` cộng 1 cho mỗi dòng thỏa điều kiện. `mergeSchema` xử lý schema của bảng Delta sink, nhưng không làm cho state trong checkpoint cũ tự tương thích với phép aggregate mới.\n\n- **A**: đúng — thay đổi stateful query cần checkpoint mới và kế hoạch rebuild/migrate, vì đổi checkpoint có thể khiến nguồn được đọc lại theo chính sách khởi đầu của query.\n- **B**: sai — `mergeSchema` được dùng để cho phép Delta sink thêm cột khi schema tiến hóa; nó không sửa state checkpoint, nhưng cũng không tự làm query sai.\n- **C**: tăng shuffle partitions có thể đổi mức song song/performance, không giải quyết bất tương thích schema state.\n- **D**: `REFRESH TABLE` làm mới metadata/cache của bảng trong một số ngữ cảnh; nó không reset checkpoint hay dựng lại state streaming.\n\nTrong production, thử thay đổi trên bản sao dữ liệu trước, chọn checkpoint path ổn định và riêng cho query, xác nhận bảng đầu ra có schema tương thích, rồi kiểm tra tổng count và số promotion sau khi replay/backfill. Với aggregation ở `complete` mode, sink nhận toàn bộ kết quả aggregate mỗi trigger, nên cần tính cả chi phí ghi lại bảng.",
     "page": null,
-    "image": "img/q_114.jpg",
     "references": [
       {
-        "title": "Databricks Documentation - Structured Streaming production checklist",
-        "url": "https://docs.databricks.com/en/structured-streaming/production#recover-from-query-failures"
+        "title": "Structured Streaming checkpoints",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/checkpoints"
+      },
+      {
+        "title": "Delta Lake table streaming reads and writes",
+        "url": "https://docs.databricks.com/aws/en/structured-streaming/delta-lake"
       }
     ]
   },
@@ -3746,7 +3768,7 @@
       "D": "Each run of a job will have a unique `run_id`; all tasks within this job will have a unique `task_id`",
       "E": "Each run of a job will have a unique `run_id`; all tasks within this job will also have a unique `run_id`"
     },
-    "answer": "D",
+    "answer": "E",
     "question_vi": "Khi sử dụng **Databricks CLI** hoặc **REST API** để lấy kết quả từ các job có nhiều task, phát biểu nào mô tả chính xác cấu trúc phản hồi?",
     "options_vi": {
       "A": "Mỗi lần chạy job sẽ có một `job_id` duy nhất; tất cả các task trong job này sẽ có một `job_id` duy nhất",
@@ -3755,80 +3777,93 @@
       "D": "Mỗi lần chạy job sẽ có một `run_id` duy nhất; tất cả các task trong job này sẽ có một `task_id` duy nhất",
       "E": "Mỗi lần chạy job sẽ có một `run_id` duy nhất; tất cả các task trong job này cũng sẽ có một `run_id` duy nhất"
     },
-    "explanation_vi": "Trong cấu trúc phản hồi của **Databricks Jobs** API dành cho các job có nhiều task: mỗi lần chạy của toàn bộ Job đó sẽ có một mã định danh chạy duy nhất gọi là `run_id`. Tuy nhiên, mỗi task riêng biệt nằm trong job đó khi thực thi sẽ có một mã định danh task riêng gọi là `task_id`. Điều này cho phép người dùng theo dõi trạng thái và lấy kết quả của từng task cụ thể trong một run của job.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án E.** API biểu diễn một lần chạy multi-task bằng một parent `run_id`; mỗi task execution bên trong lần chạy đó cũng có `run_id` riêng. Khi gọi Get Run, response chứa mảng `tasks`; client duyệt mảng, lấy `run_id` của từng task rồi dùng ID con đó để lấy output/task metadata. Gọi Get Output bằng parent ID của multi-task run sẽ lỗi vì output chỉ có ở từng task run.\n\n- **A**: `job_id` định danh cấu hình job; nó không phải ID duy nhất cho mỗi lần chạy. Các task trong cùng job cũng không nhận job_id khác nhau.\n- **B**: `task_id` không phải field chuẩn để định danh task trong response Jobs API được hỏi; dùng `task_key` cho task definition và `run_id` cho task execution.\n- **C**: `orchestration_id` không phải định danh run trong Jobs API; mỗi task run có child `run_id`.\n- **D**: phần đầu đúng vì parent run có `run_id`, nhưng phần sau sai: task execution không dùng `task_id` thay cho `run_id` khi lấy output.\n- **E**: đúng — parent và mỗi child task execution có các ID run riêng; IDs này xác định các lần chạy khác nhau.\n\nCần phân biệt ba khái niệm: `job_id` chỉ job definition; `task_key` chỉ một task được khai báo trong job; `run_id` chỉ một lần thực thi. Một task_key có thể được chạy nhiều lần nên không thể dùng nó thay cho run_id. Khi gọi CLI/REST API, hãy lấy child run IDs từ response của Get Run rồi truy vấn output từng task; không cố lấy output task từ parent run.",
     "page": null,
-    "image": "img/q_115.jpg",
     "references": [
       {
-        "title": "Databricks Documentation - Jobs API - Get job run",
-        "url": "https://docs.databricks.com/en/sql/language-manual/functions/trunc"
+        "title": "Updating from Jobs API 2.0 to 2.1 — multi-task run responses",
+        "url": "https://docs.databricks.com/aws/en/reference/jobs-api-2-1-updates"
+      },
+      {
+        "title": "Jobs API Run object",
+        "url": "https://docs.databricks.com/api/jobs/v2/list-runs"
       }
     ]
   },
   {
     "id": 116,
     "topic": 1,
-    "question": "The data engineering team is configuring environments for development, testing, and production before beginning migration on a new data pipeline. The team requires extensive testing on both the code and data resulting from code execution, and the team wants to develop and test against data as similar to production data as possible. A junior data engineer suggests that production data can be mounted to the development and testing environments, allowing pre-production code to execute against production data. Because all users have admin privileges in the development environment, the junior data engineer has offered to `configure` permissions and mount this data for the team. Which statement captures best practices for this situation?",
+    "question": "A data engineering team is setting up development, test, and production environments. It wants realistic data for extensive testing. A junior engineer proposes mounting production data into the development workspace, where all users have workspace-admin privileges, and allowing them to run pre-production code against it. Which statement best reflects safe practice?",
     "options": {
       "A": "All development, testing, and production code and data should exist in a single, unified `workspace`; creating separate environments for testing and development complicates administrative overhead.",
-      "B": "In environments where interactive code will be executed, production data should only be accessible with read permissions; creating isolated databases for each environment further reduces risks.",
+      "B": "If development users need production data, grant read-only access at the data layer and isolate catalogs or databases by environment; a masked production snapshot is another option.",
       "C": "As long as code in the development environment declares `USE dev_db` at the top of each notebook, there is no possibility of inadvertently committing changes back to production data sources.",
       "D": "Because **Delta Lake** versions all data and supports time travel, it is not possible for user error or malicious actors to permanently delete production data; as such, it is generally safe to mount production data anywhere.",
       "E": "Because access to production data will always be verified using passthrough credentials, it is safe to mount data to any **Databricks** development environment."
     },
     "answer": "B",
-    "question_vi": "Đội ngũ data engineering đang cấu hình các môi trường phát triển (development), kiểm thử (testing) và vận hành (production) trước khi bắt đầu di chuyển (migration) một data pipeline mới. Đội ngũ yêu cầu kiểm thử rộng rãi trên cả mã nguồn và dữ liệu thu được từ việc thực thi mã nguồn, đồng thời muốn phát triển và kiểm thử trên dữ liệu giống với dữ liệu sản xuất nhất có thể.\n\nMột kỹ sư dữ liệu cấp dưới đề xuất rằng dữ liệu production có thể được mount vào môi trường dev và test, cho phép mã nguồn pre-production thực thi trực tiếp trên dữ liệu production. Vì tất cả người dùng đều có quyền admin trong môi trường dev, kỹ sư này đã đề nghị cấu hình quyền và mount dữ liệu này cho cả đội.\n\nPhát biểu nào phản ánh đúng thực hành tốt nhất (best practices) cho tình huống này?",
+    "question_vi": "Một nhóm data engineering đang thiết lập môi trường development, test và production. Nhóm cần dữ liệu gần với thực tế để kiểm thử rộng. Một kỹ sư đề xuất mount dữ liệu production vào workspace development, nơi mọi người đều có quyền workspace admin, rồi chạy code chưa lên production trực tiếp trên dữ liệu đó. Phát biểu nào phản ánh thực hành an toàn nhất?",
     "options_vi": {
       "A": "Tất cả mã nguồn và dữ liệu của dev, test và prod nên tồn tại trong một workspace thống nhất duy nhất; việc tạo các môi trường riêng biệt làm tăng chi phí quản trị",
-      "B": "Trong các môi trường thực thi mã nguồn tương tác, dữ liệu production chỉ nên được truy cập với quyền đọc (read-only); việc tạo các cơ sở dữ liệu bị cô lập cho từng môi trường giúp giảm thiểu rủi ro hơn nữa",
+      "B": "Nếu người dùng development cần dữ liệu production, chỉ cấp quyền đọc ở tầng dữ liệu và cô lập catalog/database theo môi trường; có thể dùng snapshot production đã che dữ liệu nhạy cảm.",
       "C": "Chỉ cần mã nguồn trong môi trường dev khai báo `USE dev_db` ở đầu mỗi notebook thì sẽ không có khả năng vô tình commit các thay đổi trở lại nguồn dữ liệu production",
       "D": "Vì **Delta Lake** quản lý phiên bản cho tất cả dữ liệu và hỗ trợ `time travel`, người dùng không thể vô tình hoặc cố ý xóa vĩnh viễn dữ liệu production; do đó, mount dữ liệu production ở đâu cũng an toàn",
       "E": "Vì quyền truy cập vào dữ liệu production luôn được xác thực bằng thông tin xác thực passthrough, việc mount dữ liệu vào bất kỳ môi trường dev nào của **Databricks** đều an toàn"
     },
-    "explanation_vi": "Theo thực hành tốt nhất về bảo mật dữ liệu và quản trị môi trường:\n1. Trong các môi trường mà người dùng chạy code tương tác (interactive code) như môi trường phát triển (development) hoặc kiểm thử (testing), dữ liệu production chỉ nên được truy cập với quyền đọc duy nhất (Read-only) để ngăn chặn bất kỳ hành vi ghi đè hoặc xóa dữ liệu sản xuất do sơ suất.\n2. Việc cách ly các cơ sở dữ liệu (databases) riêng biệt cho từng môi trường (dev, test, prod) giúp giảm thiểu tối đa rủi ro thao tác nhầm lẫn dữ liệu giữa các môi trường.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** Quyền quản trị workspace không nên đồng nghĩa với quyền sửa hoặc xóa dữ liệu production. Nếu cần kiểm tra trên dữ liệu production thực, hãy cấp quyền đọc ở tầng Unity Catalog/storage, giới hạn workspace nào được truy cập catalog bằng workspace-catalog binding và tách catalog/schema dev, test, prod. Nếu không thể cấp quyền đọc an toàn hoặc dữ liệu có thông tin nhạy cảm, tạo snapshot cho môi trường dev rồi che/masking dữ liệu phù hợp. Như vậy người phát triển có thể đánh giá code trên dữ liệu gần thực tế mà thao tác ghi của notebook không thể làm hỏng nguồn production.\n\n- **A**: gộp code và dữ liệu của mọi môi trường vào một workspace làm tăng nguy cơ chạy nhầm, không tạo ranh giới an toàn giữa dev/test/prod.\n- **B**: đúng — tách quyền dữ liệu khỏi quyền workspace, áp dụng read-only với prod, cô lập môi trường và dùng bản sao đã xử lý khi phù hợp.\n- **C**: `USE dev_db` chỉ đổi database/schema mặc định của session; notebook vẫn có thể tham chiếu tên đầy đủ tới bảng prod hoặc dùng đường dẫn storage trực tiếp.\n- **D**: Time travel hỗ trợ đọc phiên bản cũ trong retention, không ngăn người có quyền xóa dữ liệu, xóa file hoặc làm hết hạn retention.\n- **E**: passthrough/identity delegation không tự biến quyền ghi thành quyền đọc; quyền hiệu lực vẫn phụ thuộc identity và ACL được cấp ở nguồn dữ liệu.\n\nMột policy chỉ được đặt ở UI/workspace có thể chưa đủ nếu người dùng có credentials trực tiếp tới object storage. Hãy kiểm soát quyền ở catalog, external location và cloud IAM; cấp tối thiểu cần thiết, audit quyền truy cập và tách danh tính chạy job production khỏi token cá nhân. Mục tiêu là dữ liệu thử nghiệm sát thực tế nhưng không để code chưa kiểm duyệt ghi vào dữ liệu vận hành.",
     "page": null,
-    "image": "img/q_116.jpg",
     "references": [
       {
-        "title": "Databricks Documentation - Data governance best practices",
-        "url": "https://docs.databricks.com/en/archive/spark-3.x-migration/dataskipping-index"
+        "title": "Workspace-catalog binding",
+        "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/workspace-catalog-binding"
+      },
+      {
+        "title": "MLOps workflow on Databricks — development access to production data",
+        "url": "https://docs.databricks.com/aws/en/machine-learning/mlops/mlops-workflow"
       }
     ]
   },
   {
     "id": 117,
     "topic": 1,
-    "question": "A data engineer, User A, has promoted a pipeline to production by using the **REST API** to programmatically create several jobs. A DevOps engineer, User B, has configured an external orchestration tool to trigger job runs through the **REST API**. Both users authorized the **REST API** calls using their personal access tokens. A `workspace` admin, User C, inherits responsibility for managing this pipeline. User C uses the **Databricks Jobs** UI to take \"Owner\" privileges of each job. Jobs continue to be triggered using the credentials and tooling configured by User B. An application has been configured to collect and parse run information returned by the **REST API**. Which statement describes the value returned in the `creator_user_name` field?",
+    "question": "User A creates production jobs through the **REST API**. User B's external orchestrator triggers every run through the **REST API** using User B's personal access token. Later, workspace admin User C takes the **Owner** permission on each job, but the orchestrator continues using User B's token. An application reads the **run object** returned by the Jobs API. Which identity should it expect in that run object's `creator_user_name` field?",
     "options": {
       "A": "Once User C takes \"Owner\" privileges, their email address will appear in this field; prior to this, User A’s email address will appear in this field.",
-      "B": "User B’s email address will always appear in this field, as their credentials are always used to trigger the run.",
+      "B": "User B, because User B's token initiates each run in this scenario.",
       "C": "User A’s email address will always appear in this field, as they still own the underlying notebooks.",
       "D": "Once User C takes \"Owner\" privileges, their email address will appear in this field; prior to this, User B’s email address will appear in this field.",
-      "E": "User C will only ever appear in this field if they manually trigger the job, otherwise it will indicate User B."
+      "E": "User C, because taking job ownership overrides the identity that initiated each run; User B appears only in `run_as_user_name`."
     },
     "answer": "B",
-    "question_vi": "Một kỹ sư dữ liệu, User A, đã đưa một pipeline lên production bằng cách sử dụng **REST API** để tạo một số job theo cách lập trình. Một kỹ sư DevOps, User B, đã cấu hình một công cụ điều phối bên ngoài để kích hoạt các lượt chạy job thông qua **REST API**. Cả hai người dùng đều xác thực các cuộc gọi **REST API** bằng personal access token của họ.\n\nMột quản trị viên workspace, User C, tiếp nhận trách nhiệm quản lý pipeline này. User C sử dụng **Databricks Jobs UI** để nhận quyền sở hữu (\"Owner\") của mỗi job. Các job vẫn tiếp tục được kích hoạt bằng thông tin xác thực và công cụ do User B cấu hình.\n\nMột ứng dụng đã được cấu hình để thu thập và phân tích thông tin chạy job do **REST API** trả về. Phát biểu nào mô tả đúng giá trị được trả về trong trường `creator_user_name`?",
+    "question_vi": "User A tạo các job production qua **REST API**. Công cụ điều phối bên ngoài của User B tiếp tục kích hoạt mọi lượt chạy qua **REST API** bằng personal access token của User B. Sau đó, admin workspace User C nhận quyền **Owner** của từng job, nhưng orchestrator vẫn dùng token của User B. Ứng dụng đọc **run object** do Jobs API trả về. Danh tính nào sẽ xuất hiện trong trường `creator_user_name` của run object đó?",
     "options_vi": {
       "A": "Khi User C nhận quyền sở hữu \"Owner\", địa chỉ email của họ sẽ xuất hiện trong trường này; trước đó, địa chỉ email của User A sẽ xuất hiện",
-      "B": "Địa chỉ email của User B sẽ luôn xuất hiện trong trường này, vì thông tin xác thực của họ luôn được sử dụng để kích hoạt lượt chạy",
+      "B": "User B, vì token của User B khởi tạo từng lượt chạy trong tình huống này.",
       "C": "Địa chỉ email của User A sẽ luôn xuất hiện trong trường này, vì họ vẫn sở hữu các notebook làm nền tảng",
       "D": "Khi User C nhận quyền sở hữu \"Owner\", địa chỉ email của họ sẽ xuất hiện trong trường này; trước đó, địa chỉ email của User B sẽ xuất hiện",
-      "E": "User C chỉ xuất hiện trong trường này nếu họ tự kích hoạt job theo cách thủ công, ngược lại sẽ hiển thị User B"
+      "E": "User C, vì nhận quyền sở hữu job sẽ ghi đè danh tính khởi tạo lượt chạy; User B chỉ xuất hiện trong `run_as_user_name`."
     },
-    "explanation_vi": "Trong **Databricks Jobs** API, trường `creator_user_name` phản ánh danh tính của người dùng hoặc service principal có thông tin xác thực (credential) được sử dụng để kích hoạt/tạo ra lần chạy (run) đó.\n\nDo User B đã cấu hình một công cụ điều phối bên ngoài để trigger các run của job thông qua **REST API** bằng Personal Access Token của mình, hệ thống sẽ ghi nhận User B là người tạo ra các run đó. Việc User C nhận quyền 'Owner' của job chỉ thay đổi quyền sở hữu cấu hình job trong UI chứ không thay đổi danh tính token được dùng để trigger run qua API.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** Câu hỏi nói rõ ứng dụng đọc run object, không phải job definition. Trong tình huống này, mỗi request khởi chạy được xác thực bằng PAT của User B, nên User B là danh tính tạo lượt chạy và được ghi vào `creator_user_name` của run. Việc User C nhận quyền Owner đổi người quản lý/cấu hình job; nó không viết lại danh tính đã khởi tạo một run cụ thể.\n\n- **A**: nhầm người tạo job với owner hiện tại. User A có thể xuất hiện trong `creator_user_name` của job definition do họ tạo, nhưng không phải creator của các run được User B kích hoạt.\n- **B**: đúng với giả định mọi lần gọi run-now đều dùng token User B; run creator được xác định theo caller đã tạo lượt chạy.\n- **C**: người sở hữu notebook không quyết định ai tạo run. Notebook chỉ là workload được job thực thi.\n- **D**: chuyển quyền Owner cho User C không làm `creator_user_name` của run đổi sang C; run mới vẫn do request của User B tạo.\n- **E**: đảo lẫn hai trường. `creator_user_name` cho biết creator; `run_as_user_name` là identity mà job dùng để chạy workload. Owner có thể ảnh hưởng mặc định run-as khi job access control được bật, nhưng đó là field và mục đích khác.\n\nĐừng gộp trường ở cấp job và cấp run: job response có `creator_user_name` của định nghĩa job; run response có creator của lần chạy. `run_as_user_name` thể hiện quyền thực thi dữ liệu/code của job. Khi audit, cần xem đúng object/endpoint và tách “ai tạo job”, “ai gọi run” và “job chạy dưới quyền ai”; ba danh tính này có thể khác nhau.",
     "page": null,
-    "image": "img/q_117.jpg",
     "references": [
       {
-        "title": "Databricks Documentation - Jobs API - Run details",
-        "url": "https://docs.databricks.com/en/sql/language-manual/functions/trunc"
+        "title": "Jobs API Run object",
+        "url": "https://docs.databricks.com/api/jobs/v2/list-runs"
+      },
+      {
+        "title": "Jobs API Job object and run_as_user_name",
+        "url": "https://docs.databricks.com/api/jobs/v2/job"
+      },
+      {
+        "title": "Updating from Jobs API 2.0 to 2.1",
+        "url": "https://docs.databricks.com/aws/en/reference/jobs-api-2-1-updates"
       }
     ]
   },
   {
     "id": 118,
     "topic": 1,
-    "question": "A member of the data engineering team has submitted a short notebook that they wish to schedule as part of a larger data pipeline. Assume that the commands provided below produce the logically correct results when run as presented. Which command should be removed from the notebook before scheduling it as a job?",
+    "question": "A data engineer submits this notebook for a scheduled pipeline. The commands produce logically correct results, but the job only needs to write the flattened data to a table; it does not need to return a rendered result to a person. Which command should be removed to avoid unnecessary notebook output and a second evaluation of the DataFrame?\n\n```python\n# Cmd 1\nrawDF = spark.table(\"raw_data\")\n\n# Cmd 2\nrawDF.printSchema()\n\n# Cmd 3\nflattenedDF = rawDF.select(\"*\", \"values.*\")\n\n# Cmd 4\nfinalDF = flattenedDF.drop(\"values\")\n\n# Cmd 5\ndisplay(finalDF)\n\n# Cmd 6\nfinalDF.write.mode(\"append\").saveAsTable(\"flat_data\")\n```",
     "options": {
       "A": "Cmd 2",
       "B": "Cmd 3",
@@ -3836,20 +3871,23 @@
       "D": "Cmd 5"
     },
     "answer": "D",
-    "question_vi": "Một thành viên của đội data engineering đã gửi một notebook ngắn mà họ muốn lên lịch chạy như một phần của data pipeline lớn hơn. Giả sử các lệnh dưới đây tạo ra kết quả chính xác về mặt logic khi chạy.\n\nLệnh nào nên được loại bỏ khỏi notebook trước khi lên lịch chạy nó dưới dạng một job?",
+    "question_vi": "Một data engineer gửi notebook sau để chạy theo lịch trong pipeline. Các lệnh cho kết quả logic đúng, nhưng job chỉ cần ghi dữ liệu đã flatten vào bảng; không cần trả về kết quả đã render cho người xem. Nên bỏ lệnh nào để tránh output notebook không cần thiết và việc đánh giá DataFrame lần thứ hai?\n\n```python\n# Cmd 1\nrawDF = spark.table(\"raw_data\")\n\n# Cmd 2\nrawDF.printSchema()\n\n# Cmd 3\nflattenedDF = rawDF.select(\"*\", \"values.*\")\n\n# Cmd 4\nfinalDF = flattenedDF.drop(\"values\")\n\n# Cmd 5\ndisplay(finalDF)\n\n# Cmd 6\nfinalDF.write.mode(\"append\").saveAsTable(\"flat_data\")\n```",
     "options_vi": {
       "A": "`Cmd 2`",
       "B": "`Cmd 3`",
       "C": "`Cmd 4`",
       "D": "`Cmd 5`"
     },
-    "explanation_vi": "Trước khi lên lịch chạy một notebook như một job tự động trong production, bạn cần loại bỏ các lệnh dùng để trực quan hóa hoặc hiển thị dữ liệu mang tính tương tác như `display()` (thường nằm ở ô lệnh cuối cùng, ví dụ Cmd 5).\n\nCác lệnh này chỉ có ý nghĩa khi chạy tương tác trong môi trường notebook để người dùng xem kết quả. Khi chạy dưới dạng job nền (headless job), `display()` gây lãng phí tài nguyên tính toán và có thể gây lỗi hoặc ghi log quá lớn không cần thiết vào output của job.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D — bỏ Cmd 5 `display(finalDF)`.** `display` yêu cầu Spark tính DataFrame để dựng bảng kết quả tương tác cho người xem. Cmd 6 sau đó vẫn phải tính DataFrame để ghi vào Delta table; nếu kết quả không được cache, hai lệnh có thể chạy hai lượt đọc/biến đổi tốn kém. Trong job production, bảng được ghi ở Cmd 6 mới là đầu ra cần dùng, còn bảng HTML/rich output của Cmd 5 không giúp downstream pipeline. Output lớn còn tiêu thụ tài nguyên và có giới hạn kích thước cho notebook task; vượt ngưỡng có thể làm run thất bại. Nếu thật sự cần kiểm tra, hãy log số liệu nhỏ hoặc kiểm tra riêng trong môi trường debug thay vì render toàn DataFrame.\n\n- **A**: Cmd 2 `printSchema()` in cấu trúc schema gọn để chẩn đoán; nó không render toàn bộ dữ liệu và không tạo một phép đọc/hiển thị toàn bảng như `display`.\n- **B**: Cmd 3 chọn các trường top-level và bung các trường trong struct `values`; đây là biến đổi tạo dữ liệu flatten cần cho bảng đích.\n- **C**: Cmd 4 bỏ struct gốc sau khi đã bung các trường của nó, đúng với mục tiêu schema đầu ra.\n- **D**: đúng — Cmd 5 chỉ phục vụ hiển thị kết quả trong notebook. Bỏ nó giữ lại thao tác ghi có tác dụng nghiệp vụ ở Cmd 6 và tránh output thừa.\n- **Không có lựa chọn Cmd 1 hoặc Cmd 6**: Cmd 1 đọc bảng nguồn; Cmd 6 append dữ liệu vào bảng đích, chính là tác dụng mà pipeline cần.\n\n`display` không phải lệnh “không chạy được trong job”; notebook job có thể tạo output. Lý do bỏ nó ở đây là output không được yêu cầu, có thể buộc Spark tính thêm một lần và làm tăng nguy cơ chạm giới hạn output. Nếu DataFrame được cache/persist hoặc lệnh hiển thị đã được giới hạn, chi phí có thể khác, nhưng câu hỏi đã nói không cần kết quả render.",
     "page": null,
-    "image": "img/q_118.jpg",
     "references": [
       {
-        "title": "Databricks Documentation - Schedule a notebook job",
-        "url": "https://docs.databricks.com/en/jobs/how-to/create-recurring-job"
+        "title": "Known limitations of Databricks notebooks",
+        "url": "https://docs.databricks.com/aws/en/notebooks/notebook-limitations"
+      },
+      {
+        "title": "Notebook task for Lakeflow Jobs",
+        "url": "https://docs.databricks.com/aws/en/jobs/tasks/notebook"
       }
     ]
   },
