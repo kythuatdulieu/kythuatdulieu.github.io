@@ -2946,7 +2946,7 @@
   {
     "id": 91,
     "topic": 1,
-    "question": "Which of the following commands can be used to write data into a Delta table while avoiding the writing of duplicate records?",
+    "question": "A source dataset contains one row per customer_id, and a Delta target table may already contain some of those keys. The data engineer must update matching customers and insert only keys that are not yet in the target. Which Delta Lake command supports this conditional upsert?",
     "options": {
       "A": "DROP",
       "B": "IGNORE",
@@ -2958,18 +2958,18 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Lệnh `MERGE INTO` trong Delta Lake (thường được gọi là \"upsert\") cho phép bạn đồng bộ dữ liệu từ nguồn vào bảng đích bằng cách chỉ định các điều kiện khi khớp (`WHEN MATCHED`) và khi không khớp (`WHEN NOT MATCHED`). Điều này giúp cập nhật các bản ghi hiện có hoặc chèn thêm bản ghi mới mà không tạo ra các dòng dữ liệu trùng lặp trong bảng.\n\n* **MERGE**: Là câu lệnh tối ưu để thực hiện việc này.\n* **INSERT** / **APPEND**: Sẽ chèn trực tiếp toàn bộ dữ liệu mới mà không kiểm tra sự trùng lặp.\n* **DROP**: Dùng để xóa bảng.\n* **IGNORE**: Không phải là một cú pháp SQL hợp lệ cho thao tác này.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C — \\`MERGE\\`.** Lệnh \\`MERGE INTO\\` so khớp từng hàng nguồn với bảng đích qua điều kiện \\`ON\\`. Ta có thể khai báo \\`WHEN MATCHED THEN UPDATE\\` để sửa hàng đã tồn tại và \\`WHEN NOT MATCHED THEN INSERT\\` để thêm khóa mới. Đó là mẫu upsert mà đề mô tả. Điều kiện khớp phải dùng khóa định danh phù hợp, chẳng hạn \\`target.customer_id = source.customer_id\\`.\n\nMột lưu ý quan trọng: MERGE không tự làm cho dữ liệu luôn duy nhất nếu điều kiện khớp chọn sai khóa hoặc nguồn chứa nhiều hàng cho cùng một customer_id. Cần loại trùng/chuẩn hóa nguồn và bảo đảm quy tắc khóa trước khi merge; trong một số trường hợp nhiều hàng nguồn khớp cùng hàng đích còn làm thao tác cập nhật trở nên mơ hồ và báo lỗi.\n\n**Vì sao các lựa chọn khác sai?**\n- **A:** DROP xóa bảng hoặc đối tượng; không hợp nhất hàng nguồn vào bảng đích.\n- **B:** IGNORE không phải câu lệnh DML độc lập để thực hiện upsert vào Delta table.\n- **C:** MERGE đúng vì cho phép định nghĩa riêng hành động cho khóa khớp và không khớp.\n- **D:** APPEND thêm hàng ở cuối mà không so sánh khóa với hàng hiện hữu; chạy lại nguồn có thể sinh hàng lặp.\n- **E:** INSERT chèn dữ liệu nhưng tự nó không diễn tả điều kiện “khớp thì cập nhật, chưa khớp thì thêm”. Một câu INSERT ... WHERE cũng không thay thế được logic đồng bộ này.\n\nVì vậy đáp án là MERGE khi bài toán thật sự là upsert theo khóa; tính duy nhất vẫn cần được bảo đảm bằng chất lượng khóa và bước xử lý nguồn phù hợp.",
     "references": [
       {
-        "title": "Upsert into a Delta Lake table using merge",
-        "url": "https://docs.databricks.com/en/delta/merge.html"
+        "title": "Databricks: Upsert into a Delta Lake table using MERGE",
+        "url": "https://docs.databricks.com/aws/en/delta/merge"
       },
       {
-        "title": "MERGE INTO reference syntax",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-dml-merge-into.html"
+        "title": "Databricks SQL: MERGE INTO",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into"
       }
     ],
-    "question_vi": "Lệnh nào sau đây có thể được sử dụng để ghi dữ liệu vào bảng Delta nhằm tránh việc ghi các bản ghi trùng lặp?",
+    "question_vi": "Tập dữ liệu nguồn có một hàng cho mỗi customer_id; bảng Delta đích có thể đã chứa một số khóa đó. Kỹ sư cần cập nhật các khách hàng có khóa khớp và chỉ chèn những khóa chưa có trong bảng đích. Lệnh nào của Delta Lake hỗ trợ thao tác upsert có điều kiện này?",
     "options_vi": {
       "A": "DROP",
       "B": "IGNORE",
@@ -2981,69 +2981,77 @@
   {
     "id": 92,
     "topic": 1,
-    "question": "A data engineer wants to create a new table containing the names of customers that live in France.They have written the following command:\nA senior data engineer mentions that it is organization policy to include a table property indicating that the new table includes personally identifiable information (PII).Which of the following lines of code fills in the above blank to successfully complete the task?",
+    "question": "A data engineer wants to create a table containing only the names of customers who live in France. The organization requires a key-value table property marking the table as containing personally identifiable information (PII). Which line fills the blank with that property?\n```sql\nCREATE TABLE france_customer_names\n[BLANK]\nAS SELECT name FROM customers WHERE country = 'France';\n```",
     "options": {
       "A": "There is no way to indicate whether a table contains PII.",
       "B": "\"COMMENT PII\"",
-      "C": "TBLPROPERTIES PII",
-      "D": "COMMENT \"Contains PII\"",
+      "C": "TBLPROPERTIES ('contains_pii' = 'true')",
+      "D": "COMMENT 'Contains PII'",
       "E": "PII"
     },
-    "answer": "D",
+    "answer": "C",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để thêm ghi chú mô tả ở mức độ bảng (table-level comment) trong Databricks SQL, mệnh đề chuẩn được sử dụng là `COMMENT \"nội dung chú thích\"` khi khai báo câu lệnh tạo bảng.\n\n* **COMMENT \"Contains PII\"**: Đúng cú pháp SQL để đính kèm bình luận chỉ ra rằng bảng chứa thông tin nhạy cảm (PII).\n* **TBLPROPERTIES**: Yêu cầu định dạng cặp khóa-giá trị, ví dụ: `TBLPROPERTIES ('pii' = 'true')`, nên tùy chọn C viết thiếu cú pháp là sai.\n* **COMMENT PII** / **PII**: Viết sai cú pháp chuỗi ký tự.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C — \\`TBLPROPERTIES ('contains_pii' = 'true')\\`.** Chính sách yêu cầu một *table property* dạng khóa-giá trị. \\`TBLPROPERTIES\\` chính là mệnh đề khai báo metadata tùy chỉnh gắn với bảng; ở đây khóa là \\`contains_pii\\`, giá trị là chuỗi \\`true\\`. Cú pháp nằm trong phần định nghĩa CREATE TABLE trước mệnh đề AS query, nên câu lệnh hoàn chỉnh tạo bảng tên \\`france_customer_names\\` từ cột tên của khách hàng ở Pháp và đánh dấu bảng theo quy ước của tổ chức.\n\n**Phân biệt các phương án:**\n- **A:** sai vì Databricks cho phép gắn table properties; đây là use case phù hợp để gắn nhãn quản trị tùy chỉnh.\n- **B:** \\`COMMENT PII\\` không phải property khóa-giá trị; hơn nữa PII không được viết như một literal chuỗi hoàn chỉnh theo cách này.\n- **C:** \\`TBLPROPERTIES (...)\\` đúng cấu trúc để ghi property. Tên khóa cụ thể là quy ước của tổ chức, do đó cần thống nhất cách viết và giá trị trong các pipeline.\n- **D:** \\`COMMENT 'Contains PII'\\` là comment mô tả hợp lệ cho người đọc, nhưng không tạo key-value property có thể được truy vấn như một nhãn metadata theo chính sách đề bài.\n- **E:** \\`PII\\` chỉ là một từ đứng riêng, không phải mệnh đề SQL hợp lệ trong CREATE TABLE.\n\nLưu ý: một property tự đặt chỉ lưu metadata, không tự động che tên, hạn chế quyền SELECT hoặc chứng minh dữ liệu thật sự có PII. Việc kiểm soát truy cập và phân loại dữ liệu cần được cấu hình riêng trong governance.",
     "references": [
       {
-        "title": "CREATE TABLE [USING] syntax",
-        "url": "https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using.html"
+        "title": "Databricks SQL: CREATE TABLE and table properties",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using"
+      },
+      {
+        "title": "Databricks SQL: Table properties and table options",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-tblproperties"
       }
     ],
-    "question_vi": "Một kỹ sư dữ liệu muốn tạo một bảng mới chứa tên của các khách hàng sống tại Pháp. Họ đã viết câu lệnh sau:\n\n`CREATE TABLE france_customers [BLANK] AS SELECT * FROM customers WHERE country = 'France';`\n\nMột kỹ sư dữ liệu cấp cao lưu ý rằng chính sách của tổ chức yêu cầu phải bao gồm một thuộc tính bảng nhằm biểu thị rằng bảng mới này chứa thông tin nhận dạng cá nhân (PII). Dòng mã nào sau đây điền vào chỗ trống trên để hoàn thành nhiệm vụ thành công?",
+    "question_vi": "Một kỹ sư dữ liệu muốn tạo bảng chỉ chứa tên của các khách hàng sống tại Pháp. Chính sách của tổ chức yêu cầu bảng phải có thuộc tính dạng khóa-giá trị đánh dấu rằng bảng chứa thông tin nhận dạng cá nhân (PII). Dòng nào điền vào chỗ trống để khai báo thuộc tính đó?\n```sql\nCREATE TABLE france_customer_names\n[BLANK]\nAS SELECT name FROM customers WHERE country = 'France';\n```",
     "options_vi": {
       "A": "Không có cách nào để chỉ ra một bảng có chứa PII hay không.",
       "B": "\"COMMENT PII\"",
-      "C": "TBLPROPERTIES PII",
-      "D": "COMMENT \"Contains PII\"",
+      "C": "TBLPROPERTIES ('contains_pii' = 'true')",
+      "D": "COMMENT 'Contains PII'",
       "E": "PII"
     }
   },
   {
     "id": 93,
     "topic": 1,
-    "question": "A new data engineering team has been assigned to work on a project. The team will need access to database customers in order to see what tables already exist. The team has its own group team.Which of the following commands can be used to grant the necessary permission on the entire database to the new team?",
+    "question": "A new data engineering team uses the legacy Hive metastore with table ACLs. The group team already has USAGE on database customers and needs to inspect table names and metadata there, without receiving SELECT access to the table data. Which grant provides that metadata access across the database?",
     "options": {
       "A": "GRANT VIEW ON CATALOG customers TO team;",
       "B": "GRANT CREATE ON DATABASE customers TO team;",
       "C": "GRANT USAGE ON CATALOG team TO customers;",
       "D": "GRANT CREATE ON DATABASE team TO customers;",
-      "E": "GRANT USAGE ON DATABASE customers TO team;"
+      "E": "GRANT READ_METADATA ON DATABASE customers TO team;"
     },
     "answer": "E",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trong mô hình bảo mật và phân quyền Table ACLs (Legacy) của Databricks, để một nhóm người dùng (`team`) có thể xem danh sách và cấu trúc của các bảng trong cơ sở dữ liệu (`customers`), họ cần được cấp quyền `USAGE` trên cơ sở dữ liệu đó.\n\n* **GRANT USAGE ON DATABASE customers TO team;**: Cấp quyền sử dụng cơ sở dữ liệu đúng cú pháp.\n* **GRANT CREATE...**: Cho phép tạo bảng mới trong database, vượt quá nhu cầu tối thiểu chỉ cần xem danh sách bảng.\n* **CATALOG**: Sai đối tượng phân quyền vì đề bài yêu cầu truy cập mức database.\n* **Các phương án đảo ngược vị trí (C, D)**: Bị viết sai cú pháp logic khi gán quyền trên cơ sở dữ liệu `team` cho người dùng `customers`.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án E — \\`GRANT READ_METADATA ON DATABASE customers TO team;\\`.** Câu hỏi được giới hạn vào mô hình table ACL của Hive metastore cũ và nêu rõ group đã có USAGE. \\`READ_METADATA\\` là quyền cho phép xem một đối tượng cùng metadata của nó; grant ở mức database/schema được kế thừa xuống các bảng con trong mô hình phân quyền phân cấp. Như vậy nhóm có thể khám phá tên và metadata bảng mà không được cấp quyền đọc nội dung hàng bằng SELECT.\n\n**Vì sao các phương án khác không đúng?**\n- **A:** \\`VIEW ON CATALOG\\` không phải privilege legacy được liệt kê cho mục đích này; ngoài ra đối tượng catalog và principal cần dùng cũng không khớp database customers/group team.\n- **B:** \\`CREATE ON DATABASE customers TO team\\` cho phép tạo object, không cấp quyền xem metadata các bảng hiện có. Đây cũng rộng hơn yêu cầu chỉ khám phá.\n- **C:** đảo ngược catalog và principal: câu lệnh cố cấp quyền trên catalog team cho customers, không phải database customers cho group team.\n- **D:** cũng đảo ngược object/principal và cấp CREATE thay vì quyền xem metadata.\n- **E:** đúng cho nhu cầu metadata-only. Quyền USAGE đã được đề cho sẵn để thỏa điều kiện sử dụng đối tượng schema trong Hive metastore ACL.\n\nKhông nên áp dụng nguyên lệnh DATABASE/READ_METADATA này cho Unity Catalog. UC dùng mô hình privilege khác: thường cần BROWSE trên catalog để khám phá metadata, còn đọc dữ liệu cần USE CATALOG, USE SCHEMA và SELECT. Câu đã ghi “legacy Hive metastore” để không trộn hai mô hình.",
     "references": [
       {
-        "title": "Hive metastore privileges and securable objects (legacy)",
-        "url": "https://docs.databricks.com/en/security/auth-authz/access-control/table-acls/hive-metastore-privileges.html"
+        "title": "Databricks: Hive metastore privileges and securable objects (legacy)",
+        "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/table-acls/object-privileges"
+      },
+      {
+        "title": "Databricks: Unity Catalog privileges reference",
+        "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/privileges-reference"
       }
     ],
-    "question_vi": "Một nhóm kỹ sư dữ liệu mới đã được phân công làm việc trong một dự án. Nhóm sẽ cần quyền truy cập vào cơ sở dữ liệu `customers` để xem những bảng nào đã tồn tại. Nhóm có một nhóm người dùng (group) riêng tên là `team`. Lệnh nào sau đây có thể được sử dụng để cấp quyền cần thiết trên toàn bộ cơ sở dữ liệu cho nhóm mới?",
+    "question_vi": "Một nhóm kỹ sư dữ liệu mới đang dùng Hive metastore cũ với table ACLs. Group `team` đã có quyền USAGE trên database `customers` và cần xem tên bảng cùng metadata trong database đó, nhưng không cần quyền SELECT dữ liệu bảng. Lệnh GRANT nào cấp quyền xem metadata trên toàn database?",
     "options_vi": {
       "A": "GRANT VIEW ON CATALOG customers TO team;",
       "B": "GRANT CREATE ON DATABASE customers TO team;",
       "C": "GRANT USAGE ON CATALOG team TO customers;",
       "D": "GRANT CREATE ON DATABASE team TO customers;",
-      "E": "GRANT USAGE ON DATABASE customers TO team;"
+      "E": "GRANT READ_METADATA ON DATABASE customers TO team;"
     }
   },
   {
     "id": 94,
     "topic": 1,
-    "question": "A data engineer has a Job with multiple tasks that runs nightly. Each of the tasks runs slowly because the clusters take a long time to start.Which of the following actions can the data engineer perform to improve the start up time for the clusters used for the Job?",
+    "question": "A data engineer has a nightly Job with several tasks. Most of the startup delay comes from waiting for new cloud virtual machines to be provisioned for each task cluster. Which configuration can reduce that instance-acquisition time?",
     "options": {
       "A": "They can use endpoints available in Databricks SQL",
       "B": "They can use jobs clusters instead of all-purpose clusters",
@@ -3055,14 +3063,18 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Databricks **Pools** (Bể cụm máy tính) duy trì một tập hợp các tài nguyên máy ảo rảnh rỗi và luôn sẵn sàng hoạt động (idle, ready-to-use instances). Khi một cụm máy tính của Job được cấu hình sử dụng pool, nó sẽ lấy ngay tài nguyên từ pool này thay vì yêu cầu nhà cung cấp đám mây cấp phát và khởi chạy máy ảo mới từ đầu, giúp giảm đáng kể thời gian khởi động cụm.\n\n* **D**: Là giải pháp tối ưu để cải thiện tốc độ khởi chạy cụm.\n* **Jobs cluster (B)**: Tiết kiệm chi phí nhưng thời gian khởi động vẫn lâu.\n* **Single-node (C)**: Giảm số nút tính toán chứ không giải quyết tốc độ khởi tạo thực thể đám mây.\n* **Autoscale (E)**: Giúp tự động tăng/giảm nút dựa theo tải trọng thực tế nhưng có thể làm tăng thời gian chờ cấp phát thêm nút mới.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D — gắn các cluster của Job vào một instance pool.** Pool giữ sẵn một số cloud instance nhàn rỗi. Khi cluster cần driver/worker, Databricks có thể lấy instance đã được cấp phát từ pool thay vì chờ nhà cung cấp cloud tạo máy mới; vì vậy thời gian launch và scale có thể giảm. Có thể preload phiên bản Databricks Runtime lên instance nhàn rỗi để rút ngắn thêm bước tải runtime.\n\nPool không làm toàn bộ khởi tạo Spark biến mất và cũng không bảo đảm mỗi job khởi chạy tức thì. Pool chỉ giúp phần lấy instance; cấu hình runtime, thư viện, quyền và các bước khởi động cluster vẫn cần thời gian. Instance đang nhàn rỗi trong pool vẫn có chi phí cloud, vì vậy min idle và auto termination phải được cấu hình theo workload.\n\n**Các lựa chọn khác:**\n- **A:** dùng endpoint Databricks SQL chuyển sang loại compute phục vụ SQL warehouse, không tái sử dụng VM cho các task cluster của Job như tình huống mô tả.\n- **B:** job cluster là lựa chọn đúng cho workload job về cách ly và lifecycle, nhưng bản thân việc đổi loại cluster không giữ sẵn VM để giảm thời gian cấp phát.\n- **C:** single-node có thể giảm số node cần khởi tạo trong một số workload, nhưng không giải quyết trực tiếp việc chờ cấp VM bằng tài nguyên có sẵn.\n- **D:** cluster từ pool khớp chính xác với nút thắt đã nêu là instance acquisition.\n- **E:** autoscaling điều chỉnh số worker theo tải sau khi cluster hoạt động; nó không phải cơ chế chuẩn bị trước instance để giảm initial launch delay.\n\nDo câu đã nêu rõ thời gian chờ máy ảo mới được cấp phát, pool là lựa chọn trực tiếp nhất.",
     "references": [
       {
-        "title": "Create and manage pools in Databricks",
-        "url": "https://docs.databricks.com/en/compute/pools.html"
+        "title": "Databricks: Use instance pools to reduce cluster start times",
+        "url": "https://docs.databricks.com/aws/en/compute/cluster-config-best-practices"
+      },
+      {
+        "title": "Databricks: Connect to pools",
+        "url": "https://docs.databricks.com/aws/en/compute/pool-index"
       }
     ],
-    "question_vi": "Một kỹ sư dữ liệu có một Job gồm nhiều tác vụ chạy hàng đêm. Mỗi tác vụ đều chạy chậm do các cụm máy tính (clusters) mất nhiều thời gian để khởi động. Hành động nào sau đây kỹ sư dữ liệu có thể thực hiện để cải thiện thời gian khởi động của các cụm máy tính được sử dụng cho Job đó?",
+    "question_vi": "Một kỹ sư dữ liệu có Job nhiều task chạy mỗi đêm. Phần lớn thời gian chờ khởi động đến từ việc cấp phát máy ảo cloud mới cho cluster của từng task. Cấu hình nào có thể giảm thời gian chờ lấy các instance đó?",
     "options_vi": {
       "A": "Họ có thể sử dụng các endpoint có sẵn trong Databricks SQL",
       "B": "Họ có thể sử dụng jobs cluster thay vì all-purpose cluster",
@@ -3074,7 +3086,7 @@
   {
     "id": 95,
     "topic": 1,
-    "question": "A new data engineering team team. has been assigned to an ELT project. The new data engineering team will need full privileges on the database customers to fully manage the project.Which of the following commands can be used to grant full permissions on the database to the new data engineering team?",
+    "question": "A data engineering team named team is assigned to an ELT project that uses the legacy Hive metastore. The team needs all privileges available in that legacy ACL model on the database customers. Which command grants them that privilege set?",
     "options": {
       "A": "GRANT USAGE ON DATABASE customers TO team;",
       "B": "GRANT ALL PRIVILEGES ON DATABASE team TO customers;",
@@ -3086,18 +3098,18 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Để cấp toàn bộ các đặc quyền quản trị và thao tác dữ liệu trên một cơ sở dữ liệu cho một thực thể (nhóm `team`), cú pháp SQL chuẩn là sử dụng đặc quyền `ALL PRIVILEGES`.\n\n* **GRANT ALL PRIVILEGES ON DATABASE customers TO team;**: Cấp toàn bộ các đặc quyền chính xác cho nhóm.\n* **USAGE (A)**: Chỉ cho phép đọc cấu trúc, không đủ để quản trị toàn bộ dự án.\n* **SELECT (C)**: Chỉ cho phép truy vấn dữ liệu.\n* **B**: Bị sai cú pháp đảo ngược đối tượng và chủ thể.\n* **D**: Liệt kê thủ công các quyền nhưng thiếu một số quyền quản trị khác và sai cú pháp phân tách.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án E — \\`GRANT ALL PRIVILEGES ON DATABASE customers TO team;\\`.** Trong legacy Hive metastore ACLs, \\`ALL PRIVILEGES\\` là cách viết để cấp toàn bộ các privilege được mô hình đó định nghĩa trên securable object cho principal được nêu. Câu lệnh đặt đúng object là database customers và đúng principal là group team; quyền được cấp ở mức database kế thừa xuống các object con theo phân cấp ACL.\n\n**Phân biệt các phương án:**\n- **A:** \\`USAGE\\` chỉ thỏa điều kiện sử dụng schema/database; riêng nó không cấp quyền tạo, sửa, đọc hoặc xem metadata đầy đủ.\n- **B:** đảo ngược database và nhóm: nó nhắm tới database team và cấp cho customers, không phải yêu cầu đề bài.\n- **C:** SELECT chỉ cho phép đọc dữ liệu (và lệnh còn dùng tên group teams khác với team); nó không cấp toàn bộ quyền quản lý ELT.\n- **D:** liệt kê privilege sai cú pháp: thiếu dấu phẩy theo grammar và đặt từ PRIVILEGES sau danh sách, nên đây không phải câu GRANT hợp lệ.\n- **E:** đúng phạm vi và đúng principal, dùng cú pháp ALL PRIVILEGES của legacy ACL.\n\nCần lưu ý “all” phụ thuộc vào mô hình quyền. Đây là câu hỏi về ACL Hive metastore cũ; với Unity Catalog hiện hành, ALL PRIVILEGES không bao gồm một số quyền quản trị như MANAGE hoặc READ METADATA. Vì vậy không diễn giải lệnh này thành quyền siêu quản trị trên mọi dữ liệu hay áp dụng qua catalog khác.",
     "references": [
       {
-        "title": "Hive metastore privileges and securable objects (legacy)",
-        "url": "https://docs.databricks.com/en/security/auth-authz/access-control/table-acls/hive-metastore-privileges.html"
+        "title": "Databricks: Hive metastore privileges and securable objects (legacy)",
+        "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/table-acls/object-privileges"
       },
       {
-        "title": "GRANT (Unity Catalog)",
-        "url": "https://docs.databricks.com/en/sql/language-manual/security-grant.html"
+        "title": "Databricks: GRANT for Unity Catalog",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/security-grant"
       }
     ],
-    "question_vi": "Một nhóm kỹ sư dữ liệu mới tên là `team` đã được phân công vào một dự án ELT. Nhóm kỹ sư dữ liệu mới này sẽ cần toàn bộ các quyền quản lý (full privileges) trên cơ sở dữ liệu `customers` để quản lý hoàn toàn dự án. Lệnh nào sau đây có thể được sử dụng để cấp toàn bộ quyền trên cơ sở dữ liệu cho nhóm kỹ sư dữ liệu mới?",
+    "question_vi": "Một nhóm kỹ sư dữ liệu tên `team` được giao dự án ELT sử dụng Hive metastore cũ. Nhóm cần tất cả privilege có trong mô hình ACL cũ trên database `customers`. Lệnh nào cấp tập quyền đó?",
     "options_vi": {
       "A": "GRANT USAGE ON DATABASE customers TO team;",
       "B": "GRANT ALL PRIVILEGES ON DATABASE team TO customers;",
@@ -3121,11 +3133,19 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Bằng cách bọc các truy vấn SQL bằng PySpark (`spark.sql(...)`), chúng ta có thể tận dụng toàn bộ sức mạnh điều khiển luồng (control flow) của ngôn ngữ Python (như thư viện `datetime` để kiểm tra thứ trong tuần và câu lệnh rẽ nhánh `if/else`). Điều này giúp lập trình viên dễ dàng thiết lập logic chạy có điều kiện cho truy vấn cuối cùng chỉ vào ngày Chủ Nhật.\n\n* **B**: Là giải giải pháp đơn giản, hiệu quả và linh hoạt nhất.\n* **A**: Không cần thiết vì tính năng hoàn toàn tự xây dựng được bằng lập trình.\n* **C**: Sẽ làm cho phần đầu của chương trình không được chạy hàng ngày như mong muốn.\n* **D**: Giới hạn quyền truy cập sẽ làm lỗi chương trình vào các ngày trong tuần thay vì bỏ qua tác vụ cuối một cách an toàn.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** Chuyển chương trình SQL thành một notebook/task PySpark chạy mỗi ngày cho phép gọi từng câu lệnh bằng \\`spark.sql(...)\\` và dùng logic Python để chỉ chạy truy vấn cuối vào Chủ Nhật. Các câu truy vấn chung vẫn được thực thi hàng ngày; nhánh kiểm tra ngày chỉ bao quanh bước cuối. Nên cấu hình timezone của Job và dùng timezone đó khi xác định “Chủ Nhật” để tránh lệch ngày giữa UTC và giờ địa phương.\n\n**Loại trừ các lựa chọn khác:**\n- **A:** không cần chờ nhà cung cấp thêm tính năng; có thể điều khiển thứ tự và điều kiện thực thi trong code hoặc workflow.\n- **B:** đúng: Python có thể gọi các truy vấn SQL và kiểm tra ngày trong tuần trước khi gọi truy vấn cuối.\n- **C:** chỉ chạy toàn bộ chương trình Chủ Nhật sẽ khiến các truy vấn cần thiết hàng ngày không chạy vào những ngày còn lại.\n- **D:** thu hồi/chặn quyền vào bảng nguồn không phải bộ lập lịch. Cách này dễ làm truy vấn lỗi quyền trong sáu ngày còn lại thay vì bỏ qua bước cuối một cách có chủ đích.\n- **E:** tách bảng dữ liệu không tự làm cho truy vấn cuối chỉ chạy Chủ Nhật; vẫn cần logic lịch/điều kiện.\n\nTrong triển khai hiện nay, cũng có thể mô hình hóa từng bước thành task trong Lakeflow Jobs rồi dùng nhánh If/else để điều khiển bước cuối. Nhưng trong các lựa chọn của câu thi, bao bọc chuỗi truy vấn bằng PySpark là phương án tổng quát trực tiếp nhất. Đảm bảo ngày được đánh giá ở đúng timezone của lịch chạy.",
     "references": [
       {
-        "title": "PySpark on Databricks",
-        "url": "https://docs.databricks.com/en/pyspark/index.html"
+        "title": "Databricks: PySpark on Databricks",
+        "url": "https://docs.databricks.com/aws/en/pyspark/"
+      },
+      {
+        "title": "Databricks: Lakeflow Jobs",
+        "url": "https://docs.databricks.com/aws/en/jobs/"
+      },
+      {
+        "title": "Databricks: Add branching logic to a job with the If/else task",
+        "url": "https://docs.databricks.com/aws/en/jobs/tasks/if-else"
       }
     ],
     "question_vi": "Một nhà phân tích dữ liệu có một chuỗi các truy vấn trong một chương trình SQL. Nhà phân tích dữ liệu muốn chương trình này chạy hàng ngày, nhưng họ chỉ muốn truy vấn cuối cùng trong chương trình chạy vào các ngày Chủ Nhật. Họ yêu cầu sự trợ giúp từ nhóm kỹ sư dữ liệu để hoàn thành nhiệm vụ này. Cách tiếp cận nào sau đây có thể được nhóm kỹ sư dữ liệu sử dụng để hoàn thành nhiệm vụ này?",
@@ -3140,9 +3160,9 @@
   {
     "id": 97,
     "topic": 1,
-    "question": "A data engineer runs a statement every day to copy the previous day’s sales into the table transactions. Each day’s sales are in their own file in the location \"/transactions/raw\".Today, the data engineer runs the following command to complete this task:\nAfter running the command today, the data engineer notices that the number of records in table transactions has not changed.Which of the following describes why the statement might not have copied any new records into the table?",
+    "question": "A data engineer runs this command each day to load the previous day’s sales file into the Delta table transactions. Each day has a separate Parquet file under /transactions/raw:\n```sql\nCOPY INTO transactions\nFROM '/transactions/raw'\nFILEFORMAT = PARQUET;\n```\nToday the command completes successfully, but the row count in transactions does not change. Which explanation is most likely?",
     "options": {
-      "A": "The format of the files to be copied were not included with the FORMAT_OPTIONS keyword.",
+      "A": "The statement is missing the required FILEFORMAT clause.",
       "B": "The names of the files to be copied were not included with the FILES keyword.",
       "C": "The previous day’s file has already been copied into the table.",
       "D": "The PARQUET file format does not support COPY INTO.",
@@ -3152,16 +3172,20 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Lệnh `COPY INTO` trong Databricks đảm bảo tính *idempotent* (không thay đổi kết quả khi chạy lại nhiều lần) bằng cách lưu trữ siêu dữ liệu (metadata) theo dõi các tệp nguồn đã tải thành công. Nếu tệp của ngày hôm trước đã được sao chép từ trước, `COPY INTO` sẽ tự động bỏ qua tệp đó trong các lần chạy tiếp theo, dẫn đến số lượng hàng trong bảng đích giữ nguyên.\n\n* **C**: Giải thích chính xác nhất cơ chế hoạt động của `COPY INTO`.\n* **A / B**: Thường sẽ gây ra lỗi cú pháp hoặc lỗi runtime thay vì thực thi thành công mà không có bản ghi mới.\n* **D**: Parquet được hỗ trợ đầy đủ bởi `COPY INTO`.\n* **E**: Dữ liệu sau khi load xuất hiện ngay lập tức trong bảng Delta mà không cần thao tác refresh thủ công nào.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** \\`COPY INTO\\` là thao tác retryable và idempotent: Databricks lưu dấu những file đã nạp thành công và mặc định bỏ qua các file đó khi chạy lại. Nếu tệp doanh số của ngày trước đã được nạp ở một lần chạy trước, lệnh hôm nay vẫn thành công nhưng không thêm hàng mới, nên row count giữ nguyên. Muốn nạp lại file đã xử lý, phải chủ động dùng tùy chọn phù hợp như \\`force = true\\`, nhưng làm vậy có thể tạo dữ liệu lặp nếu pipeline không có bước chống trùng.\n\nĐoạn SQL trong câu đã ghi rõ \\`FILEFORMAT = PARQUET\\` và trỏ tới thư mục raw; do đó trường hợp file đã ingest là nguyên nhân hợp lý nhất khi lệnh thành công mà không đổi số hàng.\n\n**Vì sao các lựa chọn còn lại sai?**\n- **A:** không thiếu FILEFORMAT: câu lệnh đã chỉ rõ PARQUET. \\`FORMAT_OPTIONS\\` dùng để truyền tùy chọn đọc của định dạng, không thay thế chỉ thị định dạng tệp bắt buộc.\n- **B:** không nhất thiết phải liệt kê từng tên file bằng FILES; có thể đọc các file từ source folder/pattern. FILES là cách giới hạn danh sách cụ thể, không phải yêu cầu bắt buộc trong câu này.\n- **C:** file có thể đã được nạp ở lần trước và bị cơ chế idempotency bỏ qua.\n- **D:** Parquet là một file format được hỗ trợ; COPY INTO không bị giới hạn chỉ ở CSV/JSON.\n- **E:** Delta table cập nhật sau commit. Không cần refresh thủ công để số hàng của bảng đích phản ánh dữ liệu đã nạp.\n\nNếu lệnh bị lỗi định dạng hoặc quyền truy cập, nó sẽ báo lỗi thay vì hoàn tất thành công không có bản ghi mới như tình huống mô tả.",
     "references": [
       {
-        "title": "COPY INTO (Databricks SQL)",
-        "url": "https://docs.databricks.com/en/sql/language-manual/delta-copy-into.html"
+        "title": "Databricks SQL: COPY INTO",
+        "url": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into"
+      },
+      {
+        "title": "Databricks: Get started using COPY INTO",
+        "url": "https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/copy-into"
       }
     ],
-    "question_vi": "Một kỹ sư dữ liệu chạy một câu lệnh hàng ngày để sao chép dữ liệu bán hàng của ngày hôm trước vào bảng `transactions`. Dữ liệu bán hàng của mỗi ngày nằm trong tệp tin riêng tại vị trí `/transactions/raw`.\n\nHôm nay, kỹ sư dữ liệu chạy câu lệnh COPY INTO để hoàn thành tác vụ này. Sau khi chạy lệnh hôm nay, kỹ sư dữ liệu nhận thấy số lượng bản ghi trong bảng `transactions` không thay đổi. Điều nào sau đây giải thích tại sao câu lệnh có thể đã không sao chép bất kỳ bản ghi mới nào vào bảng?",
+    "question_vi": "Mỗi ngày, một kỹ sư dữ liệu chạy câu lệnh sau để nạp tệp doanh số của ngày trước đó vào bảng Delta `transactions`. Mỗi ngày có một tệp Parquet riêng trong `/transactions/raw`:\n```sql\nCOPY INTO transactions\nFROM '/transactions/raw'\nFILEFORMAT = PARQUET;\n```\nHôm nay lệnh chạy thành công nhưng số hàng trong bảng không đổi. Đâu là lời giải thích có khả năng nhất?",
     "options_vi": {
-      "A": "Định dạng của các tệp cần sao chép đã không được đưa vào kèm theo từ khóa FORMAT_OPTIONS.",
+      "A": "Câu lệnh thiếu mệnh đề FILEFORMAT bắt buộc.",
       "B": "Tên của các tệp cần sao chép đã không được đưa vào kèm theo từ khóa FILES.",
       "C": "Tệp tin của ngày hôm trước đã được sao chép vào bảng từ trước.",
       "D": "Định dạng tệp PARQUET không hỗ trợ COPY INTO.",
@@ -3183,11 +3207,15 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Trong Databricks Workflows, thứ tự thực thi của các tác vụ (tasks) trong một Job được quản lý thông qua đồ thị tuần hoàn có hướng (DAG). Để một tác vụ mới thực thi trước tác vụ ban đầu, chúng ta cần khai báo tác vụ mới trong cùng Job, sau đó điều chỉnh tác vụ ban đầu để nó phụ thuộc (`Depends on`) vào tác vụ mới đó.\n\n* **B**: Tạo tác vụ mới và gán nó làm điều kiện phụ thuộc cho tác vụ ban đầu để đảm bảo tác vụ mới luôn chạy xong trước.\n* **C**: Đảo ngược thứ tự chạy (tác vụ cũ chạy trước tác vụ mới).\n* **D**: Chạy đồng thời sẽ không đảm bảo được thứ tự thực thi trước-sau mong muốn.\n* **A / E**: Nhân bản tác vụ không tự động tạo ra mối quan hệ phụ thuộc giữa các tác vụ trong quy trình công việc.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án B.** Thêm task notebook mới vào chính Job hiện hữu, sau đó cấu hình task gốc phụ thuộc vào task mới. Trong DAG của Job, Databricks chạy upstream task trước downstream task; do đó quan hệ đúng là “task gốc depends on task mới”. Cách này giữ lịch nightly hiện tại và chỉ mở rộng workflow bằng bước xử lý upstream mới.\n\n**Phân tích từng lựa chọn:**\n- **A:** clone task hiện tại rồi sửa notebook có thể tạo thêm task, nhưng nếu không đặt dependency thì Job không biết phải chạy task mới trước task gốc. Clone đơn thuần không đáp ứng thứ tự.\n- **B:** đúng: tạo task mới trong cùng Job và thêm task đó vào danh sách dependency của task ban đầu.\n- **C:** đảo chiều dependency: nếu task mới phụ thuộc vào task ban đầu thì task gốc sẽ chạy trước, đúng ngược với yêu cầu.\n- **D:** tạo Job mới và chạy hai task đồng thời không bảo đảm upstream notebook hoàn tất trước task gốc; đồng thời phải quản lý thêm lịch và tài nguyên.\n- **E:** clone sang Job mới cũng không tạo quan hệ DAG với task của Job gốc; hai Job là workflow độc lập trừ khi cấu hình gọi/chờ nhau riêng.\n\nNếu task mới thất bại, chính sách Run if của task downstream quyết định có tiếp tục hay không; mặc định task gốc sẽ chỉ chạy sau khi dependency thành công. Như vậy dependency vừa xác định thứ tự vừa làm rõ điều kiện vận hành.",
     "references": [
       {
-        "title": "Create and run Databricks Jobs",
-        "url": "https://docs.databricks.com/en/workflows/jobs/create-run-jobs.html"
+        "title": "Databricks: Configure task dependencies",
+        "url": "https://docs.databricks.com/aws/en/jobs/run-if"
+      },
+      {
+        "title": "Databricks: Create and run Lakeflow Jobs",
+        "url": "https://docs.databricks.com/aws/en/jobs/create-run-jobs"
       }
     ],
     "question_vi": "Một kỹ sư dữ liệu có một Job đơn tác vụ (single-task Job) chạy mỗi sáng trước khi họ bắt đầu làm việc. Sau khi xác định được một sự cố dữ liệu ở dòng trên (upstream), họ cần thiết lập một tác vụ khác để chạy một sổ tay (notebook) mới trước khi tác vụ ban đầu chạy. Cách tiếp cận nào sau đây kỹ sư dữ liệu có thể sử dụng để thiết lập tác vụ mới?",
@@ -3202,38 +3230,42 @@
   {
     "id": 99,
     "topic": 1,
-    "question": "An engineering manager wants to monitor the performance of a recent project using a Databricks SQL query. For the first week following the project’s release, the manager wants the query results to be updated every minute. However, the manager is concerned that the compute resources used for the query will be left running and cost the organization a lot of money beyond the first week of the project’s release.Which of the following approaches can the engineering team use to ensure the query does not cost the organization any money beyond the first week of the project’s release?",
+    "question": "An engineering manager schedules a Databricks SQL query to refresh every minute for the first week after a release. They need the automatic refresh schedule to stop after seven days without an operator having to remember to remove it. Using only the built-in Databricks SQL query scheduler, which statement is correct?",
     "options": {
       "A": "They can set a limit to the number of DBUs that are consumed by the SQL Endpoint.",
       "B": "They can set the query’s refresh schedule to end after a certain number of refreshes.",
-      "C": "They cannot ensure the query does not cost the organization money beyond the first week of the project’s release.",
+      "C": "The built-in query scheduler does not provide an automatic end-date setting for the refresh schedule.",
       "D": "They can set a limit to the number of individuals that are able to manage the query’s refresh schedule.",
-      "E": "They can set the query’s refresh schedule to end on a certain date in the query scheduler."
+      "E": "They can set the SQL warehouse to auto-stop after seven days, which will end the query schedule."
     },
-    "answer": "E",
+    "answer": "C",
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Khi lập lịch chạy truy vấn định kỳ trong Databricks SQL Query Scheduler, công cụ cho phép cấu hình tham số **End date (Ngày kết thúc)**. Bằng cách thiết lập ngày kết thúc đúng một tuần sau ngày phát hành, lịch trình làm mới tự động sẽ dừng lại, ngăn ngừa việc tài nguyên tính toán tự động khởi động để làm mới kết quả và tránh phát sinh thêm chi phí.\n\n* **E**: Sử dụng tùy chọn ngày kết thúc trong bộ lập lịch là giải pháp tự động và an toàn nhất.\n* **A / D**: Không giải quyết được việc tự động dừng chu kỳ chạy của truy vấn.\n* **B**: Không phải là cấu hình được hỗ trợ trong bộ lập lịch mặc định của Databricks SQL.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án C.** Tài liệu query scheduler hiện hành cho phép chọn tần suất, khoảng thời gian, giờ bắt đầu, timezone và warehouse chạy truy vấn; phần cấu hình được mô tả không có trường ngày kết thúc hoặc số lần refresh tối đa. Vì vậy chỉ tạo lịch bằng bộ lập lịch query tích hợp thì chưa có cách đặt một mốc tự dừng sau đúng bảy ngày như yêu cầu. Đây là giới hạn của các lựa chọn đang xét, không phải khẳng định rằng không thể tự động hóa bằng một hệ thống khác.\n\n**Đánh giá từng phương án:**\n- **A:** giới hạn DBU không phải cơ chế dừng schedule vào một ngày cụ thể; budget/giới hạn tiêu thụ cũng không đảm bảo lịch không khởi chạy thêm.\n- **B:** query scheduler được tài liệu hóa không có cấu hình kết thúc sau N lần refresh.\n- **C:** đúng với phạm vi đề bài: built-in SQL query schedule không có end-date setting được mô tả.\n- **D:** giới hạn số người được phép quản lý lịch chỉ kiểm soát quyền, không ngăn lịch tiếp tục chạy sau một tuần.\n- **E:** auto-stop trên warehouse dừng compute khi rảnh; nó không xóa hoặc kết thúc query schedule. Một lần refresh tiếp theo có thể khởi động warehouse trở lại, nên không đáp ứng yêu cầu.\n\nCó thể đạt mục tiêu vận hành bằng lịch workflow/automation riêng có mốc kết thúc hoặc một tác vụ quản trị xóa/tắt schedule đúng hạn. Nếu mục tiêu là không phát sinh bất kỳ chi phí nào, còn phải xét thời gian auto-stop và các workload khác dùng chung warehouse; riêng giới hạn trong câu hỏi là khả năng tự kết thúc lịch query.",
     "references": [
       {
-        "title": "Schedule a query in Databricks SQL",
-        "url": "https://docs.databricks.com/en/sql/user/queries/schedule-query.html"
+        "title": "Databricks: Schedule a query",
+        "url": "https://docs.databricks.com/aws/en/sql/user/queries/schedule-query"
+      },
+      {
+        "title": "Databricks: SQL warehouse behavior and auto-stop",
+        "url": "https://docs.databricks.com/aws/en/compute/sql-warehouse/warehouse-behavior"
       }
     ],
-    "question_vi": "Một quản lý kỹ thuật muốn theo dõi hiệu suất của một dự án gần đây bằng cách sử dụng một truy vấn Databricks SQL. Trong tuần đầu tiên sau khi phát hành dự án, người quản lý muốn kết quả truy vấn được cập nhật mỗi phút một lần. Tuy nhiên, người quản lý lo ngại rằng tài nguyên tính toán được sử dụng cho truy vấn sẽ tiếp tục chạy và tiêu tốn nhiều chi phí của tổ chức sau tuần đầu tiên đó. Cách tiếp cận nào sau đây nhóm kỹ thuật có thể sử dụng để đảm bảo truy vấn không tiêu tốn bất kỳ chi phí nào của tổ chức sau tuần đầu tiên phát hành dự án?",
+    "question_vi": "Một quản lý kỹ thuật lên lịch làm mới truy vấn Databricks SQL mỗi phút trong tuần đầu sau khi phát hành. Họ cần lịch làm mới tự động dừng sau bảy ngày mà không phải nhớ xóa lịch thủ công. Nếu chỉ dùng query scheduler tích hợp của Databricks SQL, phát biểu nào đúng?",
     "options_vi": {
       "A": "Họ có thể đặt giới hạn cho số lượng DBU tiêu thụ bởi SQL Endpoint.",
       "B": "Họ có thể thiết lập lịch trình làm mới (refresh schedule) của truy vấn kết thúc sau một số lần làm mới nhất định.",
-      "C": "Họ không thể đảm bảo truy vấn không làm phát sinh chi phí sau tuần đầu tiên phát hành dự án.",
+      "C": "Query scheduler tích hợp không cung cấp thiết lập ngày kết thúc tự động cho lịch làm mới.",
       "D": "Họ có thể đặt giới hạn số lượng người có quyền quản lý lịch trình làm mới của truy vấn.",
-      "E": "Họ có thể thiết lập lịch trình làm mới của truy vấn để kết thúc vào một ngày cụ thể trong bộ lập lịch truy vấn (query scheduler)."
+      "E": "Có thể đặt SQL warehouse tự dừng sau bảy ngày để làm cho lịch truy vấn kết thúc."
     }
   },
   {
     "id": 100,
     "topic": 1,
-    "question": "A data engineer has three tables in a Delta Live Tables (DLT) pipeline. They have configured the pipeline to drop invalid records at each table. They notice that some data is being dropped due to quality concerns at some point in the DLT pipeline. They would like to determine at which table in their pipeline the data is being dropped.Which of the following approaches can the data engineer take to identify the table that is dropping the records?",
+    "question": "A data engineer has three datasets in a Delta Live Tables (DLT) pipeline and uses drop-on-violation expectations. Some rows are dropped somewhere in the pipeline. They want to find which dataset’s expectation is dropping them. Which approach should they use?",
     "options": {
       "A": "They can set up separate expectations for each table when developing their DLT pipeline.",
       "B": "They cannot determine which table is dropping the records.",
@@ -3245,14 +3277,18 @@
     "isMulti": false,
     "page": null,
     "image": null,
-    "explanation_vi": "Giao diện quản lý đường ống Delta Live Tables (DLT UI) cung cấp biểu đồ trực quan (DAG) của luồng dữ liệu. Khi nhấp chọn vào bất kỳ bảng nào trên biểu đồ này, thanh chi tiết bên phải sẽ hiển thị các số liệu thống kê chất lượng dữ liệu (data quality statistics) trong thời gian thực, cho thấy số lượng bản ghi đã được xử lý và số lượng bản ghi bị loại bỏ bởi các quy tắc ràng buộc (expectations).\n\n* **D**: Là cách nhanh nhất và trực quan nhất để kiểm tra tỷ lệ loại bỏ dữ liệu của từng bảng.\n* **A**: Mô tả bước thiết lập, chứ không phải bước xem kết quả thống kê khi vận hành.\n* **C**: DLT không hỗ trợ sẵn chức năng tự động gửi email cảnh báo chi tiết từng dòng dữ liệu bị loại bỏ.\n* **E**: Nút 'Error' chỉ chứa các lỗi hệ thống hoặc cú pháp làm ngừng hoạt động của đường ống chứ không hiển thị các bản ghi bị loại bỏ có chủ đích bởi chính sách chất lượng dữ liệu.\n\n*(Đáp án được gợi ý bởi AI)*",
+    "explanation_vi": "**Đáp án D.** Mỗi dataset có expectation và số liệu chất lượng riêng. Mở trang pipeline, chọn từng dataset rồi xem mục Data quality/expectation metrics sẽ cho biết quy tắc nào đang chạy và số lượng hàng bị giữ, bị loại hoặc làm pipeline thất bại. Nếu workspace dùng giao diện/loại pipeline không hiển thị tab này, có thể truy vấn event log của pipeline để xem metric theo dataset và expectation.\n\n**Vì sao các lựa chọn khác không giải quyết việc truy dấu hiện tại?**\n- **A:** tách expectation riêng theo dataset hữu ích khi thiết kế và đặt tên quy tắc, nhưng tự nó không phải thao tác xem số liệu của lần chạy đã xảy ra; vẫn cần đọc metric theo dataset.\n- **B:** sai: pipeline ghi nhận expectation metrics nên có thể biết dataset nào áp dụng drop, miễn là các expectation được quan sát đúng cách.\n- **C:** không cần giả định có email tự động cho từng hàng bị drop. Có thể cấu hình notification riêng cho trạng thái pipeline, nhưng đó không thay thế thống kê expectation theo dataset.\n- **D:** đúng: xem quality metrics của từng dataset trong UI; event log là đường thay thế để kiểm tra chi tiết.\n- **E:** nút Error tập trung vào lỗi pipeline/flow, trong khi DROP ROW là hành động chất lượng có chủ đích và thường không làm flow thất bại.\n\nMetric thường cho biết số lượng pass/fail/drop, không nhất thiết lưu nguyên nội dung từng hàng bị loại. Nếu cần điều tra và khôi phục từng record lỗi, hãy thiết kế thêm nhánh quarantine trước hoặc song song với bước lọc.",
     "references": [
       {
-        "title": "Manage data quality with Delta Live Tables expectations",
-        "url": "https://docs.databricks.com/en/delta-live-tables/expectations.html"
+        "title": "Databricks: Manage data quality with pipeline expectations",
+        "url": "https://docs.databricks.com/aws/en/ldp/expectations"
+      },
+      {
+        "title": "Databricks: Query expectation metrics from the event log",
+        "url": "https://docs.databricks.com/aws/en/ldp/monitor-event-logs"
       }
     ],
-    "question_vi": "Một kỹ sư dữ liệu có ba bảng trong một đường ống Delta Live Tables (DLT). Họ đã cấu hình đường ống để loại bỏ các bản ghi không hợp lệ tại mỗi bảng. Họ nhận thấy một số dữ liệu đang bị loại bỏ do lo ngại về mặt chất lượng tại một thời điểm nào đó trong đường ống DLT. Họ muốn xác định xem dữ liệu đang bị loại bỏ ở bảng nào trong đường ống của mình. Kỹ sư dữ liệu có thể thực hiện cách tiếp cận nào sau đây để xác định bảng đang loại bỏ các bản ghi?",
+    "question_vi": "Một kỹ sư dữ liệu có ba dataset trong pipeline Delta Live Tables (DLT) và dùng expectation để loại hàng vi phạm. Một số hàng bị loại ở đâu đó trong pipeline. Kỹ sư muốn tìm dataset nào đang drop các hàng đó. Nên dùng cách nào?",
     "options_vi": {
       "A": "Họ có thể thiết lập các kỳ vọng (expectations) riêng biệt cho từng bảng khi phát triển đường ống DLT của mình.",
       "B": "Họ không thể xác định bảng nào đang loại bỏ các bản ghi.",
