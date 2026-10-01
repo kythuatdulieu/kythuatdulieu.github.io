@@ -37,6 +37,11 @@
     // DOM References
     // ========================
     const $ = id => document.getElementById(id);
+    // Match quiz data to the app build so browsers cannot reuse stale JSON.
+    const scriptSrc = document.currentScript?.src;
+    const assetVersion = scriptSrc
+        ? new URL(scriptSrc, window.location.href).searchParams.get('v') || ''
+        : '';
 
     const els = {
         questionCounter: $('questionCounter'),
@@ -1372,7 +1377,9 @@
             if (typeof QUESTIONS_DATA !== 'undefined') {
                 questions = QUESTIONS_DATA.map(normalizeQ);
             } else {
-                const response = await fetch(`/quizzes/${quizId}/questions.json`);
+                const questionsUrl = new URL(`/quizzes/${quizId}/questions.json`, window.location.origin);
+                if (assetVersion) questionsUrl.searchParams.set('v', assetVersion);
+                const response = await fetch(questionsUrl, { cache: 'no-store' });
                 const data = await response.json();
                 const questionsArray = Array.isArray(data) ? data : (data.questions || []);
                 questions = questionsArray.map(normalizeQ);

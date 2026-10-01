@@ -17,6 +17,7 @@ export async function getStaticPaths() {
 
 const { quizId } = Astro.params;
 const { quiz } = Astro.props;
+const quizAssetVersion = Date.now().toString(36);
 const quizTitle = `Quiz - ${quiz.name}`;
 const quizDescription = `${quiz.name} Practice Quiz - ${quiz.count} questions${quiz.vi ? ' with Vietnamese translation' : ''}.`;
 const canonicalUrl = toAbsoluteUrl(`/quizzes/${quizId}/`);
@@ -306,7 +307,7 @@ const quizSchema = {
   </div>
 
   <!-- Scripts -->
-  <script is:inline src="/quizzes/shared/app.js?v=20260608"></script>
+  <script is:inline src={`/quizzes/shared/app.js?v=${quizAssetVersion}`}></script>
   <script is:inline src="/reading-panel.js" defer></script>
 </body>
 
